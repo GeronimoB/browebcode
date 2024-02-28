@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
+
 class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -93,7 +95,10 @@ class SignInScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Lógica para el botón "Entrar"
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CustomBottomNavigationBar()),
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
