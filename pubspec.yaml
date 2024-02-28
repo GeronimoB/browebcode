@@ -71,6 +71,8 @@ flutter:
     - assets/jugador1.png
     - assets/Matchicon.png
     - assets/No Match.png
+    - assets/X.png
+    - assets/user.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
