@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
-
+import 'package:bro_app_to/olvide_contrasena.dart';
 class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,9 @@ class SignInScreen extends StatelessWidget {
                 Align(
                   child: TextButton(
                     onPressed: () {
-                      // Lógica para recuperar contraseña
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => OlvideContrasenaPage()),
+                      );
                     },
                     child: const Text(
                       '¿Se te ha olvidado la contraseña?',

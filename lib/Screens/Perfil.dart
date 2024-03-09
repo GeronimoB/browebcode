@@ -1,126 +1,121 @@
 import 'package:flutter/material.dart';
 
 class PerfilPage extends StatelessWidget {
+  const PerfilPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    // Obtener el ancho de la pantalla
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Perfil'),
-        backgroundColor: Colors.black,
-      ),
       backgroundColor: Colors.black,
-      body: Center(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.grey[850]!, Colors.black],
+          ),
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Imagen, nombre y subtítulo
-            Positioned(
-              top: 20.0,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
-                  width: 208.0,
-                  height: 208.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: AssetImage('assets/user.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
+          
+          children: <Widget>[
+                        const SizedBox(height: 40),
+            SizedBox(height: MediaQuery.of(context).padding.top + 20),
+            const CircleAvatar(
+              radius: 90.0,
+              backgroundImage: AssetImage('assets/user.png'),
             ),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               'Nombre de Usuario',
               style: TextStyle(
-                fontSize: 24.0,
+                color: Colors.green,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat',
-                color: Color(0xFF00E050),
+                fontSize: 24.0,
               ),
             ),
-            Text(
+            const Text(
               'Subtítulo',
               style: TextStyle(
-                fontSize: 18.0,
-                fontFamily: 'Montserrat',
                 color: Colors.grey,
+                fontSize: 18.0,
               ),
             ),
-            SizedBox(height: 100),
-            // Tarjetas de jugador
-            Container(
-              width: screenWidth * 0.9, // Ancho de la tarjeta
-              height: 168.0,
-              margin: EdgeInsets.symmetric(horizontal: 20.0),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Color(0xFF00E050),
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Columna para la imagen del jugador
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 40.0,
-                        backgroundImage: AssetImage('assets/jugador.png'),
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: 20), // Separación entre columnas
-                  // Columna para el nombre, descripción y enlace "Perfil"
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Nombre del Jugador',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        'Descripción del Jugador',
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      InkWell(
-                        onTap: () {
-                          // Acción al hacer clic en el texto "Perfil"
-                        },
-                        child: Text(
-                          'Perfil',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            color: Color(0xFF00E050),
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            const SizedBox(height: 10),
+            jugadorCard(screenWidth, 'Nombre del Jugador 1', 'assets/jugador1.png'),
+            jugadorCard(screenWidth, 'Nombre del Jugador 2', 'assets/jugador1.png'),
           ],
         ),
       ),
     );
   }
+
+Widget jugadorCard(double screenWidth, String nombreJugador, String imageAsset) {
+  return Container(
+    height: 168.0,
+    margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: screenWidth * 0.05),
+    width: screenWidth * 0.9,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(30.0),
+      border: Border.all(color: Colors.green, width: 2.0),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+      child: Column(
+        children: [
+          const SizedBox(height: 40),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                radius: 40.0,
+                backgroundImage: AssetImage(imageAsset),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      nombreJugador,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Descripción del Jugador',
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton(
+                        child: const Text(
+                          'Ver Perfil...',
+                          style: TextStyle(
+                            color: Colors.green,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                        onPressed: () {
+                          // Acción al hacer clic en Ver Perfil
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
 }

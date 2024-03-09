@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Sing_up_3.dart';
+
 class SignUpScreen_2 extends StatefulWidget {
   @override
   _SignUpScreen_2State createState() => _SignUpScreen_2State();
@@ -28,7 +29,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 5),
+              SizedBox(height: 20), // Aumentado para más espacio arriba
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
@@ -103,25 +104,31 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                   ],
                 ),
               ),
-              ElevatedButton(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: ElevatedButton(
                   onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignUpScreen_3()), 
-                      );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignUpScreen_3()),
+                    );
                   },
-                  child: const Text(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green, // Background color
+                    onPrimary: Colors.white, // Text Color (Foreground color)
+                    minimumSize: Size(double.infinity, 50), // Set width and height
+                  ),
+                  child: Text(
                     'Siguiente',
                     style: TextStyle(
                       fontFamily: 'Montserrat',
-                      fontSize: 12,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.normal,
-                      color: Colors.black,
                     ),
                   ),
                 ),
-              SizedBox(height: 10),
+              ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Image.asset(
@@ -201,12 +208,12 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
               overflow: TextOverflow.ellipsis,
             ),
             Text(
-                'Ver más...',
-                style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 11,
-                ),
+              'Ver más...',
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 11,
               ),
+            ),
           ],
         ),
       ),
