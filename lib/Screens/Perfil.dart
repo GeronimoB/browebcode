@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:bro_app_to/Screens/PerfilDetallePage.dart';
 class PerfilPage extends StatelessWidget {
   const PerfilPage({super.key});
 
@@ -108,9 +108,9 @@ Widget jugadorCard(double screenWidth, String nombreJugador, String imageAsset) 
                             decoration: TextDecoration.underline,
                           ),
                         ),
-                        onPressed: () {
-                          // Acción al hacer clic en Ver Perfil
-                        },
+                      onPressed: () {
+                        PerfilDetallePage;
+                      },
                       ),
                     ),
                   ],

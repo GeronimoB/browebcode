@@ -1,3 +1,4 @@
+import 'package:bro_app_to/Screens/Chatpage.dart';
 import 'package:flutter/material.dart';
 
 class MensajesPage extends StatelessWidget {
@@ -36,20 +37,30 @@ class MensajesPage extends StatelessWidget {
               child: ListView.builder(
                 itemCount: 4,
                 itemBuilder: (context, index) {
-                  return Align(
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatPage(name: 'Juan Lopez'), // Reemplaza 'Juan Lopez' con el nombre correspondiente
+                      ),
+                    );
+                  },
+                  child: Align(
                     alignment: Alignment.center,
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.95,
                       child: ChatWidget(
-                        key: ValueKey(index), // Unique key for Dismissible
+                        key: ValueKey(index),
                         imageURL: 'assets/jugador.png',
                         title: 'Juan Lopez',
                         description: 'Delantero',
                         onDelete: () {
-                          // Aquí manejarías la eliminación real del chat
+                          // Iemplmentar la eliminación aquí
                         },
                       ),
                     ),
+                  )
                   );
                 },
               ),
