@@ -16,7 +16,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
       body: Stack(
         children: [
           Container(
-            color: Color.fromARGB(255, 0, 0, 0),
+            color: const Color.fromARGB(255, 0, 0, 0),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
           ),
@@ -29,7 +29,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 20), // Aumentado para más espacio arriba
+              const SizedBox(height: 20), // Aumentado para más espacio arriba
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
@@ -42,7 +42,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                         });
                       },
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           border: Border(
                             top: BorderSide(color: Colors.transparent, width: 2),
                             left: BorderSide(color: Colors.transparent, width: 2),
@@ -67,7 +67,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                         });
                       },
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           border: Border(
                             top: BorderSide(color: Colors.transparent, width: 2),
                             right: BorderSide(color: Colors.transparent, width: 2),
@@ -92,7 +92,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                 height: 2,
                 color: Colors.green,
               ),
-              SizedBox(height: 0),
+              const SizedBox(height: 0),
               Expanded(
                 child: ListView(
                   children: [
@@ -114,16 +114,16 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green, // Background color
-                    onPrimary: Colors.white, // Text Color (Foreground color)
-                    minimumSize: Size(double.infinity, 50), // Set width and height
+                    foregroundColor: Colors.white, backgroundColor: Colors.green, // Text Color (Foreground color)
+                    minimumSize: const Size(double.infinity, 50), // Set width and height
                   ),
-                  child: Text(
+                  child: const Text(
                     'Siguiente',
                     style: TextStyle(
                       fontFamily: 'Montserrat',
                       fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.normal,
                     ),
                   ),
@@ -153,8 +153,8 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
       },
       child: Container(
         height: 129,
-        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        padding: EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           border: Border.all(color: isSelected ? Colors.lightGreen : Colors.green, width: 2),
           borderRadius: BorderRadius.circular(20),
@@ -165,12 +165,12 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
             Row(
               children: [
                 Image.asset(
-                  'assets/Logo.png', // Nombre de la imagen del logo
-                  width: 62, // Ancho del logo
-                  height: 32, // Alto del logo
+                  'assets/Logo.png', 
+                  width: 62,
+                  height: 32, 
                 ),
-                SizedBox(width: 10), // Espacio entre el logo y el texto "Basic"
-                Text(
+                const SizedBox(width: 10), // Espacio entre el logo y el texto "Basic"
+                const Text(
                   'Basic',
                   style: TextStyle(
                     color: Colors.green,
@@ -178,8 +178,8 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                     fontSize: 15,
                   ),
                 ),
-                Spacer(),
-                Text(
+                const Spacer(),
+                const Text(
                   'Total: 00,0€',
                   style: TextStyle(
                     color: Colors.green,
@@ -189,8 +189,8 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                 ),
               ],
             ),
-            SizedBox(height: 5),
-            Text(
+            const SizedBox(height: 5),
+            const Text(
               'Que Incluye:',
               style: TextStyle(
                 color: Colors.white,
@@ -198,7 +198,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                 fontSize: 13,
               ),
             ),
-            Text(
+            const Text(
               'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed diam nonummy nibh euismod ...',
               style: TextStyle(
                 color: Colors.grey,
@@ -207,7 +207,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            Text(
+            const Text(
               'Ver más...',
               style: TextStyle(
                 color: Colors.green,

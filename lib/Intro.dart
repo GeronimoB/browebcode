@@ -45,10 +45,10 @@ class _SignInPageState extends State<SignInPage> {
                     width: 304,
                     height: 39,
                     decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFF05FF00)),
+                      border: Border.all(color: Colors.green),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: ElevatedButton(
+                    child: OutlinedButton(
                       onPressed: () {
                       Navigator.push(
                         context,
@@ -59,20 +59,17 @@ class _SignInPageState extends State<SignInPage> {
                           isPressedCreateAccount = false; // Aseguramos que el otro botón no esté presionado
                         });
                       },
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+                      style: OutlinedButton.styleFrom(
+                      side: BorderSide(width: 2.0, color: Colors.green), // Borde en verde neón
+                      shape: const StadiumBorder(),
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                         ),
-                        overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
-                      ),
                       child: Text(
                         'Iniciar Sesión',
                         style: TextStyle(
                           fontFamily: 'Montserrat',
-                          color: isPressedCreateAccount ? Colors.white : Colors.black,
-                          fontSize: 14,
+                          color:  Colors.white ,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -84,15 +81,15 @@ class _SignInPageState extends State<SignInPage> {
                     width: 304,
                     height: 39,
                     decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFF05FF00)),
+                      border: Border.all(color:Colors.green),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: ElevatedButton(
                       onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignUpScreen()), 
-                      );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignUpScreen()), 
+                        );
                         setState(() {
                           isPressedCreateAccount = !isPressedCreateAccount;
                           isPressedSignIn = false; // Aseguramos que el otro botón no esté presionado
@@ -104,13 +101,13 @@ class _SignInPageState extends State<SignInPage> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        overlayColor: MaterialStateProperty.all<Color>(isPressedCreateAccount ? const Color(0xFF00E050) : Colors.transparent),
+                        backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF00E050)), // Cambio de color de fondo a verde
                       ),
                       child: Text(
                         'Crear Cuenta',
                         style: TextStyle(
                           fontFamily: 'Montserrat',
-                          color: isPressedCreateAccount ? Colors.white : Colors.black,
+                          color: Colors.black,
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),

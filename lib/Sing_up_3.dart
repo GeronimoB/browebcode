@@ -232,23 +232,31 @@ class SignUpScreen_3 extends StatelessWidget {
                     const SizedBox(height: 10),
                   ],
                 ),
-                const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
-                    // Lógica para ir a la siguiente pantalla o crear la cuenta
-                  },
-                  child: const Text(
-                    'Siguiente',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.normal,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 90),
+  onPressed: () {
+    // Lógica para ir a la siguiente pantalla o crear la cuenta
+  },
+  style: ButtonStyle(
+    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.symmetric(horizontal: 20)), // Ajuste del ancho del botón
+    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF00E050)), // Cambio de color de fondo a verde
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20), // Bordes redondeados
+      ),
+    ),
+  ),
+  child: const Text(
+    'Siguiente',
+    style: TextStyle(
+      fontFamily: 'Montserrat',
+      fontSize: 12,
+      fontWeight: FontWeight.bold,
+      fontStyle: FontStyle.normal,
+      color: Colors.black,
+    ),
+  ),
+),
+
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Image.asset(

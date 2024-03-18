@@ -20,7 +20,6 @@ class PerfilPage extends StatelessWidget {
         child: Column(
           
           children: <Widget>[
-                        const SizedBox(height: 40),
             SizedBox(height: MediaQuery.of(context).padding.top + 20),
             const CircleAvatar(
               radius: 90.0,
@@ -42,9 +41,9 @@ class PerfilPage extends StatelessWidget {
                 fontSize: 18.0,
               ),
             ),
-            const SizedBox(height: 10),
-            jugadorCard(screenWidth, 'Nombre del Jugador 1', 'assets/jugador1.png'),
-            jugadorCard(screenWidth, 'Nombre del Jugador 2', 'assets/jugador1.png'),
+            const SizedBox(height: 0),
+            jugadorCard(screenWidth, 'Nombre del Jugador', 'assets/jugador1.png'),
+            jugadorCard(screenWidth, 'Nombre del Jugador', 'assets/jugador1.png'),
           ],
         ),
       ),
@@ -54,7 +53,7 @@ class PerfilPage extends StatelessWidget {
 Widget jugadorCard(double screenWidth, String nombreJugador, String imageAsset) {
   return Container(
     height: 168.0,
-    margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: screenWidth * 0.05),
+    margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: screenWidth * 0.05),
     width: screenWidth * 0.9,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(30.0),
@@ -68,9 +67,16 @@ Widget jugadorCard(double screenWidth, String nombreJugador, String imageAsset) 
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 40.0,
-                backgroundImage: AssetImage(imageAsset),
+              ClipOval(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Image.asset(
+                    imageAsset,
+                    width: 80.0, 
+                    height: 80.0, 
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
               const SizedBox(width: 20),
               Expanded(
@@ -92,7 +98,6 @@ Widget jugadorCard(double screenWidth, String nombreJugador, String imageAsset) 
                         color: Colors.grey,
                       ),
                     ),
-                    const SizedBox(height: 8),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: TextButton(

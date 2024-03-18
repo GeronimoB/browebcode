@@ -108,24 +108,30 @@ class SignUpScreen extends StatelessWidget {
                   obscureText: true,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
+                  ElevatedButton(
+                    onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => SignUpScreen_2()), 
                       );
-                  },
-                  child: const Text(
-                    'Siguiente',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.normal,
-                      color: Colors.black,
+                    },
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.symmetric(horizontal: 20)), // Ajuste del ancho del botón
+                      backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF00E050)), // Cambio de color de fondo a verde
+                    ),
+                    child: const Text(
+                      'Siguiente',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.normal,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
-                ),
+
+
                 SizedBox(height: 90),
                 Align(
                   alignment: Alignment.bottomCenter,

@@ -4,7 +4,7 @@ class OlvideContrasenaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Color de fondo detrás de la imagen
+      backgroundColor: const Color.fromARGB(255, 27, 23, 23), // Color de fondo detrás de la imagen
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -26,13 +26,14 @@ class OlvideContrasenaPage extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
+            const SizedBox(height: 10),
             const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 5),
               child: Text(
                 'Te enviaremos un correo electrónico con un enlace con el que ingresarás de inmediato.',
                 style: TextStyle(
                   fontFamily: 'Montserrat',
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.w600, // SemiBoldItalic
                   fontStyle: FontStyle.italic,
                   color: Colors.white,
@@ -40,13 +41,14 @@ class OlvideContrasenaPage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
+            const SizedBox(height: 10),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 40),
               child: TextField(
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   hintText: 'Email',
-                  hintStyle: TextStyle(color: Colors.white54),
+                  hintStyle: TextStyle(color: Color.fromARGB(255, 255, 250, 250)),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
@@ -64,13 +66,19 @@ class OlvideContrasenaPage extends StatelessWidget {
                 // Add your onPressed code here
               },
               style: OutlinedButton.styleFrom(
-                side: BorderSide(width: 2.0, color: Colors.greenAccent), // Borde en verde neón
+                side: BorderSide(width: 2.0, color: Colors.green), // Borde en verde neón
                 shape: const StadiumBorder(),
                 padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
               ),
               child: const Text(
                 'Recuperar',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.normal,
+                      color: Colors.white,
+                    ),
               ),
             ),
             const SizedBox(height: 50), // You may adjust this as needed

@@ -8,7 +8,7 @@ class SignInScreen extends StatelessWidget {
       body: Stack(
         children: [
           Container(
-            color: Color.fromARGB(255, 36, 34, 34),
+            color: Color.fromARGB(255, 19, 12, 12),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
           ),
@@ -19,7 +19,7 @@ class SignInScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(30.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -95,15 +95,20 @@ class SignInScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                ElevatedButton(
+                Container(
+                  width: 50, 
+                child:  OutlinedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => CustomBottomNavigationBar()),
                     );
                   },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(width: 2.0, color: Colors.green), // Borde en verde neón
+                    shape: const StadiumBorder(),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  fixedSize: Size(132, 30),
                   ),
                   child: const Text(
                     'Entrar',
@@ -114,6 +119,7 @@ class SignInScreen extends StatelessWidget {
                       fontWeight: FontWeight.w800,
                     ),
                   ),
+                ),
                 ),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
