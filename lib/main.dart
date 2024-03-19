@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const MySplashScreen(), // Cambio a la pantalla de introducción
       debugShowCheckedModeBanner: false,
@@ -58,9 +59,9 @@ class _MySplashScreenState extends State<MySplashScreen> {
         ),
         child: Center(
           child: Image.asset(
-            'assets/Logo.png', // Nombre de la imagen del logo
-            width: 246, // Ancho del logo
-            height: 117, // Alto del logo
+            'assets/Logo.png',
+            width: 246,
+            height: 117,
           ),
         ),
       ),

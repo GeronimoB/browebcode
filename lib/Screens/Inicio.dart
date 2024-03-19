@@ -11,8 +11,9 @@ class _InicioPageState extends State<InicioPage> {
   int _currentIndex = 0;
   List<String> _images = [
     'assets/jugador.png',
+    'assets/jugador1.png',
     'assets/jugador.png',
-    'assets/jugador.png',
+    'assets/jugador1.png',
     // Añade más rutas de imagen según sea necesario
   ];
 
@@ -62,12 +63,14 @@ class _InicioPageState extends State<InicioPage> {
   @override
   Widget build(BuildContext context) {
     double scale = 1 - (_xOffset.abs() * 0.001);
-    double backgroundScale = 0.8 + (_xOffset.abs() * 0.0005); // Fondo comienza más pequeño y se agranda
-    double opacity = 0.5 + (_xOffset.abs() * 0.001); // La opacidad aumenta con el desplazamiento
-
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: GestureDetector(
+    double backgroundScale = 0.8 +
+        (_xOffset.abs() * 0.0005); // Fondo comienza más pequeño y se agranda
+    double opacity = 0.5 +
+        (_xOffset.abs() * 0.001); // La opacidad aumenta con el desplazamiento
+    double height = MediaQuery.of(context).size.height;
+    return SizedBox(
+      height: height * 0.9,
+      child: GestureDetector(
         onHorizontalDragUpdate: _onHorizontalDragUpdate,
         onHorizontalDragEnd: _onHorizontalDragEnd,
         child: Stack(
@@ -77,9 +80,13 @@ class _InicioPageState extends State<InicioPage> {
               child: Transform.scale(
                 scale: backgroundScale,
                 child: Opacity(
-                  opacity: _xOffset == 0 ? 0 : opacity, // Asegura que la opacidad sea 0 cuando no hay desplazamiento
+                  opacity: _xOffset == 0
+                      ? 0
+                      : opacity, // Asegura que la opacidad sea 0 cuando no hay desplazamiento
                   child: Image.asset(
-                    _images[_xOffset > 0 ? _prevIndex : _nextIndex], // Determina qué imagen mostrar en el fondo
+                    _images[_xOffset > 0
+                        ? _prevIndex
+                        : _nextIndex], // Determina qué imagen mostrar en el fondo
                     fit: BoxFit.cover,
                   ),
                 ),

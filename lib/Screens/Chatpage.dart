@@ -25,7 +25,7 @@ class _ChatPageState extends State<ChatPage> {
       });
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +34,8 @@ class _ChatPageState extends State<ChatPage> {
         title: Row(
           children: [
             CircleAvatar(
-              backgroundImage: AssetImage('path/to/image'), // Reemplazar con tu imagen.
+              backgroundImage: AssetImage(
+                  'assets/images/jugador23.png'), // Reemplazar con tu imagen.
             ),
             SizedBox(width: 10),
             Text(widget.name, style: TextStyle(color: Colors.white)),
@@ -61,17 +62,19 @@ class _ChatPageState extends State<ChatPage> {
                 itemCount: _messages.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 16.0),
                     alignment: Alignment.centerRight,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 16.0),
                       decoration: BoxDecoration(
                         color: Color.fromARGB(108, 4, 255, 0),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         _messages[index],
-                        style: TextStyle(color: Colors.white ,fontSize: 10),
+                        style: TextStyle(color: Colors.white, fontSize: 10),
                       ),
                     ),
                   );

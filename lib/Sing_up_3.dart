@@ -1,3 +1,4 @@
+import 'package:bro_app_to/Screens/first_video.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen_3 extends StatelessWidget {
@@ -34,7 +35,7 @@ class SignUpScreen_3 extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                
+
                 const TextField(
                   decoration: InputDecoration(
                     labelText: 'Pais',
@@ -47,10 +48,12 @@ class SignUpScreen_3 extends StatelessWidget {
                     ),
                     contentPadding: EdgeInsets.symmetric(vertical: 5),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF00E050), width: 2),
+                      borderSide:
+                          BorderSide(color: Color(0xFF00E050), width: 2),
                     ),
                   ),
-                  style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style:
+                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
                 ),
                 const TextField(
                   decoration: InputDecoration(
@@ -64,10 +67,12 @@ class SignUpScreen_3 extends StatelessWidget {
                     ),
                     contentPadding: EdgeInsets.symmetric(vertical: 5),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF00E050), width: 2),
+                      borderSide:
+                          BorderSide(color: Color(0xFF00E050), width: 2),
                     ),
                   ),
-                  style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style:
+                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
                 ),
                 const TextField(
                   decoration: InputDecoration(
@@ -81,10 +86,12 @@ class SignUpScreen_3 extends StatelessWidget {
                     ),
                     contentPadding: EdgeInsets.symmetric(vertical: 5),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF00E050), width: 2),
+                      borderSide:
+                          BorderSide(color: Color(0xFF00E050), width: 2),
                     ),
                   ),
-                  style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style:
+                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
                 ),
                 const TextField(
                   decoration: InputDecoration(
@@ -98,10 +105,12 @@ class SignUpScreen_3 extends StatelessWidget {
                     ),
                     contentPadding: EdgeInsets.symmetric(vertical: 5),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF00E050), width: 2),
+                      borderSide:
+                          BorderSide(color: Color(0xFF00E050), width: 2),
                     ),
                   ),
-                  style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style:
+                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
                 ),
                 const TextField(
                   decoration: InputDecoration(
@@ -115,10 +124,12 @@ class SignUpScreen_3 extends StatelessWidget {
                     ),
                     contentPadding: EdgeInsets.symmetric(vertical: 5),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF00E050), width: 2),
+                      borderSide:
+                          BorderSide(color: Color(0xFF00E050), width: 2),
                     ),
                   ),
-                  style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style:
+                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
                 ),
                 const TextField(
                   decoration: InputDecoration(
@@ -132,10 +143,12 @@ class SignUpScreen_3 extends StatelessWidget {
                     ),
                     contentPadding: EdgeInsets.symmetric(vertical: 5),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFF00E050), width: 2),
+                      borderSide:
+                          BorderSide(color: Color(0xFF00E050), width: 2),
                     ),
                   ),
-                  style: TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style:
+                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
                 ),
                 const SizedBox(height: 10),
                 // Modificando el primer DropdownButtonFormField
@@ -145,7 +158,8 @@ class SignUpScreen_3 extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF00E050), width: 2),
+                        border: Border.all(
+                            color: const Color(0xFF00E050), width: 2),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: DropdownButtonFormField<String>(
@@ -168,7 +182,8 @@ class SignUpScreen_3 extends StatelessWidget {
                             child: Text(
                               value,
                               style: const TextStyle(
-                                color: Colors.white, // Establece el color del texto como blanco
+                                color: Colors
+                                    .white, // Establece el color del texto como blanco
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.w500,
                                 fontStyle: FontStyle.italic,
@@ -192,7 +207,8 @@ class SignUpScreen_3 extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF00E050), width: 2),
+                        border: Border.all(
+                            color: const Color(0xFF00E050), width: 2),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: DropdownButtonFormField<String>(
@@ -208,8 +224,10 @@ class SignUpScreen_3 extends StatelessWidget {
                           border: InputBorder.none,
                         ),
                         dropdownColor: Colors.transparent,
-                        items: ['Selección Nacional Masculina', 'Selección Nacional Femenina']
-                            .map((String value) {
+                        items: [
+                          'Selección Nacional Masculina',
+                          'Selección Nacional Femenina'
+                        ].map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(
@@ -233,29 +251,37 @@ class SignUpScreen_3 extends StatelessWidget {
                   ],
                 ),
                 ElevatedButton(
-  onPressed: () {
-    // Lógica para ir a la siguiente pantalla o crear la cuenta
-  },
-  style: ButtonStyle(
-    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.symmetric(horizontal: 20)), // Ajuste del ancho del botón
-    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF00E050)), // Cambio de color de fondo a verde
-    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-      RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20), // Bordes redondeados
-      ),
-    ),
-  ),
-  child: const Text(
-    'Siguiente',
-    style: TextStyle(
-      fontFamily: 'Montserrat',
-      fontSize: 12,
-      fontWeight: FontWeight.bold,
-      fontStyle: FontStyle.normal,
-      color: Colors.black,
-    ),
-  ),
-),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const FirstVideoWidget()),
+                    );
+                  },
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        EdgeInsets.symmetric(
+                            horizontal: 20)), // Ajuste del ancho del botón
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Color(0xFF00E050)), // Cambio de color de fondo a verde
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(20), // Bordes redondeados
+                      ),
+                    ),
+                  ),
+                  child: const Text(
+                    'Siguiente',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.normal,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
 
                 Align(
                   alignment: Alignment.bottomCenter,

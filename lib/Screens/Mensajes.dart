@@ -6,73 +6,45 @@ class MensajesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: const Text(
-          'Mensajes',
-          style: TextStyle(
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Montserrat',
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF2C2C2C), Colors.black],
-          ),
-        ),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatPage(name: 'Juan Lopez'), // Reemplaza 'Juan Lopez' con el nombre correspondiente
-                      ),
-                    );
-                  },
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.95,
-                      child: ChatWidget(
-                        key: ValueKey(index),
-                        imageURL: 'assets/jugador.png',
-                        title: 'Juan Lopez',
-                        description: 'Delantero',
-                        onDelete: () {
-                          // Iemplmentar la eliminación aquí
-                        },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: 20),
+        Expanded(
+          child: ListView.builder(
+            itemCount: 7,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatPage(
+                        name: 'Juan Lopez',
                       ),
                     ),
-                  )
                   );
                 },
-              ),
-            ),
-          ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: ChatWidget(
+                    key: ValueKey(index),
+                    imageURL: 'assets/images/jugador23.png',
+                    title: 'Juan Lopez',
+                    description: 'Delantero',
+                    onDelete: () {
+                      // Implementa la eliminación aquí
+                    },
+                  ),
+                ),
+              );
+            },
+          ),
         ),
-      ),
+      ],
     );
   }
 }
-
-
 
 class ChatWidget extends StatelessWidget {
   final String imageURL;
@@ -115,9 +87,32 @@ class ChatWidget extends StatelessWidget {
           child: Row(
             children: [
               const SizedBox(width: 16.0),
-              CircleAvatar(
-                radius: 32,
-                backgroundImage: AssetImage(imageURL),
+              Container(
+                width: 64, // Doble del radio del círculo
+                height: 64, // Doble del radio del círculo
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors
+                      .black, // Cambia el color de fondo según sea necesario
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(
+                          0.1), // Cambia el color y la opacidad de la sombra según sea necesario
+                      blurRadius:
+                          10, // Cambia el radio de desenfoque según sea necesario
+                      offset: Offset(0,
+                          3), // Cambia el desplazamiento de la sombra según sea necesario
+                    ),
+                  ],
+                ),
+                child: ClipOval(
+                  child: Image.asset(
+                    imageURL,
+                    fit: BoxFit.contain,
+                    width: 64, // Doble del radio del círculo
+                    height: 64, // Doble del radio del círculo
+                  ),
+                ),
               ),
               const SizedBox(width: 35.0),
               Expanded(
