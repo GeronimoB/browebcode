@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
 import 'package:bro_app_to/olvide_contrasena.dart';
+import 'package:bro_app_to/Screens/PlayerProfile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'components/custom_text_button.dart';
@@ -18,7 +19,7 @@ class SignInScreen extends StatelessWidget {
           ),
           Positioned.fill(
             child: Image.asset(
-              'assets/Background_2.png',
+              'assets/images/Background_2.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -111,6 +112,7 @@ class SignInScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
+                            // builder: (context) => PlayerProfile()),
                             builder: (context) => CustomBottomNavigationBar()),
                       );
                     },

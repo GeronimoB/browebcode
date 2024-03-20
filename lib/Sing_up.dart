@@ -15,7 +15,7 @@ class SignUpScreen extends StatelessWidget {
           ),
           Positioned.fill(
             child: Image.asset(
-              'assets/Background_3.png',
+              'assets/images/Background_3.png',
               fit: BoxFit.cover,
             ),
           ),

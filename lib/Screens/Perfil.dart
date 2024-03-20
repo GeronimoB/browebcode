@@ -23,7 +23,7 @@ class PerfilPage extends StatelessWidget {
             SizedBox(height: MediaQuery.of(context).padding.top + 20),
             const CircleAvatar(
               radius: 90.0,
-              backgroundImage: AssetImage('assets/user.png'),
+              backgroundImage: AssetImage('assets/images/user.png'),
             ),
             const SizedBox(height: 10),
             const Text(
@@ -42,10 +42,10 @@ class PerfilPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 0),
-            jugadorCard(
-                screenWidth, 'Nombre del Jugador', 'assets/jugador1.png'),
-            jugadorCard(
-                screenWidth, 'Nombre del Jugador', 'assets/jugador1.png'),
+            jugadorCard(screenWidth, 'Nombre del Jugador',
+                'assets/images/jugador1.png'),
+            jugadorCard(screenWidth, 'Nombre del Jugador',
+                'assets/images/jugador1.png'),
           ],
         ),
       ),

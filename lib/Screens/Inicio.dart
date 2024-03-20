@@ -11,10 +11,10 @@ class _InicioPageState extends State<InicioPage> {
   double _rotation = 0.0;
   int _currentIndex = 0;
   List<String> _images = [
-    'assets/jugador.png',
-    'assets/jugador1.png',
-    'assets/jugador.png',
-    'assets/jugador1.png',
+    'assets/images/jugador.png',
+    'assets/images/jugador1.png',
+    'assets/images/jugador.png',
+    'assets/images/jugador1.png',
     // Añade más rutas de imagen según sea necesario
   ];
 
@@ -83,7 +83,7 @@ class _InicioPageState extends State<InicioPage> {
                 child: Opacity(
                   opacity: _xOffset == 0
                       ? 0
-                      : opacity, // Asegura que la opacidad sea 0 cuando no hay desplazamiento
+                      : opacity, 
                   child: Image.asset(
                     _images[_xOffset > 0
                         ? _prevIndex
@@ -115,7 +115,7 @@ class _InicioPageState extends State<InicioPage> {
                 top: MediaQuery.of(context).size.height / 2 - 50,
                 right: 0,
                 child: SvgPicture.asset(
-                  'assets/icons/Matchicon.svg',
+                  'assets/images/icons/Matchicon.svg',
                   width: 200,
                   height: 200,
                 ),
@@ -125,7 +125,7 @@ class _InicioPageState extends State<InicioPage> {
                 top: MediaQuery.of(context).size.height / 2 - 50,
                 left: 5,
                 child: SvgPicture.asset(
-                  'assets/icons/No Match.svg',
+                  'assets/images/icons/No Match.svg',
                   width: 200,
                   height: 200,
                 ),

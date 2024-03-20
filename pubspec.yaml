@@ -39,13 +39,8 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/Background_1.png
-    - assets/Background_2.png
-    - assets/Background_3.png
-    - assets/jugador.png
-    - assets/jugador1.png
-    - assets/user.png
-    - assets/Fondo_oc.png
+
+    - assets/images/
     - assets/images/
     - assets/icons/
   # The following line ensures that the Material Icons font is

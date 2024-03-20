@@ -42,7 +42,7 @@ class _MatcheState extends State<Matche> {
               child: ListView.builder(
                 itemCount: _isSelected.length,
                 itemBuilder: (context, index) {
-                  return _buildMatchComponent('assets/jugador1.png', 'Nombre Jugador ${index + 1}', 'Descripción Jugador ${index + 1}', index);
+                  return _buildMatchComponent('assets/images/jugador1.png', 'Nombre Jugador ${index + 1}', 'Descripción Jugador ${index + 1}', index);
                 },
               ),
             ),

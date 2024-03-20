@@ -25,7 +25,7 @@ class _SignInPageState extends State<SignInPage> {
           ),
           Positioned.fill(
             child: Image.asset(
-              'assets/Background_1.png',
+              'assets/images/Background_1.png',
               fit: BoxFit.cover,
             ),
           ),

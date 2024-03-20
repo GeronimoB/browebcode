@@ -68,12 +68,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             BottomNavigationBarItem(
               icon: _selectedIndex == 0
                   ? SvgPicture.asset(
-                      'assets/icons/${_selectedIconNames[0]}',
+                      'assets/images/icons/${_selectedIconNames[0]}',
                       height: 32,
                       width: 32,
                     )
                   : SvgPicture.asset(
-                      'assets/icons/${_iconNames[0]}',
+                      'assets/images/icons/${_iconNames[0]}',
                       height: 32,
                       width: 32,
                     ),
@@ -82,12 +82,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             BottomNavigationBarItem(
               icon: _selectedIndex == 1
                   ? SvgPicture.asset(
-                      'assets/icons/${_selectedIconNames[1]}',
+                      'assets/images/icons/${_selectedIconNames[1]}',
                       height: 32,
                       width: 32,
                     )
                   : SvgPicture.asset(
-                      'assets/icons/${_iconNames[1]}',
+                      'assets/images/icons/${_iconNames[1]}',
                       height: 32,
                       width: 32,
                     ),
@@ -96,12 +96,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             BottomNavigationBarItem(
               icon: _selectedIndex == 2
                   ? SvgPicture.asset(
-                      'assets/icons/${_selectedIconNames[2]}',
+                      'assets/images/icons/${_selectedIconNames[2]}',
                       height: 32,
                       width: 32,
                     )
                   : SvgPicture.asset(
-                      'assets/icons/${_iconNames[2]}',
+                      'assets/images/icons/${_iconNames[2]}',
                       height: 32,
                       width: 32,
                     ),
@@ -110,12 +110,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             BottomNavigationBarItem(
               icon: _selectedIndex == 3
                   ? SvgPicture.asset(
-                      'assets/icons/${_selectedIconNames[3]}',
+                      'assets/images/icons/${_selectedIconNames[3]}',
                       height: 32,
                       width: 32,
                     )
                   : SvgPicture.asset(
-                      'assets/icons/${_iconNames[3]}',
+                      'assets/images/icons/${_iconNames[3]}',
                       height: 32,
                       width: 32,
                     ),

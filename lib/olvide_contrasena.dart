@@ -10,7 +10,7 @@ class OlvideContrasenaPage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/Fondo_oc.png'),
+            image: AssetImage('assets/images/Fondo_oc.png'),
             fit: BoxFit.cover,
           ),
         ),
