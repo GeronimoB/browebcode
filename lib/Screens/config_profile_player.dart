@@ -95,7 +95,6 @@ Widget _buildListItem(String title, BuildContext context, bool showTrailingIcon)
           MaterialPageRoute(builder: (context) => AfiliadosPlayer()),
         );
       } else {
-        // Manejar otras opciones de la lista aquí.
       }
     },
   );

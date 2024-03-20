@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AfiliadosPlayer extends StatelessWidget {
+  const AfiliadosPlayer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
