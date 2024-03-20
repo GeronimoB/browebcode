@@ -1,5 +1,6 @@
 import 'package:bro_app_to/Screens/Match_player.dart';
 import 'package:bro_app_to/Screens/Mensajes_player.dart';
+import 'package:bro_app_to/Screens/upload_video.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,16 +17,16 @@ class _CustomBottomNavigationBarPlayerState
 
   final List<Widget> _pages = [
     PlayerProfile(),
-    MatchePlayer(),
-    PlayerIcon(), 
-    MensajesPage_player(),
+    const MatchePlayer(),
+    const UploadVideoWidget(),
+    const MensajesPage_player(),
     PlayerProfile(),
   ];
 
   final List<String?> _iconNames = [
     'Inicio.svg',
     'Match.svg',
-    'Player.svg', 
+    'Player.svg',
     'Mensaje.svg',
     'Perfil.svg',
   ];
@@ -33,7 +34,7 @@ class _CustomBottomNavigationBarPlayerState
   final List<String> _selectedIconNames = [
     'Inicio-1.svg',
     'Match-1.svg',
-    'Player.svg', 
+    'Player.svg',
     'Mensaje-1.svg',
     'Perfil-1.svg',
   ];
@@ -43,8 +44,6 @@ class _CustomBottomNavigationBarPlayerState
       _selectedIndex = index;
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +94,8 @@ class _CustomBottomNavigationBarPlayerState
                     ),
               label: 'Match',
             ),
-                        BottomNavigationBarItem(
-              icon: _selectedIndex == 3
+            BottomNavigationBarItem(
+              icon: _selectedIndex == 2
                   ? SvgPicture.asset(
                       'assets/icons/${_selectedIconNames[2]}',
                       height: 32,
@@ -110,7 +109,7 @@ class _CustomBottomNavigationBarPlayerState
               label: '',
             ),
             BottomNavigationBarItem(
-              icon: _selectedIndex == 2
+              icon: _selectedIndex == 3
                   ? SvgPicture.asset(
                       'assets/icons/${_selectedIconNames[3]}',
                       height: 32,
@@ -124,7 +123,7 @@ class _CustomBottomNavigationBarPlayerState
               label: 'Mensajes',
             ),
             BottomNavigationBarItem(
-              icon: _selectedIndex == 3
+              icon: _selectedIndex == 4
                   ? SvgPicture.asset(
                       'assets/icons/${_selectedIconNames[4]}',
                       height: 32,
@@ -137,27 +136,12 @@ class _CustomBottomNavigationBarPlayerState
                     ),
               label: 'Perfil',
             ),
-            
           ],
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white,
           onTap: _onItemTapped,
         ),
-      ),
-    );
-  }
-}
-
-class PlayerIcon extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 32,
-      height: 32,
-      child: const Icon(
-        Icons.sports_soccer, // Cambia este icono según tus necesidades
-        color: Colors.white,
       ),
     );
   }

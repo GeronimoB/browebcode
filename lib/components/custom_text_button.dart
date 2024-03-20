@@ -8,13 +8,15 @@ class CustomTextButton extends StatelessWidget {
   final bool buttonPrimary;
   final double width;
   final double height;
+  final double? fontSize;
   const CustomTextButton(
       {super.key,
       required this.onTap,
       required this.text,
       required this.buttonPrimary,
       required this.width,
-      required this.height});
+      required this.height,
+      this.fontSize = 14});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class CustomTextButton extends StatelessWidget {
             style: TextStyle(
               color: buttonPrimary ? Colors.black : Colors.white,
               fontFamily: 'Montserrat',
-              fontSize: 14,
+              fontSize: fontSize ?? 14,
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,

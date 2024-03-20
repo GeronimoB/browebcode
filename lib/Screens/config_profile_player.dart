@@ -7,6 +7,7 @@ class ConfigProfilePlayer extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        centerTitle: true,
         title: const Column(
           children: [
             SizedBox(height: 22),
@@ -16,7 +17,7 @@ class ConfigProfilePlayer extends StatelessWidget {
                 color: Color(0xFF05FF00),
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.bold,
-                fontSize: 12, 
+                fontSize: 12,
               ),
             ),
             Text(
@@ -25,7 +26,7 @@ class ConfigProfilePlayer extends StatelessWidget {
                 color: Colors.white,
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.bold,
-                fontSize: 24, 
+                fontSize: 24,
               ),
             ),
           ],
@@ -44,7 +45,7 @@ class ConfigProfilePlayer extends StatelessWidget {
             colors: [Color(0xFF212121), Color(0xFF121212)],
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 15.0), 
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: Column(
           children: [
             Expanded(
@@ -77,27 +78,30 @@ class ConfigProfilePlayer extends StatelessWidget {
     );
   }
 
-Widget _buildListItem(String title, BuildContext context, bool showTrailingIcon) {
-  return ListTile(
-    title: Text(
-      title,
-      style: const TextStyle(
-        color: Colors.white,
-        fontFamily: 'Montserrat',
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
+  Widget _buildListItem(
+      String title, BuildContext context, bool showTrailingIcon) {
+    return ListTile(
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontFamily: 'Montserrat',
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
       ),
-    ),
-    trailing: showTrailingIcon ? const Icon(Icons.chevron_right, color: Color(0xFF05FF00)) : null,
-    onTap: () {
-      if (title == 'AFILIADOS') {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => AfiliadosPlayer()),
-        );
-      } else {
-        // Manejar otras opciones de la lista aquí.
-      }
-    },
-  );
-}
+      trailing: showTrailingIcon
+          ? const Icon(Icons.chevron_right, color: Color(0xFF05FF00))
+          : null,
+      onTap: () {
+        if (title == 'AFILIADOS') {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => AfiliadosPlayer()),
+          );
+        } else {
+          // Manejar otras opciones de la lista aquí.
+        }
+      },
+    );
+  }
 }

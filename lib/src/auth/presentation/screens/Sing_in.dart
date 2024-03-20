@@ -136,9 +136,11 @@ class _SignInScreenState extends State<SignInScreen> {
                   onTap: () {
                     final playerProvider =
                         Provider.of<PlayerProvider>(context, listen: false);
-                    RemoteDataSourceImpl(playerProvider).signIn(UserEntity(
-                        username: emailController.text,
-                        password: passwordController.text));
+                    RemoteDataSourceImpl(playerProvider).signIn(
+                        UserEntity(
+                            username: emailController.text,
+                            password: passwordController.text),
+                        context);
                   },
                   text: 'Entrar',
                   buttonPrimary: true,

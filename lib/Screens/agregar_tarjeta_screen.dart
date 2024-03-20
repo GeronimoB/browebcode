@@ -1,3 +1,6 @@
+import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
+import 'package:bro_app_to/components/custom_box_shadow.dart';
+import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -11,10 +14,11 @@ class AgregarTarjetaScreen extends StatefulWidget {
 
 class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
   String tipoTarjeta = 'visa'; // Por defecto seleccionamos Visa
+  bool isSelected = false;
 
   @override
   Widget build(BuildContext context) {
-    String imagenTarjeta = tipoTarjeta == 'visa'
+    String imagenTarjeta = 'visa' == 'visa'
         ? 'assets/images/Visa_icon.png'
         : 'assets/images/Mastercard_icon.png';
 
@@ -49,7 +53,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
               body: Container(
                 padding: const EdgeInsets.all(26.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
                       'Disponibles',
@@ -59,28 +63,40 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF00E050)),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: ListTile(
-                        leading: Image.asset(imagenTarjeta),
-                        title: const Text(
-                          'Titular XXXXXXXX\nNúmero XXXXXXXXXXXX',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            color: Colors.white,
-                            fontSize: 10,
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isSelected = !isSelected;
+                        });
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: const Color(0xFF00E050)),
+                            borderRadius: BorderRadius.circular(10.0),
+                            boxShadow: isSelected
+                                ? [
+                                    const CustomBoxShadow(
+                                        color: Color(0xFF00E050), blurRadius: 4)
+                                  ]
+                                : null),
+                        child: ListTile(
+                          leading: Image.asset(imagenTarjeta),
+                          title: const Text(
+                            'Titular XXXXXXXX\nNúmero XXXXXXXXXXXX',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
+                            softWrap: false,
                           ),
-                          softWrap: false,
-                        ),
-                        trailing: IconButton(
-                          icon:
-                              const Icon(Icons.close, color: Color(0xFF00E050)),
-                          onPressed: () {
-                            // Acción para eliminar tarjeta
-                          },
+                          trailing: IconButton(
+                            icon: const Icon(Icons.close,
+                                color: Color(0xFF00E050)),
+                            onPressed: () {
+                              // Acción para eliminar tarjeta
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -105,16 +121,16 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                           },
                           child: Row(
                             children: [
-                              if (tipoTarjeta ==
-                                  'visa') // Mostrar el punto si está seleccionada Visa
-                                Container(
-                                  width: 8,
-                                  height: 8,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color(0xFF00E050),
-                                  ),
+                              Container(
+                                width: 15,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: tipoTarjeta == 'visa'
+                                      ? Color(0xFF00E050)
+                                      : Colors.white,
                                 ),
+                              ),
                               const SizedBox(width: 8),
                               Image.asset('assets/images/Visa_icon.png',
                                   height: 40),
@@ -130,16 +146,16 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                           },
                           child: Row(
                             children: [
-                              if (tipoTarjeta ==
-                                  'mastercard') // Mostrar el punto si está seleccionada Mastercard
-                                Container(
-                                  width: 8,
-                                  height: 8,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color(0xFF00E050),
-                                  ),
+                              Container(
+                                width: 15,
+                                height: 15,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: tipoTarjeta == 'mastercard'
+                                      ? Color(0xFF00E050)
+                                      : Colors.white,
                                 ),
+                              ),
                               const SizedBox(width: 8),
                               Image.asset('assets/images/Mastercard_icon.png',
                                   height: 40),
@@ -209,38 +225,21 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                             borderSide: BorderSide(color: Color(0xFF00E050))),
                       ),
                     ),
-                    const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal:
-                              70), // Puedes ajustar el valor de acuerdo a tus necesidades
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF00E050),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8,
-                              horizontal:
-                                  16), // Reducir el padding vertical y horizontal
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  20)), // Redondear bordes
-                        ),
-                        onPressed: () {
-                          // Acción para añadir tarjeta
+                    const SizedBox(height: 35.0),
+                    CustomTextButton(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CustomBottomNavigationBar()),
+                          );
                         },
-                        child: const Text(
-                          'Añadir Tarjeta',
-                          style: TextStyle(
-                            fontSize: 14, // Reducir el tamaño del texto
-                            fontFamily: 'Montserrat',
-                            fontWeight:
-                                FontWeight.bold, // Hacer el texto en negrita
-                            color: Colors.black, // Color del texto en negro
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
+                        text: 'Añadir Tarjeta',
+                        buttonPrimary: true,
+                        width: 233,
+                        height: 30),
+                    const Spacer(),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child:

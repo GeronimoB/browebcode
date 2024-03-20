@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'Screens/bottom_navigation_bar.dart';
+import 'Screens/metodo_pago_screen.dart';
 
 class Plan {
   String nombre;
@@ -69,8 +70,8 @@ class _PlanesPagoState extends State<PlanesPago> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
+    return Material(
+      child: Stack(
         children: [
           Container(
             color: const Color.fromARGB(255, 0, 0, 0),
@@ -83,13 +84,14 @@ class _PlanesPagoState extends State<PlanesPago> {
               fit: BoxFit.cover,
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50), // Espacio en la parte superior
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 120),
-                child: Text(
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(height: 50), // Espacio en la parte superior
+                const Text(
                   'Planes',
                   style: TextStyle(
                     color: Colors.white,
@@ -97,40 +99,44 @@ class _PlanesPagoState extends State<PlanesPago> {
                     fontSize: 24,
                     fontFamily: 'Montserrat',
                   ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: planes.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildCard(index);
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(22.0),
-                child: CustomTextButton(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CustomBottomNavigationBar()),
-                      );
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.all(10),
+                    itemCount: planes.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _buildCard(index);
                     },
-                    text: 'Siguiente',
-                    buttonPrimary: true,
-                    width: 116,
-                    height: 39),
-              ),
-
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SvgPicture.asset(
-                  'assets/icons/Logo.svg',
-                  width: 104,
+                  ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.all(22.0),
+                  child: CustomTextButton(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MetodoDePagoScreen()),
+                        );
+                      },
+                      text: 'Siguiente',
+                      buttonPrimary: true,
+                      width: 116,
+                      height: 39),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: SvgPicture.asset(
+                      'assets/icons/Logo.svg',
+                      width: 104,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ],
       ),
