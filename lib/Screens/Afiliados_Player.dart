@@ -16,78 +16,75 @@ class AfiliadosPlayer extends StatelessWidget {
         ),
       ),
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 32.0), 
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back, color: Color(0xFF05FF00)),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              const Expanded(
-                child: Text(
-                  'AFILIADOS',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24.0,
-                    decoration: TextDecoration.none,
-                  ),
-                  textAlign: TextAlign.center,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            'AFILIADOS',
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
+              decoration: TextDecoration.none,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Colors.transparent, // AppBar transparente
+          elevation: 0, // Quitar sombra
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Color(0xFF00E050)),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        extendBody: true,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 80.0),
+            CustomTextButton(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ListaReferidosScreen()),
+                );
+              },
+              text: 'Generar código',
+              buttonPrimary: true,
+              width: 204,
+              height: 39,
+            ),
+            const SizedBox(height: 60.0),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: const Text(
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Montserrat',
+                  fontSize: 11.0,
+                  fontWeight: FontWeight.w100,
+                  decoration: TextDecoration.none,
                 ),
+                textAlign: TextAlign.left,
               ),
-              const SizedBox(width: 48.0), 
-            ],
-          ),
-          
-          const SizedBox(height: 20.0), 
-Container(
-  padding: const EdgeInsets.all(60.0),
-  child: CustomTextButton(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ListaReferidosScreen()),
-      );
-    },
-    text: 'Generar código',
-    buttonPrimary: true,
-    width: 208,
-    height: 39,
-
-  ),
-),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: const Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-                fontSize: 11.0,
-                fontWeight: FontWeight.w100,
-                decoration: TextDecoration.none,
+            ),
+            // Agregar el logo
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Image.asset('assets/images/Logo.png'),
               ),
-              textAlign: TextAlign.left,
             ),
-          ),
-          // Agregar el logo
-          Expanded(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Image.asset('assets/images/Logo.png'), 
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
+
 class ListaReferidosScreen extends StatelessWidget {
   const ListaReferidosScreen({super.key});
 
@@ -106,9 +103,9 @@ class ListaReferidosScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
           children: [
-                        const SizedBox(height: 32.0),
+            const SizedBox(height: 32.0),
             const Text(
-              'Afiliados', 
+              'Afiliados',
               style: TextStyle(
                 color: Colors.white,
                 fontFamily: 'Montserrat',
@@ -121,7 +118,7 @@ class ListaReferidosScreen extends StatelessWidget {
             const SelectableText(
               'Https://Ejemplo.Com/Ref?=Codigo1',
               style: TextStyle(
-                color: Color(0xFF05FF00), 
+                color: Color(0xFF05FF00),
                 fontFamily: 'Montserrat',
                 fontSize: 15.0,
               ),
@@ -129,7 +126,8 @@ class ListaReferidosScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(30.0),
@@ -139,7 +137,7 @@ class ListaReferidosScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'TU CÓDIGO: ', 
+                    'TU CÓDIGO: ',
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
@@ -148,7 +146,7 @@ class ListaReferidosScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'XXXXXXXX', 
+                    'XXXXXXXX',
                     style: TextStyle(
                       color: Color(0xFF05FF00),
                       fontFamily: 'Montserrat',
@@ -159,7 +157,6 @@ class ListaReferidosScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 24.0),
             const Text(
               'Personas Referidas',
@@ -172,7 +169,10 @@ class ListaReferidosScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 15.0),
-            ...List.generate(3, (index) => const ReferidoItem(email: 'Correo@gmail.com', ganancia: '00,00€')),
+            ...List.generate(
+                3,
+                (index) => const ReferidoItem(
+                    email: 'Correo@gmail.com', ganancia: '00,00€')),
             const SizedBox(height: 24.0),
             const Text(
               'TOTAL:',
@@ -194,26 +194,27 @@ class ListaReferidosScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32.0),
-Container(
-  padding: const EdgeInsets.symmetric(horizontal: 90.0), 
-  child: CustomTextButton(
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const RetirarMenu()),
-    );
-  },
-    text: 'Retirar',
-    buttonPrimary: true,
-    width: 100,
-    height: 40,
-  ),
-),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 90.0),
+              child: CustomTextButton(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RetirarMenu()),
+                  );
+                },
+                text: 'Retirar',
+                buttonPrimary: true,
+                width: 100,
+                height: 40,
+              ),
+            ),
             const SizedBox(height: 32.0),
             Align(
               alignment: Alignment.bottomCenter,
               child: Image.asset(
-                'assets/images/Logo.png', 
+                'assets/images/Logo.png',
                 width: 104,
               ),
             ),
@@ -223,7 +224,6 @@ Container(
     );
   }
 }
-
 
 class ReferidoItem extends StatelessWidget {
   final String email;
@@ -236,11 +236,11 @@ class ReferidoItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       padding: const EdgeInsets.all(16.0),
-      width: 380, 
-      height: 59, 
+      width: 380,
+      height: 59,
       decoration: BoxDecoration(
         color: Colors.black.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(30.0), 
+        borderRadius: BorderRadius.circular(30.0),
         border: Border.all(color: const Color(0xFF05FF00), width: 1),
       ),
       child: Row(
@@ -269,35 +269,34 @@ class ReferidoItem extends StatelessWidget {
   }
 }
 
-
 class RetirarMenu extends StatelessWidget {
   const RetirarMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), 
+      backgroundColor: const Color(0xFF121212),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
           const SizedBox(height: 26.0),
           const Text(
-            'Retiro', 
+            'Retiro',
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.bold,
-              fontSize: 36.0, 
+              fontSize: 36.0,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 30.0),
           const Text(
-            'Total:', 
+            'Total:',
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'Montserrat',
-              fontSize: 19.0, 
+              fontSize: 19.0,
             ),
             textAlign: TextAlign.center,
           ),
@@ -305,36 +304,36 @@ class RetirarMenu extends StatelessWidget {
           const Text(
             '00,00€',
             style: TextStyle(
-              color: Color(0xFF05FF00), 
+              color: Color(0xFF05FF00),
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.bold,
-              fontSize: 40.0, 
+              fontSize: 40.0,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 12.0),
           _buildTextField('Banco'),
-          const SizedBox(height: 8.0), 
+          const SizedBox(height: 8.0),
           _buildTextField('Nombre del titular'),
           const SizedBox(height: 8.0),
           _buildTextField('Número de cuenta'),
           const SizedBox(height: 32.0),
           const SizedBox(height: 40.0),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 90.0),
-                    child: CustomTextButton(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const RetirarMenu()),
-                      );
-                    },
-                      text: 'Enviar',
-                      buttonPrimary: true,
-                      width: 100,
-                      height: 40,
-                    ),
-                  ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 90.0),
+            child: CustomTextButton(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const RetirarMenu()),
+                );
+              },
+              text: 'Enviar',
+              buttonPrimary: true,
+              width: 100,
+              height: 40,
+            ),
+          ),
           const SizedBox(height: 102.0),
           Align(
             alignment: Alignment.bottomCenter,
@@ -350,19 +349,20 @@ class RetirarMenu extends StatelessWidget {
 
   Widget _buildTextField(String labelText) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0), 
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: TextField(
-        style: const TextStyle(color: Colors.white, fontSize: 20.0), 
+        style: const TextStyle(color: Colors.white, fontSize: 20.0),
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: const TextStyle(color: Colors.white, fontFamily: 'Montserrat', fontSize: 12),
+          labelStyle: const TextStyle(
+              color: Colors.white, fontFamily: 'Montserrat', fontSize: 12),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.only(bottom: 8.0), 
+          contentPadding: const EdgeInsets.only(bottom: 8.0),
           enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Color(0xFF05FF00)),
           ),
-          focusedBorder: const UnderlineInputBorder( 
-            borderSide: BorderSide(color: Color(0xFF05FF00)), 
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFF05FF00)),
           ),
         ),
       ),

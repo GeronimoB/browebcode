@@ -98,25 +98,27 @@ class PlayerFullModel extends PlayerFullEntity {
     return PlayerFullModel(
       uid: json['uid'],
       name: json['name'] ?? '',
-      lastName: json['lastName'] ?? '',
+      lastName: json['lastname'] ?? '',
       email: json['email'] ?? '',
-      referralCode: json['referralCode'] ?? '',
+      referralCode: json['referral_code'] ?? '',
       isAgent: json['isAgent'] ?? false,
-      birthDate: json['birthDate'] != null ? json['birthDate'].toDate() : null,
-      dni: json['dni'] ?? '',
+      //birthDate: json['birthday'] != null ? json['birthday'].toDate() : null,
+      dni: json['DNI'] ?? '',
       pais: json['pais'] ?? '',
+      provincia: json['provincia'] ?? '',
       altura: json['altura'] ?? '',
       categoria: json['categoria'] ?? '',
       club: json['club'] ?? '',
-      logrosIndividuales: json['logrosIndividuales'] ?? '',
-      pieDominante: json['pieDominante'] ?? '',
-      seleccionNacional: json['seleccionNacional'] ?? '',
-      categoriaSeleccion: json['categoriaSeleccion'] ?? '',
+      logrosIndividuales: json['logros_individuales'] ?? '',
+      pieDominante: json['pie_ominante'] ?? '',
+      seleccionNacional: json['seleccion_nacional'] ?? '',
+      categoriaSeleccion: json['categoria_seleccion'] ?? '',
       dateCreated:
           json['dateCreated'] != null ? json['dateCreated'].toDate() : null,
       dateUpdated:
           json['dateUpdated'] != null ? json['dateUpdated'].toDate() : null,
-      userImage: json['userImage'] != null ? json['userImage'] : null,
+      userImage:
+          "https://tmssl.akamaized.net/images/foto/galerie/ngolo-kante-fc-chelsea-2020-21-1621596438-63083.jpg?lm=1621596451",
     );
   }
 

@@ -38,6 +38,7 @@ dependencies:
   get: ^4.6.6
   get_it: ^7.6.7
   remove: ^1.0.10
+  video_thumbnail: ^0.5.3
 
 dev_dependencies:
   flutter_test:

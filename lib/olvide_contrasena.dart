@@ -1,3 +1,5 @@
+import 'package:bro_app_to/Intro.dart';
+import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -17,7 +19,7 @@ class OlvideContrasenaPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            const SizedBox(height: 400), // You may adjust this as needed
+            const SizedBox(height: 400),
             const Text(
               'Recuperación de Cuenta',
               style: TextStyle(
@@ -64,28 +66,18 @@ class OlvideContrasenaPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            OutlinedButton(
-              onPressed: () {
-                // Add your onPressed code here
-              },
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(
-                    width: 2.0, color: Colors.green), // Borde en verde neón
-                shape: const StadiumBorder(),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-              ),
-              child: const Text(
-                'Recuperar',
-                style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.normal,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            CustomTextButton(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignInPage()),
+                  );
+                },
+                text: 'Recuperar',
+                buttonPrimary: false,
+                width: 183.5,
+                height: 39),
+
             const SizedBox(height: 50), // You may adjust this as needed
             SvgPicture.asset(
               width: 100,

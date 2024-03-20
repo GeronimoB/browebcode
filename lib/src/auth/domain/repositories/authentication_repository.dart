@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
+
 import '../entitites/user_entity.dart';
 
 abstract class AuthenticationRepository {
-  Future<bool> signIn(UserEntity user);
+  Future<void> signIn(UserEntity user, BuildContext context);
 }
