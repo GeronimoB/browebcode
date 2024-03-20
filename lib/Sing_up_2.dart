@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Sing_up_3.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SignUpScreen_2 extends StatefulWidget {
   @override
@@ -44,15 +45,20 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                       child: Container(
                         decoration: const BoxDecoration(
                           border: Border(
-                            top: BorderSide(color: Colors.transparent, width: 2),
-                            left: BorderSide(color: Colors.transparent, width: 2),
-                            bottom: BorderSide(color: Colors.transparent, width: 2),
+                            top:
+                                BorderSide(color: Colors.transparent, width: 2),
+                            left:
+                                BorderSide(color: Colors.transparent, width: 2),
+                            bottom:
+                                BorderSide(color: Colors.transparent, width: 2),
                           ),
                         ),
                         child: Text(
                           'Mensual',
                           style: TextStyle(
-                            color: _selectedMenu == 'Mensual' ? Colors.green : Colors.white,
+                            color: _selectedMenu == 'Mensual'
+                                ? Colors.green
+                                : Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                             fontFamily: 'Montserrat',
@@ -69,15 +75,20 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                       child: Container(
                         decoration: const BoxDecoration(
                           border: Border(
-                            top: BorderSide(color: Colors.transparent, width: 2),
-                            right: BorderSide(color: Colors.transparent, width: 2),
-                            bottom: BorderSide(color: Colors.transparent, width: 2),
+                            top:
+                                BorderSide(color: Colors.transparent, width: 2),
+                            right:
+                                BorderSide(color: Colors.transparent, width: 2),
+                            bottom:
+                                BorderSide(color: Colors.transparent, width: 2),
                           ),
                         ),
                         child: Text(
                           'Anual',
                           style: TextStyle(
-                            color: _selectedMenu == 'Anual' ? Colors.green : Colors.white,
+                            color: _selectedMenu == 'Anual'
+                                ? Colors.green
+                                : Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                             fontFamily: 'Montserrat',
@@ -105,7 +116,8 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -114,8 +126,11 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: Colors.green, // Text Color (Foreground color)
-                    minimumSize: const Size(double.infinity, 50), // Set width and height
+                    foregroundColor: Colors.white,
+                    backgroundColor:
+                        Colors.green, // Text Color (Foreground color)
+                    minimumSize:
+                        const Size(double.infinity, 50), // Set width and height
                   ),
                   child: const Text(
                     'Siguiente',
@@ -132,8 +147,8 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Image.asset(
-                  'assets/Logo.png', // Nombre de la imagen del logo
                   width: 104,
+                  'assets/images/Logo.png',
                 ),
               ),
             ],
@@ -156,7 +171,8 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          border: Border.all(color: isSelected ? Colors.lightGreen : Colors.green, width: 2),
+          border: Border.all(
+              color: isSelected ? Colors.lightGreen : Colors.green, width: 2),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -165,11 +181,12 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
             Row(
               children: [
                 Image.asset(
-                  'assets/Logo.png', 
                   width: 62,
-                  height: 32, 
+                  height: 32,
+                  'assets/images/Logo.png',
                 ),
-                const SizedBox(width: 10), // Espacio entre el logo y el texto "Basic"
+                const SizedBox(
+                    width: 10), // Espacio entre el logo y el texto "Basic"
                 const Text(
                   'Basic',
                   style: TextStyle(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
 import 'package:bro_app_to/olvide_contrasena.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SignInScreen extends StatelessWidget {
   @override
@@ -155,8 +156,8 @@ class SignInScreen extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Image.asset(
-                      'assets/Logo.png',
                       width: 104,
+                      'assets/images/Logo.png',
                     ),
                   ),
                 ),
