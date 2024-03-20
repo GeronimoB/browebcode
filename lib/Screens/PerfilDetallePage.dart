@@ -18,12 +18,13 @@ class PerfilDetallePage extends StatelessWidget {
         children: <Widget>[
           ListTile(
             leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.green),
+              icon: const Icon(Icons.arrow_back, color: Color(0xFF00E050)),
               onPressed: () => Navigator.pop(context),
             ),
             title: Text(
               'Perfil Jugador Info',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             trailing: SizedBox(width: 24), // To center the title
           ),
@@ -34,12 +35,16 @@ class PerfilDetallePage extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   radius: 75.0,
-                  backgroundImage: AssetImage('path/to/player/image.png'), // Tu imagen de jugador aquí.
+                  backgroundImage: AssetImage(
+                      'path/to/player/image.png'), // Tu imagen de jugador aquí.
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Nombres y Apellidos',
-                  style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
                 ),
                 Text(
                   'Fecha de Nacimiento\nPaís, Provincia\nCategoría en la que juega\nEscuela deportiva en la que juega\nLogros individuales\nSelección Nacional Masculina U18',
@@ -54,7 +59,8 @@ class PerfilDetallePage extends StatelessWidget {
                   onPressed: () {
                     // Acción para ir al chat
                   },
-                  child: Text('¡Vamos al Chat!', style: TextStyle(color: Colors.green)),
+                  child: Text('¡Vamos al Chat!',
+                      style: TextStyle(color: Colors.green)),
                 ),
               ],
             ),
@@ -72,6 +78,7 @@ void _showPerfilDetalle(BuildContext context) {
     builder: (BuildContext bc) {
       return PerfilDetallePage();
     },
-    isScrollControlled: true, // Si quieres que la hoja se extienda a toda la pantalla.
+    isScrollControlled:
+        true, // Si quieres que la hoja se extienda a toda la pantalla.
   );
 }

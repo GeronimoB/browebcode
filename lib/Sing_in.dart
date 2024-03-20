@@ -6,7 +6,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'components/custom_text_button.dart';
 
-class SignInScreen extends StatelessWidget {
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({super.key});
+
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+  bool rememberMe = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,10 +131,10 @@ class SignInScreen extends StatelessWidget {
                 const SizedBox(
                   height: 5,
                 ),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Recordar sesión',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
@@ -136,7 +144,30 @@ class SignInScreen extends StatelessWidget {
                         color: Colors.white,
                       ),
                     ),
-                    Icon(Icons.check_box, color: Colors.white),
+                    Checkbox(
+                      value:
+                          rememberMe, // Deberías manejar el estado del checkbox en tu lógica
+                      onChanged: (value) {
+                        setState(() {
+                          rememberMe = !rememberMe;
+                        });
+                      },
+                      fillColor: MaterialStateProperty.resolveWith<Color?>(
+                        (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return const Color(
+                                0xff00E050); // Color cuando está seleccionado
+                          }
+                          return Colors
+                              .white; // Color por defecto (fondo blanco)
+                        },
+                      ),
+
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(5), // Bordes redondeados
+                      ),
+                    ),
                     SizedBox(width: 5),
                   ],
                 ),

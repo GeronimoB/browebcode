@@ -4,21 +4,21 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class MensajesPage extends StatelessWidget {
   const MensajesPage({Key? key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 35.0),
         Container(
           color: Colors.transparent,
-          padding: const EdgeInsets.symmetric(vertical: 20),
+          padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
           child: const Center(
             child: Text(
-              'Mensajes',
+              'MENSAJE',
               style: TextStyle(
-                fontSize: 20,
+                fontFamily: 'Montserrat',
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -27,7 +27,7 @@ class MensajesPage extends StatelessWidget {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: 3,
+            itemCount: 8,
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
@@ -87,8 +87,8 @@ class ChatWidget extends StatelessWidget {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20.0),
         child: SvgPicture.asset(
-          width: 104,
-          'assets/images/icons/X.svg',
+          width: 34,
+          'assets/icons/X.svg',
         ),
       ),
       child: Container(
@@ -104,31 +104,11 @@ class ChatWidget extends StatelessWidget {
           child: Row(
             children: [
               const SizedBox(width: 16.0),
-              Container(
-                width: 64, 
-                height: 64, 
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors
-                      .black, // Cambia el color de fondo según sea necesario
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(
-                          0.1), // Cambia el color y la opacidad de la sombra según sea necesario
-                      blurRadius:
-                          10, // Cambia el radio de desenfoque según sea necesario
-                      offset: Offset(0,
-                          3), // Cambia el desplazamiento de la sombra según sea necesario
-                    ),
-                  ],
-                ),
-                child: ClipOval(
-                  child: Image.asset(
-                    imageURL,
-                    fit: BoxFit.contain,
-                    width: 64, // Doble del radio del círculo
-                    height: 64, // Doble del radio del círculo
-                  ),
+              ClipOval(
+                child: Image.asset(
+                  imageURL,
+                  width: 64,
+                  height: 64,
                 ),
               ),
               const SizedBox(width: 35.0),

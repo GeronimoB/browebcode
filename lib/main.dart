@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const MySplashScreen(), // Cambio a la pantalla de introducción
+      home: const MySplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Screens/AgregarTargetaScreen.dart';
+import 'package:bro_app_to/Screens/agregar_tarjeta_screen.dart';
 class MetodoDePagoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
