@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AgregarTarjetaScreen extends StatefulWidget {
-  AgregarTarjetaScreen({Key? key}) : super(key: key);
+  const AgregarTarjetaScreen({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _AgregarTarjetaScreenState createState() => _AgregarTarjetaScreenState();
 }
 
@@ -14,25 +15,8 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
   Widget build(BuildContext context) {
     String imagenTarjeta = tipoTarjeta == 'visa' ? 'assets/images/Visa_icon.png' : 'assets/images/Mastercard_icon.png';
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'MÉTODO DE PAGO',
-          style: TextStyle(
-            fontFamily: 'Montserrat',
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Colors.black,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Color(0xFF00E050)),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      backgroundColor: Colors.black,
-      body: Container(
+    return SafeArea(
+      child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -40,104 +24,129 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
             colors: [Color(0xFF212121), Color(0xFF121212)],
           ),
         ),
-        padding: EdgeInsets.all(26.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'MÉTODO DE PAGO',
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            backgroundColor: Colors.transparent, // AppBar transparente
+            elevation: 0, // Quitar sombra
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Color(0xFF00E050)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+          backgroundColor: Colors.transparent, // Fondo de scaffold transparente
+          body: Container(
+            padding: const EdgeInsets.all(26.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+            const Text(
               'Disponibles',
               style: TextStyle(
-                color: Colors.green,
+                color: Color(0xFF00E050),
                 fontSize: 18,
                 fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold
               ),
             ),
             Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Color(0xFF00E050)),
+                border: Border.all(color: const Color(0xFF00E050)),
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: ListTile(
                 leading: Image.asset(imagenTarjeta),
-                title: Text(
+                title: const Text(
                   'Titular XXXXXXXX\nNúmero XXXXXXXXXXXX',
                     style: TextStyle(
                       fontFamily: 'Montserrat',
                       color: Colors.white,
                       fontSize: 10,
+                      
                     ),
                     softWrap: false,
                 ),
                 trailing: IconButton(
-                  icon: Icon(Icons.close, color: Color(0xFF00E050)),
+                  icon: const Icon(Icons.close, color: Color(0xFF00E050)),
                   onPressed: () {
                     // Acción para eliminar tarjeta
                   },
                 ),
               ),
             ),
-            SizedBox(height: 16.0),
-            Text(
+            const SizedBox(height: 16.0),
+            const Text(
               'Agregar Tarjeta',
               style: TextStyle(
-                color: Colors.green,
+                color: Color(0xFF00E050),
                 fontSize: 18,
                 fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold
               ),
             ),
+            const SizedBox(height: 16.0),
             Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    GestureDetector(
-      onTap: () {
-        setState(() {
-          tipoTarjeta = 'visa';
-        });
-      },
-      child: Row(
+              
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (tipoTarjeta == 'visa') // Mostrar el punto si está seleccionada Visa
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFF00E050),
+          
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                tipoTarjeta = 'visa';
+              });
+            },
+            child: Row(
+              children: [
+                if (tipoTarjeta == 'visa') // Mostrar el punto si está seleccionada Visa
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF00E050),
+                    ),
+                  ),
+                const SizedBox(width: 8),
+                Image.asset('assets/images/Visa_icon.png', height: 40),
+              ],
+            ),
+          ),
+            const SizedBox(width: 16),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  tipoTarjeta = 'mastercard';
+                });
+              },
+              child: Row(
+                children: [
+                  if (tipoTarjeta == 'mastercard') // Mostrar el punto si está seleccionada Mastercard
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF00E050),
+                      ),
+                    ),
+                  const SizedBox(width: 8),
+                  Image.asset('assets/images/Mastercard_icon.png', height: 40),
+                ],
               ),
             ),
-          SizedBox(width: 8),
-          Image.asset('assets/images/Visa_icon.png', height: 40),
-        ],
-      ),
-    ),
-    SizedBox(width: 16),
-    GestureDetector(
-      onTap: () {
-        setState(() {
-          tipoTarjeta = 'mastercard';
-        });
-      },
-      child: Row(
-        children: [
-          if (tipoTarjeta == 'mastercard') // Mostrar el punto si está seleccionada Mastercard
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xFF00E050),
-              ),
-            ),
-          SizedBox(width: 8),
-          Image.asset('assets/images/Mastercard_icon.png', height: 40),
-        ],
-      ),
-    ),
-  ],
-),
+          ],
+        ),
 
-            SizedBox(height: 16.0),
-            TextField(
+            const SizedBox(height: 16.0),
+            const TextField(
               style: TextStyle(color: Colors.white,fontFamily: 'Montserrat', fontSize: 12),
               decoration: InputDecoration(
                 labelText: 'Nombres del Titular',
@@ -145,7 +154,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                 enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xFF00E050))),
               ),
             ),
-            TextField(
+            const TextField(
               style: TextStyle(color: Colors.white,fontFamily: 'Montserrat', fontSize: 12),
               decoration: InputDecoration(
                 labelText: 'Número de Tarjeta',
@@ -153,7 +162,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                 enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xFF00E050))),
               ),
             ),
-            TextField(
+            const TextField(
               style: TextStyle(color: Colors.white,fontFamily: 'Montserrat', fontSize: 12),
               decoration: InputDecoration(
                 labelText: 'Fecha de Caducidad',
@@ -161,7 +170,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                 enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xFF00E050))),
               ),
             ),
-            TextField(
+            const TextField(
               style: TextStyle(color: Colors.white,fontFamily: 'Montserrat', fontSize: 12),
               decoration: InputDecoration(
                 labelText: 'Código de seguridad',
@@ -169,19 +178,19 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                 enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(0xFF00E050))),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 70), // Puedes ajustar el valor de acuerdo a tus necesidades
+              padding: const EdgeInsets.symmetric(horizontal: 70), // Puedes ajustar el valor de acuerdo a tus necesidades
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF00E050),
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16), // Reducir el padding vertical y horizontal
+                  backgroundColor: const Color(0xFF00E050),
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16), // Reducir el padding vertical y horizontal
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)), // Redondear bordes
                 ),
                 onPressed: () {
                   // Acción para añadir tarjeta
                 },
-                child: Text(
+                child: const Text(
                   'Añadir Tarjeta',
                   style: TextStyle(
                     fontSize: 14, // Reducir el tamaño del texto
@@ -193,7 +202,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
               ),
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Align(
               alignment: Alignment.bottomCenter,
               child: Image.asset('assets/images/Logo.png', width: 80),
@@ -201,6 +210,8 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
           ],
         ),
       ),
+      )
+      )
     );
   }
 }

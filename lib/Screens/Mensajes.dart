@@ -1,4 +1,4 @@
-import 'package:bro_app_to/Screens/Chatpage.dart';
+import 'package:bro_app_to/Screens/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -34,7 +34,7 @@ class MensajesPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ChatPage(
+                      builder: (context) => const ChatPage(
                         name: 'Juan Lopez',
                       ),
                     ),
@@ -110,15 +110,15 @@ class ChatWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors
-                      .black, // Cambia el color de fondo según sea necesario
+                      .black, 
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(
-                          0.1), // Cambia el color y la opacidad de la sombra según sea necesario
+                          0.1), 
                       blurRadius:
-                          10, // Cambia el radio de desenfoque según sea necesario
-                      offset: Offset(0,
-                          3), // Cambia el desplazamiento de la sombra según sea necesario
+                          10, 
+                      offset: const Offset(0,
+                          3),
                     ),
                   ],
                 ),
@@ -126,8 +126,8 @@ class ChatWidget extends StatelessWidget {
                   child: Image.asset(
                     imageURL,
                     fit: BoxFit.contain,
-                    width: 64, // Doble del radio del círculo
-                    height: 64, // Doble del radio del círculo
+                    width: 64, 
+                    height: 64, 
                   ),
                 ),
               ),

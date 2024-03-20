@@ -97,7 +97,7 @@ class _ChatPageState extends State<ChatPage> {
           Flexible(
             child: TextField(
               controller: _messageController,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 hintText: "Enviar un mensaje...",
                 hintStyle: TextStyle(color: Colors.white54),

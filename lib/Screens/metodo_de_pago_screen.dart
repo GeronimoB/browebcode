@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Screens/AgregarTargetaScreen.dart';
+import 'package:bro_app_to/Screens/agregar_targeta_screen.dart';
 class MetodoDePagoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class MetodoDePagoScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Color(0xFF00E050), 
-                    fontSize: 26,
+                    fontSize: 40,
                     fontFamily: 'Montserrat',
                     fontWeight: FontWeight.bold,
                   ),

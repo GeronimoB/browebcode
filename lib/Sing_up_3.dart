@@ -1,4 +1,4 @@
-import 'package:bro_app_to/Screens/SelectCamp.dart';
+import 'package:bro_app_to/Screens/select_camp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
