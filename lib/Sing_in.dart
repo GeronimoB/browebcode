@@ -1,3 +1,4 @@
+import 'package:bro_app_to/Screens/bottom_navigation_bar_player.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
 import 'package:bro_app_to/olvide_contrasena.dart';
@@ -121,8 +122,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => true
-                                ? CustomBottomNavigationBar()
-                                : PlayerProfile()),
+                              ? CustomBottomNavigationBarPlayer()
+                              // ignore: dead_code
+                              : CustomBottomNavigationBar(),
+                        )
                       );
                     },
                     text: 'Entrar',

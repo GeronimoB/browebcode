@@ -1,3 +1,4 @@
+import 'package:bro_app_to/Screens/Afiliados_Player.dart';
 import 'package:flutter/material.dart';
 
 class ConfigProfilePlayer extends StatelessWidget {
@@ -43,7 +44,7 @@ class ConfigProfilePlayer extends StatelessWidget {
             colors: [Color(0xFF212121), Color(0xFF121212)],
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 15.0), // Padding a los lados
+        padding: const EdgeInsets.symmetric(horizontal: 15.0), 
         child: Column(
           children: [
             Expanded(
@@ -59,7 +60,6 @@ class ConfigProfilePlayer extends StatelessWidget {
                   _buildListItem('AFILIADOS', context, true),
                   _buildListItem('PEDIDOS', context, true),
                   _buildListItem('SERVICIOS', context, true),
-                  // No se agrega espacio entre los elementos, para reducir el espacio vertical
                 ],
               ),
             ),
@@ -77,20 +77,27 @@ class ConfigProfilePlayer extends StatelessWidget {
     );
   }
 
-  Widget _buildListItem(String title, BuildContext context, bool showTrailingIcon) {
-    return ListTile(
-      title: Text(
-        title,
-        style: const TextStyle(
-          color: Colors.white,
-          fontFamily: 'Montserrat',
-          fontSize: 16,
-          fontWeight: FontWeight.w500, 
-        ),
+Widget _buildListItem(String title, BuildContext context, bool showTrailingIcon) {
+  return ListTile(
+    title: Text(
+      title,
+      style: const TextStyle(
+        color: Colors.white,
+        fontFamily: 'Montserrat',
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
       ),
-      trailing: showTrailingIcon ? const Icon(Icons.chevron_right, color: Color(0xFF05FF00)) : null,
-      onTap: () {
-      },
-    );
-  }
+    ),
+    trailing: showTrailingIcon ? const Icon(Icons.chevron_right, color: Color(0xFF05FF00)) : null,
+    onTap: () {
+      if (title == 'AFILIADOS') {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => AfiliadosPlayer()),
+        );
+      } else {
+        // Manejar otras opciones de la lista aquí.
+      }
+    },
+  );
+}
 }

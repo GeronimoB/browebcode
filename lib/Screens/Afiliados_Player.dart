@@ -1,83 +1,368 @@
+import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AfiliadosPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        children: [
-          GenerarCodigoScreen(),
-          ListaReferidosScreen(),
-          RetiroFondosScreen(),
-        ],
-      ),
-    );
-  }
-}
-
-class GenerarCodigoScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
     return Container(
-      // Usar el mismo estilo de fondo que las otras pantallas
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF212121), Color(0xFF121212)],
+        ),
+      ),
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ElevatedButton(
-            onPressed: () {
-              // Implementar generación de código
-            },
-            child: Text('Generar Código'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF05FF00), // Color del botón
+          const SizedBox(height: 32.0), 
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Color(0xFF05FF00)),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const Expanded(
+                child: Text(
+                  'AFILIADOS',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
+                    decoration: TextDecoration.none,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(width: 48.0), 
+            ],
+          ),
+          
+          const SizedBox(height: 20.0), 
+Container(
+  padding: const EdgeInsets.all(60.0),
+  child: CustomTextButton(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ListaReferidosScreen()),
+      );
+    },
+    text: 'Generar código',
+    buttonPrimary: true,
+    width: 208,
+    height: 39,
+
+  ),
+),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: const Text(
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Montserrat',
+                fontSize: 11.0,
+                fontWeight: FontWeight.w100,
+                decoration: TextDecoration.none,
+              ),
+              textAlign: TextAlign.left,
             ),
           ),
-          const Text(
-            'Lorem ipsum dolor sit amet...',
-            // Estilo del texto
+          // Agregar el logo
+          Expanded(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Image.asset('assets/images/Logo.png'), 
+            ),
           ),
-          // Agregar el resto de los elementos de la UI
         ],
       ),
     );
   }
 }
-
 class ListaReferidosScreen extends StatelessWidget {
+  const ListaReferidosScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF212121), Color(0xFF121212)],
+          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+          children: [
+                        const SizedBox(height: 32.0),
+            const Text(
+              'Afiliados', 
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16.0),
+            const SelectableText(
+              'Https://Ejemplo.Com/Ref?=Codigo1',
+              style: TextStyle(
+                color: Color(0xFF05FF00), 
+                fontFamily: 'Montserrat',
+                fontSize: 15.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16.0),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(30.0),
+                border: Border.all(color: const Color(0xFF05FF00), width: 1),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'TU CÓDIGO: ', 
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                  Text(
+                    'XXXXXXXX', 
+                    style: TextStyle(
+                      color: Color(0xFF05FF00),
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 24.0),
+            const Text(
+              'Personas Referidas',
+              style: TextStyle(
+                color: Color(0xFF05FF00),
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 15.0),
+            ...List.generate(3, (index) => const ReferidoItem(email: 'Correo@gmail.com', ganancia: '00,00€')),
+            const SizedBox(height: 24.0),
+            const Text(
+              'TOTAL:',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Montserrat',
+                fontSize: 15.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const Text(
+              '00,00€',
+              style: TextStyle(
+                color: Color(0xFF05FF00),
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold,
+                fontSize: 40.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32.0),
+Container(
+  padding: const EdgeInsets.symmetric(horizontal: 90.0), 
+  child: CustomTextButton(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const RetirarMenu()),
+    );
+  },
+    text: 'Retirar',
+    buttonPrimary: true,
+    width: 100,
+    height: 40,
+  ),
+),
+            const SizedBox(height: 32.0),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Image.asset(
+                'assets/images/Logo.png', 
+                width: 104,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class ReferidoItem extends StatelessWidget {
+  final String email;
+  final String ganancia;
+
+  const ReferidoItem({super.key, required this.email, required this.ganancia});
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      // Usar el mismo estilo de fondo que las otras pantallas
-      padding: EdgeInsets.all(16.0),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      margin: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.all(16.0),
+      width: 380, 
+      height: 59, 
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(30.0), 
+        border: Border.all(color: const Color(0xFF05FF00), width: 1),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-
+          Text(
+            email,
+            style: const TextStyle(
+              color: Colors.white,
+              fontFamily: 'Montserrat',
+              fontSize: 13.0,
+            ),
+          ),
+          Text(
+            ganancia,
+            style: const TextStyle(
+              color: Color(0xFF05FF00),
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
+              fontSize: 13.0,
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class RetiroFondosScreen extends StatelessWidget {
+
+class RetirarMenu extends StatelessWidget {
+  const RetirarMenu({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Scaffold(
+      backgroundColor: const Color(0xFF121212), 
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
         children: [
-          ElevatedButton(
-            onPressed: () {
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF05FF00), 
+          const SizedBox(height: 26.0),
+          const Text(
+            'Retiro', 
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
+              fontSize: 36.0, 
             ),
-            child: const Text('Enviar'),
+            textAlign: TextAlign.center,
           ),
-
+          const SizedBox(height: 30.0),
+          const Text(
+            'Total:', 
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Montserrat',
+              fontSize: 19.0, 
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8.0),
+          const Text(
+            '00,00€',
+            style: TextStyle(
+              color: Color(0xFF05FF00), 
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
+              fontSize: 40.0, 
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12.0),
+          _buildTextField('Banco'),
+          const SizedBox(height: 8.0), 
+          _buildTextField('Nombre del titular'),
+          const SizedBox(height: 8.0),
+          _buildTextField('Número de cuenta'),
+          const SizedBox(height: 32.0),
+          const SizedBox(height: 40.0),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 90.0),
+                    child: CustomTextButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const RetirarMenu()),
+                      );
+                    },
+                      text: 'Enviar',
+                      buttonPrimary: true,
+                      width: 100,
+                      height: 40,
+                    ),
+                  ),
+          const SizedBox(height: 102.0),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Image.asset(
+              'assets/images/Logo.png',
+              width: 104,
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTextField(String labelText) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0), 
+      child: TextField(
+        style: const TextStyle(color: Colors.white, fontSize: 20.0), 
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: const TextStyle(color: Colors.white, fontFamily: 'Montserrat', fontSize: 12),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.only(bottom: 8.0), 
+          enabledBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFF05FF00)),
+          ),
+          focusedBorder: const UnderlineInputBorder( 
+            borderSide: BorderSide(color: Color(0xFF05FF00)), 
+          ),
+        ),
       ),
     );
   }
