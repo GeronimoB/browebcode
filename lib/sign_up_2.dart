@@ -5,7 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'components/custom_dropdown.dart';
 import 'components/custom_text_button.dart';
 
-
 class SignUpScreen2 extends StatelessWidget {
   const SignUpScreen2({super.key});
 
