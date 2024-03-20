@@ -224,6 +224,26 @@ class SignUpScreen2 extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
+                const TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Código Afiliado',
+                    labelStyle: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w500,
+                      fontStyle: FontStyle.italic,
+                      fontSize: 12,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xFF00F056), width: 2),
+                    ),
+                  ),
+                  style:
+                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                ),
+                const SizedBox(height: 25),
                 CustomTextButton(
                     onTap: () {
                       Navigator.push(
@@ -236,14 +256,15 @@ class SignUpScreen2 extends StatelessWidget {
                     buttonPrimary: true,
                     width: 116,
                     height: 39),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Image.asset(
-                    width: 104,
-                    'assets/images/Logo.png',
-                  ),
-                ),
               ],
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            left: MediaQuery.of(context).size.width / 2 - 52,
+            child: Image.asset(
+              width: 104,
+              'assets/images/Logo.png',
             ),
           ),
         ],

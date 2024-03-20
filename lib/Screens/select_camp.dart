@@ -18,11 +18,22 @@ class SelectCampState extends State<SelectCamp> {
     var screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: <Widget>[
-          Positioned.fill(
-            child: Image.asset('assets/images/Fondo.png', fit: BoxFit.cover),
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromARGB(255, 44, 44, 44),
+                  Color.fromARGB(255, 0, 0, 0),
+                ],
+              ),
+            ),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
           ),
           Positioned(
             top: screenSize.height * 0.1,
@@ -36,114 +47,89 @@ class SelectCampState extends State<SelectCamp> {
             ),
           ),
           Positioned(
-            top: screenSize.height * 0.55,
-            left: screenSize.width * 0.43,
-            child: GestureDetector(
-              onTap: () => _showPositionDialog("Portero"),
-              child: Image.asset(
-                'assets/images/Nro1.png',
+            top: screenSize.height * 0.1,
+            left: 0,
+            right: 0,
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.center,
+                  colors: [
+                    Color.fromARGB(255, 40, 40, 40),
+                    Color.fromARGB(0, 43, 43, 43),
+                  ],
+                ),
               ),
+              width: MediaQuery.of(context).size.width,
+              height: 394,
             ),
           ),
-          Positioned(
-            top: screenSize.height * 0.52,
-            left: screenSize.width * 0.85,
-            child: GestureDetector(
-              onTap: () => _showPositionDialog("Lateral Derecho"),
-              child: Image.asset(
-                'assets/images/Nro2.png',
-              ),
-            ),
+          playerPic(
+            "Portero",
+            "1",
+            screenSize.height * 0.55,
+            screenSize.width * 0.43,
           ),
-          Positioned(
-            top: screenSize.height * 0.52,
-            left: screenSize.width * 0.01,
-            child: GestureDetector(
-              onTap: () => _showPositionDialog("Lateral Izquierdo"),
-              child: Image.asset(
-                'assets/images/Nro3.png',
-              ),
-            ),
+          playerPic(
+            "Lateral Derecho",
+            "2",
+            screenSize.height * 0.52,
+            screenSize.width * 0.85,
           ),
-          Positioned(
-            top: screenSize.height * 0.5,
-            left: screenSize.width * 0.6,
-            child: GestureDetector(
-              onTap: () => _showPositionDialog("Defensa Central"),
-              child: Image.asset(
-                'assets/images/Nro4.png',
-              ),
-            ),
+          playerPic(
+            "Lateral Izquierdo",
+            "3",
+            screenSize.height * 0.52,
+            screenSize.width * 0.01,
           ),
-          Positioned(
-            top: screenSize.height * 0.5,
-            left: screenSize.width * 0.26,
-            child: GestureDetector(
-              onTap: () => _showPositionDialog("Defensa Central"),
-              child: Image.asset(
-                'assets/images/Nro5.png',
-              ),
-            ),
+          playerPic(
+            "Defensa Central",
+            "4",
+            screenSize.height * 0.5,
+            screenSize.width * 0.6,
           ),
-          Positioned(
-            top: screenSize.height * 0.45,
-            left: screenSize.width * 0.17,
-            child: GestureDetector(
-              onTap: () => _showPositionDialog("Mediocampista Defensivo"),
-              child: Image.asset(
-                'assets/images/Nro6.png',
-              ),
-            ),
+          playerPic(
+            "Defensa Central",
+            "5",
+            screenSize.height * 0.5,
+            screenSize.width * 0.26,
           ),
-          Positioned(
-            top: screenSize.height * 0.41,
-            left: screenSize.width * 0.73,
-            child: GestureDetector(
-              onTap: () => _showPositionDialog("Mediocampista Derecho"),
-              child: Image.asset(
-                'assets/images/Nro7.png',
-              ),
-            ),
+          playerPic(
+            "Mediocampista Defensivo",
+            "6",
+            screenSize.height * 0.45,
+            screenSize.width * 0.17,
           ),
-          Positioned(
-            top: screenSize.height * 0.45,
-            left: screenSize.width * 0.67,
-            child: GestureDetector(
-              onTap: () => _showPositionDialog("Mediocampista Central"),
-              child: Image.asset(
-                'assets/images/Nro8.png',
-              ),
-            ),
+          playerPic(
+            "Mediocampista Derecho",
+            "7",
+            screenSize.height * 0.41,
+            screenSize.width * 0.73,
           ),
-          Positioned(
-            top: screenSize.height * 0.41,
-            left: screenSize.width * 0.47,
-            child: GestureDetector(
-              onTap: () => _showPositionDialog("Delantero Centro"),
-              child: Image.asset(
-                'assets/images/Nro9.png',
-              ),
-            ),
+          playerPic(
+            "Mediocampista Central",
+            "8",
+            screenSize.height * 0.45,
+            screenSize.width * 0.67,
           ),
-          Positioned(
-            top: screenSize.height * 0.44,
-            left: screenSize.width * 0.4,
-            child: GestureDetector(
-              onTap: () => _showPositionDialog("Mediocampista Ofensivo"),
-              child: Image.asset(
-                'assets/images/Nro10.png',
-              ),
-            ),
+          playerPic(
+            "Delantero Centro",
+            "9",
+            screenSize.height * 0.40,
+            screenSize.width * 0.475,
           ),
-          Positioned(
-            top: screenSize.height * 0.41,
-            left: screenSize.width * 0.1,
-            child: GestureDetector(
-              onTap: () => _showPositionDialog("Extremo Izquierdo"),
-              child: Image.asset(
-                'assets/images/Nro11.png',
-              ),
-            ),
+          playerPic(
+            "Delantero Centro",
+            "10",
+            screenSize.height * 0.44,
+            screenSize.width * 0.4,
+          ),
+          playerPic(
+            "Extremo Izquierdo",
+            "11",
+            screenSize.height * 0.41,
+            screenSize.width * 0.1,
           ),
           Positioned(
             top: screenSize.height * 0.7,
@@ -162,6 +148,20 @@ class SelectCampState extends State<SelectCamp> {
                             _acceptedTerms = value!;
                           });
                         },
+                        fillColor: MaterialStateProperty.resolveWith<Color?>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.selected)) {
+                              return const Color(
+                                  0xff00E050); // Color cuando está seleccionado
+                            }
+                            return Colors
+                                .white; // Color por defecto (fondo blanco)
+                          },
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(5), // Bordes redondeados
+                        ),
                       ),
                       Expanded(
                         child: GestureDetector(
@@ -170,12 +170,24 @@ class SelectCampState extends State<SelectCamp> {
                               _acceptedTerms = !_acceptedTerms;
                             });
                           },
-                          child: const Text(
-                            'Confirmo y acepto los Términos y Condiciones y he leído la Política de Privacidad',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              color: Colors.white,
-                              fontSize: 8,
+                          child: RichText(
+                            text: const TextSpan(
+                              text: 'Confirmo y acepto los ',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 11,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text:
+                                      'Términos y Condiciones y he leído la Política de Privacidad.',
+                                  style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -203,8 +215,7 @@ class SelectCampState extends State<SelectCamp> {
             ),
           ),
           Positioned(
-            bottom:
-                screenSize.height * 0.03, // Espacio desde el fondo para el logo
+            bottom: screenSize.height * 0.03,
             left: 0,
             right: 0,
             child: Center(
@@ -220,7 +231,6 @@ class SelectCampState extends State<SelectCamp> {
   }
 
   void _showPositionDialog(String position) {
-    // Debería ser una variable de estado para que pueda actualizar la interfaz de usuario cuando cambie
     bool? isSelected;
 
     showDialog(
@@ -230,24 +240,24 @@ class SelectCampState extends State<SelectCamp> {
           builder: (context, setState) {
             return AlertDialog(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
+                  borderRadius: BorderRadius.circular(23)),
               backgroundColor: const Color(0xFF3B3B3B),
-              title: Text(
-                "¿Eres $position?",
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Text(
+                    "¿Eres $position?",
+                    style: const TextStyle(
+                        color: Color(0xff00E050),
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
                   Row(
+                    mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      const Text("SÍ", style: TextStyle(color: Colors.white)),
                       Radio<bool>(
                         value: true,
                         groupValue: isSelected,
@@ -255,9 +265,15 @@ class SelectCampState extends State<SelectCamp> {
                           // Actualiza el estado para reflejar la nueva selección
                           setState(() => isSelected = value);
                         },
-                        activeColor: Colors.green,
+                        activeColor: const Color(0xff00E050),
                       ),
-                      const Text("NO", style: TextStyle(color: Colors.white)),
+                      const Text("SÍ",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20)),
+                      const SizedBox(width: 25),
                       Radio<bool>(
                         value: false,
                         groupValue: isSelected,
@@ -265,30 +281,67 @@ class SelectCampState extends State<SelectCamp> {
                           // Actualiza el estado para reflejar la nueva selección
                           setState(() => isSelected = value);
                         },
-                        activeColor: Colors.green,
+                        activeColor: const Color(0xff00E050),
                       ),
+                      const Text("NO",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20)),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      shape: const StadiumBorder(),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop(isSelected);
-                    },
-                    child: const Text(
-                      "Listo",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
+                  CustomTextButton(
+                      onTap: () {
+                        Navigator.of(context).pop(isSelected);
+                      },
+                      text: "Listo",
+                      buttonPrimary: true,
+                      width: 174,
+                      height: 30),
                 ],
               ),
             );
           },
         );
       },
+    );
+  }
+
+  Widget playerPic(String position, String number, double top, double left) {
+    return Positioned(
+      top: top,
+      left: left,
+      child: GestureDetector(
+        onTap: () {
+          _showPositionDialog(position);
+        },
+        child: Column(
+          children: [
+            Container(
+                width: 35,
+                height: 35,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white, width: 3),
+                    borderRadius: BorderRadius.circular(17.5)),
+                child: Center(
+                  child: Text(
+                    number,
+                    style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        letterSpacing: 1,
+                        height: 1),
+                  ),
+                )),
+            Image.asset(
+              'assets/images/football-player 1.png',
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

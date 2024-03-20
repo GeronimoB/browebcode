@@ -120,8 +120,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => PlayerProfile()),
-                            // builder: (context) => CustomBottomNavigationBar()),
+                            builder: (context) => true
+                                ? CustomBottomNavigationBar()
+                                : PlayerProfile()),
                       );
                     },
                     text: 'Entrar',
