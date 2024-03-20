@@ -1,11 +1,20 @@
+import 'package:bro_app_to/Screens/config_profile_player.dart';
 import 'package:bro_app_to/Screens/full_screen_image_page.dart';
 import 'package:flutter/material.dart';
 
-class PlayerProfile extends StatelessWidget {
+class PlayerProfile extends StatefulWidget {
+  @override
+  _PlayerProfileState createState() => _PlayerProfileState();
+}
+
+class _PlayerProfileState extends State<PlayerProfile> {
+  Map<String, bool> destacadas = {
+    'assets/images/jugador1.png': false,
+  };
+
   @override
   Widget build(BuildContext context) {
-    double gridSpacing = 4.0; // Espacio más pequeño entre las imágenes
-
+    double gridSpacing = 4.0;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -27,7 +36,11 @@ class PlayerProfile extends StatelessWidget {
                 child: IconButton(
                   icon: const Icon(Icons.settings, color: Color(0xFF00E050)),
                   onPressed: () {
-                    // Acción para el botón de configuración
+                                        Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ConfigProfilePlayer(),
+                      ),
+                    );
                   },
                 ),
               ),
@@ -51,8 +64,8 @@ class PlayerProfile extends StatelessWidget {
             ),
             Container(
               margin: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 10),
-              height: 4.0, // Barra verde más ancha
-              width: double.infinity, // Hace que la barra sea tan ancha como las tres imágenes juntas, incluido el espacio entre ellas
+              height: 4.0,
+              width: double.infinity, 
               color: const Color(0xFF00E050),
             ),
             Expanded(
@@ -62,16 +75,15 @@ class PlayerProfile extends StatelessWidget {
                   crossAxisCount: 3,
                   crossAxisSpacing: gridSpacing,
                   mainAxisSpacing: gridSpacing,
-                  // El childAspectRatio es aproximado, ajustar según sea necesario
                   childAspectRatio: (MediaQuery.of(context).size.width / 3 - gridSpacing * 2) / 183,
                 ),
-                itemCount: 6,
+                itemCount: 2,
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => FullScreenImagePage(imagePath: 'assets/images/jugador1.png'),
+                          builder: (context) => const FullScreenImagePage(imagePath: 'assets/images/jugador1.png'),
                         ),
                       );
                     },

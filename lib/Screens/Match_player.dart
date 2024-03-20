@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Matche extends StatefulWidget {
-  const Matche({super.key});
+class MatchePlayer extends StatefulWidget {
+  const MatchePlayer({super.key});
 
   @override
   _MatcheState createState() => _MatcheState();
 }
 
-class _MatcheState extends State<Matche> {
+class _MatcheState extends State<MatchePlayer> {
   final List<bool> _isSelected = [false, false, false]; 
 
   @override
@@ -42,7 +42,7 @@ class _MatcheState extends State<Matche> {
               child: ListView.builder(
                 itemCount: _isSelected.length,
                 itemBuilder: (context, index) {
-                  return _buildMatchComponent('assets/images/jugador1.png', 'Nombre Jugador ${index + 1}', 'Descripción Jugador ${index + 1}', index);
+                  return _buildMatchComponent('assets/images/jugador1.png', 'Nombre entrenador ${index + 1}', 'Descripción entrenador ${index + 1}', index);
                 },
               ),
             ),
