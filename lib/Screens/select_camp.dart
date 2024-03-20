@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Screens/metodo_de_pago_screen.dart';
+import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
 class SelectCamp extends StatefulWidget {
   @override
   _SelectCampState createState() => _SelectCampState();

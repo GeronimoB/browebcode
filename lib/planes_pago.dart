@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Sing_up_3.dart';
+import 'package:bro_app_to/sing_up_2.dart';
 import 'package:flutter_svg/svg.dart';
 
 
