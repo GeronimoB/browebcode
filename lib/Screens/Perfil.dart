@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Screens/PerfilDetallePage.dart';
+import 'package:bro_app_to/Screens/perfil_detalle_page.dart';
 
 class PerfilPage extends StatelessWidget {
   const PerfilPage({super.key});

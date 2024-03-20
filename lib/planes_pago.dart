@@ -1,13 +1,16 @@
+import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Sing_up_3.dart';
+import 'package:bro_app_to/sign_up_2.dart';
 import 'package:flutter_svg/svg.dart';
 
-class SignUpScreen_2 extends StatefulWidget {
+class PlanesPago extends StatefulWidget {
+  const PlanesPago({super.key});
+
   @override
-  _SignUpScreen_2State createState() => _SignUpScreen_2State();
+  PlanesPagoState createState() => PlanesPagoState();
 }
 
-class _SignUpScreen_2State extends State<SignUpScreen_2> {
+class PlanesPagoState extends State<PlanesPago> {
   int _selectedCardIndex = -1; // Índice de la tarjeta seleccionada
 
   @override
@@ -27,7 +30,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
             ),
           ),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 50), // Espacio en la parte superior
               const Padding(
@@ -57,11 +60,13 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SignUpScreen_3()),
+                      MaterialPageRoute(
+                          builder: (context) => const MetodoDePagoScreen()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: Color(0xFF00F056),
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color(0xFF00F056),
                     minimumSize: const Size(double.infinity, 50),
                   ),
                   child: const Text(
@@ -88,7 +93,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
         ],
       ),
     );
- }
+  }
 
   Widget _buildCard(int index) {
     bool isSelected = _selectedCardIndex == index;
@@ -103,7 +108,9 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          border: Border.all(color: isSelected ? Colors.lightGreen : Color(0xFF00F056), width: 2),
+          border: Border.all(
+              color: isSelected ? Colors.lightGreen : Color(0xFF00F056),
+              width: 2),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(

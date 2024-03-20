@@ -1,6 +1,7 @@
 import 'package:bro_app_to/Screens/Inicio.dart';
 import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/planes_pago.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_svg/svg.dart';
@@ -104,7 +105,7 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                       ),
                       Slider(
                         activeColor: Color(0xff3EAE64),
-                        inactiveColor: Color(0xff00F056),
+                        inactiveColor: const Color(0xff00F056),
                         value: _sliderValue,
                         min: 0.0,
                         max: _videoController!.value.duration.inSeconds
@@ -121,16 +122,16 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.shuffle),
-                            color: Color(0xff00F056),
+                            icon: const Icon(Icons.shuffle),
+                            color: const Color(0xff00F056),
                             iconSize: 30,
                             onPressed: () {
                               // Retroceder 30 segundos
                             },
                           ),
                           IconButton(
-                            icon: Icon(Icons.fast_rewind),
-                            color: Color(0xff00F056),
+                            icon: const Icon(Icons.fast_rewind),
+                            color: const Color(0xff00F056),
                             iconSize: 30,
                             onPressed: () {
                               // Retroceder 30 segundos
@@ -141,11 +142,11 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                             },
                           ),
                           IconButton(
-                            color: Color(0xff00F056),
+                            color: const Color(0xff00F056),
                             iconSize: 60,
                             icon: _videoController!.value.isPlaying
-                                ? Icon(Icons.pause_circle_filled)
-                                : Icon(Icons.play_circle_fill),
+                                ? const Icon(Icons.pause_circle_filled)
+                                : const Icon(Icons.play_circle_fill),
                             onPressed: () {
                               setState(() {
                                 if (_videoController!.value.isPlaying) {
@@ -157,8 +158,8 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                             },
                           ),
                           IconButton(
-                            icon: Icon(Icons.fast_forward),
-                            color: Color(0xff00F056),
+                            icon: const Icon(Icons.fast_forward),
+                            color: const Color(0xff00F056),
                             iconSize: 30,
                             onPressed: () {
                               // Avanzar 30 segundos
@@ -169,9 +170,9 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                             },
                           ),
                           IconButton(
-                            color: Color(0xff00F056),
+                            color: const Color(0xff00F056),
                             iconSize: 30,
-                            icon: Icon(Icons.star),
+                            icon: const Icon(Icons.star),
                             onPressed: () {
                               // Implementa la lógica para agregar a favoritos
                             },
@@ -183,12 +184,11 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      CustomBottomNavigationBar()),
+                                  builder: (context) => const PlanesPago()),
                             );
                           },
                           text: 'Subir',
-                          buttonPrimary: false,
+                          buttonPrimary: true,
                           width: 100,
                           height: 39)
                     ],

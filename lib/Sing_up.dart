@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Sing_up_2.dart';
 import 'package:flutter_svg/svg.dart';
 
+import 'components/custom_text_button.dart';
+import 'sign_up_2.dart';
+
 class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           Container(
-            color: Color.fromARGB(255, 0, 0, 0),
+            color: const Color.fromARGB(255, 0, 0, 0),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
           ),
@@ -23,7 +27,7 @@ class SignUpScreen extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
                   'Regístrate',
@@ -118,31 +122,18 @@ class SignUpScreen extends StatelessWidget {
                   obscureText: true,
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SignUpScreen_2()),
-                    );
-                  },
-                  style: ButtonStyle(
-                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.symmetric(
-                            horizontal: 20)), // Ajuste del ancho del botón
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        Color(0xFF00E050)), // Cambio de color de fondo a verde
-                  ),
-                  child: const Text(
-                    'Siguiente',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.normal,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
+                CustomTextButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SignUpScreen2()),
+                      );
+                    },
+                    text: 'Siguiente',
+                    buttonPrimary: true,
+                    width: 116,
+                    height: 39),
                 SizedBox(
                   height: 90,
                   child: Align(

@@ -1,11 +1,16 @@
+import 'package:bro_app_to/Screens/first_video.dart';
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Screens/MetodoDePagoScreen.dart';
+
+import '../components/custom_text_button.dart';
+
 class SelectCamp extends StatefulWidget {
+  const SelectCamp({super.key});
+
   @override
-  _SelectCampState createState() => _SelectCampState();
+  SelectCampState createState() => SelectCampState();
 }
 
-class _SelectCampState extends State<SelectCamp> {
+class SelectCampState extends State<SelectCamp> {
   bool _acceptedTerms = false;
 
   @override
@@ -149,37 +154,30 @@ class _SelectCampState extends State<SelectCamp> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
-                  // Botón Siguiente
-                  ElevatedButton(
-                                      onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MetodoDePagoScreen()),
-                    );
-                  },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green, // Color del botón
-                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20), // Tamaño del botón
-                    ),
-                    child: const Text(
-                      'Siguiente',
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 16, // Tamaño de fuente del botón
-                        color: Colors.white, // Color del texto del botón
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10), // Espacio extra para evitar superposición con el logo
+                  const SizedBox(height: 10),
+                  CustomTextButton(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const FirstVideoWidget()),
+                        );
+                      },
+                      text: 'Siguiente',
+                      buttonPrimary: true,
+                      width: 116,
+                      height: 39),
+                  const SizedBox(
+                      height:
+                          10), // Espacio extra para evitar superposición con el logo
                 ],
               ),
             ),
           ),
           // Logo centrado en la parte inferior
           Positioned(
-            bottom: screenSize.height * 0.03, // Espacio desde el fondo para el logo
+            bottom:
+                screenSize.height * 0.03, // Espacio desde el fondo para el logo
             left: 0,
             right: 0,
             child: Center(
