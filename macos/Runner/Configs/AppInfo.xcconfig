@@ -8,7 +8,7 @@
 PRODUCT_NAME = bro_app_to
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.broAppTo
+PRODUCT_BUNDLE_IDENTIFIER = com.example.bro_app_toAppTo
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2024 com.example. All rights reserved.

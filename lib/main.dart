@@ -13,9 +13,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Bro app',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const MySplashScreen(), // Cambio a la pantalla de introducción
@@ -61,6 +61,8 @@ class _MySplashScreenState extends State<MySplashScreen> {
         child: Center(
           child: Image.asset(
             width: 239,
+            height: 117,
+            fit: BoxFit.fill,
             'assets/images/Logo.png',
           ),
         ),

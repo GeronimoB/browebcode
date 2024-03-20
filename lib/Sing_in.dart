@@ -3,6 +3,8 @@ import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
 import 'package:bro_app_to/olvide_contrasena.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'components/custom_text_button.dart';
+
 class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class SignInScreen extends StatelessWidget {
             padding: const EdgeInsets.all(30.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
                   'Identifícate',
@@ -104,35 +106,20 @@ class SignInScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  width: 50,
-                  child: OutlinedButton(
-                    onPressed: () {
+                CustomTextButton(
+                    onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => CustomBottomNavigationBar()),
                       );
                     },
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(
-                          width: 2.0,
-                          color: Colors.green), // Borde en verde neón
-                      shape: const StadiumBorder(),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                      fixedSize: Size(132, 30),
-                    ),
-                    child: const Text(
-                      'Entrar',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
+                    text: 'Entrar',
+                    buttonPrimary: true,
+                    width: 100,
+                    height: 39),
+                const SizedBox(
+                  height: 5,
                 ),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,

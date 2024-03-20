@@ -43,7 +43,6 @@ class CustomTextButton extends StatelessWidget {
                   blurStyle: BlurStyle.normal)
               : const _CustomBoxShadow(
                   color: Color.fromARGB(255, 0, 224, 80),
-                  blurRadius: 3,
                   offset: Offset(0, 0),
                 ),
         ],
@@ -71,7 +70,7 @@ class _CustomBoxShadow extends BoxShadow {
   const _CustomBoxShadow({
     Color color = Colors.black,
     Offset offset = Offset.zero,
-    double blurRadius = 20.0,
+    double blurRadius = 5,
     BlurStyle blurStyle = BlurStyle.outer,
   }) : super(
           color: color,
