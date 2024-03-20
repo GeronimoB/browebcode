@@ -1,3 +1,4 @@
+import 'package:bro_app_to/Screens/config_profile_player.dart';
 import 'package:bro_app_to/Screens/full_screen_image_page.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +28,11 @@ class PlayerProfile extends StatelessWidget {
                 child: IconButton(
                   icon: const Icon(Icons.settings, color: Color(0xFF00E050)),
                   onPressed: () {
-                    // Acción para el botón de configuración
+                                        Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ConfigProfilePlayer(),
+                      ),
+                    );
                   },
                 ),
               ),

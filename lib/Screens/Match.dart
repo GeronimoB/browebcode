@@ -90,10 +90,10 @@ Widget _buildMatchComponent(String imagePath, String playerName, String playerDe
                   ),
                 ),
               ),
-              const SizedBox(width: 30), // Espacio entre la imagen y el texto
-              Expanded( // Asegura que el texto no desborde
+              const SizedBox(width: 30), 
+              Expanded( 
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // Alinea el texto a la izquierda
+                  crossAxisAlignment: CrossAxisAlignment.start, //
                   children: [
                     const SizedBox(height: 30),
                     Text(
