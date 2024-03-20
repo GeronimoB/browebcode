@@ -1,5 +1,6 @@
 import 'package:bro_app_to/Screens/SelectCamp.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SignUpScreen_3 extends StatelessWidget {
   @override
@@ -14,7 +15,7 @@ class SignUpScreen_3 extends StatelessWidget {
           ),
           Positioned.fill(
             child: Image.asset(
-              'assets/BackgroundRegis.png',
+              'assets/images/BackgroundRegis.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -286,8 +287,8 @@ class SignUpScreen_3 extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Image.asset(
-                    'assets/Logo.png',
                     width: 104,
+                    'assets/images/Logo.png',
                   ),
                 ),
               ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Sing_up_3.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SignUpScreen_2 extends StatefulWidget {
   @override
@@ -21,7 +22,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
           ),
           Positioned.fill(
             child: Image.asset(
-              'assets/backgroundplanes.png',
+              'assets/images/backgroundplanes.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -50,7 +51,8 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -77,7 +79,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Image.asset(
-                  'assets/Logo.png',
+                  'assets/images/Logo.png',
                   width: 104,
                 ),
               ),
@@ -110,11 +112,12 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
             Row(
               children: [
                 Image.asset(
-                  'assets/Logo.png', 
                   width: 62,
-                  height: 32, 
+                  height: 32,
+                  'assets/images/Logo.png',
                 ),
-                const SizedBox(width: 10), // Espacio entre el logo y el texto "Basic"
+                const SizedBox(
+                    width: 10), // Espacio entre el logo y el texto "Basic"
                 const Text(
                   'Basic',
                   style: TextStyle(

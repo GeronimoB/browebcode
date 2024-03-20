@@ -12,7 +12,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String imagenTarjeta = tipoTarjeta == 'visa' ? 'assets/Visa_icon.png' : 'assets/Mastercard_icon.png';
+    String imagenTarjeta = tipoTarjeta == 'visa' ? 'assets/images/Visa_icon.png' : 'assets/images/Mastercard_icon.png';
 
     return Scaffold(
       appBar: AppBar(
@@ -106,7 +106,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
               ),
             ),
           SizedBox(width: 8),
-          Image.asset('assets/Visa_icon.png', height: 40),
+          Image.asset('assets/images/Visa_icon.png', height: 40),
         ],
       ),
     ),
@@ -129,7 +129,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
               ),
             ),
           SizedBox(width: 8),
-          Image.asset('assets/Mastercard_icon.png', height: 40),
+          Image.asset('assets/images/Mastercard_icon.png', height: 40),
         ],
       ),
     ),
@@ -196,7 +196,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
             SizedBox(height: 16),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Image.asset('assets/Logo.png', width: 80),
+              child: Image.asset('assets/images/Logo.png', width: 80),
             ),
           ],
         ),

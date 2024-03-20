@@ -3,6 +3,7 @@ import 'package:bro_app_to/Screens/Inicio.dart'; // Importa los archivos de las 
 import 'package:bro_app_to/Screens/Match.dart';
 import 'package:bro_app_to/Screens/Mensajes.dart';
 import 'package:bro_app_to/Screens/Perfil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   @override
@@ -23,18 +24,18 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
   // Lista de nombres de archivos de iconos no seleccionados
   final List<String> _iconNames = [
-    'Inicio.png',
-    'Match.png',
-    'Mensaje.png',
-    'Perfil.png',
+    'Inicio.svg',
+    'Match.svg',
+    'Mensaje.svg',
+    'Perfil.svg',
   ];
 
   // Lista de nombres de archivos de iconos seleccionados
   final List<String> _selectedIconNames = [
-    'Inicio-1.png',
-    'Match-1.png',
-    'Mensaje-1.png',
-    'Perfil-1.png',
+    'Inicio-1.svg',
+    'Match-1.svg',
+    'Mensaje-1.svg',
+    'Perfil-1.svg',
   ];
 
   void _onItemTapped(int index) {
@@ -48,85 +49,75 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 44, 44, 44),
-              Color.fromARGB(255, 33, 33, 33),
-              Color.fromARGB(255, 22, 22, 22),
-              Color.fromARGB(255, 0, 0, 0), // Negro más oscuro
-            ],
-            stops: [
-              0.0,
-              0.5,
-              0.8,
-              1.0
-            ]),
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromARGB(255, 44, 44, 44),
+            Color.fromARGB(255, 0, 0, 0),
+          ],
+        ),
       ),
       child: Scaffold(
-        backgroundColor:
-            Colors.transparent, // Hacer el fondo del Scaffold transparente
-        extendBody:
-            true, // Permitir que el cuerpo del Scaffold se extienda debajo del bottomNavigationBar
+        backgroundColor: Colors.transparent,
+        extendBody: true,
         body: _pages[_selectedIndex],
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors
-              .transparent, // Hacer el fondo del bottomNavigationBar transparente
+          backgroundColor: Colors.black,
           items: [
             BottomNavigationBarItem(
               icon: _selectedIndex == 0
-                  ? Image.asset(
-                      'assets/${_selectedIconNames[0]}',
-                      height: 24,
-                      width: 24,
+                  ? SvgPicture.asset(
+                      'assets/images/icons/${_selectedIconNames[0]}',
+                      height: 32,
+                      width: 32,
                     )
-                  : Image.asset(
-                      'assets/${_iconNames[0]}',
-                      height: 24,
-                      width: 24,
+                  : SvgPicture.asset(
+                      'assets/images/icons/${_iconNames[0]}',
+                      height: 32,
+                      width: 32,
                     ),
               label: 'Inicio',
             ),
             BottomNavigationBarItem(
               icon: _selectedIndex == 1
-                  ? Image.asset(
-                      'assets/${_selectedIconNames[1]}',
-                      height: 24,
-                      width: 24,
+                  ? SvgPicture.asset(
+                      'assets/images/icons/${_selectedIconNames[1]}',
+                      height: 32,
+                      width: 32,
                     )
-                  : Image.asset(
-                      'assets/${_iconNames[1]}',
-                      height: 24,
-                      width: 24,
+                  : SvgPicture.asset(
+                      'assets/images/icons/${_iconNames[1]}',
+                      height: 32,
+                      width: 32,
                     ),
               label: 'Buscar',
             ),
             BottomNavigationBarItem(
               icon: _selectedIndex == 2
-                  ? Image.asset(
-                      'assets/${_selectedIconNames[2]}',
-                      height: 24,
-                      width: 24,
+                  ? SvgPicture.asset(
+                      'assets/images/icons/${_selectedIconNames[2]}',
+                      height: 32,
+                      width: 32,
                     )
-                  : Image.asset(
-                      'assets/${_iconNames[2]}',
-                      height: 24,
-                      width: 24,
+                  : SvgPicture.asset(
+                      'assets/images/icons/${_iconNames[2]}',
+                      height: 32,
+                      width: 32,
                     ),
               label: 'Mensajes',
             ),
             BottomNavigationBarItem(
               icon: _selectedIndex == 3
-                  ? Image.asset(
-                      'assets/${_selectedIconNames[3]}',
-                      height: 24,
-                      width: 24,
+                  ? SvgPicture.asset(
+                      'assets/images/icons/${_selectedIconNames[3]}',
+                      height: 32,
+                      width: 32,
                     )
-                  : Image.asset(
-                      'assets/${_iconNames[3]}',
-                      height: 24,
-                      width: 24,
+                  : SvgPicture.asset(
+                      'assets/images/icons/${_iconNames[3]}',
+                      height: 32,
+                      width: 32,
                     ),
               label: 'Perfil',
             ),

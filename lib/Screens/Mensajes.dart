@@ -1,5 +1,6 @@
 import 'package:bro_app_to/Screens/Chatpage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MensajesPage extends StatelessWidget {
   const MensajesPage({Key? key});
@@ -85,15 +86,17 @@ class ChatWidget extends StatelessWidget {
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20.0),
-        child: const Image(image: AssetImage('assets/X.png')),
+        child: SvgPicture.asset(
+          width: 104,
+          'assets/images/icons/X.svg',
+        ),
       ),
       child: Container(
         height: 101,
         decoration: const BoxDecoration(
           color: Colors.transparent,
           border: Border(
-            top: BorderSide(color: Colors.green, width: 1.0),
-            bottom: BorderSide(color: Colors.green, width: 1.0),
+            top: BorderSide(color: Color.fromARGB(255, 62, 174, 100), width: 2),
           ),
         ),
         child: Padding(

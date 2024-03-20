@@ -18,7 +18,7 @@ class _SelectCampState extends State<SelectCamp> {
         children: <Widget>[
           // Fondo
           Positioned.fill(
-            child: Image.asset('assets/Fondo.png', fit: BoxFit.cover),
+            child: Image.asset('assets/images/Fondo.png', fit: BoxFit.cover),
           ),
           // Campo con margen superior
           Positioned(
@@ -26,7 +26,7 @@ class _SelectCampState extends State<SelectCamp> {
             left: 0,
             right: 0,
             child: Image.asset(
-              'assets/Campo.png',
+              'assets/images/Campo.png',
               width: screenSize.width,
               height: screenSize.height * 0.6,
               fit: BoxFit.fitWidth,
@@ -37,77 +37,77 @@ class _SelectCampState extends State<SelectCamp> {
             top: screenSize.height * 0.55,
             left: screenSize.width * 0.43,
             child: Image.asset(
-              'assets/Nro1.png',
+              'assets/images/Nro1.png',
             ),
           ),
           Positioned(
             top: screenSize.height * 0.52,
             left: screenSize.width * 0.85,
             child: Image.asset(
-              'assets/Nro2.png',
+              'assets/images/Nro2.png',
             ),
           ),
           Positioned(
             top: screenSize.height * 0.52,
             left: screenSize.width * 0.01,
             child: Image.asset(
-              'assets/Nro3.png',
+              'assets/images/Nro3.png',
             ),
           ),
           Positioned(
             top: screenSize.height * 0.5,
             left: screenSize.width * 0.6,
             child: Image.asset(
-              'assets/Nro4.png',
+              'assets/images/Nro4.png',
             ),
           ),
           Positioned(
             top: screenSize.height * 0.5,
             left: screenSize.width * 0.26,
             child: Image.asset(
-              'assets/Nro5.png',
+              'assets/images/Nro5.png',
             ),
           ),
           Positioned(
             top: screenSize.height * 0.45,
             left: screenSize.width * 0.17,
             child: Image.asset(
-              'assets/Nro6.png',
+              'assets/images/Nro6.png',
             ),
           ),
           Positioned(
             top: screenSize.height * 0.41,
             left: screenSize.width * 0.73,
             child: Image.asset(
-              'assets/Nro7.png',
+              'assets/images/Nro7.png',
             ),
           ),
           Positioned(
             top: screenSize.height * 0.45,
             left: screenSize.width * 0.67,
             child: Image.asset(
-              'assets/Nro8.png',
+              'assets/images/Nro8.png',
             ),
           ),
           Positioned(
             top: screenSize.height * 0.41,
             left: screenSize.width * 0.47,
             child: Image.asset(
-              'assets/Nro9.png',
+              'assets/images/Nro9.png',
             ),
           ),
           Positioned(
             top: screenSize.height * 0.44,
             left: screenSize.width * 0.4,
             child: Image.asset(
-              'assets/Nro10.png',
+              'assets/images/Nro10.png',
             ),
           ),
           Positioned(
             top: screenSize.height * 0.41,
             left: screenSize.width * 0.1,
             child: Image.asset(
-              'assets/Nro11.png',
+              'assets/images/Nro11.png',
             ),
           ),
           // Contenido debajo del campo
@@ -184,7 +184,7 @@ class _SelectCampState extends State<SelectCamp> {
             right: 0,
             child: Center(
               child: Image.asset(
-                'assets/Logo.png',
+                'assets/images/Logo.png',
                 width: 104,
               ),
             ),

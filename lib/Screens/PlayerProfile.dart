@@ -34,7 +34,7 @@ class PlayerProfile extends StatelessWidget {
             SizedBox(height: 8.0),
             CircleAvatar(
               radius: 80.0,
-              backgroundImage: AssetImage('assets/jugador.png'),
+              backgroundImage: AssetImage('assets/images/jugador.png'),
               backgroundColor: Colors.transparent,
             ),
             SizedBox(height: 8.0),
@@ -64,7 +64,7 @@ class PlayerProfile extends StatelessWidget {
                 ),
                 itemCount: 6,
                 itemBuilder: (context, index) {
-                  return Image.asset('assets/jugador1.png', fit: BoxFit.cover);
+                  return Image.asset('assets/images/jugador1.png', fit: BoxFit.cover);
                 },
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class InicioPage extends StatefulWidget {
   @override
@@ -10,10 +11,10 @@ class _InicioPageState extends State<InicioPage> {
   double _rotation = 0.0;
   int _currentIndex = 0;
   List<String> _images = [
-    'assets/jugador.png',
-    'assets/jugador1.png',
-    'assets/jugador.png',
-    'assets/jugador1.png',
+    'assets/images/jugador.png',
+    'assets/images/jugador1.png',
+    'assets/images/jugador.png',
+    'assets/images/jugador1.png',
     // Añade más rutas de imagen según sea necesario
   ];
 
@@ -113,8 +114,8 @@ class _InicioPageState extends State<InicioPage> {
               Positioned(
                 top: MediaQuery.of(context).size.height / 2 - 50,
                 right: 0,
-                child: Image.asset(
-                  'assets/Matchicon.png',
+                child: SvgPicture.asset(
+                  'assets/images/icons/Matchicon.svg',
                   width: 200,
                   height: 200,
                 ),
@@ -122,9 +123,9 @@ class _InicioPageState extends State<InicioPage> {
             if (_xOffset < 0)
               Positioned(
                 top: MediaQuery.of(context).size.height / 2 - 50,
-                left: -30,
-                child: Image.asset(
-                  'assets/No Match.png',
+                left: 5,
+                child: SvgPicture.asset(
+                  'assets/images/icons/No Match.svg',
                   width: 200,
                   height: 200,
                 ),

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OlvideContrasenaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 27, 23, 23), // Color de fondo detrás de la imagen
+      backgroundColor: const Color.fromARGB(
+          255, 27, 23, 23), // Color de fondo detrás de la imagen
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/Fondo_oc.png'),
+            image: AssetImage('assets/images/Fondo_oc.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -48,7 +50,8 @@ class OlvideContrasenaPage extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   hintText: 'Email',
-                  hintStyle: TextStyle(color: Color.fromARGB(255, 255, 250, 250)),
+                  hintStyle:
+                      TextStyle(color: Color.fromARGB(255, 255, 250, 250)),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
@@ -66,26 +69,28 @@ class OlvideContrasenaPage extends StatelessWidget {
                 // Add your onPressed code here
               },
               style: OutlinedButton.styleFrom(
-                side: BorderSide(width: 2.0, color: Colors.green), // Borde en verde neón
+                side: BorderSide(
+                    width: 2.0, color: Colors.green), // Borde en verde neón
                 shape: const StadiumBorder(),
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
               ),
               child: const Text(
                 'Recuperar',
                 style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.normal,
-                      color: Colors.white,
-                    ),
+                  fontFamily: 'Montserrat',
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.normal,
+                  color: Colors.white,
+                ),
               ),
             ),
             const SizedBox(height: 50), // You may adjust this as needed
-            SizedBox(
+            Image.asset(
               width: 100,
               height: 49,
-              child: Image.asset('assets/Logo.png'), // Tamaño del logo ajustado
+              'assets/images/Logo.png',
             ),
             const SizedBox(height: 10), // You may adjust this as needed
           ],

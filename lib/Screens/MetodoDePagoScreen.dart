@@ -64,14 +64,14 @@ class MetodoDePagoScreen extends StatelessWidget {
                   );
                 },
                 child: Image.asset(
-                  'assets/visa.png',
+                  'assets/images/visa.png',
                   width: metodoPagoWidth,
                   height: metodoPagoHeight,
                 ),
               ),
               SizedBox(height: 26),
               Image.asset(
-                'assets/Transfencias.png',
+                'assets/images/Transfencias.png',
                 width: metodoPagoWidth,
                 height: metodoPagoHeight,
               ),
@@ -79,7 +79,7 @@ class MetodoDePagoScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Image.asset(
-                  'assets/Logo.png',
+                  'assets/images/Logo.png',
                   width: 80,
                 ),
               ),

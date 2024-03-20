@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Sing_in.dart';
 import 'package:bro_app_to/Sing_up.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -23,7 +24,7 @@ class _SignInPageState extends State<SignInPage> {
           ),
           Positioned.fill(
             child: Image.asset(
-              'assets/Background_1.png',
+              'assets/images/Background_1.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -36,8 +37,8 @@ class _SignInPageState extends State<SignInPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'assets/Logo.png',
                     width: 239,
+                    'assets/images/Logo.png',
                   ),
                   const SizedBox(height: 20),
                   AnimatedContainer(
@@ -50,13 +51,15 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                     child: OutlinedButton(
                       onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignInScreen()),
-                      );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignInScreen()),
+                        );
                         setState(() {
                           isPressedSignIn = !isPressedSignIn;
-                          isPressedCreateAccount = false; // Aseguramos que el otro botón no esté presionado
+                          isPressedCreateAccount =
+                              false; // Aseguramos que el otro botón no esté presionado
                         });
                       },
                       style: OutlinedButton.styleFrom(
@@ -68,7 +71,7 @@ class _SignInPageState extends State<SignInPage> {
                         'Iniciar Sesión',
                         style: TextStyle(
                           fontFamily: 'Montserrat',
-                          color:  Colors.white ,
+                          color: Colors.white,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
@@ -88,20 +91,24 @@ class _SignInPageState extends State<SignInPage> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SignUpScreen()), 
+                          MaterialPageRoute(
+                              builder: (context) => SignUpScreen()),
                         );
                         setState(() {
                           isPressedCreateAccount = !isPressedCreateAccount;
-                          isPressedSignIn = false; // Aseguramos que el otro botón no esté presionado
+                          isPressedSignIn =
+                              false; // Aseguramos que el otro botón no esté presionado
                         });
                       },
                       style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF00E050)), // Cambio de color de fondo a verde
+                        backgroundColor: MaterialStateProperty.all<Color>(Color(
+                            0xFF00E050)), // Cambio de color de fondo a verde
                       ),
                       child: Text(
                         'Crear Cuenta',

@@ -1,7 +1,9 @@
 import 'package:bro_app_to/Screens/Inicio.dart';
 import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
+import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
 
@@ -176,32 +178,7 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                           ),
                         ],
                       ),
-                      Container(
-                        width: 100,
-                        height: 42,
-                        margin: EdgeInsets.symmetric(vertical: 60),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [
-                              Color.fromARGB(255, 0, 180, 64),
-                              Color.fromARGB(255, 0, 225, 80),
-                              Color.fromARGB(255, 0, 178, 63),
-                            ], // Colores de tu gradiente
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(21),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromARGB(255, 0, 224, 80),
-                              spreadRadius: 2,
-                              blurRadius: 2,
-                              offset:
-                                  Offset(0, 0), // Desplazamiento del sombreado
-                            ),
-                          ],
-                        ),
-                        child: GestureDetector(
+                      CustomTextButton(
                           onTap: () {
                             Navigator.pushReplacement(
                               context,
@@ -210,20 +187,10 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                                       CustomBottomNavigationBar()),
                             );
                           },
-                          child: const Center(
-                            child: Text(
-                              'Subir',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'Montserrat',
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ),
+                          text: 'Subir',
+                          buttonPrimary: false,
+                          width: 100,
+                          height: 39)
                     ],
                   )
                 : GestureDetector(
@@ -234,10 +201,10 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                     )),
             Center(
               child: Padding(
-                padding: EdgeInsets.all(30),
+                padding: const EdgeInsets.all(25),
                 child: Image.asset(
-                  'assets/Logo.png',
                   width: 104,
+                  'assets/images/Logo.png',
                 ),
               ),
             ),

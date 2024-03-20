@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Intro.dart'; // Asegúrate de importar correctamente tu archivo Intro.dart
+import 'package:bro_app_to/Intro.dart';
+import 'package:flutter_svg/svg.dart'; // Asegúrate de importar correctamente tu archivo Intro.dart
 
 void main() {
   runApp(const MyApp());
@@ -47,21 +48,20 @@ class _MySplashScreenState extends State<MySplashScreen> {
     return Scaffold(
       backgroundColor: Colors.black, // Fondo negro
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
             colors: [
-              Colors.black, // Color negro en la parte inferior
-              Colors.grey[900]!, // Color negro un poco más claro arriba
+              Color.fromARGB(255, 44, 44, 44),
+              Color.fromARGB(255, 0, 0, 0),
             ],
           ),
         ),
         child: Center(
           child: Image.asset(
-            'assets/Logo.png',
-            width: 246,
-            height: 117,
+            width: 239,
+            'assets/images/Logo.png',
           ),
         ),
       ),
