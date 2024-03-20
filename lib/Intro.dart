@@ -45,7 +45,7 @@ class _SignInPageState extends State<SignInPage> {
                     width: 304,
                     height: 39,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.green),
+                      border: Border.all(color: Color(0xFF00E050)),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: OutlinedButton(
@@ -60,7 +60,7 @@ class _SignInPageState extends State<SignInPage> {
                         });
                       },
                       style: OutlinedButton.styleFrom(
-                      side: BorderSide(width: 2.0, color: Colors.green), // Borde en verde neón
+                      side: BorderSide(width: 2.0, color: Color(0xFF00E050)), // Borde en verde neón
                       shape: const StadiumBorder(),
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                         ),
@@ -81,7 +81,7 @@ class _SignInPageState extends State<SignInPage> {
                     width: 304,
                     height: 39,
                     decoration: BoxDecoration(
-                      border: Border.all(color:Colors.green),
+                      border: Border.all(color:Color(0xFF00E050)),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: ElevatedButton(

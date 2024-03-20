@@ -7,7 +7,6 @@ class SignUpScreen_2 extends StatefulWidget {
 }
 
 class _SignUpScreen_2State extends State<SignUpScreen_2> {
-  String _selectedMenu = 'Mensual'; // Menú seleccionado por defecto
   int _selectedCardIndex = -1; // Índice de la tarjeta seleccionada
 
   @override
@@ -22,86 +21,32 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
           ),
           Positioned.fill(
             child: Image.asset(
-              'assets/Background_3.png', // Nombre de la imagen del fondo
+              'assets/backgroundplanes.png',
               fit: BoxFit.cover,
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 20), // Aumentado para más espacio arriba
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedMenu = 'Mensual';
-                        });
-                      },
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(color: Colors.transparent, width: 2),
-                            left: BorderSide(color: Colors.transparent, width: 2),
-                            bottom: BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                        ),
-                        child: Text(
-                          'Mensual',
-                          style: TextStyle(
-                            color: _selectedMenu == 'Mensual' ? Colors.green : Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            fontFamily: 'Montserrat',
-                          ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedMenu = 'Anual';
-                        });
-                      },
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(color: Colors.transparent, width: 2),
-                            right: BorderSide(color: Colors.transparent, width: 2),
-                            bottom: BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                        ),
-                        child: Text(
-                          'Anual',
-                          style: TextStyle(
-                            color: _selectedMenu == 'Anual' ? Colors.green : Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            fontFamily: 'Montserrat',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+              const SizedBox(height: 50), // Espacio en la parte superior
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 120),
+                child: Text(
+                  'Planes',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    fontFamily: 'Montserrat',
+                  ),
                 ),
               ),
-              Container(
-                height: 2,
-                color: Colors.green,
-              ),
-              const SizedBox(height: 0),
               Expanded(
-                child: ListView(
-                  children: [
-                    _buildCard(0),
-                    _buildCard(1),
-                    _buildCard(2),
-                    _buildCard(3),
-                    // Agrega más llamadas a _buildCard() según sea necesario
-                  ],
+                child: ListView.builder(
+                  itemCount: 4, // Actualizar con la cantidad real de planes
+                  itemBuilder: (context, index) {
+                    return _buildCard(index);
+                  },
                 ),
               ),
               Padding(
@@ -114,8 +59,8 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: Colors.green, // Text Color (Foreground color)
-                    minimumSize: const Size(double.infinity, 50), // Set width and height
+                    foregroundColor: Colors.white, backgroundColor: Color(0xFF00F056),
+                    minimumSize: const Size(double.infinity, 50),
                   ),
                   child: const Text(
                     'Siguiente',
@@ -132,7 +77,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Image.asset(
-                  'assets/Logo.png', // Nombre de la imagen del logo
+                  'assets/Logo.png',
                   width: 104,
                 ),
               ),
@@ -141,7 +86,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
         ],
       ),
     );
-  }
+ }
 
   Widget _buildCard(int index) {
     bool isSelected = _selectedCardIndex == index;
@@ -156,7 +101,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          border: Border.all(color: isSelected ? Colors.lightGreen : Colors.green, width: 2),
+          border: Border.all(color: isSelected ? Colors.lightGreen : Color(0xFF00F056), width: 2),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -173,7 +118,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                 const Text(
                   'Basic',
                   style: TextStyle(
-                    color: Colors.green,
+                    color: Color(0xFF00F056),
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
                   ),
@@ -182,7 +127,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
                 const Text(
                   'Total: 00,0€',
                   style: TextStyle(
-                    color: Colors.green,
+                    color: Color(0xFF00F056),
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
                   ),
@@ -210,7 +155,7 @@ class _SignUpScreen_2State extends State<SignUpScreen_2> {
             const Text(
               'Ver más...',
               style: TextStyle(
-                color: Colors.green,
+                color: Color(0xFF00F056),
                 fontSize: 11,
               ),
             ),

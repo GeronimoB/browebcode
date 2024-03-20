@@ -2,17 +2,31 @@ import 'package:bro_app_to/Screens/Chatpage.dart';
 import 'package:flutter/material.dart';
 
 class MensajesPage extends StatelessWidget {
-  const MensajesPage({super.key});
-
+  const MensajesPage({Key? key});
+  
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 20),
+        const SizedBox(height: 35.0),
+        Container(
+          color: Colors.transparent,
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: const Center(
+            child: Text(
+              'Mensajes',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
         Expanded(
           child: ListView.builder(
-            itemCount: 7,
+            itemCount: 3,
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
@@ -53,12 +67,12 @@ class ChatWidget extends StatelessWidget {
   final VoidCallback onDelete;
 
   const ChatWidget({
-    super.key,
+    Key? key,
     required this.imageURL,
     required this.title,
     required this.description,
     required this.onDelete,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +102,8 @@ class ChatWidget extends StatelessWidget {
             children: [
               const SizedBox(width: 16.0),
               Container(
-                width: 64, // Doble del radio del círculo
-                height: 64, // Doble del radio del círculo
+                width: 64, 
+                height: 64, 
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors

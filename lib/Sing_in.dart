@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
 import 'package:bro_app_to/olvide_contrasena.dart';
+import 'package:bro_app_to/Screens/PlayerProfile.dart';
 
 class SignInScreen extends StatelessWidget {
   @override
@@ -110,7 +111,8 @@ class SignInScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => CustomBottomNavigationBar()),
+                            builder: (context) => PlayerProfile()),
+                            // builder: (context) => CustomBottomNavigationBar()),
                       );
                     },
                     style: OutlinedButton.styleFrom(

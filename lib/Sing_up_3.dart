@@ -1,4 +1,4 @@
-import 'package:bro_app_to/Screens/first_video.dart';
+import 'package:bro_app_to/Screens/SelectCamp.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen_3 extends StatelessWidget {
@@ -14,7 +14,7 @@ class SignUpScreen_3 extends StatelessWidget {
           ),
           Positioned.fill(
             child: Image.asset(
-              'assets/Background_3.png',
+              'assets/BackgroundRegis.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -49,7 +49,7 @@ class SignUpScreen_3 extends StatelessWidget {
                     contentPadding: EdgeInsets.symmetric(vertical: 5),
                     enabledBorder: UnderlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color(0xFF00E050), width: 2),
+                          BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
                   style:
@@ -68,7 +68,7 @@ class SignUpScreen_3 extends StatelessWidget {
                     contentPadding: EdgeInsets.symmetric(vertical: 5),
                     enabledBorder: UnderlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color(0xFF00E050), width: 2),
+                          BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
                   style:
@@ -87,7 +87,7 @@ class SignUpScreen_3 extends StatelessWidget {
                     contentPadding: EdgeInsets.symmetric(vertical: 5),
                     enabledBorder: UnderlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color(0xFF00E050), width: 2),
+                          BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
                   style:
@@ -106,7 +106,7 @@ class SignUpScreen_3 extends StatelessWidget {
                     contentPadding: EdgeInsets.symmetric(vertical: 5),
                     enabledBorder: UnderlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color(0xFF00E050), width: 2),
+                          BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
                   style:
@@ -125,7 +125,7 @@ class SignUpScreen_3 extends StatelessWidget {
                     contentPadding: EdgeInsets.symmetric(vertical: 5),
                     enabledBorder: UnderlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color(0xFF00E050), width: 2),
+                          BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
                   style:
@@ -144,7 +144,7 @@ class SignUpScreen_3 extends StatelessWidget {
                     contentPadding: EdgeInsets.symmetric(vertical: 5),
                     enabledBorder: UnderlineInputBorder(
                       borderSide:
-                          BorderSide(color: Color(0xFF00E050), width: 2),
+                          BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
                   style:
@@ -159,7 +159,7 @@ class SignUpScreen_3 extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: const Color(0xFF00E050), width: 2),
+                            color: const Color(0xFF00F056), width: 2),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: DropdownButtonFormField<String>(
@@ -208,7 +208,7 @@ class SignUpScreen_3 extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: const Color(0xFF00E050), width: 2),
+                            color: const Color(0xFF00F056), width: 2),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: DropdownButtonFormField<String>(
@@ -255,15 +255,15 @@ class SignUpScreen_3 extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const FirstVideoWidget()),
+                          builder: (context) => SelectCamp()),
                     );
                   },
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.symmetric(
+                        const EdgeInsets.symmetric(
                             horizontal: 20)), // Ajuste del ancho del botón
                     backgroundColor: MaterialStateProperty.all<Color>(
-                        Color(0xFF00E050)), // Cambio de color de fondo a verde
+                        const Color(0xFF00F056)), // Cambio de color de fondo a verde
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius:

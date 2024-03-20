@@ -82,7 +82,7 @@ class _InicioPageState extends State<InicioPage> {
                 child: Opacity(
                   opacity: _xOffset == 0
                       ? 0
-                      : opacity, // Asegura que la opacidad sea 0 cuando no hay desplazamiento
+                      : opacity, 
                   child: Image.asset(
                     _images[_xOffset > 0
                         ? _prevIndex
