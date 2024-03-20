@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
 import 'package:bro_app_to/olvide_contrasena.dart';
-import 'package:bro_app_to/Screens/PlayerProfile.dart';
+import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'components/custom_text_button.dart';
@@ -21,7 +21,7 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Stack(
         children: [
           Container(
-            color: Color.fromARGB(255, 19, 12, 12),
+            color: const Color.fromARGB(255, 19, 12, 12),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
           ),
@@ -120,8 +120,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            // builder: (context) => PlayerProfile()),
-                            builder: (context) => CustomBottomNavigationBar()),
+                            builder: (context) => PlayerProfile()),
+                            // builder: (context) => CustomBottomNavigationBar()),
                       );
                     },
                     text: 'Entrar',

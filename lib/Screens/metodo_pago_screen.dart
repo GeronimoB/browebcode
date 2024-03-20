@@ -49,8 +49,8 @@ class MetodoDePagoScreen extends StatelessWidget {
                   '00,00€',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Color(0xFF00E050),
-                    fontSize: 26,
+                    color: Color(0xFF00E050), 
+                    fontSize: 40,
                     fontFamily: 'Montserrat',
                     fontWeight: FontWeight.bold,
                   ),

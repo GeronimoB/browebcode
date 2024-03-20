@@ -1,3 +1,4 @@
+import 'package:bro_app_to/Screens/full_screen_image_page.dart';
 import 'package:flutter/material.dart';
 
 class PlayerProfile extends StatelessWidget {
@@ -24,33 +25,35 @@ class PlayerProfile extends StatelessWidget {
               child: Align(
                 alignment: Alignment.topRight,
                 child: IconButton(
-                  icon: Icon(Icons.settings, color: Colors.white),
+                  icon: const Icon(Icons.settings, color: Color(0xFF00E050)),
                   onPressed: () {
                     // Acción para el botón de configuración
                   },
                 ),
               ),
             ),
-            SizedBox(height: 8.0),
-            CircleAvatar(
+            const SizedBox(height: 8.0),
+            const CircleAvatar(
               radius: 80.0,
               backgroundImage: AssetImage('assets/images/jugador.png'),
               backgroundColor: Colors.transparent,
             ),
-            SizedBox(height: 8.0),
-            Text(
+            const SizedBox(height: 8.0),
+            const Text(
               'NOMBRE Y APELLIDO',
-              style: TextStyle(color: Colors.white, fontSize: 22.0),
+              style: TextStyle(color: Color(0xFF00E050), fontSize: 22.0,fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,),
             ),
-            Text(
+            const Text(
               'Datos Futbolista',
-              style: TextStyle(color: Colors.grey, fontSize: 16.0),
+              style: TextStyle(color: Colors.white, fontSize: 16.0,fontFamily: 'Montserrat',fontStyle: FontStyle.italic,
+                    ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(vertical: 8.0,horizontal: 10),
+              margin: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 10),
               height: 4.0, // Barra verde más ancha
               width: double.infinity, // Hace que la barra sea tan ancha como las tres imágenes juntas, incluido el espacio entre ellas
-              color: Colors.green,
+              color: const Color(0xFF00E050),
             ),
             Expanded(
               child: GridView.builder(
@@ -64,7 +67,16 @@ class PlayerProfile extends StatelessWidget {
                 ),
                 itemCount: 6,
                 itemBuilder: (context, index) {
-                  return Image.asset('assets/images/jugador1.png', fit: BoxFit.cover);
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => FullScreenImagePage(imagePath: 'assets/images/jugador1.png'),
+                        ),
+                      );
+                    },
+                    child: Image.asset('assets/images/jugador1.png', fit: BoxFit.cover),
+                  );
                 },
               ),
             ),
@@ -73,4 +85,5 @@ class PlayerProfile extends StatelessWidget {
       ),
     );
   }
+  
 }
