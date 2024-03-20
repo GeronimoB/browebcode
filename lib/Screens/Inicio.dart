@@ -81,9 +81,7 @@ class _InicioPageState extends State<InicioPage> {
               child: Transform.scale(
                 scale: backgroundScale,
                 child: Opacity(
-                  opacity: _xOffset == 0
-                      ? 0
-                      : opacity, 
+                  opacity: _xOffset == 0 ? 0 : opacity,
                   child: Image.asset(
                     _images[_xOffset > 0
                         ? _prevIndex
@@ -115,7 +113,7 @@ class _InicioPageState extends State<InicioPage> {
                 top: MediaQuery.of(context).size.height / 2 - 50,
                 right: 0,
                 child: SvgPicture.asset(
-                  'assets/images/icons/Matchicon.svg',
+                  'assets/icons/Matchicon.svg',
                   width: 200,
                   height: 200,
                 ),
@@ -125,7 +123,7 @@ class _InicioPageState extends State<InicioPage> {
                 top: MediaQuery.of(context).size.height / 2 - 50,
                 left: 5,
                 child: SvgPicture.asset(
-                  'assets/images/icons/No Match.svg',
+                  'assets/icons/No Match.svg',
                   width: 200,
                   height: 200,
                 ),

@@ -15,6 +15,8 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final List<String> _messages = [];
+  final FocusNode _messageFocusNode = FocusNode();
+  final ScrollController _scrollController = ScrollController();
 
   void _sendMessage() {
     final String text = _messageController.text;
@@ -23,42 +25,74 @@ class _ChatPageState extends State<ChatPage> {
         _messages.add(text);
         _messageController.clear();
       });
+      _messageFocusNode.unfocus();
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: AssetImage(
-                  'assets/images/jugador23.png'), // Reemplazar con tu imagen.
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromARGB(255, 44, 44, 44),
+            Color.fromARGB(255, 0, 0, 0),
+          ],
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        extendBody: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ClipOval(
+                child: Image.asset(
+                  'assets/images/jugador23.png',
+                  width: 40,
+                  height: 40,
+                ),
+              ),
+              const SizedBox(width: 20),
+              Text(
+                widget.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Montserrat',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Spacer(),
+            ],
+          ),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFF00E050),
             ),
-            SizedBox(width: 10),
-            Text(widget.name, style: TextStyle(color: Colors.white)),
-            Spacer(),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          actions: [
             IconButton(
-              icon: Icon(Icons.more_vert, color: Colors.green),
+              icon: const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
+              iconSize: 32,
               onPressed: () {
                 // Acciones de los 3 puntos verticales.
               },
             ),
           ],
         ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.green),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: Container(
-        color: Colors.black,
-        child: Column(
-          children: <Widget>[
+        body: Column(
+          children: [
             Expanded(
               child: ListView.builder(
+                controller: _scrollController,
                 itemCount: _messages.length,
                 itemBuilder: (context, index) {
                   return Container(
@@ -69,12 +103,21 @@ class _ChatPageState extends State<ChatPage> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 10.0, horizontal: 16.0),
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(108, 4, 255, 0),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+                          color: const Color.fromARGB(51, 4, 255, 0),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                          border: Border.all(
+                            color: const Color.fromARGB(107, 4, 255, 0),
+                          )),
                       child: Text(
                         _messages[index],
-                        style: TextStyle(color: Colors.white, fontSize: 10),
+                        style: const TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                            fontStyle: FontStyle.italic),
                       ),
                     ),
                   );
@@ -89,39 +132,54 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget _buildTextComposer() {
-    return Container(
-      color: Colors.black,
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            child: TextField(
-              controller: _messageController,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                hintText: "Enviar un mensaje...",
-                hintStyle: TextStyle(color: Colors.white54),
-                border: InputBorder.none,
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        margin: const EdgeInsets.all(8),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          border: Border.all(color: const Color(0xff3EAE64), width: 1),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(16),
+          ),
+        ),
+        child: Row(
+          children: <Widget>[
+            Flexible(
+              child: TextField(
+                controller: _messageController,
+                focusNode: _messageFocusNode,
+                style: const TextStyle(color: Colors.white),
+                minLines: 1,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  hintText: "Enviar un mensaje...",
+                  hintStyle: TextStyle(color: Colors.white54),
+                  border: InputBorder.none,
+                ),
               ),
             ),
-          ),
-          IconButton(
-            icon: Icon(Icons.photo_camera, color: Colors.green),
-            onPressed: () {
-              // Acciones para enviar imágenes.
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.attach_file, color: Colors.green),
-            onPressed: () {
-              // Acciones para adjuntar archivos.
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.send, color: Colors.green),
-            onPressed: _sendMessage,
-          ),
-        ],
+            IconButton(
+              icon: const Icon(Icons.photo_camera_outlined,
+                  color: Color(0xff00E050), size: 26),
+              onPressed: () {
+                // Acciones para enviar imágenes.
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.attach_file,
+                  color: Color(0xff00E050), size: 26),
+              onPressed: () {
+                // Acciones para adjuntar archivos.
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.send, color: Color(0xff00E050), size: 26),
+              onPressed: _sendMessage,
+            ),
+          ],
+        ),
       ),
     );
   }
