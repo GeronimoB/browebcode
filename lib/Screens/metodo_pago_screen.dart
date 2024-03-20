@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/agregar_tarjeta_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MetodoDePagoScreen extends StatelessWidget {
   const MetodoDePagoScreen({super.key});
@@ -80,8 +81,8 @@ class MetodoDePagoScreen extends StatelessWidget {
               const Spacer(),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Image.asset(
-                  'assets/images/Logo.png',
+                child: SvgPicture.asset(
+                  'assets/icons/Logo.svg',
                   width: 80,
                 ),
               ),

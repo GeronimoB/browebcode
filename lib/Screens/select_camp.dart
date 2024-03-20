@@ -1,5 +1,6 @@
 import 'package:bro_app_to/Screens/first_video.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../components/custom_text_button.dart';
 
@@ -219,8 +220,8 @@ class SelectCampState extends State<SelectCamp> {
             left: 0,
             right: 0,
             child: Center(
-              child: Image.asset(
-                'assets/images/Logo.png',
+              child: SvgPicture.asset(
+                'assets/icons/Logo.svg',
                 width: 104,
               ),
             ),

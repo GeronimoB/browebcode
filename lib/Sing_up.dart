@@ -139,9 +139,9 @@ class SignUpScreen extends StatelessWidget {
                   height: 90,
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: Image.asset(
+                    child: SvgPicture.asset(
                       width: 104,
-                      'assets/images/Logo.png',
+                      'assets/icons/Logo.svg',
                     ),
                   ),
                 ),

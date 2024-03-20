@@ -87,10 +87,10 @@ class OlvideContrasenaPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 50), // You may adjust this as needed
-            Image.asset(
+            SvgPicture.asset(
               width: 100,
               height: 49,
-              'assets/images/Logo.png',
+              'assets/icons/Logo.svg',
             ),
             const SizedBox(height: 10), // You may adjust this as needed
           ],

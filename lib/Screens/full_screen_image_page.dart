@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class FullScreenImagePage extends StatelessWidget {
   final String imagePath;
 
-  const FullScreenImagePage({Key? key, required this.imagePath}) : super(key: key);
+  const FullScreenImagePage({Key? key, required this.imagePath})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,43 +41,66 @@ class FullScreenImagePage extends StatelessWidget {
                   side: BorderSide(color: Color(0xFF00E050)),
                 ),
                 color: const Color(0xff3B3B3B),
-                onSelected: (String result) {
-                },
+                onSelected: (String result) {},
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   const PopupMenuItem<String>(
                     child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                    child: Text('Borrar', style: TextStyle(color: Colors.white ,fontFamily: 'Montserrat',fontStyle: FontStyle.italic)),
-                  ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                      child: Text('Borrar',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontStyle: FontStyle.italic)),
+                    ),
                   ),
                   const PopupMenuItem<String>(
                     value: 'destacar',
                     child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                    child: Text('Destacar', style: TextStyle(color: Colors.white,fontFamily: 'Montserrat',fontStyle: FontStyle.italic)),
-                      ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                      child: Text('Destacar',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontStyle: FontStyle.italic)),
                     ),
-                  const PopupMenuItem<String>(
-                    child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                    child: Text('Editar', style: TextStyle(color: Colors.white,fontFamily: 'Montserrat',fontStyle: FontStyle.italic)),
-                  ),
                   ),
                   const PopupMenuItem<String>(
                     child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                    child: Text('Guardar', style: TextStyle(color: Colors.white,fontFamily: 'Montserrat',fontStyle: FontStyle.italic)),
-                  ),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                      child: Text('Editar',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontStyle: FontStyle.italic)),
+                    ),
                   ),
                   const PopupMenuItem<String>(
                     child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                    child: Text('Ocultar', style: TextStyle(color: Colors.white,fontFamily: 'Montserrat',fontStyle: FontStyle.italic)),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                      child: Text('Guardar',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontStyle: FontStyle.italic)),
+                    ),
                   ),
+                  const PopupMenuItem<String>(
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                      child: Text('Ocultar',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontStyle: FontStyle.italic)),
+                    ),
                   )
                 ],
               ),
-
             ),
           ),
           Positioned(
@@ -86,7 +111,8 @@ class FullScreenImagePage extends StatelessWidget {
             child: Container(
               color: Colors.black,
               child: Center(
-                child: Image.asset('assets/images/Logo.png', fit: BoxFit.fitWidth),
+                child: SvgPicture.asset('assets/icons/Logo.svg',
+                    fit: BoxFit.fitWidth),
               ),
             ),
           ),

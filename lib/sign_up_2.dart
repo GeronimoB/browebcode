@@ -262,9 +262,9 @@ class SignUpScreen2 extends StatelessWidget {
           Positioned(
             bottom: 10,
             left: MediaQuery.of(context).size.width / 2 - 52,
-            child: Image.asset(
+            child: SvgPicture.asset(
               width: 104,
-              'assets/images/Logo.png',
+              'assets/icons/Logo.svg',
             ),
           ),
         ],

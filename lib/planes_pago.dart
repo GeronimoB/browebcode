@@ -125,8 +125,8 @@ class _PlanesPagoState extends State<PlanesPago> {
 
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Image.asset(
-                  'assets/images/Logo.png',
+                child: SvgPicture.asset(
+                  'assets/icons/Logo.svg',
                   width: 104,
                 ),
               ),
@@ -176,8 +176,8 @@ class _PlanesPagoState extends State<PlanesPago> {
           children: [
             Row(
               children: [
-                Image.asset(
-                  'assets/images/Logo.png',
+                SvgPicture.asset(
+                  'assets/icons/Logo.svg',
                   width: 62,
                   height: 32,
                 ),

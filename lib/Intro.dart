@@ -1,6 +1,6 @@
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Sing_in.dart';
+import 'package:bro_app_to/src/auth/presentation/screens/Sing_in.dart';
 import 'package:bro_app_to/sing_up.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -37,11 +37,11 @@ class _SignInPageState extends State<SignInPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
+                   SvgPicture.asset(
                     width: 239,
                     height: 117,
                     fit: BoxFit.fill,
-                    'assets/images/Logo.png',
+                    'assets/icons/Logo.svg',
                   ),
                   const SizedBox(height: 20),
                   CustomTextButton(
@@ -49,7 +49,7 @@ class _SignInPageState extends State<SignInPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignInScreen()),
+                              builder: (context) => const SignInScreen()),
                         );
                       },
                       text: 'Iniciar Sesión',

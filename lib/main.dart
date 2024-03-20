@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Intro.dart';
-import 'package:flutter_svg/svg.dart'; // Asegúrate de importar correctamente tu archivo Intro.dart
+import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+
+import 'providers/user_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,14 +15,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Bro app',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return MultiProvider(
+      providers: [
+        Provider<PlayerProvider>(
+          create: (context) => PlayerProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Bro app',
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: const MySplashScreen(),
+        debugShowCheckedModeBanner: false,
       ),
-      home: const MySplashScreen(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -59,11 +69,11 @@ class _MySplashScreenState extends State<MySplashScreen> {
           ),
         ),
         child: Center(
-          child: Image.asset(
+          child: SvgPicture.asset(
             width: 239,
             height: 117,
             fit: BoxFit.fill,
-            'assets/images/Logo.png',
+            'assets/icons/Logo.svg',
           ),
         ),
       ),

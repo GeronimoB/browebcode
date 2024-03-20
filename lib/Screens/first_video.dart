@@ -202,9 +202,9 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(25),
-                child: Image.asset(
+                child: SvgPicture.asset(
                   width: 104,
-                  'assets/images/Logo.png',
+                  'assets/icons/Logo.svg',
                 ),
               ),
             ),
