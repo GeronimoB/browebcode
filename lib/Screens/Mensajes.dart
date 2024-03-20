@@ -1,4 +1,4 @@
-import 'package:bro_app_to/Screens/chat_page.dart';
+import 'package:bro_app_to/Screens/Chatpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
