@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/Inicio.dart'; // Importa los archivos de las pantallas
-import 'package:bro_app_to/Screens/match.dart';
+import 'package:bro_app_to/Screens/Match.dart';
 import 'package:bro_app_to/Screens/mensajes.dart';
 import 'package:bro_app_to/Screens/perfil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
