@@ -1,3 +1,5 @@
+import 'package:bro_app_to/components/custom_box_shadow.dart';
+import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
@@ -82,7 +84,7 @@ class _PlanesPagoState extends State<PlanesPago> {
             ),
           ),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 50), // Espacio en la parte superior
               const Padding(
@@ -106,33 +108,21 @@ class _PlanesPagoState extends State<PlanesPago> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CustomBottomNavigationBar()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: const Color(0xFF00F056),
-                    minimumSize: const Size(double.infinity, 50),
-                  ),
-                  child: const Text(
-                    'Siguiente',
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.normal,
-                    ),
-                  ),
-                ),
+                padding: const EdgeInsets.all(22.0),
+                child: CustomTextButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CustomBottomNavigationBar()),
+                      );
+                    },
+                    text: 'Siguiente',
+                    buttonPrimary: true,
+                    width: 116,
+                    height: 39),
               ),
+
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Image.asset(
@@ -166,16 +156,21 @@ class _PlanesPagoState extends State<PlanesPago> {
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.black,
-          border: Border.all(
-            color: isSelected
-                ? Colors.lightGreen
-                : const Color(
-                    0xFF00F056), // Cambiar el color del borde si está seleccionado
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(20),
-        ),
+            color: Colors.transparent,
+            border: Border.all(
+              color: const Color(
+                  0xFF00F056), // Cambiar el color del borde si está seleccionado
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: isSelected
+                ? [
+                    const CustomBoxShadow(
+                      color: Color.fromARGB(255, 5, 255, 80),
+                      offset: Offset(0, 0),
+                    ),
+                  ]
+                : null),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -215,29 +210,44 @@ class _PlanesPagoState extends State<PlanesPago> {
             if (!plan.isExpanded) ...[
               Text(
                 plan.descripcion,
-                style: const TextStyle(color: Colors.grey, fontSize: 11),
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 11,
+                    fontStyle: FontStyle.italic),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
               InkWell(
                 child: const Text(
                   'Ver más...',
-                  style: TextStyle(color: Color(0xFF00F056), fontSize: 11),
+                  style: TextStyle(
+                      color: Color(0xFF00F056),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontStyle: FontStyle.italic),
                 ),
                 onTap: () => setState(() {
-                  plan.isExpanded = true; // Cambiamos el estado a expandido
+                  plan.isExpanded = true;
                 }),
               ),
             ] else ...[
-              // Aquí se agrega el caso contrario, cuando isExpanded es true
               Text(
                 plan.descripcionLarga,
-                style: const TextStyle(color: Colors.grey, fontSize: 11),
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 11,
+                    fontStyle: FontStyle.italic),
               ),
               InkWell(
                 child: const Text(
                   'Ver menos...',
-                  style: TextStyle(color: Color(0xFF00F056), fontSize: 11),
+                  style: TextStyle(
+                      color: Color(0xFF00F056),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontStyle: FontStyle.italic),
                 ),
                 onTap: () => setState(() {
                   plan.isExpanded =

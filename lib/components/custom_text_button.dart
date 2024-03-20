@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'custom_box_shadow.dart';
+
 class CustomTextButton extends StatelessWidget {
   final VoidCallback onTap;
   final String text;
@@ -43,7 +45,7 @@ class CustomTextButton extends StatelessWidget {
                     spreadRadius: 2,
                     offset: Offset(0, 0),
                     blurStyle: BlurStyle.normal)
-                : const _CustomBoxShadow(
+                : const CustomBoxShadow(
                     color: Color.fromARGB(255, 0, 224, 80),
                     offset: Offset(0, 0),
                   ),
@@ -63,33 +65,5 @@ class CustomTextButton extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class _CustomBoxShadow extends BoxShadow {
-  const _CustomBoxShadow({
-    Color color = Colors.black,
-    Offset offset = Offset.zero,
-    double blurRadius = 5,
-    BlurStyle blurStyle = BlurStyle.outer,
-  }) : super(
-          color: color,
-          offset: offset,
-          blurRadius: blurRadius,
-          blurStyle: blurStyle,
-        );
-
-  @override
-  Paint toPaint() {
-    final result = Paint()
-      ..color = color
-      ..maskFilter = MaskFilter.blur(blurStyle, blurSigma);
-    assert(() {
-      if (debugDisableShadows) {
-        result.maskFilter = null;
-      }
-      return true;
-    }());
-    return result;
   }
 }
