@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bro_app_to/Screens/first_video.dart';
+import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -252,53 +253,66 @@ class SelectCampState extends State<SelectCamp> {
                         playerProvider.updateTemporalPlayer(
                           position: selectedPlayer.position,
                         );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const FirstVideoWidget()),
-                        );
-                        // try {
-                        //   final response = await http
-                        //       .post(
-                        //         Uri.parse(
-                        //           '${ApiConstants.baseUrl}/auth/player',
-                        //         ),
-                        //         body: playerProvider.getTemporalUser().toMap(),
-                        //       )
-                        //       .timeout(const Duration(seconds: 10));
-                        //   print(response.body);
-                        //   if (response.statusCode == 200) {
-                        //     ScaffoldMessenger.of(context).showSnackBar(
-                        //       const SnackBar(
-                        //           backgroundColor: Colors.lightGreen,
-                        //           content: Text(
-                        //               'Su cuenta se ha creado exitosamente, tiene 3 días para confirmar su correo.')),
-                        //     );
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) =>
-                        //               const FirstVideoWidget()),
-                        //     );
-                        //   } else {
-                        //     final jsonData = json.decode(response.body);
-                        //     ScaffoldMessenger.of(context).showSnackBar(
-                        //       SnackBar(
-                        //           backgroundColor: Colors.redAccent,
-                        //           content: Text(jsonData["error"])),
-                        //     );
-                        //   }
-                        // } on TimeoutException {
-                        //   // Si se produce un timeout, muestra un mensaje de error y devuelve false
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //     const SnackBar(
-                        //       backgroundColor: Colors.redAccent,
-                        //       content: Text(
-                        //           'Se ha producido un error. Por favor, inténtalo de nuevo.'),
-                        //     ),
-                        //   );
-                        //   return;
-                        // }
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => const FirstVideoWidget()),
+                        // );
+                        try {
+                          final response = await ApiClient().post(
+                            'auth/player',
+                            playerProvider.getTemporalUser().toMap(),
+                          );
+
+                          if (response.statusCode == 200) {
+                            final jsonData = jsonDecode(response.body);
+                            final userId = jsonData["userInfo"]["userId"];
+                            final name =
+                                "${playerProvider.getTemporalUser().name} ${playerProvider.getTemporalUser().lastName}";
+                            print("el nombre actual es $name");
+                            final email =
+                                playerProvider.getTemporalUser().email;
+
+                            await ApiClient().post(
+                              'security_filter/v1/api/payment/customer',
+                              {
+                                "userId": userId.toString(),
+                                "CompleteName": name,
+                                "Email": email
+                              },
+                            );
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  backgroundColor: Colors.lightGreen,
+                                  content: Text(
+                                      'Su cuenta se ha creado exitosamente, tiene 3 días para confirmar su correo.')),
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const FirstVideoWidget()),
+                            );
+                          } else {
+                            final jsonData = json.decode(response.body);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  backgroundColor: Colors.redAccent,
+                                  content: Text(jsonData["error"])),
+                            );
+                          }
+                        } on TimeoutException {
+                          // Si se produce un timeout, muestra un mensaje de error y devuelve false
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Colors.redAccent,
+                              content: Text(
+                                  'Se ha producido un error. Por favor, inténtalo de nuevo.'),
+                            ),
+                          );
+                          return;
+                        }
                       },
                       text: 'Siguiente',
                       buttonPrimary: true,

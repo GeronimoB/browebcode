@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class PlayerFullEntity extends Equatable {
+  final String? userId;
   final String? uid;
 
   final String? name;
@@ -44,6 +45,7 @@ class PlayerFullEntity extends Equatable {
   final String? userImage;
 
   const PlayerFullEntity({
+    this.userId,
     this.uid,
     this.name,
     this.lastName,
@@ -69,6 +71,7 @@ class PlayerFullEntity extends Equatable {
   });
 
   PlayerFullEntity copyWith({
+    String? userId,
     String? uid,
     String? name,
     String? lastName,
@@ -93,6 +96,7 @@ class PlayerFullEntity extends Equatable {
     String? password,
   }) {
     return PlayerFullEntity(
+      userId: userId ?? this.userId,
       uid: uid ?? this.uid,
       name: name ?? this.name,
       lastName: lastName ?? this.lastName,
@@ -120,6 +124,7 @@ class PlayerFullEntity extends Equatable {
 
   @override
   List<Object?> get props => [
+        userId,
         uid,
         name,
         lastName,
