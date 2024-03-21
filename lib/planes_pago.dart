@@ -14,7 +14,7 @@ List<Plan> planes = [
   Plan(
     idPlan: 'prod_Pm9dXaR543QJTO',
     nombre: 'Basic',
-    precio: '19,99€',
+    precio: '19,99',
     descripcion:
         'Posibilita subir 2 videos de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD.',
     descripcionLarga:
@@ -23,7 +23,7 @@ List<Plan> planes = [
   Plan(
     nombre: 'Gold',
     idPlan: 'prod_PmB07jIWo7KNqU',
-    precio: '29,99€',
+    precio: '29,99',
     descripcion:
         'Posibilita subir 5 videos de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD.',
     descripcionLarga:
@@ -32,7 +32,7 @@ List<Plan> planes = [
   Plan(
     idPlan: 'prod_PmB1Pkn0RKq6U7',
     nombre: 'Platinum',
-    precio: '49,99€ ',
+    precio: '49,99',
     descripcion:
         'Posibilita subir 10 videos de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD.',
     descripcionLarga:
@@ -41,7 +41,7 @@ List<Plan> planes = [
   Plan(
     idPlan: 'prod_PmB1j2KKHYdHD5',
     nombre: 'Unlimited',
-    precio: '89,99€',
+    precio: '89,99',
     descripcion:
         'Dicha suscripción tiene una duración de 12 meses, y posibilita subir videos ilimitados con un máximo de 2min',
     descripcionLarga:

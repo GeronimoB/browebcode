@@ -1,7 +1,7 @@
 name: bro_app_to
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
+# pub.dev using flutter pub publish. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
@@ -39,10 +39,9 @@ dependencies:
   get_it: ^7.6.7
   remove: ^1.0.10
   video_thumbnail: ^0.5.3
-  carousel_slider: ^4.0.0 
+  flutter_stripe: ^10.1.1
   image_picker: ^1.0.7
-
-
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:

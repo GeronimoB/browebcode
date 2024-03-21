@@ -3,6 +3,7 @@ import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../utils/api_client.dart';
@@ -16,6 +17,7 @@ class AgregarTarjetaScreen extends StatefulWidget {
 }
 
 class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
+  final controller = CardFormEditController();
   String tipoTarjeta = 'Visa';
   bool isSelected = false;
   late TextEditingController nombresTitularCtlr;
@@ -26,12 +28,25 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
   @override
   void initState() {
     super.initState();
+    controller.addListener(update);
     nombresTitularCtlr = TextEditingController();
     numeroTarjetaCtlr = TextEditingController();
     fechaCaducidadCtlr = TextEditingController();
     cvcCtlr = TextEditingController();
   }
 
+  @override
+  void dispose() {
+    nombresTitularCtlr.dispose();
+    numeroTarjetaCtlr.dispose();
+    fechaCaducidadCtlr.dispose();
+    cvcCtlr.dispose();
+    controller.removeListener(update);
+    controller.dispose();
+    super.dispose();
+  }
+
+  void update() => setState(() {});
   @override
   Widget build(BuildContext context) {
     String imagenTarjeta = 'visa' == 'visa'
@@ -135,6 +150,29 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                         fontSize: 18,
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                CardFormField(
+                  countryCode: 'ES',
+                  enablePostalCode: false,
+                  onCardChanged: (details) {
+                    print(details);
+                    if (controller.details.complete) {
+                      FocusScope.of(context).unfocus();
+                    }
+                  },
+                  controller: controller,
+                  style: CardFormStyle(
+                    // Estilo del texto dentro del campo
+                    backgroundColor: Colors.white,
+                    borderWidth: 2,
+                    borderColor: Colors.green,
+                    borderRadius: 15,
+                    fontSize: 14,
+                    textColor: Colors.black,
+
+                    // Color del texto
                   ),
                 ),
                 const SizedBox(height: 16.0),
