@@ -5,27 +5,33 @@ import 'package:bro_app_to/Screens/Pedidos.dart';
 import 'package:bro_app_to/Screens/Privacidad.dart';
 import 'package:bro_app_to/Screens/Servicios.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:bro_app_to/providers/user_provider.dart';
+
 
 class ConfigProfilePlayer extends StatelessWidget {
   @override
+  
   Widget build(BuildContext context) {
+    final playerProvider = Provider.of<PlayerProvider>(context);
+    final player = playerProvider.getPlayer()!;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
-        title: const Column(
+        title: Column(
           children: [
             SizedBox(height: 22),
             Text(
-              'NOMBRE Y APELLIDO',
-              style: TextStyle(
+              '${player.name} ${player.lastName}',
+              style: const TextStyle(
                 color: Color(0xFF05FF00),
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.bold,
                 fontSize: 12,
               ),
             ),
-            Text(
+            const Text(
               'CONFIGURACIÓN',
               style: TextStyle(
                 color: Colors.white,

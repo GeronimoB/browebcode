@@ -5,17 +5,22 @@ import 'package:bro_app_to/Intro.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter/services.dart';
 import 'providers/user_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Stripe.publishableKey = ApiConstants.stripePublicKey;
-
   await Stripe.instance.applySettings();
+
+  // Bloquear la orientación del dispositivo en modo vertical
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key});
 

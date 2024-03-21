@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:provider/provider.dart';
+import 'package:bro_app_to/providers/user_provider.dart';
+
 class CuentaPage extends StatefulWidget {
   @override
   _CuentaPageState createState() => _CuentaPageState();
@@ -11,6 +14,8 @@ class _CuentaPageState extends State<CuentaPage> {
 
   @override
   Widget build(BuildContext context) {
+    final playerProvider = Provider.of<PlayerProvider>(context);
+    final player = playerProvider.getPlayer()!;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -65,9 +70,9 @@ class _CuentaPageState extends State<CuentaPage> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Nombre de Usuario',
-              style: TextStyle(
+             Text(
+              '${player.name} ${player.lastName}',
+              style: const TextStyle(
                 color: Color(0xFF05FF00),
                 fontFamily: 'Montserrat',
                 fontSize: 18,
@@ -75,9 +80,9 @@ class _CuentaPageState extends State<CuentaPage> {
               ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'Subtítulo',
-              style: TextStyle(
+             Text(
+              '${player.pais}, ${player.provincia} - ${player.club} - ${player.categoria}',
+              style: const TextStyle(
                 color: Colors.grey,
                 fontFamily: 'Montserrat',
                 fontSize: 16,
