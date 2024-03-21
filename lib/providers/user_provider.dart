@@ -1,12 +1,20 @@
+import 'package:bro_app_to/utils/tarjeta_model.dart';
+import 'package:bro_app_to/utils/video_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../src/registration/data/models/player_full_model.dart';
 import '../utils/plan_model.dart';
 
 class PlayerProvider extends ChangeNotifier {
-  PlayerFullModel? _player;
+  PlayerFullModel _player = const PlayerFullModel(name: '', email: '');
   PlayerFullModel _temporalUser = const PlayerFullModel(name: '', email: '');
   Plan? _plan;
+  List<Tarjeta> _savedCards = [];
+  Tarjeta? selectedCard;
+  String? videoPathToUpload;
+  Uint8List? imagePathToUpload;
+  List<Video> userVideos = [];
 
   void updateTemporalPlayer({
     String? customerStripeId,
@@ -72,5 +80,36 @@ class PlayerProvider extends ChangeNotifier {
 
   PlayerFullModel? getPlayer() {
     return _player;
+  }
+
+  void setCards(List<Tarjeta> cards) {
+    _savedCards = cards;
+    notifyListeners();
+  }
+
+  void setSelectedCard(Tarjeta card) {
+    selectedCard = card;
+    notifyListeners();
+  }
+
+  List<Tarjeta>? getSavedCards() {
+    return _savedCards;
+  }
+
+  void updateDataToUpload(String? video, Uint8List? image) {
+    imagePathToUpload = image;
+    videoPathToUpload = video;
+    notifyListeners();
+  }
+
+  void setNewUser() {
+    _player = _temporalUser;
+    notifyListeners();
+  }
+
+  void setUserVideos(List<Video> videos) {
+    userVideos.clear();
+    userVideos.addAll(videos);
+    notifyListeners();
   }
 }

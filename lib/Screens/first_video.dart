@@ -6,12 +6,15 @@ import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 import 'package:video_thumbnail/video_thumbnail.dart';
+
+import '../providers/user_provider.dart';
 
 class FirstVideoWidget extends StatefulWidget {
   const FirstVideoWidget({super.key});
@@ -126,7 +129,10 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
         quality: 30,
       );
       imagePathToUpload = uint8list;
-      // Si pasa las validaciones, entonces reproducir el video
+      final playerProvider =
+          Provider.of<PlayerProvider>(context, listen: false);
+
+      playerProvider.updateDataToUpload(videoPath, uint8list);
 
       _temporalVideoController?.dispose();
       _videoController?.dispose();
@@ -135,7 +141,7 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
       await _videoController?.initialize();
 
       await _videoController?.play();
-      Future.delayed(Duration(seconds: 8), () {
+      Future.delayed(Duration(seconds: 6), () {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const PlanesPago()),

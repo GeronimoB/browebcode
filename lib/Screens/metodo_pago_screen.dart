@@ -27,7 +27,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFF212121), Color(0xFF121212)],
+          colors: [Color(0xFF444444), Color(0xFF000000)],
         ),
       ),
       child: Scaffold(
@@ -57,7 +57,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Text(
-                '${playerProvider.getActualPlan()!.precio}',
+                '${playerProvider.getActualPlan()!.precio} €',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Color(0xFF00E050),
@@ -177,9 +177,12 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
             const Spacer(),
             Align(
               alignment: Alignment.bottomCenter,
-              child: SvgPicture.asset(
-                'assets/icons/Logo.svg',
-                width: 80,
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: SvgPicture.asset(
+                  'assets/icons/Logo.svg',
+                  width: 80,
+                ),
               ),
             ),
           ],

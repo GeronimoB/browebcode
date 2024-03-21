@@ -12,7 +12,7 @@ import 'utils/plan_model.dart';
 
 List<Plan> planes = [
   Plan(
-    idPlan: 'prod_Pm9dXaR543QJTO',
+    idPlan: 'price_1OwbK8IkdX2ffauu5v0rezbw',
     nombre: 'Basic',
     precio: '19,99',
     descripcion:
@@ -22,7 +22,7 @@ List<Plan> planes = [
   ),
   Plan(
     nombre: 'Gold',
-    idPlan: 'prod_PmB07jIWo7KNqU',
+    idPlan: 'price_1OwceiIkdX2ffauuyNaKIHHL',
     precio: '29,99',
     descripcion:
         'Posibilita subir 5 videos de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD.',
@@ -30,7 +30,7 @@ List<Plan> planes = [
         'ube nuevo video una vez tengas el cupo de 5 cubierto, para ello deberás eliminar uno de la plataforma para que sea efectiva la subida y seguir manteniendo tus 5 videos activos..',
   ),
   Plan(
-    idPlan: 'prod_PmB1Pkn0RKq6U7',
+    idPlan: 'price_1Owcf5IkdX2ffauudm4v0KAQ',
     nombre: 'Platinum',
     precio: '49,99',
     descripcion:
@@ -39,7 +39,7 @@ List<Plan> planes = [
         'Sube nuevo video una vez tengas el cupo de 10 cubiertos, para ellos deberás eliminar uno de la plataforma para que sea efectiva la subida y seguir  manteniendo tus 10 videos activos',
   ),
   Plan(
-    idPlan: 'prod_PmB1j2KKHYdHD5',
+    idPlan: 'price_1OwcfMIkdX2ffauuEqdLsX5h',
     nombre: 'Unlimited',
     precio: '89,99',
     descripcion:
@@ -191,7 +191,7 @@ class _PlanesPagoState extends State<PlanesPago> {
                 ),
                 const Spacer(),
                 Text(
-                  'Total: ${plan.precio}',
+                  'Total: ${plan.precio}€',
                   style: const TextStyle(
                       color: Color(0xFF00F056),
                       fontWeight: FontWeight.bold,
