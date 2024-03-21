@@ -38,13 +38,13 @@ class _SignInPageState extends State<SignInPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                   SvgPicture.asset(
+                  SvgPicture.asset(
                     width: 239,
                     height: 117,
                     fit: BoxFit.fill,
                     'assets/icons/Logo.svg',
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 35),
                   CustomTextButton(
                       onTap: () {
                         Navigator.push(

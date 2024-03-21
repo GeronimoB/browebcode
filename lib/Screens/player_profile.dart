@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:bro_app_to/Screens/config_profile_player.dart';
 import 'package:bro_app_to/Screens/full_screen_image_page.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/utils/video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../utils/api_client.dart';
 
 class PlayerProfile extends StatefulWidget {
   @override
@@ -16,9 +21,35 @@ class _PlayerProfileState extends State<PlayerProfile> {
   };
 
   @override
+  void initState() {
+    super.initState();
+    fetchVideos();
+  }
+
+  Future<void> fetchVideos() async {
+    final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
+    final userId =
+        playerProvider.getPlayer()!.userId; // Obtener el ID del jugador
+    try {
+      final videosResponse = await ApiClient()
+          .get('auth/videos/$userId'); // Realizar la solicitud de videos
+      if (videosResponse.statusCode == 200) {
+        final jsonData = jsonDecode(videosResponse.body);
+        final videos = jsonData["videos"];
+        playerProvider.setUserVideos(mapListToVideos(videos));
+      } else {
+        print('Error al obtener los videos: ${videosResponse.statusCode}');
+      }
+    } catch (e) {
+      print('Error en la solicitud de videos: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final playerProvider = Provider.of<PlayerProvider>(context);
+    final playerProvider = Provider.of<PlayerProvider>(context, listen: true);
     final player = playerProvider.getPlayer()!;
+    final videos = playerProvider.userVideos;
     double gridSpacing = 4.0;
     return Scaffold(
       body: Container(
@@ -98,8 +129,8 @@ class _PlayerProfileState extends State<PlayerProfile> {
               margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
               height: 4.0,
               width: double.infinity,
-              decoration: BoxDecoration(
-                  color: const Color(0xFF00E050),
+              decoration: const BoxDecoration(
+                  color: Color(0xFF00E050),
                   boxShadow: [
                     CustomBoxShadow(color: Color(0xFF05FF00), blurRadius: 4)
                   ]),
@@ -116,8 +147,9 @@ class _PlayerProfileState extends State<PlayerProfile> {
                           gridSpacing * 2) /
                       183,
                 ),
-                itemCount: 2,
+                itemCount: videos.length,
                 itemBuilder: (context, index) {
+                  final video = videos[index];
                   return GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
@@ -127,8 +159,19 @@ class _PlayerProfileState extends State<PlayerProfile> {
                         ),
                       );
                     },
-                    child: Image.asset('assets/images/jugador1.png',
-                        fit: BoxFit.cover),
+                    child: FadeInImage.assetNetwork(
+                      placeholder: 'assets/images/video_placeholder.jpg',
+                      imageErrorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'assets/images/video_placeholder.jpg',
+                          height: 150,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                      image: video.imageUrl ?? "",
+                      height: 250,
+                      fit: BoxFit.fill,
+                    ),
                   );
                 },
               ),

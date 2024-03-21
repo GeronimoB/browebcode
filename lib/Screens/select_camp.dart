@@ -302,16 +302,19 @@ class SelectCampState extends State<SelectCamp> {
                               );
                               return;
                             }
-                            final customerId =
-                                jsonDecode(responseStripe.body)['customerId'];
+                            final jsonDataCus = jsonDecode(responseStripe.body);
+                            final customerId = jsonDataCus["customerId"];
+                            print("que me llega $customerId");
                             playerProvider.updateTemporalPlayer(
                                 customerStripeId: customerId);
+
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   backgroundColor: Colors.lightGreen,
                                   content: Text(
                                       'Su cuenta se ha creado exitosamente, tiene 3 días para confirmar su correo.')),
                             );
+                            Future.delayed(Duration(seconds: 2));
                             Navigator.push(
                               context,
                               MaterialPageRoute(
