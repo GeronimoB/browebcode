@@ -154,22 +154,22 @@ class _PlayerProfileState extends State<PlayerProfile> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const FullScreenVideoPage(
-                              imagePath: 'assets/images/jugador1.png', videoPath: '',),
+                          builder: (context) => FullScreenVideoPage(
+                            imagePath: video.imageUrl ?? '',
+                            videoPath: video.videoUrl ?? '',
+                          ),
                         ),
                       );
                     },
                     child: FadeInImage.assetNetwork(
-                      placeholder: 'assets/images/video_placeholder.jpg',
+                      placeholder: 'assets/images/video_placeholder.jpeg',
                       imageErrorBuilder: (context, error, stackTrace) {
                         return Image.asset(
-                          'assets/images/video_placeholder.jpg',
-                          height: 150,
+                          'assets/images/video_placeholder.jpeg',
                           fit: BoxFit.cover,
                         );
                       },
                       image: video.imageUrl ?? "",
-                      height: 250,
                       fit: BoxFit.fill,
                     ),
                   );

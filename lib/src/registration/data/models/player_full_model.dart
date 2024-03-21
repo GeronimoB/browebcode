@@ -112,9 +112,9 @@ class PlayerFullModel extends PlayerFullEntity {
 
   factory PlayerFullModel.fromJson(Map<String, dynamic> json) {
     return PlayerFullModel(
-      customerStripeId: json['customerStripeId'],
-      uid: json['uid'],
-      userId: json['userId'] ?? '',
+      customerStripeId: json['stripe_customer_id'],
+      uid: json['id'].toString(),
+      userId: json['user_id'].toString(),
       name: json['name'] ?? '',
       lastName: json['lastname'] ?? '',
       email: json['email'] ?? '',
@@ -127,9 +127,9 @@ class PlayerFullModel extends PlayerFullEntity {
       altura: json['altura'] ?? '',
       categoria: json['categoria'] ?? '',
       club: json['club'] ?? '',
-      position: json['position'] ?? '',
+      position: json['posicion_jugador'] ?? '',
       logrosIndividuales: json['logros_individuales'] ?? '',
-      pieDominante: json['pie_ominante'] ?? '',
+      pieDominante: json['pie_dominante'] ?? '',
       seleccionNacional: json['seleccion_nacional'] ?? '',
       categoriaSeleccion: json['categoria_seleccion'] ?? '',
       dateCreated:
