@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class FullScreenVideoPage extends StatelessWidget {
+class FullScreenImagePage extends StatelessWidget {
   final String imagePath;
 
-  const FullScreenVideoPage({Key? key, required this.imagePath, required String videoPath})
+  const FullScreenImagePage({Key? key, required this.imagePath})
       : super(key: key);
 
   @override
@@ -112,7 +112,7 @@ class FullScreenVideoPage extends StatelessWidget {
               color: Colors.black,
               child: Center(
                 child: SvgPicture.asset('assets/icons/Logo.svg',
-                    fit: BoxFit.fitWidth, width: 100),
+                    fit: BoxFit.fitWidth),
               ),
             ),
           ),
