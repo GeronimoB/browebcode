@@ -45,8 +45,6 @@ class _InicioPageState extends State<InicioPage> {
           }
         });
     }
-
-    // Cargar el controlador para el video anterior
     if (_controllers[previousIndex] == null) {
       // ignore: deprecated_member_use
       _controllers[previousIndex] = VideoPlayerController.network(_videoUrls[previousIndex])
