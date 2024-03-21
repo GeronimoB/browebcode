@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'custom_box_shadow.dart';
 
 class CustomTextButton extends StatelessWidget {
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final String text;
   final bool buttonPrimary;
   final double width;
@@ -11,7 +11,7 @@ class CustomTextButton extends StatelessWidget {
   final double? fontSize;
   const CustomTextButton(
       {super.key,
-      required this.onTap,
+      this.onTap,
       required this.text,
       required this.buttonPrimary,
       required this.width,

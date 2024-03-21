@@ -9,6 +9,7 @@ class PlayerProvider extends ChangeNotifier {
   Plan? _plan;
 
   void updateTemporalPlayer({
+    String? customerStripeId,
     String? userId,
     String? name,
     String? email,
@@ -29,6 +30,7 @@ class PlayerProvider extends ChangeNotifier {
     String? dni,
   }) {
     _temporalUser = _temporalUser.copyWith(
+        customerStripeId: customerStripeId,
         userId: userId,
         dni: dni,
         name: name,
