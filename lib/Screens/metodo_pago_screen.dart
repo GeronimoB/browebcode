@@ -57,7 +57,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Text(
-                playerProvider.getActualPlan()!.precio,
+                '${playerProvider.getActualPlan()!.precio}',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Color(0xFF00E050),

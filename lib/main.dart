@@ -1,12 +1,18 @@
 import 'dart:async';
+import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Intro.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/user_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = ApiConstants.stripePublicKey;
+
+  await Stripe.instance.applySettings();
   runApp(const MyApp());
 }
 
