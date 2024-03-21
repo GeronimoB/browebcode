@@ -24,6 +24,7 @@ class SelectCamp extends StatefulWidget {
 class SelectCampState extends State<SelectCamp> {
   bool _acceptedTerms = false;
   late List<Player> players;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -227,6 +228,9 @@ class SelectCampState extends State<SelectCamp> {
                   const SizedBox(height: 10),
                   CustomTextButton(
                       onTap: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
                         if (!_acceptedTerms) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -234,6 +238,9 @@ class SelectCampState extends State<SelectCamp> {
                                 content: Text(
                                     'Por favor, acepta los terminos y condiciones.')),
                           );
+                          setState(() {
+                            isLoading = false;
+                          });
                           return;
                         }
                         if (!players.any((player) => player.isSelected)) {
@@ -244,6 +251,9 @@ class SelectCampState extends State<SelectCamp> {
                                   Text('Por favor, selecciona una posición.'),
                             ),
                           );
+                          setState(() {
+                            isLoading = false;
+                          });
                           return;
                         }
                         final selectedPlayer =
@@ -267,9 +277,13 @@ class SelectCampState extends State<SelectCamp> {
                           if (response.statusCode == 200) {
                             final jsonData = jsonDecode(response.body);
                             final userId = jsonData["userInfo"]["userId"];
+
+                            playerProvider.updateTemporalPlayer(
+                              userId: userId.toString(),
+                            );
+
                             final name =
                                 "${playerProvider.getTemporalUser().name} ${playerProvider.getTemporalUser().lastName}";
-                            print("el nombre actual es $name");
                             final email =
                                 playerProvider.getTemporalUser().email;
 
@@ -281,7 +295,6 @@ class SelectCampState extends State<SelectCamp> {
                                 "Email": email
                               },
                             );
-
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   backgroundColor: Colors.lightGreen,
@@ -295,6 +308,9 @@ class SelectCampState extends State<SelectCamp> {
                                       const FirstVideoWidget()),
                             );
                           } else {
+                            setState(() {
+                              isLoading = false;
+                            });
                             final jsonData = json.decode(response.body);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
@@ -311,6 +327,9 @@ class SelectCampState extends State<SelectCamp> {
                                   'Se ha producido un error. Por favor, inténtalo de nuevo.'),
                             ),
                           );
+                          setState(() {
+                            isLoading = false;
+                          });
                           return;
                         }
                       },
@@ -336,6 +355,17 @@ class SelectCampState extends State<SelectCamp> {
               ),
             ),
           ),
+          if (isLoading)
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Colors.black.withOpacity(0.5),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                ),
+              ),
+            ),
         ],
       ),
     );

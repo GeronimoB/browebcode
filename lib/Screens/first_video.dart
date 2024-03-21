@@ -59,8 +59,6 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                   const SizedBox(height: 15),
                   CustomTextButton(
                       onTap: () async {
-                        await uploadVideoAndImage(
-                            videoPathToUpload, imagePathToUpload);
                         Navigator.of(context).pop();
                       },
                       text: "Listo",
@@ -137,6 +135,13 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
       await _videoController?.initialize();
 
       await _videoController?.play();
+      Future.delayed(Duration(seconds: 8), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const PlanesPago()),
+        );
+      });
+
       _videoController?.setLooping(true); // Pone el video en bucle
 
       _videoController?.addListener(() {

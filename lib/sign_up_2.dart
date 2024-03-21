@@ -145,9 +145,12 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    height: 0.5,
+                    height: 1,
                   ),
                   textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 TextField(
                   controller: dniController,
