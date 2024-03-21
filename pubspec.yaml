@@ -39,6 +39,8 @@ dependencies:
   get_it: ^7.6.7
   remove: ^1.0.10
   video_thumbnail: ^0.5.3
+  carousel_slider: ^4.0.0 
+  
 
 dev_dependencies:
   flutter_test:
@@ -48,7 +50,8 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/images/
+    - assets/videos/13.mp4
+    - assets/videos/12.mp4
     - assets/images/
     - assets/icons/
   # The following line ensures that the Material Icons font is

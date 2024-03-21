@@ -1,4 +1,9 @@
 import 'package:bro_app_to/Screens/Afiliados_Player.dart';
+import 'package:bro_app_to/Screens/CuentaPlayer.dart';
+import 'package:bro_app_to/Screens/Notificaciones.dart';
+import 'package:bro_app_to/Screens/Pedidos.dart';
+import 'package:bro_app_to/Screens/Privacidad.dart';
+import 'package:bro_app_to/Screens/Servicios.dart';
 import 'package:flutter/material.dart';
 
 class ConfigProfilePlayer extends StatelessWidget {
@@ -52,15 +57,16 @@ class ConfigProfilePlayer extends StatelessWidget {
               child: ListView(
                 children: [
                   SizedBox(height: 22),
-                  _buildListItem('CUENTA', context, true),
-                  _buildListItem('PRIVACIDAD', context, true),
-                  SizedBox(height: 15),
-                  _buildListItem('CENTRO DE AYUDA (FAQ)', context, false),
-                  _buildListItem('SOPORTE', context, false),
-                  _buildListItem('NOTIFICACIONES', context, true),
-                  _buildListItem('AFILIADOS', context, true),
-                  _buildListItem('PEDIDOS', context, true),
-                  _buildListItem('SERVICIOS', context, true),
+                    _buildListItem('CUENTA', context, true, CuentaPage()),
+                    _buildListItem('PRIVACIDAD', context, true, Privacidad()),
+                    SizedBox(height: 15),
+                    _buildListItem('CENTRO DE AYUDA (FAQ)', context, false, ConfigProfilePlayer()),
+                    _buildListItem('SOPORTE', context, false, ConfigProfilePlayer()),
+                    _buildListItem('NOTIFICACIONES', context, true, Notificaciones()),
+                    _buildListItem('AFILIADOS', context, true, const AfiliadosPlayer()),
+                    _buildListItem('PEDIDOS', context, true, Pedidos()),
+                    _buildListItem('SERVICIOS', context, true, const Servicios()),
+
                 ],
               ),
             ),
@@ -79,7 +85,7 @@ class ConfigProfilePlayer extends StatelessWidget {
   }
 
   Widget _buildListItem(
-      String title, BuildContext context, bool showTrailingIcon) {
+      String title, BuildContext context, bool showTrailingIcon, Widget page) {
     return ListTile(
       title: Text(
         title,
@@ -94,13 +100,9 @@ class ConfigProfilePlayer extends StatelessWidget {
           ? const Icon(Icons.chevron_right, color: Color(0xFF05FF00))
           : null,
       onTap: () {
-        if (title == 'AFILIADOS') {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AfiliadosPlayer()),
-          );
-        } else {
-          // Manejar otras opciones de la lista aquí.
-        }
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => page),
+        );
       },
     );
   }
