@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../src/registration/data/models/player_full_model.dart';
+import '../utils/plan_model.dart';
 
 class PlayerProvider extends ChangeNotifier {
   PlayerFullModel? _player;
   PlayerFullModel _temporalUser = const PlayerFullModel(name: '', email: '');
+  Plan? _plan;
 
   void updateTemporalPlayer({
+    String? userId,
     String? name,
     String? email,
     DateTime? birthDate,
@@ -26,6 +29,7 @@ class PlayerProvider extends ChangeNotifier {
     String? dni,
   }) {
     _temporalUser = _temporalUser.copyWith(
+        userId: userId,
         dni: dni,
         name: name,
         email: email,
@@ -46,7 +50,6 @@ class PlayerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Método para obtener el usuario temporal
   PlayerFullModel getTemporalUser() {
     return _temporalUser;
   }
@@ -54,6 +57,15 @@ class PlayerProvider extends ChangeNotifier {
   void setPlayer(PlayerFullModel player) {
     _player = player;
     notifyListeners();
+  }
+
+  void selectPlan(Plan plan) {
+    _plan = plan;
+    notifyListeners();
+  }
+
+  Plan? getActualPlan() {
+    return _plan;
   }
 
   PlayerFullModel? getPlayer() {

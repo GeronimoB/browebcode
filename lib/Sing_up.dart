@@ -68,6 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           .timeout(const Duration(seconds: 10));
 
       if (response.statusCode != 200) {
+        print(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               backgroundColor: Colors.redAccent,

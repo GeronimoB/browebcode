@@ -3,28 +3,16 @@ import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 import 'Screens/bottom_navigation_bar.dart';
 import 'Screens/metodo_pago_screen.dart';
-
-class Plan {
-  String nombre;
-  String precio;
-  String descripcion;
-  String descripcionLarga;
-  bool isExpanded;
-
-  Plan({
-    required this.nombre,
-    required this.precio,
-    required this.descripcion,
-    required this.descripcionLarga,
-    this.isExpanded = false,
-  });
-}
+import 'providers/user_provider.dart';
+import 'utils/plan_model.dart';
 
 List<Plan> planes = [
   Plan(
+    idPlan: 'prod_Pm9dXaR543QJTO',
     nombre: 'Basic',
     precio: '19,99€',
     descripcion:
@@ -34,6 +22,7 @@ List<Plan> planes = [
   ),
   Plan(
     nombre: 'Gold',
+    idPlan: 'prod_PmB07jIWo7KNqU',
     precio: '29,99€',
     descripcion:
         'Posibilita subir 5 videos de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD.',
@@ -41,6 +30,7 @@ List<Plan> planes = [
         'ube nuevo video una vez tengas el cupo de 5 cubierto, para ello deberás eliminar uno de la plataforma para que sea efectiva la subida y seguir manteniendo tus 5 videos activos..',
   ),
   Plan(
+    idPlan: 'prod_PmB1Pkn0RKq6U7',
     nombre: 'Platinum',
     precio: '49,99€ ',
     descripcion:
@@ -49,6 +39,7 @@ List<Plan> planes = [
         'Sube nuevo video una vez tengas el cupo de 10 cubiertos, para ellos deberás eliminar uno de la plataforma para que sea efectiva la subida y seguir  manteniendo tus 10 videos activos',
   ),
   Plan(
+    idPlan: 'prod_PmB1j2KKHYdHD5',
     nombre: 'Unlimited',
     precio: '89,99€',
     descripcion:
@@ -150,6 +141,9 @@ class _PlanesPagoState extends State<PlanesPago> {
 
     return GestureDetector(
       onTap: () {
+        final playerProvider =
+            Provider.of<PlayerProvider>(context, listen: false);
+        playerProvider.selectPlan(plan);
         setState(() {
           if (isSelected) {
             _selectedCardIndex = -1; // Deseleccionar
