@@ -1,3 +1,4 @@
+import 'package:bro_app_to/Screens/MatchProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:video_player/video_player.dart';
@@ -83,17 +84,31 @@ class _InicioPageState extends State<InicioPage> {
         _initializeController(_currentIndex);
         _managePlayback(_currentIndex);
       });
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MatchProfile()),
+      );
+      print('Deslizado hacia la derecha');
     } else if (_xOffset < -100) {
       setState(() {
         _currentIndex = _currentIndex == 0 ? _controllers.length - 1 : _currentIndex - 1;
         _initializeController(_currentIndex);
         _managePlayback(_currentIndex);
       });
+      print('Deslizado hacia la izquierda');
     }
     setState(() {
       _xOffset = 0;
       _rotation = 0;
     });
+  }
+
+  void _togglePlayPause() {
+    if (_controllers[_currentIndex]?.value.isPlaying ?? false) {
+      _controllers[_currentIndex]?.pause();
+    } else {
+      _controllers[_currentIndex]?.play();
+    }
   }
 
   @override
@@ -104,6 +119,7 @@ class _InicioPageState extends State<InicioPage> {
     return SizedBox(
       height: height * 0.9,
       child: GestureDetector(
+        onTap: _togglePlayPause,
         onHorizontalDragUpdate: _onHorizontalDragUpdate,
         onHorizontalDragEnd: _onHorizontalDragEnd,
         child: Stack(
@@ -120,7 +136,15 @@ class _InicioPageState extends State<InicioPage> {
                         alignment: Alignment.bottomCenter,
                         children: [
                           VideoPlayer(_controllers[_currentIndex]!),
-                          VideoProgressIndicator(_controllers[_currentIndex]!, allowScrubbing: true),
+                          VideoProgressIndicator(
+                            _controllers[_currentIndex]!,
+                            allowScrubbing: true,
+                            colors: const VideoProgressColors(
+                              playedColor: Color(0xFF00E050), 
+                              bufferedColor: Colors.white,
+                              backgroundColor: Colors.grey, 
+                            ),
+                          ),
                         ],
                       ),
                     ),

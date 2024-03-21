@@ -1,4 +1,4 @@
-import 'package:bro_app_to/Screens/config_profile_player.dart';
+import 'package:bro_app_to/Screens/config_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/perfil_detalle_page.dart';
 
@@ -38,7 +38,7 @@ class PerfilPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => ConfigProfilePlayer(),
+                          builder: (context) => ConfigProfile(),
                         ),
                       );
                     },

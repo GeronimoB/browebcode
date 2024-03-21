@@ -40,8 +40,9 @@ dependencies:
   remove: ^1.0.10
   video_thumbnail: ^0.5.3
   carousel_slider: ^4.0.0 
-  
-  flutter_stripe: ^10.1.1
+  image_picker: ^1.0.7
+
+
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +52,7 @@ dev_dependencies:
 
 flutter:
   assets:
+    - assets/images/
     - assets/images/
     - assets/icons/
   # The following line ensures that the Material Icons font is
