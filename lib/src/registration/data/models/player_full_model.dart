@@ -12,6 +12,7 @@ class PlayerFullModel extends PlayerFullEntity {
     final bool? isAgent,
     final DateTime? birthDate,
     final String? dni,
+    final String? password,
     final String? pais,
     final String? provincia,
     final String? altura,
@@ -21,6 +22,7 @@ class PlayerFullModel extends PlayerFullEntity {
     final String? pieDominante,
     final String? seleccionNacional,
     final String? categoriaSeleccion,
+    final String? position,
     final DateTime? dateCreated,
     final DateTime? dateUpdated,
     final String? userImage,
@@ -29,10 +31,12 @@ class PlayerFullModel extends PlayerFullEntity {
           name: name,
           lastName: lastName,
           email: email,
+          password: password,
           referralCode: referralCode,
           isAgent: isAgent,
           birthDate: birthDate,
           dni: dni,
+          position: position,
           pais: pais,
           provincia: provincia,
           altura: altura,
@@ -54,9 +58,11 @@ class PlayerFullModel extends PlayerFullEntity {
     String? lastName,
     String? email,
     String? referralCode,
+    String? password,
     bool? isAgent,
     DateTime? birthDate,
     String? dni,
+    String? position,
     String? pais,
     String? provincia,
     String? altura,
@@ -74,7 +80,9 @@ class PlayerFullModel extends PlayerFullEntity {
       uid: uid ?? this.uid,
       name: name ?? this.name,
       lastName: lastName ?? this.lastName,
+      password: password ?? this.password,
       email: email ?? this.email,
+      position: position ?? this.position,
       referralCode: referralCode ?? this.referralCode,
       isAgent: isAgent ?? this.isAgent,
       birthDate: birthDate ?? this.birthDate,
@@ -109,6 +117,7 @@ class PlayerFullModel extends PlayerFullEntity {
       altura: json['altura'] ?? '',
       categoria: json['categoria'] ?? '',
       club: json['club'] ?? '',
+      position: json['position'] ?? '',
       logrosIndividuales: json['logros_individuales'] ?? '',
       pieDominante: json['pie_ominante'] ?? '',
       seleccionNacional: json['seleccion_nacional'] ?? '',
@@ -123,27 +132,30 @@ class PlayerFullModel extends PlayerFullEntity {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      "uid": uid,
-      "name": name,
-      "lastName": lastName,
-      "email": email,
-      "referralCode": referralCode,
-      "isAgent": isAgent,
-      "birthDate": birthDate,
-      "dni": dni,
-      "pais": pais,
-      "provincia": provincia,
-      "altura": altura,
-      "categoria": categoria,
-      "club": club,
-      "logrosIndividuales": logrosIndividuales,
-      "pieDominante": pieDominante,
-      "seleccionNacional": seleccionNacional,
-      "categoriaSeleccion": categoriaSeleccion,
-      "dateCreated": dateCreated,
-      "dateUpdated": dateUpdated,
-      "userImage": userImage,
-    };
+    final Map<String, dynamic> map = {};
+
+    if (uid != null) map['uid'] = uid;
+    if (name != null) map['Name'] = name;
+    if (lastName != null) map['LastName'] = lastName;
+    if (email != null) map['Email'] = email;
+    if (referralCode != null) map['CodigoAfiliado'] = referralCode;
+    if (password != null) map['Password'] = password;
+    if (birthDate != null) map['Birthday'] = birthDate.toString();
+    if (dni != null) map['DNI'] = dni;
+    if (pais != null) map['Pais'] = pais;
+    if (position != null) map['PosicionJugador'] = position;
+    if (provincia != null) map['Provincia'] = provincia;
+    if (altura != null) map['Altura'] = altura;
+    if (categoria != null) map['Categoria'] = categoria;
+    if (club != null) map['Club'] = club;
+    if (logrosIndividuales != null)
+      map['LogrosIndividuales'] = logrosIndividuales;
+    if (pieDominante != null) map['PieDominante'] = pieDominante;
+    if (seleccionNacional != null) map['SeleccionNacional'] = seleccionNacional;
+    if (categoriaSeleccion != null)
+      map['CategoriaSeleccion'] = categoriaSeleccion;
+    if (userImage != null) map['userImage'] = userImage;
+
+    return map;
   }
 }

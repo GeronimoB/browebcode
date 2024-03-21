@@ -15,6 +15,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MaterialColor customGreen = const MaterialColor(
+      0xFF00F056,
+      <int, Color>{
+        50: Color(0xFFE0F7EF),
+        100: Color(0xFFB3E1C9),
+        200: Color(0xFF80CEA1),
+        300: Color(0xFF4DBB79),
+        400: Color(0xFF26AC5E),
+        500: Color(0xFF00F056),
+        600: Color(0xFF00C84B),
+        700: Color(0xFF009A3B),
+        800: Color(0xFF00732B),
+        900: Color(0xFF004C1D),
+      },
+    );
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PlayerProvider()),
@@ -23,6 +38,12 @@ class MyApp extends StatelessWidget {
         title: 'Bro app',
         theme: ThemeData(
           primarySwatch: Colors.green,
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: customGreen, // Color principal
+            backgroundColor: Colors.black, // Color de fondo
+            cardColor: Colors.white, // Color de la tarjeta
+          ),
+          useMaterial3: true,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: const MySplashScreen(),

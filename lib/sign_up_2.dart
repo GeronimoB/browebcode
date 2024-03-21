@@ -1,12 +1,120 @@
+import 'dart:async';
+
 import 'package:bro_app_to/Screens/select_camp.dart';
+import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 import 'components/custom_dropdown.dart';
 import 'components/custom_text_button.dart';
+import 'providers/user_provider.dart';
+import 'package:http/http.dart' as http;
 
-class SignUpScreen2 extends StatelessWidget {
+class SignUpScreen2 extends StatefulWidget {
   const SignUpScreen2({super.key});
+
+  @override
+  State<SignUpScreen2> createState() => _SignUpScreen2State();
+}
+
+class _SignUpScreen2State extends State<SignUpScreen2> {
+  bool isLoading = false;
+  late TextEditingController dniController;
+  late TextEditingController countryController;
+  late TextEditingController stateController;
+  late TextEditingController categoryController;
+  late TextEditingController clubController;
+  late TextEditingController achivementController;
+  late TextEditingController referralCodeCtlr;
+  late TextEditingController heightController;
+  String dominantFoot = 'Zurdo';
+  String selection = 'Masculina';
+  String catSelection = '12';
+
+  Future<bool> validateForm(BuildContext context) async {
+    if (dniController.text.isEmpty ||
+        countryController.text.isEmpty ||
+        stateController.text.isEmpty ||
+        categoryController.text.isEmpty ||
+        clubController.text.isEmpty ||
+        achivementController.text.isEmpty ||
+        heightController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            backgroundColor: Colors.redAccent,
+            content: Text('Por favor, complete todos los campos.')),
+      );
+      return false;
+    }
+    if (referralCodeCtlr.text.isNotEmpty) {
+      try {
+        final response = await http
+            .get(
+              Uri.parse(
+                  '${ApiConstants.baseUrl}/auth/referralCode/${referralCodeCtlr.text}'),
+            )
+            .timeout(const Duration(seconds: 10));
+
+        if (response.statusCode != 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                backgroundColor: Colors.redAccent,
+                content: Text('El código de afiliado ingresado no existe.')),
+          );
+          referralCodeCtlr.text = "";
+          return false;
+        }
+        return true;
+      } on TimeoutException {
+        // Si se produce un timeout, muestra un mensaje de error y devuelve false
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            content: Text(
+                'Se ha producido un error. Por favor, inténtalo de nuevo.'),
+          ),
+        );
+        return false;
+      } catch (e) {
+        // Captura cualquier otra excepción y muestra un mensaje de error genérico
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.redAccent,
+            content: Text(
+                'Se ha producido un error. Por favor, intentelo de nuevo.'),
+          ),
+        );
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    dniController = TextEditingController();
+    countryController = TextEditingController();
+    clubController = TextEditingController();
+    heightController = TextEditingController();
+    categoryController = TextEditingController();
+    stateController = TextEditingController();
+    achivementController = TextEditingController();
+    referralCodeCtlr = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    dniController.dispose();
+    countryController.dispose();
+    clubController.dispose();
+    categoryController.dispose();
+    stateController.dispose();
+    achivementController.dispose();
+    referralCodeCtlr.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +132,8 @@ class SignUpScreen2 extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(30.0),
+          SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(24, 145.0, 24, 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -41,8 +149,29 @@ class SignUpScreen2 extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: dniController,
+                  decoration: const InputDecoration(
+                    labelText: 'Introduce tu SIN / NI / DNI/ NIE',
+                    labelStyle: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w500,
+                      fontStyle: FontStyle.italic,
+                      fontSize: 12,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xFF00F056), width: 2),
+                    ),
+                  ),
+                  style: const TextStyle(
+                      color: Colors.white, fontFamily: 'Montserrat'),
+                ),
+                TextField(
+                  controller: countryController,
+                  decoration: const InputDecoration(
                     labelText: 'Pais',
                     labelStyle: TextStyle(
                       color: Colors.white,
@@ -57,11 +186,12 @@ class SignUpScreen2 extends StatelessWidget {
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
-                  style:
-                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style: const TextStyle(
+                      color: Colors.white, fontFamily: 'Montserrat'),
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: stateController,
+                  decoration: const InputDecoration(
                     labelText: 'Provincia',
                     labelStyle: TextStyle(
                       color: Colors.white,
@@ -76,11 +206,12 @@ class SignUpScreen2 extends StatelessWidget {
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
-                  style:
-                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style: const TextStyle(
+                      color: Colors.white, fontFamily: 'Montserrat'),
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: heightController,
+                  decoration: const InputDecoration(
                     labelText: 'Altura',
                     labelStyle: TextStyle(
                       color: Colors.white,
@@ -95,11 +226,12 @@ class SignUpScreen2 extends StatelessWidget {
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
-                  style:
-                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style: const TextStyle(
+                      color: Colors.white, fontFamily: 'Montserrat'),
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: categoryController,
+                  decoration: const InputDecoration(
                     labelText: 'Categoría en la que juega',
                     labelStyle: TextStyle(
                       color: Colors.white,
@@ -114,11 +246,12 @@ class SignUpScreen2 extends StatelessWidget {
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
-                  style:
-                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style: const TextStyle(
+                      color: Colors.white, fontFamily: 'Montserrat'),
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: clubController,
+                  decoration: const InputDecoration(
                     labelText: 'Club/Escuela deportivo/a en el/la que juega',
                     labelStyle: TextStyle(
                       color: Colors.white,
@@ -133,11 +266,12 @@ class SignUpScreen2 extends StatelessWidget {
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
-                  style:
-                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style: const TextStyle(
+                      color: Colors.white, fontFamily: 'Montserrat'),
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: achivementController,
+                  decoration: const InputDecoration(
                     labelText: 'Logros individuales',
                     labelStyle: TextStyle(
                       color: Colors.white,
@@ -152,8 +286,8 @@ class SignUpScreen2 extends StatelessWidget {
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
-                  style:
-                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style: const TextStyle(
+                      color: Colors.white, fontFamily: 'Montserrat'),
                 ),
                 const SizedBox(height: 10),
                 Row(
@@ -171,10 +305,12 @@ class SignUpScreen2 extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     DropdownWidget<String>(
-                      value: 'Zurdo',
+                      value: dominantFoot,
                       items: ['Zurdo', 'Diestro', 'Ambidiestro'].toList(),
                       onChanged: (String? newValue) {
-                        // Handle dropdown value change
+                        setState(() {
+                          dominantFoot = newValue ?? 'Zurdo';
+                        });
                       },
                       itemBuilder: (String item) {
                         return item;
@@ -199,10 +335,12 @@ class SignUpScreen2 extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     DropdownWidget<String>(
-                      value: 'Masculina',
+                      value: selection,
                       items: ['Masculina', 'Femenino'].toList(),
                       onChanged: (String? newValue) {
-                        // Handle dropdown value change
+                        setState(() {
+                          selection = newValue ?? 'Masculina';
+                        });
                       },
                       itemBuilder: (String item) {
                         return item;
@@ -211,10 +349,12 @@ class SignUpScreen2 extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     DropdownWidget<String>(
-                      value: '12',
+                      value: catSelection,
                       items: ['12', '13', '14', '15', '16'].toList(),
                       onChanged: (String? newValue) {
-                        // Handle dropdown value change
+                        setState(() {
+                          catSelection = newValue ?? '12';
+                        });
                       },
                       itemBuilder: (String item) {
                         return item;
@@ -224,8 +364,9 @@ class SignUpScreen2 extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: referralCodeCtlr,
+                  decoration: const InputDecoration(
                     labelText: 'Código Afiliado',
                     labelStyle: TextStyle(
                       color: Colors.white,
@@ -240,33 +381,71 @@ class SignUpScreen2 extends StatelessWidget {
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
-                  style:
-                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style: const TextStyle(
+                      color: Colors.white, fontFamily: 'Montserrat'),
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 55),
                 CustomTextButton(
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      FocusScope.of(context).unfocus();
+
+                      bool isValid = await validateForm(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => const SelectCamp()),
                       );
+                      if (isValid) {
+                        final playerProvider =
+                            Provider.of<PlayerProvider>(context, listen: false);
+                        playerProvider.updateTemporalPlayer(
+                          dni: dniController.text,
+                          pais: countryController.text,
+                          provincia: stateController.text,
+                          categoria: categoryController.text,
+                          club: categoryController.text,
+                          logros: achivementController.text,
+                          codigoReferido: referralCodeCtlr.text,
+                          altura: heightController.text,
+                          pieDominante: dominantFoot,
+                          seleccion: selection,
+                          categoriaSeleccion: catSelection,
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SelectCamp()),
+                        );
+                      }
+                      setState(() {
+                        isLoading = false; // Ocultar el loader
+                      });
                     },
                     text: 'Siguiente',
                     buttonPrimary: true,
                     width: 116,
                     height: 39),
+                const SizedBox(height: 85),
+                SvgPicture.asset(
+                  width: 104,
+                  'assets/icons/Logo.svg',
+                ),
               ],
             ),
           ),
-          Positioned(
-            bottom: 10,
-            left: MediaQuery.of(context).size.width / 2 - 52,
-            child: SvgPicture.asset(
-              width: 104,
-              'assets/icons/Logo.svg',
+          if (isLoading)
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Colors.black
+                  .withOpacity(0.5), // Color de fondo semitransparente
+              child: const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Colors.green), // Color del loader
+                ),
+              ),
             ),
-          ),
         ],
       ),
     );

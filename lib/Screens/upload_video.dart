@@ -127,6 +127,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
       );
 
       // Si pasa las validaciones, entonces reproducir el video
+      showUploadDialog("El video se cargo correctamente", true);
       await _videoController?.play();
       _videoController?.setLooping(true); // Pone el video en bucle
 

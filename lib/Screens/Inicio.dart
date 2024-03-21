@@ -48,12 +48,10 @@ class _InicioPageState extends State<InicioPage> {
       setState(() {
         _currentIndex = _nextIndex;
       });
-      print('Swiped right');
     } else if (_xOffset < -100) {
       setState(() {
         _currentIndex = _prevIndex;
       });
-      print('Swiped left');
     }
     setState(() {
       _xOffset = 0;

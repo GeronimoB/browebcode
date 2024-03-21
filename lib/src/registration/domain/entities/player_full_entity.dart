@@ -27,6 +27,9 @@ class PlayerFullEntity extends Equatable {
 
   final String? club;
 
+  final String? password;
+  final String? position;
+
   final String? logrosIndividuales;
 
   final String? pieDominante;
@@ -49,6 +52,7 @@ class PlayerFullEntity extends Equatable {
     this.isAgent,
     this.birthDate,
     this.dni,
+    this.position,
     this.pais,
     this.provincia,
     this.altura,
@@ -61,6 +65,7 @@ class PlayerFullEntity extends Equatable {
     this.dateCreated,
     this.dateUpdated,
     this.userImage,
+    this.password,
   });
 
   PlayerFullEntity copyWith({
@@ -78,12 +83,14 @@ class PlayerFullEntity extends Equatable {
     String? categoria,
     String? logrosIndividuales,
     String? club,
+    String? position,
     String? pieDominante,
     String? seleccionNacional,
     String? categoriaSeleccion,
     DateTime? dateCreated,
     DateTime? dateUpdated,
     String? userImage,
+    String? password,
   }) {
     return PlayerFullEntity(
       uid: uid ?? this.uid,
@@ -93,7 +100,9 @@ class PlayerFullEntity extends Equatable {
       referralCode: referralCode ?? this.referralCode,
       isAgent: isAgent ?? this.isAgent,
       birthDate: birthDate ?? this.birthDate,
+      password: password ?? this.password,
       dni: dni ?? this.dni,
+      position: position ?? this.position,
       pais: pais ?? this.pais,
       provincia: provincia ?? this.provincia,
       altura: altura ?? this.altura,
@@ -119,9 +128,11 @@ class PlayerFullEntity extends Equatable {
         isAgent,
         birthDate,
         dni,
+        position,
         pais,
         provincia,
         altura,
+        password,
         categoria,
         club,
         logrosIndividuales,

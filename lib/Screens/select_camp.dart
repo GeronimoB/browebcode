@@ -1,8 +1,17 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:bro_app_to/Screens/first_video.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../components/custom_text_button.dart';
+import '../providers/user_provider.dart';
+import 'package:http/http.dart' as http;
+
+import '../utils/api_constants.dart';
 
 class SelectCamp extends StatefulWidget {
   const SelectCamp({super.key});
@@ -13,6 +22,25 @@ class SelectCamp extends StatefulWidget {
 
 class SelectCampState extends State<SelectCamp> {
   bool _acceptedTerms = false;
+  late List<Player> players;
+
+  @override
+  void initState() {
+    super.initState();
+    players = [
+      Player(position: "Portero", number: "1"),
+      Player(position: "Lateral Derecho", number: "2"),
+      Player(position: "Lateral Izquierdo", number: "3"),
+      Player(position: "Defensa Central Derecho", number: "4"),
+      Player(position: "Defensa Central Izquierdo", number: "5"),
+      Player(position: "Mediocampista Defensivo", number: "6"),
+      Player(position: "Mediocampista Derecho", number: "7"),
+      Player(position: "Mediocampista Central", number: "8"),
+      Player(position: "Delantero Centro", number: "9"),
+      Player(position: "Mediocampista Ofensivo", number: "10"),
+      Player(position: "Extremo Izquierdo", number: "11"),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,13 +113,13 @@ class SelectCampState extends State<SelectCamp> {
             screenSize.width * 0.01,
           ),
           playerPic(
-            "Defensa Central",
+            "Defensa Central Derecho",
             "4",
             screenSize.height * 0.5,
             screenSize.width * 0.6,
           ),
           playerPic(
-            "Defensa Central",
+            "Defensa Central Izquierdo",
             "5",
             screenSize.height * 0.5,
             screenSize.width * 0.26,
@@ -121,7 +149,7 @@ class SelectCampState extends State<SelectCamp> {
             screenSize.width * 0.475,
           ),
           playerPic(
-            "Delantero Centro",
+            "Mediocampista Ofensivo",
             "10",
             screenSize.height * 0.44,
             screenSize.width * 0.4,
@@ -197,12 +225,80 @@ class SelectCampState extends State<SelectCamp> {
                   ),
                   const SizedBox(height: 10),
                   CustomTextButton(
-                      onTap: () {
+                      onTap: () async {
+                        if (!_acceptedTerms) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                backgroundColor: Colors.redAccent,
+                                content: Text(
+                                    'Por favor, acepta los terminos y condiciones.')),
+                          );
+                          return;
+                        }
+                        if (!players.any((player) => player.isSelected)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Colors.redAccent,
+                              content:
+                                  Text('Por favor, selecciona una posición.'),
+                            ),
+                          );
+                          return;
+                        }
+                        final selectedPlayer =
+                            players.firstWhere((element) => element.isSelected);
+                        final playerProvider =
+                            Provider.of<PlayerProvider>(context, listen: false);
+                        playerProvider.updateTemporalPlayer(
+                          position: selectedPlayer.position,
+                        );
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const FirstVideoWidget()),
                         );
+                        // try {
+                        //   final response = await http
+                        //       .post(
+                        //         Uri.parse(
+                        //           '${ApiConstants.baseUrl}/auth/player',
+                        //         ),
+                        //         body: playerProvider.getTemporalUser().toMap(),
+                        //       )
+                        //       .timeout(const Duration(seconds: 10));
+                        //   print(response.body);
+                        //   if (response.statusCode == 200) {
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //       const SnackBar(
+                        //           backgroundColor: Colors.lightGreen,
+                        //           content: Text(
+                        //               'Su cuenta se ha creado exitosamente, tiene 3 días para confirmar su correo.')),
+                        //     );
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (context) =>
+                        //               const FirstVideoWidget()),
+                        //     );
+                        //   } else {
+                        //     final jsonData = json.decode(response.body);
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //       SnackBar(
+                        //           backgroundColor: Colors.redAccent,
+                        //           content: Text(jsonData["error"])),
+                        //     );
+                        //   }
+                        // } on TimeoutException {
+                        //   // Si se produce un timeout, muestra un mensaje de error y devuelve false
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     const SnackBar(
+                        //       backgroundColor: Colors.redAccent,
+                        //       content: Text(
+                        //           'Se ha producido un error. Por favor, inténtalo de nuevo.'),
+                        //     ),
+                        //   );
+                        //   return;
+                        // }
                       },
                       text: 'Siguiente',
                       buttonPrimary: true,
@@ -231,8 +327,9 @@ class SelectCampState extends State<SelectCamp> {
     );
   }
 
-  void _showPositionDialog(String position) {
+  void _showPositionDialog(String position, VoidCallback update) {
     bool? isSelected;
+    bool aux = false;
 
     showDialog(
       context: context,
@@ -263,8 +360,10 @@ class SelectCampState extends State<SelectCamp> {
                         value: true,
                         groupValue: isSelected,
                         onChanged: (bool? value) {
-                          // Actualiza el estado para reflejar la nueva selección
-                          setState(() => isSelected = value);
+                          setState(() {
+                            isSelected = value;
+                            aux = true;
+                          });
                         },
                         activeColor: const Color(0xff00E050),
                       ),
@@ -279,8 +378,10 @@ class SelectCampState extends State<SelectCamp> {
                         value: false,
                         groupValue: isSelected,
                         onChanged: (bool? value) {
-                          // Actualiza el estado para reflejar la nueva selección
-                          setState(() => isSelected = value);
+                          setState(() {
+                            isSelected = value;
+                            aux = false;
+                          });
                         },
                         activeColor: const Color(0xff00E050),
                       ),
@@ -294,6 +395,14 @@ class SelectCampState extends State<SelectCamp> {
                   ),
                   CustomTextButton(
                       onTap: () {
+                        setState(() {
+                          players.forEach((player) {
+                            if (player.position == position) {
+                              player.isSelected = aux;
+                            }
+                          });
+                          update.call();
+                        });
                         Navigator.of(context).pop(isSelected);
                       },
                       text: "Listo",
@@ -310,39 +419,94 @@ class SelectCampState extends State<SelectCamp> {
   }
 
   Widget playerPic(String position, String number, double top, double left) {
+    // Encuentra el jugador correspondiente en la lista
+    Player player = players.firstWhere(
+      (element) => element.position == position,
+      orElse: () => Player(position: position, number: number),
+    );
+
     return Positioned(
       top: top,
       left: left,
       child: GestureDetector(
         onTap: () {
-          _showPositionDialog(position);
+          _showPositionDialog(position, () {
+            setState(() {});
+          });
+          handlePlayerSelection(player);
         },
         child: Column(
           children: [
             Container(
-                width: 35,
-                height: 35,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white, width: 3),
-                    borderRadius: BorderRadius.circular(17.5)),
-                child: Center(
-                  child: Text(
-                    number,
-                    style: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        letterSpacing: 1,
-                        height: 1),
+              width: 35,
+              height: 35,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: player.isSelected
+                      ? const Color(0xff05FF00)
+                      : Colors.white,
+                  width: 3,
+                ),
+                borderRadius: BorderRadius.circular(17.5),
+              ),
+              child: Center(
+                child: Text(
+                  number,
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    letterSpacing: 1,
+                    height: 1,
                   ),
-                )),
-            Image.asset(
-              'assets/images/football-player 1.png',
+                ),
+              ),
             ),
+            Image.asset('assets/images/football-player 1.png'),
           ],
         ),
       ),
+    );
+  }
+
+  void handlePlayerSelection(Player selectedPlayer) {
+    setState(() {
+      for (var player in players) {
+        if (player.position != selectedPlayer.position) {
+          player.isSelected = false;
+        } else {
+          player.isSelected = true;
+        }
+      }
+    });
+  }
+}
+
+class Player {
+  final String position;
+  final String number;
+  bool isSelected;
+  final bool? isPositionConfirmed;
+
+  Player({
+    required this.position,
+    required this.number,
+    this.isSelected = false,
+    this.isPositionConfirmed,
+  });
+
+  Player copyWith({
+    String? position,
+    String? number,
+    bool? isSelected,
+    bool? isPositionConfirmed,
+  }) {
+    return Player(
+      position: position ?? this.position,
+      number: number ?? this.number,
+      isSelected: isSelected ?? this.isSelected,
+      isPositionConfirmed: isPositionConfirmed ?? this.isPositionConfirmed,
     );
   }
 }

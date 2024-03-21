@@ -18,7 +18,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   @override
   Future<void> signIn(UserEntity user, BuildContext context) async {
-    print("intentando logueaar");
     try {
       final response = await http.post(
         Uri.parse(Uri.encodeFull(
