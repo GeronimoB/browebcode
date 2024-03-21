@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bro_app_to/src/auth/presentation/screens/Sing_in.dart';
 import 'package:bro_app_to/sing_up.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:bro_app_to/Screens/player_profile.dart';
 
 class SignInPage extends StatefulWidget {
   @override
