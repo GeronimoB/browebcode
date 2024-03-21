@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 @immutable
 class PlayerFullModel extends PlayerFullEntity {
   const PlayerFullModel({
+    final String? userId,
     final String? uid,
     final String? name,
     final String? lastName,
@@ -27,6 +28,7 @@ class PlayerFullModel extends PlayerFullEntity {
     final DateTime? dateUpdated,
     final String? userImage,
   }) : super(
+          userId: userId,
           uid: uid,
           name: name,
           lastName: lastName,
@@ -53,6 +55,7 @@ class PlayerFullModel extends PlayerFullEntity {
 
   @override
   PlayerFullModel copyWith({
+    String? userId,
     String? uid,
     String? name,
     String? lastName,
@@ -77,6 +80,7 @@ class PlayerFullModel extends PlayerFullEntity {
     String? userImage,
   }) {
     return PlayerFullModel(
+      userId: userId ?? this.userId,
       uid: uid ?? this.uid,
       name: name ?? this.name,
       lastName: lastName ?? this.lastName,
@@ -105,6 +109,7 @@ class PlayerFullModel extends PlayerFullEntity {
   factory PlayerFullModel.fromJson(Map<String, dynamic> json) {
     return PlayerFullModel(
       uid: json['uid'],
+      userId: json['userId'] ?? '',
       name: json['name'] ?? '',
       lastName: json['lastname'] ?? '',
       email: json['email'] ?? '',
@@ -134,6 +139,7 @@ class PlayerFullModel extends PlayerFullEntity {
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> map = {};
 
+    if (userId != null) map['userId'] = userId;
     if (uid != null) map['uid'] = uid;
     if (name != null) map['Name'] = name;
     if (lastName != null) map['LastName'] = lastName;
