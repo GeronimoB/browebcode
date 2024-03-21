@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
@@ -5,8 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/user_provider.dart';
 import '../utils/api_client.dart';
+import 'package:http/http.dart' as http;
 
 class AgregarTarjetaScreen extends StatefulWidget {
   const AgregarTarjetaScreen({Key? key}) : super(key: key);
@@ -18,29 +23,15 @@ class AgregarTarjetaScreen extends StatefulWidget {
 
 class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
   final controller = CardFormEditController();
-  String tipoTarjeta = 'Visa';
   bool isSelected = false;
-  late TextEditingController nombresTitularCtlr;
-  late TextEditingController numeroTarjetaCtlr;
-  late TextEditingController fechaCaducidadCtlr;
-  late TextEditingController cvcCtlr;
-
   @override
   void initState() {
     super.initState();
     controller.addListener(update);
-    nombresTitularCtlr = TextEditingController();
-    numeroTarjetaCtlr = TextEditingController();
-    fechaCaducidadCtlr = TextEditingController();
-    cvcCtlr = TextEditingController();
   }
 
   @override
   void dispose() {
-    nombresTitularCtlr.dispose();
-    numeroTarjetaCtlr.dispose();
-    fechaCaducidadCtlr.dispose();
-    cvcCtlr.dispose();
     controller.removeListener(update);
     controller.dispose();
     super.dispose();
@@ -171,215 +162,123 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                     borderRadius: 15,
                     fontSize: 14,
                     textColor: Colors.black,
-
-                    // Color del texto
                   ),
                 ),
-                const SizedBox(height: 16.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          tipoTarjeta = 'Visa';
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 15,
-                            height: 15,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: tipoTarjeta == 'Visa'
-                                  ? Color(0xFF00E050)
-                                  : Colors.white,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Image.asset('assets/images/Visa_icon.png',
-                              height: 40),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          tipoTarjeta = 'Mastercard';
-                        });
-                      },
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 15,
-                            height: 15,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: tipoTarjeta == 'Mastercard'
-                                  ? Color(0xFF00E050)
-                                  : Colors.white,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Image.asset('assets/images/Mastercard_icon.png',
-                              height: 40),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16.0),
-                TextField(
-                  controller: nombresTitularCtlr,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Montserrat',
-                    fontSize: 14,
-                  ),
-                  decoration: const InputDecoration(
-                    labelText: 'Nombres del Titular',
-                    labelStyle: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontSize: 14,
-                        fontStyle: FontStyle.italic),
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF00E050))),
-                  ),
-                ),
-                TextField(
-                  controller: numeroTarjetaCtlr,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
-                      fontSize: 14),
-                  decoration: const InputDecoration(
-                    labelText: 'Número de Tarjeta',
-                    labelStyle: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontSize: 14,
-                        fontStyle: FontStyle.italic),
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF00E050))),
-                  ),
-                ),
-                TextField(
-                  controller: fechaCaducidadCtlr,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
-                      fontSize: 14),
-                  decoration: const InputDecoration(
-                    labelText: 'Fecha de Caducidad (MM/YYYY)',
-                    labelStyle: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontSize: 14,
-                        fontStyle: FontStyle.italic),
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF00E050))),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(7),
-                    _FechaCaducidadInputFormatter(), // Formatea la entrada de texto
-                  ],
-                ),
-                TextField(
-                  controller: cvcCtlr,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
-                      fontSize: 14),
-                  decoration: const InputDecoration(
-                    labelText: 'Código de seguridad',
-                    labelStyle: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontSize: 14,
-                        fontStyle: FontStyle.italic),
-                    enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFF00E050))),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(
-                        3), // Limita a 3 caracteres
-                    FilteringTextInputFormatter
-                        .digitsOnly, // Permite solo números
-                  ],
-                  obscureText: true,
-                ),
-                const SizedBox(height: 35.0),
                 CustomTextButton(
-                    onTap: () async {
-                      if (nombresTitularCtlr.text.isEmpty ||
-                          numeroTarjetaCtlr.text.isEmpty ||
-                          fechaCaducidadCtlr.text.isEmpty ||
-                          cvcCtlr.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              backgroundColor: Colors.redAccent,
-                              content: Text(
-                                  'Por favor, complete todos los campos.')),
-                        );
-                      } else {
-                        final addPaymentMetodResult = await ApiClient().post(
-                          'security_filter/v1/api/payment/payment-method',
-                          {
-                            "titular": nombresTitularCtlr.text,
-                            "numeroTarjeta": numeroTarjetaCtlr.toString(),
-                            "expira": fechaCaducidadCtlr.text.toString(),
-                            "cvc": cvcCtlr.text.toString(),
-                            "franquicia": tipoTarjeta,
-                          },
-                        );
-                        print(addPaymentMetodResult.statusCode);
-                      }
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => CustomBottomNavigationBar()),
-                      // );
-                    },
+                    onTap: controller.details.complete == true
+                        ? () {
+                            _handlePayPress();
+                          }
+                        : null,
                     text: 'Añadir Tarjeta',
                     buttonPrimary: true,
                     width: 233,
                     height: 30),
-                const Spacer(),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SvgPicture.asset('assets/icons/Logo.svg', width: 80),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SvgPicture.asset('assets/icons/Logo.svg', width: 80),
+                  ),
                 ),
               ],
             ),
           ),
         ));
   }
-}
 
-class _FechaCaducidadInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    var text = newValue.text;
-
-    // Si el texto es más largo que 2 caracteres y el tercer caracter no es "/", elimina el exceso de caracteres
-    if (text.length > 2 && text[2] != '/') {
-      text = text.substring(0, 2) + '/' + text.substring(2);
+  Future<void> _handlePayPress() async {
+    if (!controller.details.complete) {
+      return;
     }
 
-    // Si el texto tiene más de 7 caracteres, corta el exceso
-    if (text.length > 7) {
-      text = text.substring(0, 7);
-    }
+    try {
+      // 1. Gather customer billing information (ex. email)
+      final playerProvider =
+          Provider.of<PlayerProvider>(context, listen: false);
 
-    return TextEditingValue(
-      text: text,
-      selection: TextSelection.collapsed(offset: text.length),
+      final billingDetails = BillingDetails(
+        email: playerProvider.getTemporalUser().email,
+      ); // mocked data for tests
+
+      // 2. Create payment method
+      final paymentMethod = await Stripe.instance.createPaymentMethod(
+          params: PaymentMethodParams.card(
+        paymentMethodData: PaymentMethodData(
+          billingDetails: billingDetails,
+        ),
+      ));
+      print(paymentMethod.id);
+      // // 3. call API to create PaymentIntent
+      // final paymentIntentResult = await callNoWebhookPayEndpointMethodId(
+      //   useStripeSdk: true,
+      //   paymentMethodId: paymentMethod.id,
+      //   currency: 'eur', // mocked data
+      //   items: ['id-1'],
+      // );
+
+      // if (paymentIntentResult['error'] != null) {
+      //   // Error during creating or confirming Intent
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //       SnackBar(content: Text('Error: ${paymentIntentResult['error']}')));
+      //   return;
+      // }
+
+      // if (paymentIntentResult['clientSecret'] != null &&
+      //     paymentIntentResult['requiresAction'] == null) {
+      //   // Payment succedeed
+
+      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //       content:
+      //           Text('Success!: The payment was confirmed successfully!')));
+      //   return;
+      // }
+
+      // if (paymentIntentResult['clientSecret'] != null &&
+      //     paymentIntentResult['requiresAction'] == true) {
+      //   // 4. if payment requires action calling handleNextAction
+      //   final paymentIntent = await Stripe.instance
+      //       .handleNextAction(paymentIntentResult['clientSecret']);
+
+      //   // todo handle error
+      //   /*if (cardActionError) {
+      //   Alert.alert(
+      //   `Error code: ${cardActionError.code}`,
+      //   cardActionError.message
+      //   );
+      // } else*/
+
+      //   if (paymentIntent.status == PaymentIntentsStatus.RequiresConfirmation) {
+      //     // 5. Call API to confirm intent
+      //     await confirmIntent(paymentIntent.id);
+      //   } else {
+      //     // Payment succedeed
+      //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //         content: Text('Error: ${paymentIntentResult['error']}')));
+      //   }
+      // }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Error: $e')));
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>> callNoWebhookPayEndpointMethodId({
+    required bool useStripeSdk,
+    required String paymentMethodId,
+    required String currency,
+    List<String>? items,
+  }) async {
+    final response = await ApiClient().post(
+      '/pay-without-webhooks',
+      {
+        'useStripeSdk': useStripeSdk,
+        'paymentMethodId': paymentMethodId,
+        'currency': currency,
+        'items': items
+      },
     );
+
+    return json.decode(response.body);
   }
 }

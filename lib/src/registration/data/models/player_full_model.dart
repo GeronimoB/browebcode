@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 @immutable
 class PlayerFullModel extends PlayerFullEntity {
   const PlayerFullModel({
+    final String? customerStripeId,
     final String? userId,
     final String? uid,
     final String? name,
@@ -28,6 +29,7 @@ class PlayerFullModel extends PlayerFullEntity {
     final DateTime? dateUpdated,
     final String? userImage,
   }) : super(
+          customerStripeId: customerStripeId,
           userId: userId,
           uid: uid,
           name: name,
@@ -55,6 +57,7 @@ class PlayerFullModel extends PlayerFullEntity {
 
   @override
   PlayerFullModel copyWith({
+    String? customerStripeId,
     String? userId,
     String? uid,
     String? name,
@@ -80,6 +83,7 @@ class PlayerFullModel extends PlayerFullEntity {
     String? userImage,
   }) {
     return PlayerFullModel(
+      customerStripeId: customerStripeId ?? this.customerStripeId,
       userId: userId ?? this.userId,
       uid: uid ?? this.uid,
       name: name ?? this.name,
@@ -108,6 +112,7 @@ class PlayerFullModel extends PlayerFullEntity {
 
   factory PlayerFullModel.fromJson(Map<String, dynamic> json) {
     return PlayerFullModel(
+      customerStripeId: json['customerStripeId'],
       uid: json['uid'],
       userId: json['userId'] ?? '',
       name: json['name'] ?? '',
@@ -140,6 +145,7 @@ class PlayerFullModel extends PlayerFullEntity {
     final Map<String, dynamic> map = {};
 
     if (userId != null) map['userId'] = userId;
+    if (customerStripeId != null) map['customerStripeId'] = customerStripeId;
     if (uid != null) map['uid'] = uid;
     if (name != null) map['Name'] = name;
     if (lastName != null) map['LastName'] = lastName;

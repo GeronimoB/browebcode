@@ -5,14 +5,11 @@ import 'package:bro_app_to/Screens/first_video.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../components/custom_text_button.dart';
 import '../providers/user_provider.dart';
 import 'package:http/http.dart' as http;
-
-import '../utils/api_constants.dart';
 
 class SelectCamp extends StatefulWidget {
   const SelectCamp({super.key});
@@ -287,7 +284,7 @@ class SelectCampState extends State<SelectCamp> {
                             final email =
                                 playerProvider.getTemporalUser().email;
 
-                            await ApiClient().post(
+                            final responseStripe = await ApiClient().post(
                               'security_filter/v1/api/payment/customer',
                               {
                                 "userId": userId.toString(),
@@ -295,6 +292,20 @@ class SelectCampState extends State<SelectCamp> {
                                 "Email": email
                               },
                             );
+                            if (responseStripe.statusCode != 200) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  backgroundColor: Colors.redAccent,
+                                  content: Text(
+                                      'Ha ocurrido un error al crear su cuenta, por favor intentelo de nuevo.'),
+                                ),
+                              );
+                              return;
+                            }
+                            final customerId =
+                                jsonDecode(responseStripe.body)['customerId'];
+                            playerProvider.updateTemporalPlayer(
+                                customerStripeId: customerId);
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   backgroundColor: Colors.lightGreen,
