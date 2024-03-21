@@ -50,8 +50,6 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/videos/13.mp4
-    - assets/videos/12.mp4
     - assets/images/
     - assets/icons/
   # The following line ensures that the Material Icons font is
