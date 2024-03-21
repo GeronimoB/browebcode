@@ -1,8 +1,9 @@
+import 'package:bro_app_to/Screens/config_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/perfil_detalle_page.dart';
 
 class PerfilPage extends StatelessWidget {
-  const PerfilPage({super.key});
+  const PerfilPage({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +22,32 @@ class PerfilPage extends StatelessWidget {
         child: Column(
           children: <Widget>[
             SizedBox(height: MediaQuery.of(context).padding.top + 20),
-            const CircleAvatar(
-              radius: 90.0,
-              backgroundImage: AssetImage('assets/images/user.png'),
+            Stack(
+              alignment: Alignment.topRight,
+              children: [
+                const Center(
+                  child: CircleAvatar(
+                    radius: 90.0,
+                    backgroundImage: AssetImage('assets/images/user.png'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IconButton(
+                    icon: const Icon(Icons.settings, color: Color(0xFF00E050)),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ConfigProfile(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 10),
+
             const Text(
               'Nombre de Usuario',
               style: TextStyle(

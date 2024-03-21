@@ -10,7 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
 
-import 'package:video_thumbnail/video_thumbnail.dart';
+// import 'package:video_thumbnail/video_thumbnail.dart';
 
 class UploadVideoWidget extends StatefulWidget {
   const UploadVideoWidget({super.key});
@@ -118,13 +118,13 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
         return;
       }
 
-      // Capturar un frame del video para usarlo como placeholder
-      final uint8list = await VideoThumbnail.thumbnailData(
-        video: videoPath,
-        imageFormat: ImageFormat.PNG,
-        maxHeight: 200,
-        quality: 30,
-      );
+      // // Capturar un frame del video para usarlo como placeholder
+      // final uint8list = await VideoThumbnail.thumbnailData(
+      //   video: videoPath,
+      //   imageFormat: ImageFormat.PNG,
+      //   maxHeight: 200,
+      //   quality: 30,
+      // );
 
       // Si pasa las validaciones, entonces reproducir el video
       showUploadDialog("El video se cargo correctamente", true);

@@ -6,7 +6,7 @@ class PerfilDetallePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(25),
@@ -21,45 +21,45 @@ class PerfilDetallePage extends StatelessWidget {
               icon: const Icon(Icons.arrow_back, color: Color(0xFF00E050)),
               onPressed: () => Navigator.pop(context),
             ),
-            title: Text(
+            title: const Text(
               'Perfil Jugador Info',
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
-            trailing: SizedBox(width: 24), // To center the title
+            trailing: const SizedBox(width: 24), // To center the title
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 75.0,
                   backgroundImage: AssetImage(
                       'path/to/player/image.png'), // Tu imagen de jugador aquí.
                 ),
                 const SizedBox(height: 16),
-                Text(
+                const Text(
                   'Nombres y Apellidos',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold),
                 ),
-                Text(
+                const Text(
                   'Fecha de Nacimiento\nPaís, Provincia\nCategoría en la que juega\nEscuela deportiva en la que juega\nLogros individuales\nSelección Nacional Masculina U18',
                   style: TextStyle(color: Colors.grey),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: Colors.green),
+                    side: const BorderSide(color: Colors.green),
                   ),
                   onPressed: () {
                     // Acción para ir al chat
                   },
-                  child: Text('¡Vamos al Chat!',
+                  child: const Text('¡Vamos al Chat!',
                       style: TextStyle(color: Colors.green)),
                 ),
               ],
@@ -71,14 +71,3 @@ class PerfilDetallePage extends StatelessWidget {
   }
 }
 
-// Para mostrar esta vista, usarías algo como esto en tu widget principal:
-void _showPerfilDetalle(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext bc) {
-      return PerfilDetallePage();
-    },
-    isScrollControlled:
-        true, // Si quieres que la hoja se extienda a toda la pantalla.
-  );
-}

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:bro_app_to/Screens/config_profile_player.dart';
-import 'package:bro_app_to/Screens/full_screen_image_page.dart';
+import 'package:bro_app_to/Screens/full_screen_video_page.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/video_model.dart';
@@ -154,8 +154,8 @@ class _PlayerProfileState extends State<PlayerProfile> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const FullScreenImagePage(
-                              imagePath: 'assets/images/jugador1.png'),
+                          builder: (context) => const FullScreenVideoPage(
+                              imagePath: 'assets/images/jugador1.png', videoPath: '',),
                         ),
                       );
                     },

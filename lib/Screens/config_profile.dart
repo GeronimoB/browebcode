@@ -1,37 +1,31 @@
 import 'package:bro_app_to/Screens/Afiliados_Player.dart';
-import 'package:bro_app_to/Screens/CuentaPlayer.dart';
+import 'package:bro_app_to/Screens/Edit_info_player.dart';
 import 'package:bro_app_to/Screens/Notificaciones.dart';
 import 'package:bro_app_to/Screens/Pedidos.dart';
 import 'package:bro_app_to/Screens/Privacidad.dart';
 import 'package:bro_app_to/Screens/Servicios.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:bro_app_to/providers/user_provider.dart';
 
-
-class ConfigProfilePlayer extends StatelessWidget {
+class ConfigProfile extends StatelessWidget {
   @override
-  
   Widget build(BuildContext context) {
-    final playerProvider = Provider.of<PlayerProvider>(context);
-    final player = playerProvider.getPlayer()!;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
-        title: Column(
+        title: const Column(
           children: [
             SizedBox(height: 22),
             Text(
-              '${player.name} ${player.lastName}',
-              style: const TextStyle(
+              'NOMBRE Y APELLIDO',
+              style: TextStyle(
                 color: Color(0xFF05FF00),
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.bold,
                 fontSize: 12,
               ),
             ),
-            const Text(
+            Text(
               'CONFIGURACIÓN',
               style: TextStyle(
                 color: Colors.white,
@@ -62,12 +56,12 @@ class ConfigProfilePlayer extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  SizedBox(height: 22),
-                    _buildListItem('CUENTA', context, true, CuentaPage()),
+                  const SizedBox(height: 22),
+                    _buildListItem('EDITAR INFROMACION', context, true, EditarInfo()),
                     _buildListItem('PRIVACIDAD', context, true, Privacidad()),
-                    SizedBox(height: 15),
-                    _buildListItem('CENTRO DE AYUDA (FAQ)', context, false, ConfigProfilePlayer()),
-                    _buildListItem('SOPORTE', context, false, ConfigProfilePlayer()),
+                    const SizedBox(height: 15),
+                    _buildListItem('CENTRO DE AYUDA (FAQ)', context, false, ConfigProfile()),
+                    _buildListItem('SOPORTE', context, false, ConfigProfile()),
                     _buildListItem('NOTIFICACIONES', context, true, Notificaciones()),
                     _buildListItem('AFILIADOS', context, true, const AfiliadosPlayer()),
                     _buildListItem('PEDIDOS', context, true, Pedidos()),
