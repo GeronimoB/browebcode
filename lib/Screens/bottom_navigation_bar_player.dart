@@ -5,39 +5,49 @@ import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+final List<Widget> _pages = [
+  PlayerProfile(),
+  const MatchePlayer(),
+  const UploadVideoWidget(),
+  const MensajesPage_player(),
+  PlayerProfile(),
+];
+
+final List<String?> _iconNames = [
+  'Inicio.svg',
+  'Match.svg',
+  'Player.svg',
+  'Mensaje.svg',
+  'Perfil.svg',
+];
+
+final List<String> _selectedIconNames = [
+  'Inicio-1.svg',
+  'Match-1.svg',
+  'Player.svg',
+  'Mensaje-1.svg',
+  'Perfil-1.svg',
+];
+
 class CustomBottomNavigationBarPlayer extends StatefulWidget {
+  final int initialIndex;
+
+  const CustomBottomNavigationBarPlayer({super.key, this.initialIndex = 0});
+
   @override
-  _CustomBottomNavigationBarPlayerState createState() =>
-      _CustomBottomNavigationBarPlayerState();
+  CustomBottomNavigationBarPlayerState createState() =>
+      CustomBottomNavigationBarPlayerState();
 }
 
-class _CustomBottomNavigationBarPlayerState
+class CustomBottomNavigationBarPlayerState
     extends State<CustomBottomNavigationBarPlayer> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    PlayerProfile(),
-    const MatchePlayer(),
-    const UploadVideoWidget(),
-    const MensajesPage_player(),
-    PlayerProfile(),
-  ];
-
-  final List<String?> _iconNames = [
-    'Inicio.svg',
-    'Match.svg',
-    'Player.svg',
-    'Mensaje.svg',
-    'Perfil.svg',
-  ];
-
-  final List<String> _selectedIconNames = [
-    'Inicio-1.svg',
-    'Match-1.svg',
-    'Player.svg',
-    'Mensaje-1.svg',
-    'Perfil-1.svg',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
 
   void _onItemTapped(int index) {
     setState(() {
