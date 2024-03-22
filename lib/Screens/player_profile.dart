@@ -22,25 +22,25 @@ class _PlayerProfileState extends State<PlayerProfile> {
 
   @override
   void initState() {
-    super.initState();
     fetchVideos();
+    super.initState();
   }
 
   Future<void> fetchVideos() async {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
-    final userId =
-        playerProvider.getPlayer()!.userId; // Obtener el ID del jugador
+    final userId = playerProvider.getPlayer()!.userId;
     try {
-      final videosResponse = await ApiClient()
-          .get('auth/videos/$userId'); // Realizar la solicitud de videos
+      final videosResponse = await ApiClient().get('auth/videos/$userId');
       if (videosResponse.statusCode == 200) {
         final jsonData = jsonDecode(videosResponse.body);
         final videos = jsonData["videos"];
         playerProvider.setUserVideos(mapListToVideos(videos));
       } else {
+        playerProvider.setUserVideos([]);
         print('Error al obtener los videos: ${videosResponse.statusCode}');
       }
     } catch (e) {
+      playerProvider.setUserVideos([]);
       print('Error en la solicitud de videos: $e');
     }
   }
@@ -150,12 +150,13 @@ class _PlayerProfileState extends State<PlayerProfile> {
                 itemCount: videos.length,
                 itemBuilder: (context, index) {
                   final video = videos[index];
+
                   return GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => FullScreenVideoPage(
-                              videoPath: video.videoUrl ?? ''),
+                          builder: (context) =>
+                              FullScreenVideoPage(video: video, index: index),
                         ),
                       );
                     },

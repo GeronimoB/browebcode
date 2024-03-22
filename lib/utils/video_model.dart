@@ -5,6 +5,8 @@ class Video {
   String? videoKey;
   String? imageUrl;
   String? imageKey;
+  bool isHidden;
+  bool isFavorite;
 
   Video({
     this.id,
@@ -13,6 +15,8 @@ class Video {
     this.videoKey,
     this.imageUrl,
     this.imageKey,
+    this.isHidden = false,
+    this.isFavorite = false,
   });
 
   factory Video.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,8 @@ class Video {
       videoUrl: json['video_url'],
       imageUrl: json['placeholder_url'],
       imageKey: json['image_key'],
+      isFavorite: json['destacado'] == 1 ? true : false,
+      isHidden: json['destacado'] == 1 ? true : false,
     );
   }
 }
