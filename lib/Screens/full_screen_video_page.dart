@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:video_player/video_player.dart';
 
 class FullScreenVideoPage extends StatefulWidget {
@@ -33,6 +33,16 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
     super.dispose();
   }
 
+  void _togglePlayPause() {
+    setState(() {
+      if (_controller.value.isPlaying) {
+        _controller.pause();
+      } else {
+        _controller.play();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,12 +50,15 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
       body: Stack(
         children: <Widget>[
           Positioned.fill(
-            child: _controller.value.isInitialized
-                ? AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
-                  )
-                : Center(child: CircularProgressIndicator()),
+            child: GestureDetector(
+              onTap: _togglePlayPause,
+              child: _controller.value.isInitialized
+                  ? AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: VideoPlayer(_controller),
+                    )
+                  : const Center(child: CircularProgressIndicator()),
+            ),
           ),
           Positioned(
             top: MediaQuery.of(context).padding.top,
@@ -55,6 +68,21 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
+            ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: VideoProgressIndicator(
+              _controller,
+              allowScrubbing: true,
+              padding: const EdgeInsets.all(8.0),
+              colors: const VideoProgressColors(
+                playedColor: Color(0xFF00E050), // Color de la barra de progreso
+                bufferedColor: Colors.white60, // Color del video precargado
+                backgroundColor: Colors.white24, // Color de fondo de la barra de progreso
+              ),
             ),
           ),
           Positioned(
@@ -141,11 +169,8 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
             child: Container(
               color: Colors.black,
               child: Center(
-                child: SvgPicture.asset(
-                  'assets/icons/Logo.svg',
-                  fit: BoxFit.fitWidth,
-                  width: 100,
-                ),
+                child: SvgPicture.asset('assets/icons/Logo.svg',
+                    fit: BoxFit.fitWidth, width: 100,),
               ),
             ),
           ),
