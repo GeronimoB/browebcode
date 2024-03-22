@@ -112,4 +112,14 @@ class PlayerProvider extends ChangeNotifier {
     userVideos.addAll(videos);
     notifyListeners();
   }
+
+  void updateIsHiddenById(int index) {
+    userVideos[index].isFavorite = !userVideos[index].isFavorite;
+    notifyListeners();
+  }
+
+  void updateIsFavoriteById(int index) {
+    userVideos[index].isFavorite = !userVideos[index].isFavorite;
+    notifyListeners();
+  }
 }

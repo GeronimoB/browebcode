@@ -4,7 +4,7 @@ class CustomBoxShadow extends BoxShadow {
   const CustomBoxShadow({
     Color color = Colors.black,
     Offset offset = Offset.zero,
-    double blurRadius = 5,
+    double blurRadius = 10,
     BlurStyle blurStyle = BlurStyle.outer,
   }) : super(
           color: color,
