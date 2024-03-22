@@ -1,11 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:video_player/video_player.dart';
 
-class FullScreenImagePage extends StatelessWidget {
-  final String imagePath;
+class FullScreenVideoPage extends StatefulWidget {
+  final String videoPath;
 
-  const FullScreenImagePage({Key? key, required this.imagePath})
-      : super(key: key);
+  const FullScreenVideoPage({Key? key, required this.videoPath}) : super(key: key);
+
+  @override
+  _FullScreenVideoPageState createState() => _FullScreenVideoPageState();
+}
+
+class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // ignore: deprecated_member_use
+    _controller = VideoPlayerController.network(widget.videoPath)
+      ..initialize().then((_) {
+        // Asegúrate de llamar a setState para que la página se reconstruya cuando el video esté listo.
+        setState(() {});
+        _controller.play(); // Reproduce el video tan pronto como esté listo
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +39,12 @@ class FullScreenImagePage extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           Positioned.fill(
-            bottom: MediaQuery.of(context).size.height * 0.1,
-            child: Image.asset(imagePath, fit: BoxFit.cover),
+            child: _controller.value.isInitialized
+                ? AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  )
+                : Center(child: CircularProgressIndicator()),
           ),
           Positioned(
             top: MediaQuery.of(context).padding.top,
