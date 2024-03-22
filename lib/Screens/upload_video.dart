@@ -1,14 +1,19 @@
-import 'package:bro_app_to/Screens/Inicio.dart';
-import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/bottom_navigation_bar_player.dart';
-import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
-import 'package:bro_app_to/planes_pago.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+
+import 'package:video_thumbnail/video_thumbnail.dart';
+
+import '../providers/user_provider.dart';
+import '../utils/api_constants.dart';
 
 // import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -21,15 +26,19 @@ class UploadVideoWidget extends StatefulWidget {
 
 class _UploadVideoWidgetState extends State<UploadVideoWidget> {
   VideoPlayerController? _videoController;
+  VideoPlayerController? _temporalVideoController;
   double _sliderValue = 0.0;
+  String? videoPathToUpload;
+  Uint8List? imagePathToUpload;
 
   @override
   void dispose() {
     _videoController?.dispose();
+    _temporalVideoController?.dispose();
     super.dispose();
   }
 
-  void showUploadDialog(String text, bool success) {
+  void showChargeDialog(String text, bool success) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -85,57 +94,110 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     if (result != null) {
       PlatformFile file = result.files.first;
       String videoPath = file.path!;
-      _videoController
-          ?.dispose(); // Libera el controlador de video existente si lo hay
+      videoPathToUpload = videoPath;
+      _temporalVideoController?.dispose();
+      _temporalVideoController = VideoPlayerController.file(File(videoPath));
+
+      await _temporalVideoController?.initialize();
+
+      // Verificar duración del video
+      Duration duration = _temporalVideoController!.value.duration;
+      if (duration.inSeconds > 120) {
+        // Video dura más de 2 minutos
+        showChargeDialog("El video no puede durar más de 2 minutos", false);
+        return;
+      }
+
+      if (_temporalVideoController!.value.size.height < 720 ||
+          _temporalVideoController!.value.size.width < 720) {
+        // Video tiene una resolución menor a 720p
+        showChargeDialog("La resolución minima es de 720p", false);
+        return;
+      }
+      if (_temporalVideoController!.value.aspectRatio > 1) {
+        // Video es horizontal
+        showChargeDialog("Solo se pueden subir videos verticales", false);
+        return;
+      }
+
+      // Capturar un frame del video para usarlo como placeholder
+      final uint8list = await VideoThumbnail.thumbnailData(
+        video: videoPath,
+        imageFormat: ImageFormat.PNG,
+        maxHeight: 200,
+        quality: 30,
+      );
+      imagePathToUpload = uint8list;
+
+      _temporalVideoController?.dispose();
+      _videoController?.dispose();
       _videoController = VideoPlayerController.file(File(videoPath));
 
       await _videoController?.initialize();
 
-      // Verificar duración del video
-      Duration duration = _videoController!.value.duration;
-      if (duration.inSeconds > 120) {
-        // Video dura más de 2 minutos
-        // Puedes mostrar un mensaje de error o realizar alguna acción apropiada
-        showUploadDialog("El video no puede durar más de 2 minutos", false);
-        return;
-      }
-
-      // Verificar resolución del video
-      if (_videoController!.value.size != null &&
-          (_videoController!.value.size!.height < 720 ||
-              _videoController!.value.size!.width < 1280)) {
-        // Video tiene una resolución menor a 720p
-        // Puedes mostrar un mensaje de error o realizar alguna acción apropiada
-        showUploadDialog("La resolución minima es de 720p", false);
-        return;
-      }
-
-      // Verificar orientación del video
-      if (_videoController!.value.aspectRatio > 1) {
-        // Video es horizontal
-        // Puedes mostrar un mensaje de error o realizar alguna acción apropiada
-        showUploadDialog("Solo se pueden subir videos verticales", false);
-        return;
-      }
-
-      // // Capturar un frame del video para usarlo como placeholder
-      // final uint8list = await VideoThumbnail.thumbnailData(
-      //   video: videoPath,
-      //   imageFormat: ImageFormat.PNG,
-      //   maxHeight: 200,
-      //   quality: 30,
-      // );
-
-      // Si pasa las validaciones, entonces reproducir el video
-      showUploadDialog("El video se cargo correctamente", true);
       await _videoController?.play();
-      _videoController?.setLooping(true); // Pone el video en bucle
+
+      _videoController?.setLooping(true);
 
       _videoController?.addListener(() {
         setState(() {
           _sliderValue = _videoController!.value.position.inSeconds.toDouble();
         });
       });
+      final playerProvider =
+          Provider.of<PlayerProvider>(context, listen: false);
+      _showUploadDialog();
+      await uploadVideoAndImage(
+          videoPath, uint8list, playerProvider.getPlayer()!.userId);
+    }
+  }
+
+  Future<void> uploadVideoAndImage(
+      String? videoPath, Uint8List? uint8list, String? userId) async {
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('${ApiConstants.baseUrl}/auth/uploadFiles'),
+    );
+    request.fields["userId"] = userId ?? '';
+    if (videoPath != null) {
+      // Adjuntar el archivo de video al cuerpo de la solicitud
+      request.files.add(await http.MultipartFile.fromPath(
+        'video', // Nombre del campo en el servidor para el video
+        videoPath,
+      ));
+    }
+
+    if (uint8list != null) {
+      // Adjuntar los bytes de la imagen al cuerpo de la solicitud
+      request.files.add(http.MultipartFile.fromBytes(
+        'imagen',
+        uint8list,
+        filename: 'imagen.png',
+        contentType: MediaType('image', 'png'),
+      ));
+    }
+
+    // Enviar la solicitud al servidor y esperar la respuesta
+    var response = await request.send();
+
+    // Verificar el estado de la respuesta
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.greenAccent,
+          content: Text('Video subido exitosamente.')));
+      Future.delayed(Duration(seconds: 3));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                CustomBottomNavigationBarPlayer(initialIndex: 4)),
+      );
+    } else {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.redAccent,
+          content:
+              Text('Hubo un error al cargar el video, intentalo de nuevo.')));
     }
   }
 
@@ -271,7 +333,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
                       // ),
                       CustomTextButton(
                           onTap: () {
-                            showUploadDialog(
+                            showChargeDialog(
                                 "El video se subio exitosamente!", true);
                           },
                           text: 'Subir',
@@ -298,6 +360,43 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showUploadDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(23)),
+              contentPadding: const EdgeInsets.all(25),
+              backgroundColor: const Color(0xFF3B3B3B),
+              content: const Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Estamos subiendo tu vídeo, esto puede tardar unos segundos…",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 25),
+                  LinearProgressIndicator(
+                    color: Color(0xff00E050),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
