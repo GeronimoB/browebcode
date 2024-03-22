@@ -13,6 +13,7 @@ class FullScreenVideoPage extends StatefulWidget {
 
 class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
   late VideoPlayerController _controller;
+    double _videoHeight = 0;
 
   @override
   void initState() {
@@ -21,10 +22,17 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
     _controller = VideoPlayerController.network(widget.videoPath)
       ..initialize().then((_) {
         setState(() {});
-        _controller.play(); // Iniciar la reproducción del video automáticamente
+        _controller.play(); 
       });
   }
-
+  void _calculateVideoHeight() {
+    final Size screenSize = MediaQuery.of(context).size;
+    final double videoWidth = screenSize.width;
+    final double videoAspectRatio = _controller.value.aspectRatio;
+    setState(() {
+      _videoHeight = videoWidth / videoAspectRatio;
+    });
+  }
   @override
   void dispose() {
     _controller.dispose();
@@ -71,15 +79,15 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
           Positioned(
             left: 0,
             right: 0,
-            bottom: 0,
+            bottom: MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + _videoHeight),
             child: VideoProgressIndicator(
               _controller,
               allowScrubbing: true,
               padding: const EdgeInsets.all(8.0),
               colors: const VideoProgressColors(
-                playedColor: Color(0xFF00E050), // Color de la barra de progreso
-                bufferedColor: Colors.white60, // Color del video precargado
-                backgroundColor: Colors.white24, // Color de fondo de la barra de progreso
+                playedColor: Color(0xFF00E050), 
+                bufferedColor: Colors.white60,
+                backgroundColor: Colors.white24,
               ),
             ),
           ),
