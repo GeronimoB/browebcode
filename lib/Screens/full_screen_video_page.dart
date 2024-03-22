@@ -5,7 +5,8 @@ import 'package:video_player/video_player.dart';
 class FullScreenVideoPage extends StatefulWidget {
   final String videoPath;
 
-  const FullScreenVideoPage({Key? key, required this.videoPath}) : super(key: key);
+  const FullScreenVideoPage({Key? key, required this.videoPath})
+      : super(key: key);
 
   @override
   _FullScreenVideoPageState createState() => _FullScreenVideoPageState();
@@ -18,11 +19,12 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
   @override
   void initState() {
     super.initState();
-    // ignore: deprecated_member_use
-    _controller = VideoPlayerController.network(widget.videoPath)
+    Uri url = Uri.parse(widget.videoPath);
+    _controller = VideoPlayerController.networkUrl(url)
       ..initialize().then((_) {
         setState(() {});
-        _controller.play(); 
+        _controller.play();
+        _controller.setLooping(true);
       });
   }
   void _calculateVideoHeight() {
