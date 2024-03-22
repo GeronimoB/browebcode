@@ -111,42 +111,51 @@ class _PlanesPagoState extends State<Servicios> {
                       return _buildCard(index);
                     },
                   ),
-                  
                 ),
-                
-Column(
-  children: [
-    const SizedBox(height: 20),
-    const Text(
-      'Seleccione una opción de pago:',
-      style: TextStyle(
-        color: Colors.white,
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
-      ),
-    ),
-  
-Row(
-  children: [
-    Checkbox(
-      value: _isSelected,
-      onChanged: (bool? value) {
-        setState(() {
-          _isSelected = value!;
-        });
-      },
-      activeColor: const Color(
-                  0xFF00F056), // Color del marcador cuando está seleccionado
-    ),
-    const Text(
-      'Full Plan: Todos los servicios 149,99€/Mes',
-      style: TextStyle(color: Colors.white),
-    ),
-  ],
-),
 
-  ],
-),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Seleccione una opción de pago:',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                          value: _isSelected,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _isSelected = value!;
+                            });
+                          },
+                          fillColor: MaterialStateProperty.resolveWith<Color?>(
+                            (Set<MaterialState> states) {
+                              if (states.contains(MaterialState.selected)) {
+                                return const Color(0xff00E050);
+                              }
+                              return Colors.white;
+                            },
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(5), // Bordes redondeados
+                          ),
+                        ),
+                        const Text(
+                          'Full Plan: Todos los servicios 149,99€/Mes',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
                 Padding(
                   padding: const EdgeInsets.all(22.0),
                   child: CustomTextButton(
@@ -189,9 +198,9 @@ Row(
       onTap: () {
         setState(() {
           if (isSelected) {
-            _selectedCardIndex = -1; 
+            _selectedCardIndex = -1;
           } else {
-            _selectedCardIndex = index; 
+            _selectedCardIndex = index;
           }
         });
       },
@@ -201,8 +210,7 @@ Row(
         decoration: BoxDecoration(
             color: Colors.transparent,
             border: Border.all(
-              color: const Color(
-                  0xFF00F056),
+              color: const Color(0xFF00F056),
               width: 1,
             ),
             borderRadius: BorderRadius.circular(20),
@@ -248,7 +256,6 @@ Row(
                   ],
                 ),
                 const Spacer(),
-                
               ],
             ),
             const SizedBox(height: 5),
@@ -302,8 +309,7 @@ Row(
                       fontStyle: FontStyle.italic),
                 ),
                 onTap: () => setState(() {
-                  plan.isExpanded =
-                      false; 
+                  plan.isExpanded = false;
                 }),
               ),
             ],

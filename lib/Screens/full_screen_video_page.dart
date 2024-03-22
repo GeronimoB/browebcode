@@ -230,11 +230,11 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                     children: <Widget>[
                       CustomTextButton(
                           onTap: () async {
-                            Navigator.pop(context);
                             final response = await ApiClient().post(
                                 'auth/delete-video',
                                 {"videoId": videoId.toString()});
-
+                            print(response.body);
+                            await Future.delayed(Duration(seconds: 1));
                             if (response.statusCode == 200) {
                               Navigator.pushReplacement(
                                 context,
