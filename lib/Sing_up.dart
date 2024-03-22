@@ -10,6 +10,8 @@ import 'providers/user_provider.dart';
 import 'sign_up_2.dart';
 import 'package:http/http.dart' as http;
 
+import 'utils/api_client.dart';
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -61,11 +63,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     try {
-      final response = await http
-          .get(
-            Uri.parse('${ApiConstants.baseUrl}/auth/player/$email'),
-          )
-          .timeout(const Duration(seconds: 10));
+      final response =
+          await ApiClient().post('auth/verify-email', {"email": email});
 
       if (response.statusCode != 200) {
         print(response.body);

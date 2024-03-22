@@ -14,7 +14,7 @@ class FullScreenVideoPage extends StatefulWidget {
 
 class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
   late VideoPlayerController _controller;
-    double _videoHeight = 0;
+  double _videoHeight = 0;
 
   @override
   void initState() {
@@ -27,6 +27,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
         _controller.setLooping(true);
       });
   }
+
   void _calculateVideoHeight() {
     final Size screenSize = MediaQuery.of(context).size;
     final double videoWidth = screenSize.width;
@@ -35,6 +36,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
       _videoHeight = videoWidth / videoAspectRatio;
     });
   }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -53,137 +55,133 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: <Widget>[
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: _togglePlayPause,
-              child: _controller.value.isInitialized
-                  ? AspectRatio(
-                      aspectRatio: _controller.value.aspectRatio,
-                      child: VideoPlayer(_controller),
-                    )
-                  : const Center(child: CircularProgressIndicator()),
-            ),
+    final videoHeight = MediaQuery.of(context).size.height - 100;
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: _togglePlayPause,
+          child: _controller.value.isInitialized
+              ? SizedBox(
+                  width: double.maxFinite,
+                  height: videoHeight,
+                  child: VideoPlayer(_controller),
+                )
+              : const Center(child: CircularProgressIndicator()),
+        ),
+        Positioned(
+          top: MediaQuery.of(context).padding.top,
+          left: 8.0,
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Color(0xFF00E050)),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
-          Positioned(
-            top: MediaQuery.of(context).padding.top,
-            left: 8.0,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Color(0xFF00E050)),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+        ),
+        Positioned(
+          top: MediaQuery.of(context).padding.top,
+          right: 8.0,
+          child: Theme(
+            data: Theme.of(context).copyWith(
+              iconTheme: const IconThemeData(color: Color(0xFF00E050)),
             ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: MediaQuery.of(context).size.height - (MediaQuery.of(context).padding.top + _videoHeight),
-            child: VideoProgressIndicator(
-              _controller,
-              allowScrubbing: true,
-              padding: const EdgeInsets.all(8.0),
-              colors: const VideoProgressColors(
-                playedColor: Color(0xFF00E050), 
-                bufferedColor: Colors.white60,
-                backgroundColor: Colors.white24,
+            child: PopupMenuButton<String>(
+              icon: const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                side: BorderSide(color: Color(0xFF00E050)),
               ),
-            ),
-          ),
-          Positioned(
-            top: MediaQuery.of(context).padding.top,
-            right: 8.0,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                iconTheme: const IconThemeData(color: Color(0xFF00E050)),
-              ),
-              child: PopupMenuButton<String>(
-                icon: const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  side: BorderSide(color: Color(0xFF00E050)),
+              color: const Color(0xff3B3B3B),
+              onSelected: (String result) {},
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                    child: Text('Borrar',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic)),
+                  ),
                 ),
-                color: const Color(0xff3B3B3B),
-                onSelected: (String result) {},
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  const PopupMenuItem<String>(
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                      child: Text('Borrar',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat',
-                              fontStyle: FontStyle.italic)),
-                    ),
+                const PopupMenuItem<String>(
+                  value: 'destacar',
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                    child: Text('Destacar',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic)),
                   ),
-                  const PopupMenuItem<String>(
-                    value: 'destacar',
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                      child: Text('Destacar',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat',
-                              fontStyle: FontStyle.italic)),
-                    ),
+                ),
+                const PopupMenuItem<String>(
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                    child: Text('Editar',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic)),
                   ),
-                  const PopupMenuItem<String>(
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                      child: Text('Editar',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat',
-                              fontStyle: FontStyle.italic)),
-                    ),
+                ),
+                const PopupMenuItem<String>(
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                    child: Text('Guardar',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic)),
                   ),
-                  const PopupMenuItem<String>(
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                      child: Text('Guardar',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat',
-                              fontStyle: FontStyle.italic)),
-                    ),
+                ),
+                const PopupMenuItem<String>(
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                    child: Text('Ocultar',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic)),
                   ),
-                  const PopupMenuItem<String>(
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                      child: Text('Ocultar',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat',
-                              fontStyle: FontStyle.italic)),
-                    ),
-                  )
-                ],
-              ),
+                )
+              ],
             ),
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: MediaQuery.of(context).size.height * 0.1,
-            child: Container(
-              color: Colors.black,
-              child: Center(
-                child: SvgPicture.asset('assets/icons/Logo.svg',
-                    fit: BoxFit.fitWidth, width: 100,),
-              ),
+        ),
+        Positioned(
+          bottom: 0,
+          left: MediaQuery.of(context).size.width / 2 - 52,
+          child: Padding(
+            padding: const EdgeInsets.all(5),
+            child: SvgPicture.asset(
+              'assets/icons/Logo.svg',
+              fit: BoxFit.fitWidth,
+              width: 104,
             ),
           ),
-        ],
-      ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: MediaQuery.of(context).size.height - videoHeight - 2,
+          child: VideoProgressIndicator(
+            _controller,
+            allowScrubbing: true,
+            padding: const EdgeInsets.symmetric(vertical: 0),
+            colors: const VideoProgressColors(
+              playedColor: Color(0xFF00E050),
+              bufferedColor: Colors.white60,
+              backgroundColor: Colors.white24,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

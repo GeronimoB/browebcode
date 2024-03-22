@@ -4,6 +4,7 @@ import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/data/datasources/remote_data_source.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
+import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -19,15 +20,15 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   @override
   Future<void> signIn(UserEntity user, BuildContext context) async {
     try {
-      final response = await http.post(
-        Uri.parse(Uri.encodeFull(
-            '${ApiConstants.baseUrl}/auth/login')), // URL de la solicitud POST para iniciar sesión
-        body: {
+      final response = await ApiClient().post(
+        'auth/login', // URL de la solicitud POST para iniciar sesión
+        {
           'UserName': user.username,
           'Password': user.password,
         },
       );
 
+      print(response.body);
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
         final player = PlayerFullModel.fromJson(jsonData["userInfo"]);

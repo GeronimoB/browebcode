@@ -21,7 +21,7 @@ class _SignInScreenState extends State<SignInScreen> {
   bool rememberMe = false;
   late TextEditingController emailController;
   late TextEditingController passwordController;
-
+  bool isLoading = false;
   @override
   void initState() {
     super.initState();
@@ -134,6 +134,9 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               CustomTextButton(
                   onTap: () {
+                    setState(() {
+                      isLoading = true;
+                    });
                     final playerProvider =
                         Provider.of<PlayerProvider>(context, listen: false);
                     RemoteDataSourceImpl(playerProvider).signIn(
@@ -201,6 +204,18 @@ class _SignInScreenState extends State<SignInScreen> {
             ],
           ),
         ),
+        if (isLoading)
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.black
+                .withOpacity(0.5), // Color de fondo semitransparente
+            child: const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+              ),
+            ),
+          ),
       ],
     ));
   }
