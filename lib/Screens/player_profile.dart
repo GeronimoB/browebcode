@@ -160,10 +160,10 @@ class _PlayerProfileState extends State<PlayerProfile> {
                       );
                     },
                     child: FadeInImage.assetNetwork(
-                      placeholder: 'assets/images/video_placeholder.png',
+                      placeholder: 'assets/images/video_placeholder.jpg',
                       imageErrorBuilder: (context, error, stackTrace) {
                         return Image.asset(
-                          'assets/images/video_placeholder.png',
+                          'assets/images/video_placeholder.jpg',
                           fit: BoxFit.cover,
                         );
                       },

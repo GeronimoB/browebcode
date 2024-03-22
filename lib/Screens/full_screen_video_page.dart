@@ -5,7 +5,8 @@ import 'package:video_player/video_player.dart';
 class FullScreenVideoPage extends StatefulWidget {
   final String videoPath;
 
-  const FullScreenVideoPage({Key? key, required this.videoPath}) : super(key: key);
+  const FullScreenVideoPage({Key? key, required this.videoPath})
+      : super(key: key);
 
   @override
   _FullScreenVideoPageState createState() => _FullScreenVideoPageState();
@@ -17,12 +18,12 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
   @override
   void initState() {
     super.initState();
-    // ignore: deprecated_member_use
-    _controller = VideoPlayerController.network(widget.videoPath)
+    Uri url = Uri.parse(widget.videoPath);
+    _controller = VideoPlayerController.networkUrl(url)
       ..initialize().then((_) {
-        // Asegúrate de llamar a setState para que la página se reconstruya cuando el video esté listo.
         setState(() {});
-        _controller.play(); // Reproduce el video tan pronto como esté listo
+        _controller.play();
+        _controller.setLooping(true);
       });
   }
 
@@ -140,8 +141,11 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
             child: Container(
               color: Colors.black,
               child: Center(
-                child: SvgPicture.asset('assets/icons/Logo.svg',
-                    fit: BoxFit.fitWidth),
+                child: SvgPicture.asset(
+                  'assets/icons/Logo.svg',
+                  fit: BoxFit.fitWidth,
+                  width: 100,
+                ),
               ),
             ),
           ),
