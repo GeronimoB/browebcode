@@ -12,9 +12,13 @@ class FullScreenVideoPage extends StatefulWidget {
   _FullScreenVideoPageState createState() => _FullScreenVideoPageState();
 }
 
-class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
+class _FullScreenVideoPageState extends State<FullScreenVideoPage>
+    with SingleTickerProviderStateMixin {
   late VideoPlayerController _controller;
   double _videoHeight = 0;
+  bool _isPlaying = false;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -25,7 +29,21 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
         setState(() {});
         _controller.play();
         _controller.setLooping(true);
+        _controller.addListener(() {
+          if (_controller.value.isPlaying) {
+            setState(() {
+              _isPlaying = true;
+            });
+          } else {
+            setState(() {
+              _isPlaying = false;
+            });
+          }
+        });
       });
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
   }
 
   void _calculateVideoHeight() {
@@ -40,6 +58,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
   @override
   void dispose() {
     _controller.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -47,8 +66,10 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
     setState(() {
       if (_controller.value.isPlaying) {
         _controller.pause();
+        _animationController.forward();
       } else {
         _controller.play();
+        _animationController.reverse();
       }
     });
   }
@@ -62,10 +83,24 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
           onTap: _togglePlayPause,
           child: _controller.value.isInitialized
               ? SizedBox(
-                  width: double.maxFinite,
-                  height: videoHeight,
-                  child: VideoPlayer(_controller),
-                )
+            width: double.maxFinite,
+            height: videoHeight,
+            child: Stack(
+              children: [
+                VideoPlayer(_controller),
+                Center(
+                  child: ScaleTransition(
+                    scale: _animation,
+                    child: Icon(
+                      Icons.play_arrow,
+                      size: 100,
+                      color: Colors.white.withOpacity(0.5),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
               : const Center(child: CircularProgressIndicator()),
         ),
         Positioned(
@@ -97,7 +132,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                 const PopupMenuItem<String>(
                   child: Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
                     child: Text('Borrar',
                         style: TextStyle(
                             color: Colors.white,
@@ -109,7 +144,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                   value: 'destacar',
                   child: Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
                     child: Text('Destacar',
                         style: TextStyle(
                             color: Colors.white,
@@ -120,7 +155,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                 const PopupMenuItem<String>(
                   child: Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
                     child: Text('Editar',
                         style: TextStyle(
                             color: Colors.white,
@@ -131,7 +166,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                 const PopupMenuItem<String>(
                   child: Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
                     child: Text('Guardar',
                         style: TextStyle(
                             color: Colors.white,
@@ -142,7 +177,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                 const PopupMenuItem<String>(
                   child: Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
+                    EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
                     child: Text('Ocultar',
                         style: TextStyle(
                             color: Colors.white,
