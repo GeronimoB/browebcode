@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bro_app_to/utils/agente_model.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Intro.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'providers/agent_provider.dart';
 import 'providers/user_provider.dart';
 
 void main() async {
@@ -21,6 +23,7 @@ void main() async {
 
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key});
 
@@ -44,6 +47,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PlayerProvider()),
+        ChangeNotifierProvider(create: (_) => AgenteProvider())
       ],
       child: MaterialApp(
         title: 'Bro app',

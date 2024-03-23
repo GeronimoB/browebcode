@@ -5,27 +5,32 @@ import 'package:bro_app_to/Screens/Pedidos.dart';
 import 'package:bro_app_to/Screens/Privacidad.dart';
 import 'package:bro_app_to/Screens/Servicios.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/agent_provider.dart';
 
 class ConfigProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AgenteProvider>(context, listen: true);
+    final agente = provider.getAgente();
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
-        title: const Column(
+        title: Column(
           children: [
-            SizedBox(height: 22),
+            const SizedBox(height: 22),
             Text(
-              'NOMBRE Y APELLIDO',
-              style: TextStyle(
+              '${agente.nombre} ${agente.apellido}',
+              style: const TextStyle(
                 color: Color(0xFF05FF00),
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.bold,
                 fontSize: 12,
               ),
             ),
-            Text(
+            const Text(
               'CONFIGURACIÓN',
               style: TextStyle(
                 color: Colors.white,
@@ -57,16 +62,19 @@ class ConfigProfile extends StatelessWidget {
               child: ListView(
                 children: [
                   const SizedBox(height: 22),
-                    _buildListItem('EDITAR INFROMACION', context, true, EditarInfo()),
-                    _buildListItem('PRIVACIDAD', context, true, Privacidad()),
-                    const SizedBox(height: 15),
-                    _buildListItem('CENTRO DE AYUDA (FAQ)', context, false, ConfigProfile()),
-                    _buildListItem('SOPORTE', context, false, ConfigProfile()),
-                    _buildListItem('NOTIFICACIONES', context, true, Notificaciones()),
-                    _buildListItem('AFILIADOS', context, true, const AfiliadosPlayer()),
-                    _buildListItem('PEDIDOS', context, true, Pedidos()),
-                    _buildListItem('SERVICIOS', context, true, const Servicios()),
-
+                  _buildListItem(
+                      'EDITAR INFROMACION', context, true, EditarInfo()),
+                  _buildListItem('PRIVACIDAD', context, true, Privacidad()),
+                  const SizedBox(height: 15),
+                  _buildListItem(
+                      'CENTRO DE AYUDA (FAQ)', context, false, ConfigProfile()),
+                  _buildListItem('SOPORTE', context, false, ConfigProfile()),
+                  _buildListItem(
+                      'NOTIFICACIONES', context, true, Notificaciones()),
+                  _buildListItem(
+                      'AFILIADOS', context, true, const AfiliadosPlayer()),
+                  _buildListItem('PEDIDOS', context, true, Pedidos()),
+                  _buildListItem('SERVICIOS', context, true, const Servicios()),
                 ],
               ),
             ),
