@@ -155,7 +155,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                 TextField(
                   controller: dniController,
                   decoration: const InputDecoration(
-                    labelText: 'Introduce tu SIN / NI / DNI/ NIE',
+                    labelText: 'Introduce tu DNI/NIE/NIF',
                     labelStyle: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',

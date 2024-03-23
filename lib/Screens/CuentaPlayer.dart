@@ -1,3 +1,4 @@
+import 'package:bro_app_to/planes_pago.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
@@ -62,7 +63,7 @@ class _CuentaPageState extends State<CuentaPage> {
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: Image.asset(
-                    'assets/images/jugador.png',
+                    'assets/images/fot.png',
                     width: 181,
                     fit: BoxFit.fill,
                   ),
@@ -80,17 +81,21 @@ class _CuentaPageState extends State<CuentaPage> {
               ),
             ),
             const SizedBox(height: 10),
-             Text(
-              '${player.pais}, ${player.provincia} - ${player.club} - ${player.categoria}',
+            Text(
+              '${player.provincia},${player.pais}  \n${player.club}, ${player.categoria}',
               style: const TextStyle(
-                color: Colors.grey,
+                color: Colors.white,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w400,
                 fontFamily: 'Montserrat',
-                fontSize: 16,
+                fontStyle: FontStyle.italic,
               ),
+              textAlign: TextAlign.center,
             ),
+                        const SizedBox(height: 10),
             CarouselSlider(
   options: CarouselOptions(
-    height: 300.0,
+    height: 280.0,
     enlargeCenterPage: true,
     autoPlay: true,
     autoPlayCurve: Curves.fastOutSlowIn,
@@ -98,21 +103,7 @@ class _CuentaPageState extends State<CuentaPage> {
     autoPlayAnimationDuration: const Duration(milliseconds: 800),
     viewportFraction: 0.8,
   ),
-  items: [
-    {
-      'nombre': 'Gold',
-      'descripcion': 'La mejor opción para ti. Incluye funciones avanzadas y soporte premium.',
-    },
-    {
-      'nombre': 'Silver',
-      'descripcion': 'Económico y efectivo. Ideal para usuarios intermedios que ',
-    },
-    {
-      'nombre': 'Bronze',
-      'descripcion': 'Comienza con nosotros. Perfecto para principiantes que desean ',
-    },
-    // Agrega más mapas a la lista para más tarjetas...
-  ].map((plan) {
+  items: planes.map((plan) {
     return Builder(
       builder: (BuildContext context) {
         return Container(
@@ -128,15 +119,15 @@ class _CuentaPageState extends State<CuentaPage> {
               Positioned(
                 top: 26,
                 left: 26,
-                child: Image.asset('assets/images/Logo.png', width: 100),
+                child: Image.asset('assets/images/Logo.png', width: 80),
               ),
               Positioned(
                 top: 36,
                 right: 36,
                 child: Text(
-                  plan['nombre']!, // Nombre del plan
+                  plan.nombre, // Nombre del plan
                   style: const TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF05FF00),
                   ),
@@ -159,12 +150,13 @@ class _CuentaPageState extends State<CuentaPage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      plan['descripcion']!, // Descripción del plan
+                      plan.descripcionLarga, // Descripción del plan
                       style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                       ),
-                      maxLines: null, // Permite múltiples líneas
+                      maxLines: 2, // Máximo de 2 líneas antes de mostrar "Ver más"
+                      overflow: TextOverflow.ellipsis, // Manejo de overflow
                     ),
                     const SizedBox(height: 20),
                     TextButton(
@@ -176,11 +168,13 @@ class _CuentaPageState extends State<CuentaPage> {
                     ),
                     Center(
                       child: CustomTextButton(
-                      onTap: () {}, // No se necesita ninguna acción
-                      text: 'Adquirir', // Agrega el texto "Adquirir"
-                      buttonPrimary: true, // Utiliza el estilo primario
-                      width: 90, height: 30,
-                    ),
+                        onTap: () {
+                          // Aquí puedes agregar la lógica para suscribirse al plan
+                        },
+                        text: 'subscribirse', // Agrega el texto "Adquirir"
+                        buttonPrimary: true, // Utiliza el estilo primario
+                        width: 110, height: 30,
+                      ),
                     ),
                   ],
                 ),
@@ -193,7 +187,6 @@ class _CuentaPageState extends State<CuentaPage> {
   }).toList(),
 ),
 
-            const SizedBox(height: 20),
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,

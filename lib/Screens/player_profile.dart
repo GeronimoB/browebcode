@@ -93,7 +93,7 @@ class _PlayerProfileState extends State<PlayerProfile> {
                     fit: BoxFit.cover, // Ajuste de la imagen
                   );
                 },
-                image: player.userImage ?? "", // URL de la imagen
+                image: 'assets/images/fot.png', // URL de la imagen
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover, // Ajuste de la imagen
@@ -110,17 +110,19 @@ class _PlayerProfileState extends State<PlayerProfile> {
               ),
               textAlign: TextAlign.center,
             ),
-            Text(
-              '${player.pais}, ${player.provincia} - ${player.club} - ${player.categoria}',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Montserrat',
-                fontStyle: FontStyle.italic,
-              ),
-              textAlign: TextAlign.center,
-            ),
+Text(
+  ' ${player.provincia},${player.pais}\n${player.club}, ${player.altura}\n${player.pieDominante}, ${player.seleccionNacional}\n${player.position}, ${player.categoria}\n ${player.logrosIndividuales}',
+  style: const TextStyle(
+    color: Colors.white,
+    fontSize: 16.0,
+    fontWeight: FontWeight.w400,
+    fontFamily: 'Montserrat',
+    fontStyle: FontStyle.italic,
+  ),
+  textAlign: TextAlign.center,
+),
+
+
             const SizedBox(height: 15.0),
             Container(
               margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
