@@ -1,6 +1,8 @@
 import 'package:bro_app_to/Screens/config_profile.dart';
+import 'package:bro_app_to/providers/agent_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/perfil_detalle_page.dart';
+import 'package:provider/provider.dart';
 
 class PerfilPage extends StatelessWidget {
   const PerfilPage({Key? key});
@@ -8,7 +10,8 @@ class PerfilPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
+    final provider = Provider.of<AgenteProvider>(context, listen: true);
+    final agente = provider.getAgente();
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
@@ -47,18 +50,17 @@ class PerfilPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-
-            const Text(
-              'Nombre de Usuario',
-              style: TextStyle(
-                color: Colors.green,
+            Text(
+              agente.usuario!,
+              style: const TextStyle(
+                color: Color(0xff05FF00),
                 fontWeight: FontWeight.bold,
                 fontSize: 24.0,
               ),
             ),
-            const Text(
-              'Subtítulo',
-              style: TextStyle(
+            Text(
+              '${agente.provincia}, ${agente.pais}',
+              style: const TextStyle(
                 color: Colors.grey,
                 fontSize: 18.0,
               ),

@@ -1,12 +1,15 @@
 import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
+import 'package:bro_app_to/providers/agent_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/data/datasources/remote_data_source.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
+import 'package:bro_app_to/utils/agente_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import '../../../../Screens/bottom_navigation_bar_player.dart';
 import '../../domain/entitites/user_entity.dart';
@@ -31,9 +34,13 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       print(response.body);
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
-        final player = PlayerFullModel.fromJson(jsonData["userInfo"]);
+        final userData = jsonData["userInfo"];
+        final player = PlayerFullModel.fromJson(userData);
         final isAgent = jsonData["isAgent"];
         if (isAgent) {
+          final agentProvider =
+              Provider.of<AgenteProvider>(context, listen: false);
+          agentProvider.setAgente(Agente.fromJson(userData));
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(

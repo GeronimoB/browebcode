@@ -62,7 +62,6 @@ class _InicioPageState extends State<InicioPage> {
       }
     } catch (error) {
       print('Error al obtener las URLs de los videos: $error');
-      // Manejar el error, mostrar un mensaje de error, etc.
     }
   }
 
