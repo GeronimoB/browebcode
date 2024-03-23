@@ -1,4 +1,4 @@
-import 'package:bro_app_to/Screens/Chatpage.dart';
+import 'package:bro_app_to/Screens/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -47,8 +47,7 @@ class MensajesPage_player extends StatelessWidget {
                     imageURL: 'assets/images/jugador23.png',
                     title: 'Luis Garzon',
                     description: 'Entrenador',
-                    onDelete: () {
-                    },
+                    onDelete: () {},
                   ),
                 ),
               );

@@ -1,9 +1,9 @@
-import 'package:bro_app_to/Screens/Afiliados_Player.dart';
-import 'package:bro_app_to/Screens/player/CuentaPlayer.dart';
-import 'package:bro_app_to/Screens/Notificaciones.dart';
-import 'package:bro_app_to/Screens/player/Pedidos.dart';
-import 'package:bro_app_to/Screens/Privacidad.dart';
-import 'package:bro_app_to/Screens/player/Servicios.dart';
+import 'package:bro_app_to/Screens/afiliados_player.dart';
+import 'package:bro_app_to/Screens/player/cuenta_player.dart';
+import 'package:bro_app_to/Screens/notificaciones.dart';
+import 'package:bro_app_to/Screens/player/pedidos.dart';
+import 'package:bro_app_to/Screens/privacidad.dart';
+import 'package:bro_app_to/Screens/player/servicios.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Screens/agent/Inicio.dart'; // Importa los archivos de las pantallas
+import 'package:bro_app_to/Screens/agent/inicio.dart'; // Importa los archivos de las pantallas
 import 'package:bro_app_to/Screens/agent/Match.dart';
 import 'package:bro_app_to/Screens/mensajes.dart';
 import 'package:bro_app_to/Screens/perfil.dart';

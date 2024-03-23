@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bro_app_to/Screens/agent/MatchProfile.dart';
+import 'package:bro_app_to/Screens/agent/match_profile.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/initial_video_model.dart';
 import 'package:flutter/material.dart';

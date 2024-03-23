@@ -1,5 +1,5 @@
-import 'package:bro_app_to/Screens/player/Match_player.dart';
-import 'package:bro_app_to/Screens/Mensajes_player.dart';
+import 'package:bro_app_to/Screens/player/match_player.dart';
+import 'package:bro_app_to/Screens/mensajes_player.dart';
 import 'package:bro_app_to/Screens/player/upload_video.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
