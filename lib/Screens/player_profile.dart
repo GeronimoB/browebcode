@@ -7,9 +7,9 @@ import '../components/custom_box_shadow.dart';
 import '../providers/player_provider.dart';
 import '../utils/api_client.dart';
 import '../utils/video_model.dart';
-import 'bottom_navigation_bar_player.dart';
-import 'config_profile_player.dart';
-import 'full_screen_video_page.dart';
+import 'player/bottom_navigation_bar_player.dart';
+import 'player/config_profile_player.dart';
+import 'player/full_screen_video_page.dart';
 
 class PlayerProfile extends StatefulWidget {
   @override

@@ -2,7 +2,7 @@ import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
 
-import 'Chatpage.dart';
+import '../Chatpage.dart';
 
 class MatchePlayer extends StatefulWidget {
   const MatchePlayer({super.key});

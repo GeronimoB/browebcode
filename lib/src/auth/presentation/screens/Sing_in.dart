@@ -1,6 +1,6 @@
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
+import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/olvide_contrasena.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';

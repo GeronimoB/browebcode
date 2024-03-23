@@ -57,7 +57,7 @@ class MatchProfile extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: Colors.white), // Texto en blanco
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     _buildInfoRow(context, 'Fecha de Nacimiento:',
                         '${userData.birthDate}'),
                     _buildInfoRow(context, 'País, Provincia:',
@@ -70,7 +70,7 @@ class MatchProfile extends StatelessWidget {
                         '${userData.logrosIndividuales}'),
                     _buildInfoRow(context, 'Selección Nacional:',
                         '${userData.seleccionNacional} ${userData.categoriaSeleccion}'),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     CustomTextButton(
                       onTap: () {},
                       text: '¡Vamos al Chat!',

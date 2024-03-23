@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import 'Screens/bottom_navigation_bar.dart';
+import 'Screens/agent/bottom_navigation_bar.dart';
 import 'Screens/metodo_pago_screen.dart';
 import 'providers/player_provider.dart';
 import 'utils/plan_model.dart';

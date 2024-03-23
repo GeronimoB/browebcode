@@ -8,10 +8,11 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import '../components/custom_text_button.dart';
-import '../utils/api_client.dart';
+import '../../components/custom_text_button.dart';
+import '../../utils/api_client.dart';
 import 'bottom_navigation_bar_player.dart';
 import 'package:path_provider/path_provider.dart';
+
 class FullScreenVideoPage extends StatefulWidget {
   final Video video;
   final int index;
@@ -39,48 +40,48 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
       });
   }
 
-void _handleDownload(Video video) async {
-  String? videoUrl = video.videoUrl;
+  void _handleDownload(Video video) async {
+    String? videoUrl = video.videoUrl;
 
-  if (videoUrl == null || videoUrl.isEmpty) {
-    print('URL del video nula o vacía. No se puede iniciar la descarga.');
-    return;
-  }
-
-  print('Iniciando descarga del video desde la URL: $videoUrl');
-
-  final status = await Permission.storage.status;
-  if (!status.isGranted) {
-    print('Solicitando permiso de almacenamiento...');
-    final result = await Permission.storage.request();
-    if (!result.isGranted) {
-      print('Permiso de almacenamiento denegado. No se puede continuar con la descarga.');
+    if (videoUrl == null || videoUrl.isEmpty) {
+      print('URL del video nula o vacía. No se puede iniciar la descarga.');
       return;
     }
-  }
 
-  final directory = await getApplicationDocumentsDirectory();
-  final savedDir = '${directory.path}/BroAppVideos/';
-  final exists = await Directory(savedDir).exists();
-  if (!exists) {
-    print('El directorio no existe. Creando...');
-    await Directory(savedDir).create(recursive: true);
-  }
+    print('Iniciando descarga del video desde la URL: $videoUrl');
 
-  try {
-    final taskId = await FlutterDownloader.enqueue(
-      url: videoUrl,
-      savedDir: savedDir,
-      fileName: 'video_${video.id}.mp4',
-      showNotification: true,
-      openFileFromNotification: true,
-    );
-    print('Descarga iniciada correctamente. ID de tarea: $taskId');
-  } catch (error) {
-    print('Error al iniciar la descarga: $error');
-  }
-}
+    final status = await Permission.storage.status;
+    if (!status.isGranted) {
+      print('Solicitando permiso de almacenamiento...');
+      final result = await Permission.storage.request();
+      if (!result.isGranted) {
+        print(
+            'Permiso de almacenamiento denegado. No se puede continuar con la descarga.');
+        return;
+      }
+    }
 
+    final directory = await getApplicationDocumentsDirectory();
+    final savedDir = '${directory.path}/BroAppVideos/';
+    final exists = await Directory(savedDir).exists();
+    if (!exists) {
+      print('El directorio no existe. Creando...');
+      await Directory(savedDir).create(recursive: true);
+    }
+
+    try {
+      final taskId = await FlutterDownloader.enqueue(
+        url: videoUrl,
+        savedDir: savedDir,
+        fileName: 'video_${video.id}.mp4',
+        showNotification: true,
+        openFileFromNotification: true,
+      );
+      print('Descarga iniciada correctamente. ID de tarea: $taskId');
+    } catch (error) {
+      print('Error al iniciar la descarga: $error');
+    }
+  }
 
   @override
   void dispose() {
@@ -185,25 +186,26 @@ void _handleDownload(Video video) async {
                 //             fontStyle: FontStyle.italic)),
                 //   ),
                 // ),
-PopupMenuItem<String>(
-  child: GestureDetector(
-    onTap: () {
-      _handleDownload(widget.video);
-    },
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-      child: Text(
-        'Guardar',
-        style: TextStyle(
-          color: Colors.white,
-          fontFamily: 'Montserrat',
-          fontStyle: FontStyle.italic,
-        ),
-      ),
-    ),
-  ),
-),
-    
+                PopupMenuItem<String>(
+                  child: GestureDetector(
+                    onTap: () {
+                      _handleDownload(widget.video);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 1.0),
+                      child: Text(
+                        'Guardar',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
                 // PopupMenuItem<String>(
                 //   child: GestureDetector(
                 //     onTap: () {
@@ -344,18 +346,6 @@ PopupMenuItem<String>(
       'videoId': video.id.toString(),
       'destacado': video.isFavorite.toString(),
     });
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-          builder: (context) =>
-              CustomBottomNavigationBarPlayer(initialIndex: 4)),
-    );
-  }
-
-  void _handleHide(int index) {
-    final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
-    playerProvider.updateIsHiddenById(index);
-
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(

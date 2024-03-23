@@ -1,8 +1,9 @@
-import 'package:bro_app_to/Screens/config_profile.dart';
 import 'package:bro_app_to/providers/agent_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/perfil_detalle_page.dart';
 import 'package:provider/provider.dart';
+
+import 'config_profile.dart';
 
 class PerfilPage extends StatelessWidget {
   const PerfilPage({Key? key});

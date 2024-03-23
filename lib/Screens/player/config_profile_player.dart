@@ -1,17 +1,17 @@
 import 'package:bro_app_to/Screens/Afiliados_Player.dart';
-import 'package:bro_app_to/Screens/Edit_info_player.dart';
+import 'package:bro_app_to/Screens/player/CuentaPlayer.dart';
 import 'package:bro_app_to/Screens/Notificaciones.dart';
-import 'package:bro_app_to/Screens/Pedidos.dart';
+import 'package:bro_app_to/Screens/player/Pedidos.dart';
 import 'package:bro_app_to/Screens/Privacidad.dart';
-import 'package:bro_app_to/Screens/Servicios.dart';
-import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
+import 'package:bro_app_to/Screens/player/Servicios.dart';
+import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:bro_app_to/providers/player_provider.dart';
 
-import '../providers/agent_provider.dart';
-import '../providers/user_provider.dart';
+import 'bottom_navigation_bar_player.dart';
 
-class ConfigProfile extends StatelessWidget {
+class ConfigProfilePlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
@@ -23,7 +23,7 @@ class ConfigProfile extends StatelessWidget {
         centerTitle: true,
         title: Column(
           children: [
-            const SizedBox(height: 22),
+            SizedBox(height: 22),
             Text(
               '${user.name} ${user.lastName}',
               style: const TextStyle(
@@ -51,7 +51,7 @@ class ConfigProfile extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    const CustomBottomNavigationBar(initialIndex: 3)),
+                    CustomBottomNavigationBarPlayer(initialIndex: 4)),
           ),
         ),
       ),
@@ -69,14 +69,14 @@ class ConfigProfile extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  const SizedBox(height: 22),
-                  _buildListItem(
-                      'EDITAR INFORMACION', context, true, EditarInfo()),
+                  SizedBox(height: 22),
+                  _buildListItem('CUENTA', context, true, CuentaPage()),
                   _buildListItem('PRIVACIDAD', context, true, Privacidad()),
-                  const SizedBox(height: 15),
+                  SizedBox(height: 15),
+                  _buildListItem('CENTRO DE AYUDA (FAQ)', context, false,
+                      ConfigProfilePlayer()),
                   _buildListItem(
-                      'CENTRO DE AYUDA (FAQ)', context, false, ConfigProfile()),
-                  _buildListItem('SOPORTE', context, false, ConfigProfile()),
+                      'SOPORTE', context, false, ConfigProfilePlayer()),
                   _buildListItem(
                       'NOTIFICACIONES', context, true, Notificaciones()),
                   _buildListItem(

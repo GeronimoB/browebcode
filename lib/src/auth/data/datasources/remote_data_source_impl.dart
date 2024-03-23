@@ -1,4 +1,4 @@
-import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
+import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:bro_app_to/providers/agent_provider.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
@@ -12,7 +12,7 @@ import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
-import '../../../../Screens/bottom_navigation_bar_player.dart';
+import '../../../../Screens/player/bottom_navigation_bar_player.dart';
 import '../../domain/entitites/user_entity.dart';
 import 'package:http/http.dart' as http;
 

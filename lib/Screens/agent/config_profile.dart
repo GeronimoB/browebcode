@@ -1,17 +1,25 @@
 import 'package:bro_app_to/Screens/Afiliados_Player.dart';
-import 'package:bro_app_to/Screens/CuentaPlayer.dart';
+import 'package:bro_app_to/Screens/agent/edit_agent_info.dart';
 import 'package:bro_app_to/Screens/Notificaciones.dart';
-import 'package:bro_app_to/Screens/Pedidos.dart';
+import 'package:bro_app_to/Screens/player/Pedidos.dart';
 import 'package:bro_app_to/Screens/Privacidad.dart';
-import 'package:bro_app_to/Screens/Servicios.dart';
-import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/Screens/player/Servicios.dart';
+import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:bro_app_to/providers/player_provider.dart';
 
-import 'bottom_navigation_bar_player.dart';
+import '../../providers/agent_provider.dart';
+import '../../providers/user_provider.dart';
 
-class ConfigProfilePlayer extends StatelessWidget {
+class ConfigProfile extends StatefulWidget {
+  const ConfigProfile({super.key});
+
+  @override
+  State<ConfigProfile> createState() => _ConfigProfileState();
+}
+
+class _ConfigProfileState extends State<ConfigProfile> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
@@ -23,7 +31,7 @@ class ConfigProfilePlayer extends StatelessWidget {
         centerTitle: true,
         title: Column(
           children: [
-            SizedBox(height: 22),
+            const SizedBox(height: 22),
             Text(
               '${user.name} ${user.lastName}',
               style: const TextStyle(
@@ -51,7 +59,7 @@ class ConfigProfilePlayer extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    CustomBottomNavigationBarPlayer(initialIndex: 4)),
+                    const CustomBottomNavigationBar(initialIndex: 3)),
           ),
         ),
       ),
@@ -69,34 +77,34 @@ class ConfigProfilePlayer extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  SizedBox(height: 22),
-                  _buildListItem('CUENTA', context, true, CuentaPage()),
-                  _buildListItem('PRIVACIDAD', context, true, Privacidad()),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 22),
+                  _buildListItem(
+                      'EDITAR INFORMACION', context, true, EditarInfo(), true),
+                  _buildListItem(
+                      'PRIVACIDAD', context, true, Privacidad(), true),
+                  const SizedBox(height: 15),
                   _buildListItem('CENTRO DE AYUDA (FAQ)', context, false,
-                      ConfigProfilePlayer()),
+                      ConfigProfile(), false),
                   _buildListItem(
-                      'SOPORTE', context, false, ConfigProfilePlayer()),
+                      'SOPORTE', context, false, ConfigProfile(), false),
                   _buildListItem(
-                      'NOTIFICACIONES', context, true, Notificaciones()),
+                      'NOTIFICACIONES', context, true, Notificaciones(), true),
                   _buildListItem(
-                    'AFILIADOS',
-                    context,
-                    true,
-                    user.referralCode != ""
-                        ? const ListaReferidosScreen()
-                        : const AfiliadosPlayer(),
-                  ),
-                  _buildListItem('PEDIDOS', context, true, Pedidos()),
-                  _buildListItem('SERVICIOS', context, true, const Servicios()),
+                      'AFILIADOS',
+                      context,
+                      true,
+                      user.referralCode != ""
+                          ? const ListaReferidosScreen()
+                          : const AfiliadosPlayer(),
+                      true),
                 ],
               ),
             ),
             Container(
               padding: const EdgeInsets.only(bottom: 32.0),
               alignment: Alignment.center,
-              child: Image.asset(
-                'assets/images/Logo.png',
+              child: SvgPicture.asset(
+                'assets/icons/Logo.svg',
                 width: 104,
               ),
             ),
@@ -106,25 +114,27 @@ class ConfigProfilePlayer extends StatelessWidget {
     );
   }
 
-  Widget _buildListItem(
-      String title, BuildContext context, bool showTrailingIcon, Widget page) {
+  Widget _buildListItem(String title, BuildContext context,
+      bool showTrailingIcon, Widget? page, bool goToNewPage) {
     return ListTile(
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.white,
           fontFamily: 'Montserrat',
           fontSize: 16,
-          fontWeight: FontWeight.w500,
+          fontWeight: goToNewPage ? FontWeight.w500 : FontWeight.bold,
         ),
       ),
       trailing: showTrailingIcon
           ? const Icon(Icons.chevron_right, color: Color(0xFF05FF00))
           : null,
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => page),
-        );
+        if (goToNewPage) {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => page!),
+          );
+        }
       },
     );
   }

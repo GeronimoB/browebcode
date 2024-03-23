@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:bro_app_to/Screens/MatchProfile.dart';
+import 'package:bro_app_to/Screens/agent/MatchProfile.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/initial_video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:video_player/video_player.dart';
 
-import '../components/slidedable_video.dart';
+import '../../components/slidedable_video.dart';
 
 class InicioPage extends StatefulWidget {
   @override
@@ -46,28 +46,25 @@ class _InicioPageState extends State<InicioPage> {
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
     setState(() {
       _xOffset += details.primaryDelta!;
-      _rotation = _xOffset / 1000;
+      _rotation = -_xOffset / 1000;
     });
   }
 
   void _onHorizontalDragEnd(DragEndDetails details) {
     if (_xOffset > 100) {
+      //Obtener id antes de cambiar
+      final userId = _videoUrls[_currentIndex].userId;
       setState(() {
         _currentIndex = (_currentIndex + 1) % _videoUrls.length;
       });
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                MatchProfile(userId: _videoUrls[_currentIndex].userId)),
+        MaterialPageRoute(builder: (context) => MatchProfile(userId: userId)),
       );
-      print('Deslizado hacia la derecha');
     } else if (_xOffset < -100) {
       setState(() {
-        _currentIndex =
-            _currentIndex == 0 ? _videoUrls.length - 1 : _currentIndex - 1;
+        _currentIndex = (_currentIndex + 1) % _videoUrls.length;
       });
-      print('Deslizado hacia la izquierda');
     }
     setState(() {
       _xOffset = 0;
@@ -79,7 +76,21 @@ class _InicioPageState extends State<InicioPage> {
   Widget build(BuildContext context) {
     double scale = 1 - (_xOffset.abs() * 0.001);
     double height = MediaQuery.of(context).size.height;
-
+    Widget child;
+    if (_videoUrls.isEmpty) {
+      child = const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 20),
+            Text('Cargando videos...'),
+          ],
+        ),
+      );
+    } else {
+      child = SlidableVideo(videoUrl: _videoUrls[_currentIndex].url);
+    }
     return SizedBox(
       height: height * 0.9,
       child: GestureDetector(
@@ -93,9 +104,7 @@ class _InicioPageState extends State<InicioPage> {
                 child: Transform.rotate(
                   angle: _rotation,
                   child: Transform.translate(
-                      offset: Offset(_xOffset, 0),
-                      child: SlidableVideo(
-                          videoUrl: _videoUrls[_currentIndex].url)),
+                      offset: Offset(_xOffset, 0), child: child),
                 ),
               ),
             ),

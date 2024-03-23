@@ -1,13 +1,6 @@
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
-import 'package:bro_app_to/utils/agente_model.dart';
 import 'package:bro_app_to/utils/referido_model.dart';
-import 'package:bro_app_to/utils/tarjeta_model.dart';
-import 'package:bro_app_to/utils/video_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import '../src/registration/data/models/player_full_model.dart';
-import '../utils/plan_model.dart';
 
 class UserProvider extends ChangeNotifier {
   UserModel _currentUser = const UserModel(username: '', password: '');

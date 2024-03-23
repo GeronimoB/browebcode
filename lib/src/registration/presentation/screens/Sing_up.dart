@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import 'components/custom_text_button.dart';
-import 'providers/player_provider.dart';
-import 'sign_up_2.dart';
+import '../../../../components/custom_text_button.dart';
+import '../../../../providers/player_provider.dart';
 import 'package:http/http.dart' as http;
 
-import 'utils/api_client.dart';
+import '../../../../utils/api_client.dart';
+import 'sign_up_2.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

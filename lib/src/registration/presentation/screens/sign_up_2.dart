@@ -1,16 +1,14 @@
 import 'dart:async';
 
-import 'package:bro_app_to/Screens/select_camp.dart';
+import 'package:bro_app_to/components/custom_dropdown.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/select_camp.dart';
 import 'package:bro_app_to/utils/api_client.dart';
-import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import 'components/custom_dropdown.dart';
-import 'components/custom_text_button.dart';
-import 'providers/player_provider.dart';
-import 'package:http/http.dart' as http;
+import '../../../../components/custom_text_button.dart';
+import '../../../../providers/player_provider.dart';
 
 class SignUpScreen2 extends StatefulWidget {
   const SignUpScreen2({super.key});

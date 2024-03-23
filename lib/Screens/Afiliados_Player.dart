@@ -1,19 +1,16 @@
 import 'dart:convert';
 
-import 'package:bro_app_to/Screens/config_profile.dart';
-import 'package:bro_app_to/Screens/config_profile_player.dart';
-import 'package:bro_app_to/Screens/select_camp.dart';
+import 'package:bro_app_to/Screens/player/config_profile_player.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
-import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/player_provider.dart';
 import '../providers/user_provider.dart';
 import '../utils/referido_model.dart';
+import 'agent/config_profile.dart';
 
 class AfiliadosPlayer extends StatelessWidget {
   const AfiliadosPlayer({super.key});
@@ -164,7 +161,7 @@ class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  user.isAgent ? ConfigProfile() : ConfigProfilePlayer()),
+                  user.isAgent ? const ConfigProfile() : ConfigProfilePlayer()),
         );
         return false;
       },

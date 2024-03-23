@@ -49,7 +49,7 @@ class _SlidableVideoState extends State<SlidableVideo> {
       _showPauseIcon = true;
     });
     // Después de 1 segundo, ocultar el ícono de pausa
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         _showPauseIcon = false;
       });
@@ -71,6 +71,7 @@ class _SlidableVideoState extends State<SlidableVideo> {
     return GestureDetector(
       onTap: _togglePlayPause,
       child: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
           _controller.value.isInitialized
               ? VideoPlayer(_controller)
@@ -99,7 +100,9 @@ class _SlidableVideoState extends State<SlidableVideo> {
                   _controller.value.isPlaying
                       ? Icons.pause_circle_filled
                       : Icons.play_circle_fill,
-                  color: Colors.white,
+                  color: _controller.value.isPlaying
+                      ? const Color.fromARGB(142, 255, 255, 255)
+                      : Colors.white,
                   size: 64,
                 ),
               ),

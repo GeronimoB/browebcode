@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:bro_app_to/Screens/first_video.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/first_video.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../components/custom_text_button.dart';
-import '../providers/player_provider.dart';
+import '../../../../components/custom_text_button.dart';
+import '../../../../providers/player_provider.dart';
 import 'package:http/http.dart' as http;
 
 class SelectCamp extends StatefulWidget {

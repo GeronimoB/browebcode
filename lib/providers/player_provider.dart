@@ -1,4 +1,3 @@
-import 'package:bro_app_to/utils/referido_model.dart';
 import 'package:bro_app_to/utils/tarjeta_model.dart';
 import 'package:bro_app_to/utils/video_model.dart';
 import 'package:flutter/material.dart';
@@ -115,15 +114,9 @@ class PlayerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateIsHiddenById(int index) {
-    userVideos[index].isFavorite = !userVideos[index].isFavorite;
-    notifyListeners();
-  }
-
   void updateIsFavoriteById(int index) {
     userVideos[index].isFavorite = !userVideos[index].isFavorite;
     notifyListeners();
   }
-
 
 }

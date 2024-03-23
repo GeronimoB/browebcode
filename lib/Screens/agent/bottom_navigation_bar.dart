@@ -1,47 +1,45 @@
-import 'package:bro_app_to/Screens/Match_player.dart';
-import 'package:bro_app_to/Screens/Mensajes_player.dart';
-import 'package:bro_app_to/Screens/upload_video.dart';
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Screens/player_profile.dart';
+import 'package:bro_app_to/Screens/agent/Inicio.dart'; // Importa los archivos de las pantallas
+import 'package:bro_app_to/Screens/agent/Match.dart';
+import 'package:bro_app_to/Screens/mensajes.dart';
+import 'package:bro_app_to/Screens/perfil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-final List<Widget> _pages = [
-  PlayerProfile(),
-  const MatchePlayer(),
-  const UploadVideoWidget(),
-  const MensajesPage_player(),
-  PlayerProfile(),
-];
-
-final List<String?> _iconNames = [
-  'Inicio.svg',
-  'Match.svg',
-  'Player.svg',
-  'Mensaje.svg',
-  'Perfil.svg',
-];
-
-final List<String> _selectedIconNames = [
-  'Inicio-1.svg',
-  'Match-1.svg',
-  'Player.svg',
-  'Mensaje-1.svg',
-  'Perfil-1.svg',
-];
-
-class CustomBottomNavigationBarPlayer extends StatefulWidget {
+class CustomBottomNavigationBar extends StatefulWidget {
   final int initialIndex;
 
-  const CustomBottomNavigationBarPlayer({super.key, this.initialIndex = 0});
-
+  const CustomBottomNavigationBar({super.key, this.initialIndex = 0});
   @override
-  CustomBottomNavigationBarPlayerState createState() =>
-      CustomBottomNavigationBarPlayerState();
+  _CustomBottomNavigationBarState createState() =>
+      _CustomBottomNavigationBarState();
 }
 
-class CustomBottomNavigationBarPlayerState
-    extends State<CustomBottomNavigationBarPlayer> {
+class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   int _selectedIndex = 0;
+
+  // Lista de páginas que quieres mostrar en el BottomNavigationBar
+  final List<Widget> _pages = [
+    InicioPage(),
+    Matche(),
+    MensajesPage(),
+    PerfilPage(),
+  ];
+
+  // Lista de nombres de archivos de iconos no seleccionados
+  final List<String> _iconNames = [
+    'Inicio.svg',
+    'Match.svg',
+    'Mensaje.svg',
+    'Perfil.svg',
+  ];
+
+  // Lista de nombres de archivos de iconos seleccionados
+  final List<String> _selectedIconNames = [
+    'Inicio-1.svg',
+    'Match-1.svg',
+    'Mensaje-1.svg',
+    'Perfil-1.svg',
+  ];
 
   @override
   void initState() {
@@ -116,7 +114,7 @@ class CustomBottomNavigationBarPlayerState
                       height: 32,
                       width: 32,
                     ),
-              label: '',
+              label: 'Mensajes',
             ),
             BottomNavigationBarItem(
               icon: _selectedIndex == 3
@@ -127,20 +125,6 @@ class CustomBottomNavigationBarPlayerState
                     )
                   : SvgPicture.asset(
                       'assets/icons/${_iconNames[3]}',
-                      height: 32,
-                      width: 32,
-                    ),
-              label: 'Mensajes',
-            ),
-            BottomNavigationBarItem(
-              icon: _selectedIndex == 4
-                  ? SvgPicture.asset(
-                      'assets/icons/${_selectedIconNames[4]}',
-                      height: 32,
-                      width: 32,
-                    )
-                  : SvgPicture.asset(
-                      'assets/icons/${_iconNames[4]}',
                       height: 32,
                       width: 32,
                     ),
