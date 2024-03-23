@@ -147,7 +147,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                     },
                     controller: controller,
                     style: CardFormStyle(
-                      backgroundColor: Colors.white,
+                      backgroundColor: Colors.grey,
                       borderWidth: 2,
                       borderColor: Colors.green,
                       borderRadius: 15,
@@ -250,86 +250,88 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         });
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-        decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xFF00E050)),
-          borderRadius: BorderRadius.circular(10.0),
-          boxShadow: isSelected == index
-              ? [const CustomBoxShadow(color: Color(0xFF05FF00), blurRadius: 6)]
-              : null,
-        ),
-        child: ListTile(
-          contentPadding: EdgeInsets.all(0),
-          leading: Image.asset(
-            tarjeta.displayBrand == 'visa'
-                ? 'assets/images/Visa_icon.png'
-                : 'assets/images/Mastercard_icon.png',
-            width: 70,
-          ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                titular,
-                style: const TextStyle(
-                  fontFamily: 'Montserrat',
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
-                ),
-                textAlign: TextAlign.left,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                'Número ************${tarjeta.last4Numbers}',
-                style: const TextStyle(
-                  fontFamily: 'Montserrat',
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
-                ),
-                softWrap: false,
-                textAlign: TextAlign.left,
-              ),
-            ],
-          ),
-          trailing: IconButton(
-            icon: const Icon(Icons.close, color: Color(0xFF00E050), size: 32),
-            onPressed: () async {
-              final asociatePaymentMethod = await ApiClient().post(
-                'security_filter/v1/api/payment/delete-payment-method',
-                {
-                  "paymentMethodId": tarjeta.cardId,
-                  "customerId":
-                      playerProvider.getTemporalUser().customerStripeId,
-                },
-              );
-
-              if (asociatePaymentMethod.statusCode != 200) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    backgroundColor: Colors.redAccent,
-                    content: Text(
-                        'Error al eliminar la tarjeta, intentelo de nuevo.'),
-                  ),
-                );
-                return;
-              }
-
-              final savedCards =
-                  jsonDecode(asociatePaymentMethod.body)["paymentMethods"];
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    backgroundColor: Colors.lightGreen,
-                    content: Text('La tarjeta se ha eliminado exitosamente.')),
-              );
-              playerProvider.setCards(mapListToTarjetas(savedCards));
-            },
-          ),
-        ),
+  margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+  child: Container(
+    decoration: BoxDecoration(
+      border: Border.all(color: const Color(0xFF00E050)),
+      borderRadius: BorderRadius.circular(10.0),
+      boxShadow: isSelected == index
+          ? [const CustomBoxShadow(color: Color(0xFF05FF00), blurRadius: 6)]
+          : null,
+    ),
+    child: ListTile(
+      contentPadding: EdgeInsets.all(5),
+      leading: Image.asset(
+        tarjeta.displayBrand == 'visa'
+            ? 'assets/images/Visa_icon.png'
+            : 'assets/images/Mastercard_icon.png',
+        width: 70,
       ),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            titular,
+            style: const TextStyle(
+              fontFamily: 'Montserrat',
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.italic,
+            ),
+            textAlign: TextAlign.left,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            'Número *****${tarjeta.last4Numbers}',
+            style: const TextStyle(
+              fontFamily: 'Montserrat',
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.italic,
+            ),
+            softWrap: false,
+            textAlign: TextAlign.left,
+          ),
+        ],
+      ),
+      trailing: IconButton(
+        icon: const Icon(Icons.close, color: Color(0xFF00E050), size: 32),
+        onPressed: () async {
+          final asociatePaymentMethod = await ApiClient().post(
+            'security_filter/v1/api/payment/delete-payment-method',
+            {
+              "paymentMethodId": tarjeta.cardId,
+              "customerId":
+                  playerProvider.getTemporalUser().customerStripeId,
+            },
+          );
+
+          if (asociatePaymentMethod.statusCode != 200) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                backgroundColor: Colors.redAccent,
+                content: Text(
+                    'Error al eliminar la tarjeta, intentelo de nuevo.'),
+              ),
+            );
+            return;
+          }
+
+          final savedCards =
+              jsonDecode(asociatePaymentMethod.body)["paymentMethods"];
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                backgroundColor: Colors.lightGreen,
+                content: Text('La tarjeta se ha eliminado exitosamente.')),
+          );
+          playerProvider.setCards(mapListToTarjetas(savedCards));
+        },
+      ),
+    ),
+  ),
+),
     );
   }
 

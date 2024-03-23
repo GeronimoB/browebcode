@@ -171,7 +171,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 TextField(
                   controller: nameController,
                   decoration: const InputDecoration(
-                    labelText: 'Nombres',
+                    labelText: 'Nombre',
                     labelStyle: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
