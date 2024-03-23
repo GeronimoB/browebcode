@@ -1,14 +1,15 @@
 import 'dart:convert';
 
-import 'package:bro_app_to/Screens/config_profile_player.dart';
-import 'package:bro_app_to/Screens/full_screen_video_page.dart';
-import 'package:bro_app_to/components/custom_box_shadow.dart';
-import 'package:bro_app_to/providers/user_provider.dart';
-import 'package:bro_app_to/utils/video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../components/custom_box_shadow.dart';
+import '../providers/user_provider.dart';
 import '../utils/api_client.dart';
+import '../utils/video_model.dart';
+import 'bottom_navigation_bar_player.dart';
+import 'config_profile_player.dart';
+import 'full_screen_video_page.dart';
 
 class PlayerProfile extends StatefulWidget {
   @override
@@ -16,10 +17,6 @@ class PlayerProfile extends StatefulWidget {
 }
 
 class _PlayerProfileState extends State<PlayerProfile> {
-  Map<String, bool> destacadas = {
-    'assets/images/jugador1.png': false,
-  };
-
   @override
   void initState() {
     fetchVideos();
@@ -136,17 +133,15 @@ class _PlayerProfileState extends State<PlayerProfile> {
                     CustomBoxShadow(color: Color(0xFF05FF00), blurRadius: 4)
                   ]),
             ),
-            const SizedBox(height: 15.0),
             Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15), 
               child: GridView.builder(
-                padding: EdgeInsets.all(gridSpacing),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: gridSpacing,
                   mainAxisSpacing: gridSpacing,
-                  childAspectRatio: (MediaQuery.of(context).size.width / 3 -
-                          gridSpacing * 2) /
-                      183,
+                  childAspectRatio: (MediaQuery.of(context).size.width / 3 - gridSpacing * 2) / 183,
                 ),
                 itemCount: videos.length,
                 itemBuilder: (context, index) {
@@ -156,26 +151,40 @@ class _PlayerProfileState extends State<PlayerProfile> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) =>
-                              FullScreenVideoPage(video: video, index: index),
+                          builder: (context) => FullScreenVideoPage(video: video, index: index),
                         ),
                       );
                     },
-                    child: FadeInImage.assetNetwork(
-                      placeholder: 'assets/images/video_placeholder.jpg',
-                      imageErrorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
-                          'assets/images/video_placeholder.jpg',
-                          fit: BoxFit.cover,
-                        );
-                      },
-                      image: video.imageUrl ?? "",
-                      fit: BoxFit.fill,
+                    child: Stack(
+                      children: [
+                        FadeInImage.assetNetwork(
+                          placeholder: 'assets/images/video_placeholder.jpg',
+                          imageErrorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'assets/images/video_placeholder.jpg',
+                              fit: BoxFit.cover,
+                            );
+                          },
+                          image: video.imageUrl ?? "",
+                          fit: BoxFit.fill,
+                        ),
+                        if (video.isFavorite) // Mostrar estrella si el video está destacado
+                          const Positioned(
+                            top: 8.0,
+                            right: 15.0,
+                            child: Icon(
+                              Icons.star,
+                              color: Color(0xFF05FF00),
+                              size: 24.0,
+                            ),
+                          ),
+                      ],
                     ),
                   );
                 },
               ),
             ),
+          )
           ],
         ),
       ),
