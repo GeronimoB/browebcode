@@ -28,6 +28,7 @@ class _PlayerProfileState extends State<PlayerProfile> {
     final userId = playerProvider.getPlayer()!.userId;
     try {
       final videosResponse = await ApiClient().get('auth/videos/$userId');
+      print(videosResponse.body);
       if (videosResponse.statusCode == 200) {
         final jsonData = jsonDecode(videosResponse.body);
         final videos = jsonData["videos"];
