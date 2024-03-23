@@ -4,7 +4,7 @@ import 'package:bro_app_to/Screens/agregar_tarjeta_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/user_provider.dart';
+import '../providers/player_provider.dart';
 
 class MetodoDePagoScreen extends StatefulWidget {
   const MetodoDePagoScreen({super.key});

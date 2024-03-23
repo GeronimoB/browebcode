@@ -14,7 +14,7 @@ import 'package:http_parser/http_parser.dart';
 
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-import '../providers/user_provider.dart';
+import '../providers/player_provider.dart';
 
 class FirstVideoWidget extends StatefulWidget {
   const FirstVideoWidget({super.key});

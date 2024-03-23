@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../components/custom_box_shadow.dart';
-import '../providers/user_provider.dart';
+import '../providers/player_provider.dart';
 import '../utils/api_client.dart';
 import '../utils/video_model.dart';
 import 'bottom_navigation_bar_player.dart';

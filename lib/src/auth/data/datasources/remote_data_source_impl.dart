@@ -1,6 +1,7 @@
 import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:bro_app_to/providers/agent_provider.dart';
+import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/data/datasources/remote_data_source.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
@@ -35,8 +36,13 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
         final userData = jsonData["userInfo"];
-        final player = PlayerFullModel.fromJson(userData);
+
+        //Setear usuario que esta usando la app
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
+        userProvider.setCurrentUser(UserModel.fromJson(userData));
+
         final isAgent = jsonData["isAgent"];
+
         if (isAgent) {
           final agentProvider =
               Provider.of<AgenteProvider>(context, listen: false);
@@ -47,6 +53,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
                 builder: (context) => CustomBottomNavigationBar()),
           );
         } else {
+          final player = PlayerFullModel.fromJson(userData);
           playerProvider.setPlayer(player);
           Navigator.pushReplacement(
             context,

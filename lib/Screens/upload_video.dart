@@ -12,7 +12,7 @@ import 'package:http_parser/http_parser.dart';
 
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-import '../providers/user_provider.dart';
+import '../providers/player_provider.dart';
 import '../utils/api_constants.dart';
 
 // import 'package:video_thumbnail/video_thumbnail.dart';

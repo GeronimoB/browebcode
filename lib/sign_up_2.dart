@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 import 'components/custom_dropdown.dart';
 import 'components/custom_text_button.dart';
-import 'providers/user_provider.dart';
+import 'providers/player_provider.dart';
 import 'package:http/http.dart' as http;
 
 class SignUpScreen2 extends StatefulWidget {

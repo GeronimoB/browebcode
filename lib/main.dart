@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'providers/agent_provider.dart';
+import 'providers/player_provider.dart';
 import 'providers/user_provider.dart';
 
 void main() async {
@@ -47,7 +48,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PlayerProvider()),
-        ChangeNotifierProvider(create: (_) => AgenteProvider())
+        ChangeNotifierProvider(create: (_) => AgenteProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider())
       ],
       child: MaterialApp(
         title: 'Bro app',

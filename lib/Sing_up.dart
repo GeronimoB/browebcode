@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import 'components/custom_text_button.dart';
-import 'providers/user_provider.dart';
+import 'providers/player_provider.dart';
 import 'sign_up_2.dart';
 import 'package:http/http.dart' as http;
 

@@ -6,6 +6,9 @@ import 'package:bro_app_to/Screens/perfil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
+  final int initialIndex;
+
+  const CustomBottomNavigationBar({super.key, this.initialIndex = 0});
   @override
   _CustomBottomNavigationBarState createState() =>
       _CustomBottomNavigationBarState();
@@ -37,6 +40,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     'Mensaje-1.svg',
     'Perfil-1.svg',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
 
   void _onItemTapped(int index) {
     setState(() {

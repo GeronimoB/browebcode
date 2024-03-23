@@ -1,4 +1,4 @@
-import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/bottom_navigation_bar.dart';
 import 'package:bro_app_to/olvide_contrasena.dart';

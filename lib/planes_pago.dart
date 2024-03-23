@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'Screens/bottom_navigation_bar.dart';
 import 'Screens/metodo_pago_screen.dart';
-import 'providers/user_provider.dart';
+import 'providers/player_provider.dart';
 import 'utils/plan_model.dart';
 
 List<Plan> planes = [

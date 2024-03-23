@@ -1,14 +1,17 @@
 import 'dart:convert';
 
+import 'package:bro_app_to/Screens/config_profile.dart';
 import 'package:bro_app_to/Screens/config_profile_player.dart';
 import 'package:bro_app_to/Screens/select_camp.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/player_provider.dart';
 import '../providers/user_provider.dart';
 import '../utils/referido_model.dart';
 
@@ -55,15 +58,17 @@ class AfiliadosPlayer extends StatelessWidget {
             const SizedBox(height: 80.0),
             CustomTextButton(
               onTap: () async {
-                final playerProvider =
-                    Provider.of<PlayerProvider>(context, listen: false);
+                final userProvider =
+                    Provider.of<UserProvider>(context, listen: false);
+
                 final response = await ApiClient().post(
-                    'auth/create-referral-code',
-                    {"userId": playerProvider.getPlayer()!.userId});
+                    'auth/create-referral-code', {
+                  "userId": userProvider.getCurrentUser().userId.toString()
+                });
                 if (response.statusCode == 200) {
                   final jsonData = jsonDecode(response.body);
                   final code = jsonData["referralCode"];
-                  playerProvider.updateRefCode(code);
+                  userProvider.updateRefCode(code);
 
                   Navigator.pushReplacement(
                     context,
@@ -120,14 +125,14 @@ class ListaReferidosScreen extends StatefulWidget {
 }
 
 class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
-  late PlayerFullModel player;
-  late PlayerProvider provider;
+  late UserModel user;
+  late UserProvider provider;
   bool isLoading = true;
 
   @override
   void initState() {
-    provider = Provider.of<PlayerProvider>(context, listen: false);
-    player = provider.getPlayer()!;
+    provider = Provider.of<UserProvider>(context, listen: false);
+    user = provider.getCurrentUser();
     fetchReferrals();
     super.initState();
   }
@@ -135,7 +140,7 @@ class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
   Future<void> fetchReferrals() async {
     try {
       final referrals = await ApiClient()
-          .post('auth/afiliados', {"referralCode": player.referralCode});
+          .post('auth/afiliados', {"referralCode": user.referralCode});
       if (referrals.statusCode == 200) {
         final afiliados = jsonDecode(referrals.body)["players"];
         provider.setAfiliados(mapListToAfiliados(afiliados));
@@ -152,13 +157,14 @@ class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final playerProvider = Provider.of<PlayerProvider>(context, listen: true);
-    final player = playerProvider.getPlayer();
+    user = provider.getCurrentUser();
     return WillPopScope(
       onWillPop: () async {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => ConfigProfilePlayer()),
+          MaterialPageRoute(
+              builder: (context) =>
+                  user.isAgent ? ConfigProfile() : ConfigProfilePlayer()),
         );
         return false;
       },
@@ -188,7 +194,7 @@ class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
               ),
               const SizedBox(height: 16.0),
               SelectableText(
-                'https://Ejemplo.Com/Ref?=${player!.referralCode!}',
+                'https://Ejemplo.Com/Ref?=${user.referralCode!}',
                 style: const TextStyle(
                   color: Color(0xFF05FF00),
                   fontFamily: 'Montserrat',
@@ -199,7 +205,7 @@ class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
               const SizedBox(height: 16.0),
               GestureDetector(
                 onTap: () {
-                  Clipboard.setData(ClipboardData(text: player.referralCode!));
+                  Clipboard.setData(ClipboardData(text: user.referralCode));
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                         backgroundColor: Colors.greenAccent,
@@ -228,7 +234,7 @@ class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
                         ),
                       ),
                       Text(
-                        player!.referralCode!,
+                        user.referralCode,
                         style: const TextStyle(
                           color: Color(0xFF05FF00),
                           fontFamily: 'Montserrat',
@@ -259,7 +265,7 @@ class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
                             Colors.green), // Color del loader
                       ),
                     )
-                  : playerProvider.afiliados.isNotEmpty
+                  : provider.afiliados.isNotEmpty
                       ? Column(
                           children: List.generate(
                             3,

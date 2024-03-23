@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/utils/video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

@@ -4,18 +4,19 @@ import 'package:bro_app_to/Screens/Notificaciones.dart';
 import 'package:bro_app_to/Screens/Pedidos.dart';
 import 'package:bro_app_to/Screens/Privacidad.dart';
 import 'package:bro_app_to/Screens/Servicios.dart';
+import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/providers/player_provider.dart';
 
 import 'bottom_navigation_bar_player.dart';
 
 class ConfigProfilePlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final playerProvider = Provider.of<PlayerProvider>(context);
-    final player = playerProvider.getPlayer()!;
-    print("este es el codigo, ${player.referralCode}");
+    final userProvider = Provider.of<UserProvider>(context);
+    final user = userProvider.getCurrentUser();
+    print("este es el codigo, ${user.referralCode}");
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -24,7 +25,7 @@ class ConfigProfilePlayer extends StatelessWidget {
           children: [
             SizedBox(height: 22),
             Text(
-              '${player.name} ${player.lastName}',
+              '${user.name} ${user.lastName}',
               style: const TextStyle(
                 color: Color(0xFF05FF00),
                 fontFamily: 'Montserrat',
@@ -79,12 +80,13 @@ class ConfigProfilePlayer extends StatelessWidget {
                   _buildListItem(
                       'NOTIFICACIONES', context, true, Notificaciones()),
                   _buildListItem(
-                      'AFILIADOS',
-                      context,
-                      true,
-                      player.referralCode != null && player.referralCode != ""
-                          ? const ListaReferidosScreen()
-                          : const AfiliadosPlayer()),
+                    'AFILIADOS',
+                    context,
+                    true,
+                    user.referralCode != ""
+                        ? const ListaReferidosScreen()
+                        : const AfiliadosPlayer(),
+                  ),
                   _buildListItem('PEDIDOS', context, true, Pedidos()),
                   _buildListItem('SERVICIOS', context, true, const Servicios()),
                 ],

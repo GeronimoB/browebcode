@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:provider/provider.dart';
-import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/providers/player_provider.dart';
 
 class CuentaPage extends StatefulWidget {
   @override
