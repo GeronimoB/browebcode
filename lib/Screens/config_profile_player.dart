@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 
-
 class ConfigProfilePlayer extends StatelessWidget {
   @override
-  
   Widget build(BuildContext context) {
     final playerProvider = Provider.of<PlayerProvider>(context);
     final player = playerProvider.getPlayer()!;
@@ -63,16 +61,24 @@ class ConfigProfilePlayer extends StatelessWidget {
               child: ListView(
                 children: [
                   SizedBox(height: 22),
-                    _buildListItem('CUENTA', context, true, CuentaPage()),
-                    _buildListItem('PRIVACIDAD', context, true, Privacidad()),
-                    SizedBox(height: 15),
-                    _buildListItem('CENTRO DE AYUDA (FAQ)', context, false, ConfigProfilePlayer()),
-                    _buildListItem('SOPORTE', context, false, ConfigProfilePlayer()),
-                    _buildListItem('NOTIFICACIONES', context, true, Notificaciones()),
-                    _buildListItem('AFILIADOS', context, true, const AfiliadosPlayer()),
-                    _buildListItem('PEDIDOS', context, true, Pedidos()),
-                    _buildListItem('SERVICIOS', context, true, const Servicios()),
-
+                  _buildListItem('CUENTA', context, true, CuentaPage()),
+                  _buildListItem('PRIVACIDAD', context, true, Privacidad()),
+                  SizedBox(height: 15),
+                  _buildListItem('CENTRO DE AYUDA (FAQ)', context, false,
+                      ConfigProfilePlayer()),
+                  _buildListItem(
+                      'SOPORTE', context, false, ConfigProfilePlayer()),
+                  _buildListItem(
+                      'NOTIFICACIONES', context, true, Notificaciones()),
+                  _buildListItem(
+                      'AFILIADOS',
+                      context,
+                      true,
+                      player.referralCode != null
+                          ? const ListaReferidosScreen()
+                          : const AfiliadosPlayer()),
+                  _buildListItem('PEDIDOS', context, true, Pedidos()),
+                  _buildListItem('SERVICIOS', context, true, const Servicios()),
                 ],
               ),
             ),

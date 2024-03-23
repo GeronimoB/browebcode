@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/user_provider.dart';
 
 class AfiliadosPlayer extends StatelessWidget {
   const AfiliadosPlayer({super.key});
@@ -44,12 +50,30 @@ class AfiliadosPlayer extends StatelessWidget {
           children: [
             const SizedBox(height: 80.0),
             CustomTextButton(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ListaReferidosScreen()),
-                );
+              onTap: () async {
+                final playerProvider =
+                    Provider.of<PlayerProvider>(context, listen: false);
+                final response = await ApiClient().post(
+                    'auth/create-referral-code',
+                    {"userId": playerProvider.getPlayer()!.userId});
+                if (response.statusCode == 200) {
+                  final jsonData = jsonDecode(response.body);
+                  final code = jsonData["referralCode"];
+                  playerProvider.updateRefCode(code);
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ListaReferidosScreen()),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        backgroundColor: Colors.redAccent,
+                        content: Text(
+                            'Hubo un error al generar tu codigo de referido, intentalo de  nuevo.')),
+                  );
+                }
               },
               text: 'Generar código',
               buttonPrimary: true,
@@ -71,7 +95,6 @@ class AfiliadosPlayer extends StatelessWidget {
                 textAlign: TextAlign.left,
               ),
             ),
-            // Agregar el logo
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -90,6 +113,8 @@ class ListaReferidosScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final playerProvider = Provider.of<PlayerProvider>(context, listen: true);
+    final player = playerProvider.getPlayer();
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
@@ -115,9 +140,9 @@ class ListaReferidosScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16.0),
-            const SelectableText(
-              'Https://Ejemplo.Com/Ref?=Codigo1',
-              style: TextStyle(
+            SelectableText(
+              'https://Ejemplo.Com/Ref?=${player!.referralCode!}',
+              style: const TextStyle(
                 color: Color(0xFF05FF00),
                 fontFamily: 'Montserrat',
                 fontSize: 15.0,
@@ -125,36 +150,46 @@ class ListaReferidosScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16.0),
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(30.0),
-                border: Border.all(color: const Color(0xFF05FF00), width: 1),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'TU CÓDIGO: ',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.0,
+            GestureDetector(
+              onTap: () {
+                Clipboard.setData(ClipboardData(text: player.referralCode!));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      backgroundColor: Colors.greenAccent,
+                      content: Text('Codigo de afiliado copiado.')),
+                );
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(30.0),
+                  border: Border.all(color: const Color(0xFF05FF00), width: 1),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'TU CÓDIGO: ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.0,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'XXXXXXXX',
-                    style: TextStyle(
-                      color: Color(0xFF05FF00),
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.0,
+                    Text(
+                      player!.referralCode!,
+                      style: const TextStyle(
+                        color: Color(0xFF05FF00),
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.0,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 24.0),

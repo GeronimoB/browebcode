@@ -122,4 +122,9 @@ class PlayerProvider extends ChangeNotifier {
     userVideos[index].isFavorite = !userVideos[index].isFavorite;
     notifyListeners();
   }
+
+  void updateRefCode(String code) {
+    _player = _player.copyWith(referralCode: code);
+    notifyListeners();
+  }
 }
