@@ -12,6 +12,8 @@ class CuentaPage extends StatefulWidget {
 
 class _CuentaPageState extends State<CuentaPage> {
   bool deslizadorActivado = true; // Estado del deslizador
+  bool expanded = false; // Estado de expansión de la descripción
+
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +73,7 @@ class _CuentaPageState extends State<CuentaPage> {
               ),
             ),
             const SizedBox(height: 20),
-             Text(
+            Text(
               '${player.name} ${player.lastName}',
               style: const TextStyle(
                 color: Color(0xFF05FF00),
@@ -92,100 +94,104 @@ class _CuentaPageState extends State<CuentaPage> {
               ),
               textAlign: TextAlign.center,
             ),
-                        const SizedBox(height: 10),
+            const SizedBox(height: 10),
             CarouselSlider(
-  options: CarouselOptions(
-    height: 280.0,
-    enlargeCenterPage: true,
-    autoPlay: true,
-    autoPlayCurve: Curves.fastOutSlowIn,
-    enableInfiniteScroll: true,
-    autoPlayAnimationDuration: const Duration(milliseconds: 800),
-    viewportFraction: 0.8,
-  ),
-  items: planes.map((plan) {
-    return Builder(
-      builder: (BuildContext context) {
-        return Container(
-          width: 360, // Ancho de la tarjeta
-          margin: const EdgeInsets.symmetric(horizontal: 5.0),
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border.all(color: Color(0xFF05FF00)),
-            borderRadius: BorderRadius.circular(40),
-          ),
-          child: Stack(
-            children: [
-              Positioned(
-                top: 26,
-                left: 26,
-                child: Image.asset('assets/images/Logo.png', width: 80),
+              options: CarouselOptions(
+                height: 280.0,
+                enlargeCenterPage: true,
+                autoPlay: true,
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enableInfiniteScroll: true,
+                autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                viewportFraction: 0.8,
               ),
-              Positioned(
-                top: 36,
-                right: 36,
-                child: Text(
-                  plan.nombre, // Nombre del plan
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF05FF00),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 80,
-                left: 16,
-                right: 16,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Que incluye:',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold
+              items: planes.map((plan) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                      width: 360, // Ancho de la tarjeta
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border.all(color: Color(0xFF05FF00)),
+                        borderRadius: BorderRadius.circular(40),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      plan.descripcionLarga, // Descripción del plan
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 26,
+                            left: 26,
+                            child: Image.asset('assets/images/Logo.png', width: 80),
+                          ),
+                          Positioned(
+                            top: 36,
+                            right: 36,
+                            child: Text(
+                              plan.nombre, // Nombre del plan
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF05FF00),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 80,
+                            left: 16,
+                            right: 16,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Que incluye:',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  expanded ? plan.descripcionLarga : plan.descripcion, // Descripción del plan
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                  maxLines: expanded ? 6 : 2, 
+                                  overflow: TextOverflow.ellipsis, // Manejo de overflow
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      // Cambiar el estado de expansión al presionar el botón
+                                      expanded = !expanded;
+                                    });
+                                  },
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Color(0xFF05FF00),
+                                  ),
+                                  child: Text(expanded ? 'Ver menos...' : 'Ver más...'), 
+                                ),
+                                Center(
+                                  child: CustomTextButton(
+                                    onTap: () {
+                                      // Aquí puedes agregar la lógica para suscribirse al plan
+                                    },
+                                    text: 'subscribirse', // Agrega el texto "Adquirir"
+                                    buttonPrimary: true, // Utiliza el estilo primario
+                                    width: 110, height: 30,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      maxLines: 2, // Máximo de 2 líneas antes de mostrar "Ver más"
-                      overflow: TextOverflow.ellipsis, // Manejo de overflow
-                    ),
-                    const SizedBox(height: 20),
-                    TextButton(
-                      onPressed: () {},
-                      style: TextButton.styleFrom(
-                        foregroundColor: Color(0xFF05FF00),
-                      ),
-                      child: const Text('Ver más...'),
-                    ),
-                    Center(
-                      child: CustomTextButton(
-                        onTap: () {
-                          // Aquí puedes agregar la lógica para suscribirse al plan
-                        },
-                        text: 'subscribirse', // Agrega el texto "Adquirir"
-                        buttonPrimary: true, // Utiliza el estilo primario
-                        width: 110, height: 30,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }).toList(),
-),
+                    );
+                  },
+                );
+              }).toList(),
+            ),
 
             Expanded(
               child: Align(

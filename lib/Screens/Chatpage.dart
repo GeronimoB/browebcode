@@ -78,15 +78,108 @@ class _ChatPageState extends State<ChatPage> {
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
-              iconSize: 32,
-              onPressed: () {
-                // Acciones de los 3 puntos verticales.
-              },
-            ),
-          ],
+actions: [
+  PopupMenuButton<String>(
+    onSelected: (String result) {
+      switch (result) {
+        case 'Perfil':
+          break;
+        case 'Anclar':
+          break;
+        case 'Buscar':
+          break;
+        case 'Silenciar':
+          break;
+        case 'Bloquear':
+          break;
+        case 'Archivos':
+          break;
+      }
+    },
+    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+      const PopupMenuItem<String>(
+        value: 'Perfil',
+        child: Text(
+          'Ver Perfil',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Montserrat',
+            fontStyle: FontStyle.italic,
+            fontSize: 13,
+          ),
+        ),
+      ),
+      const PopupMenuItem<String>(
+        value: 'Anclar',
+        child: Text(
+          'Anclar arriba',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Montserrat',
+            fontStyle: FontStyle.italic,
+            fontSize: 13,
+          ),
+        ),
+      ),
+      const PopupMenuItem<String>(
+        value: 'Buscar',
+        child: Text(
+          'Buscar',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Montserrat',
+            fontStyle: FontStyle.italic,
+            fontSize: 13,
+          ),
+        ),
+      ),
+      const PopupMenuItem<String>(
+        value: 'Silenciar',
+        child: Text(
+          'Silenciar notificaciones',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Montserrat',
+            fontStyle: FontStyle.italic,
+            fontSize: 13,
+          ),
+        ),
+      ),
+      const PopupMenuItem<String>(
+        value: 'Bloquear',
+        child: Text(
+          'Bloquear',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Montserrat',
+            fontStyle: FontStyle.italic,
+            fontSize: 13,
+          ),
+        ),
+      ),
+      const PopupMenuItem<String>(
+        value: 'Archivos',
+        child: Text(
+          'Buscar Archivos',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Montserrat',
+            fontStyle: FontStyle.italic,
+            fontSize: 13,
+          ),
+        ),
+      ),
+    ],
+    color: const Color(0xFF3B3B3B),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    offset: const Offset(0, 50), // Ajusta el offset si es necesario
+    icon: const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
+  ),
+],
+
+
         ),
         body: Column(
           children: [
