@@ -91,7 +91,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                       height: 32,
                       width: 32,
                     ),
-              label: 'Buscar',
+              label: 'Match',
             ),
             BottomNavigationBarItem(
               icon: _selectedIndex == 2

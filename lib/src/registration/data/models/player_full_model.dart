@@ -111,6 +111,11 @@ class PlayerFullModel extends PlayerFullEntity {
   }
 
   factory PlayerFullModel.fromJson(Map<String, dynamic> json) {
+    DateTime? birthDate;
+    if (json['birthday'] != null) {
+      // Convertir la cadena a un objeto DateTime
+      birthDate = DateTime.parse(json['birthday']);
+    }
     return PlayerFullModel(
       customerStripeId: json['stripe_customer_id'],
       uid: json['id'].toString(),
@@ -120,7 +125,7 @@ class PlayerFullModel extends PlayerFullEntity {
       email: json['email'] ?? '',
       referralCode: json['referral_code'] ?? '',
       isAgent: json['isAgent'] ?? false,
-      //birthDate: json['birthday'] != null ? json['birthday'].toDate() : null,
+      birthDate: birthDate,
       dni: json['DNI'] ?? '',
       pais: json['pais'] ?? '',
       provincia: json['provincia'] ?? '',

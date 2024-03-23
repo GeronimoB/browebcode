@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bro_app_to/Screens/select_camp.dart';
+import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -49,12 +50,10 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
     }
     if (referralCodeCtlr.text.isNotEmpty) {
       try {
-        final response = await http
-            .get(
-              Uri.parse(
-                  '${ApiConstants.baseUrl}/auth/referralCode/${referralCodeCtlr.text}'),
-            )
-            .timeout(const Duration(seconds: 10));
+        final response = await ApiClient().post(
+          'auth/referralCode',
+          {"code": referralCodeCtlr.text},
+        );
 
         if (response.statusCode != 200) {
           ScaffoldMessenger.of(context).showSnackBar(

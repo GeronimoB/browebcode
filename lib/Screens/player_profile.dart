@@ -17,6 +17,7 @@ class PlayerProfile extends StatefulWidget {
 }
 
 class _PlayerProfileState extends State<PlayerProfile> {
+  double gridSpacing = 4.0;
   @override
   void initState() {
     fetchVideos();
@@ -48,7 +49,8 @@ class _PlayerProfileState extends State<PlayerProfile> {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: true);
     final player = playerProvider.getPlayer()!;
     final videos = playerProvider.userVideos;
-    double gridSpacing = 4.0;
+    final widthVideo = MediaQuery.of(context).size.width / 3;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -83,21 +85,19 @@ class _PlayerProfileState extends State<PlayerProfile> {
             const SizedBox(height: 15.0),
             ClipOval(
               child: FadeInImage.assetNetwork(
-                placeholder:
-                    'assets/images/fot.png', // Placeholder mientras se carga la imagen
+                placeholder: 'assets/images/fot.png',
                 imageErrorBuilder: (context, error, stackTrace) {
-                  // Widget de fallback en caso de que la imagen falle al cargar
                   return Image.asset(
-                    'assets/images/fot.png', // Imagen de fallback
+                    'assets/images/fot.png',
                     width: 80,
                     height: 80,
-                    fit: BoxFit.cover, // Ajuste de la imagen
+                    fit: BoxFit.cover,
                   );
                 },
-                image: 'assets/images/fot.png', // URL de la imagen
+                image: 'assets/images/fot.png',
                 width: 80,
                 height: 80,
-                fit: BoxFit.cover, // Ajuste de la imagen
+                fit: BoxFit.cover,
               ),
             ),
             const SizedBox(height: 15.0),
@@ -111,19 +111,17 @@ class _PlayerProfileState extends State<PlayerProfile> {
               ),
               textAlign: TextAlign.center,
             ),
-Text(
-  ' ${player.provincia},${player.pais}\n${player.club}, ${player.altura}\n${player.pieDominante}, ${player.seleccionNacional}\n${player.position}, ${player.categoria}\n ${player.logrosIndividuales}',
-  style: const TextStyle(
-    color: Colors.white,
-    fontSize: 16.0,
-    fontWeight: FontWeight.w400,
-    fontFamily: 'Montserrat',
-    fontStyle: FontStyle.italic,
-  ),
-  textAlign: TextAlign.center,
-),
-
-
+            Text(
+              ' ${player.provincia}, ${player.pais}\n${player.club}, ${player.altura} cm\n${player.pieDominante}, ${player.seleccionNacional}\n${player.position}, ${player.categoria}\n ${player.logrosIndividuales}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Montserrat',
+                fontStyle: FontStyle.italic,
+              ),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 15.0),
             Container(
               margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
@@ -136,57 +134,66 @@ Text(
                   ]),
             ),
             Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15), 
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: gridSpacing,
-                  mainAxisSpacing: gridSpacing,
-                  childAspectRatio: (MediaQuery.of(context).size.width / 3 - gridSpacing * 2) / 183,
-                ),
-                itemCount: videos.length,
-                itemBuilder: (context, index) {
-                  final video = videos[index];
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: gridSpacing,
+                    mainAxisSpacing: gridSpacing,
+                    childAspectRatio: (widthVideo - gridSpacing * 2) / 183,
+                  ),
+                  itemCount: videos.length,
+                  itemBuilder: (context, index) {
+                    final video = videos[index];
 
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => FullScreenVideoPage(video: video, index: index),
-                        ),
-                      );
-                    },
-                    child: Stack(
-                      children: [
-                        FadeInImage.assetNetwork(
-                          placeholder: 'assets/images/video_placeholder.jpg',
-                          imageErrorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                              'assets/images/video_placeholder.jpg',
-                              fit: BoxFit.cover,
-                            );
-                          },
-                          image: video.imageUrl ?? "",
-                          fit: BoxFit.fill,
-                        ),
-                        if (video.isFavorite) // Mostrar estrella si el video está destacado
-                          const Positioned(
-                            top: 8.0,
-                            right: 15.0,
-                            child: Icon(
-                              Icons.star,
-                              color: Color(0xFF05FF00),
-                              size: 24.0,
-                            ),
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                FullScreenVideoPage(video: video, index: index),
                           ),
-                      ],
-                    ),
-                  );
-                },
+                        );
+                      },
+                      child: Stack(
+                        children: [
+                          FadeInImage.assetNetwork(
+                            placeholder: 'assets/images/video_placeholder.jpg',
+                            placeholderFit: BoxFit.fill,
+                            placeholderCacheHeight: 175,
+                            placeholderCacheWidth: widthVideo.toInt(),
+                            imageErrorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                'assets/images/video_placeholder.jpg',
+                                height: 175,
+                                width: widthVideo,
+                                fit: BoxFit.cover,
+                              );
+                            },
+                            image: video.imageUrl ?? "",
+                            width: widthVideo,
+                            height: 175,
+                            fit: BoxFit.fill,
+                          ),
+                          if (video
+                              .isFavorite) // Mostrar estrella si el video está destacado
+                            const Positioned(
+                              top: 8.0,
+                              right: 8.0,
+                              child: Icon(
+                                Icons.star,
+                                color: Color(0xFF05FF00),
+                                size: 24.0,
+                              ),
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          )
+            )
           ],
         ),
       ),

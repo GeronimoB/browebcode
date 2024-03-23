@@ -1,12 +1,16 @@
 import 'dart:convert';
 
+import 'package:bro_app_to/Screens/config_profile_player.dart';
+import 'package:bro_app_to/Screens/select_camp.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user_provider.dart';
+import '../utils/referido_model.dart';
 
 class AfiliadosPlayer extends StatelessWidget {
   const AfiliadosPlayer({super.key});
@@ -61,7 +65,7 @@ class AfiliadosPlayer extends StatelessWidget {
                   final code = jsonData["referralCode"];
                   playerProvider.updateRefCode(code);
 
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const ListaReferidosScreen()),
@@ -108,152 +112,223 @@ class AfiliadosPlayer extends StatelessWidget {
   }
 }
 
-class ListaReferidosScreen extends StatelessWidget {
-  const ListaReferidosScreen({super.key});
+class ListaReferidosScreen extends StatefulWidget {
+  const ListaReferidosScreen({Key? key}) : super(key: key);
+
+  @override
+  _ListaReferidosScreenState createState() => _ListaReferidosScreenState();
+}
+
+class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
+  late PlayerFullModel player;
+  late PlayerProvider provider;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    provider = Provider.of<PlayerProvider>(context, listen: false);
+    player = provider.getPlayer()!;
+    fetchReferrals();
+    super.initState();
+  }
+
+  Future<void> fetchReferrals() async {
+    try {
+      final referrals = await ApiClient()
+          .post('auth/afiliados', {"referralCode": player.referralCode});
+      if (referrals.statusCode == 200) {
+        final afiliados = jsonDecode(referrals.body)["players"];
+        provider.setAfiliados(mapListToAfiliados(afiliados));
+      } else {
+        provider.setAfiliados([]);
+      }
+      setState(() {
+        isLoading = false;
+      });
+    } catch (error) {
+      print('Error al obtener los referidos: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: true);
     final player = playerProvider.getPlayer();
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF212121), Color(0xFF121212)],
-          ),
-        ),
-        child: ListView(
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ConfigProfilePlayer()),
+        );
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-          children: [
-            const SizedBox(height: 32.0),
-            const Text(
-              'Afiliados',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-              ),
-              textAlign: TextAlign.center,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF444444), Color(0xFF000000)],
             ),
-            const SizedBox(height: 16.0),
-            SelectableText(
-              'https://Ejemplo.Com/Ref?=${player!.referralCode!}',
-              style: const TextStyle(
-                color: Color(0xFF05FF00),
-                fontFamily: 'Montserrat',
-                fontSize: 15.0,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16.0),
-            GestureDetector(
-              onTap: () {
-                Clipboard.setData(ClipboardData(text: player.referralCode!));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      backgroundColor: Colors.greenAccent,
-                      content: Text('Codigo de afiliado copiado.')),
-                );
-              },
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(30.0),
-                  border: Border.all(color: const Color(0xFF05FF00), width: 1),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(height: 32.0),
+              const Text(
+                'Afiliados',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'TU CÓDIGO: ',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                    Text(
-                      player!.referralCode!,
-                      style: const TextStyle(
-                        color: Color(0xFF05FF00),
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.0,
-                      ),
-                    ),
-                  ],
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16.0),
+              SelectableText(
+                'https://Ejemplo.Com/Ref?=${player!.referralCode!}',
+                style: const TextStyle(
+                  color: Color(0xFF05FF00),
+                  fontFamily: 'Montserrat',
+                  fontSize: 15.0,
                 ),
+                textAlign: TextAlign.center,
               ),
-            ),
-            const SizedBox(height: 24.0),
-            const Text(
-              'Personas Referidas',
-              style: TextStyle(
-                color: Color(0xFF05FF00),
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 15.0),
-            ...List.generate(
-                3,
-                (index) => const ReferidoItem(
-                    email: 'Correo@gmail.com', ganancia: '00,00€')),
-            const SizedBox(height: 24.0),
-            const Text(
-              'TOTAL:',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-                fontSize: 15.0,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const Text(
-              '00,00€',
-              style: TextStyle(
-                color: Color(0xFF05FF00),
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-                fontSize: 40.0,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 32.0),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 90.0),
-              child: CustomTextButton(
+              const SizedBox(height: 16.0),
+              GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RetirarMenu()),
+                  Clipboard.setData(ClipboardData(text: player.referralCode!));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        backgroundColor: Colors.greenAccent,
+                        content: Text('Codigo de afiliado copiado.')),
                   );
                 },
-                text: 'Retirar',
-                buttonPrimary: true,
-                width: 100,
-                height: 40,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(30.0),
+                    border:
+                        Border.all(color: const Color(0xFF05FF00), width: 1),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'TU CÓDIGO: ',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      Text(
+                        player!.referralCode!,
+                        style: const TextStyle(
+                          color: Color(0xFF05FF00),
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 32.0),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Image.asset(
-                'assets/images/Logo.png',
-                width: 104,
+              const SizedBox(height: 24.0),
+              const Text(
+                'Personas Referidas',
+                style: TextStyle(
+                  color: Color(0xFF05FF00),
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
+                textAlign: TextAlign.center,
               ),
-            ),
-          ],
+              const SizedBox(height: 15.0),
+              isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.green), // Color del loader
+                      ),
+                    )
+                  : playerProvider.afiliados.isNotEmpty
+                      ? Column(
+                          children: List.generate(
+                            3,
+                            (index) => const ReferidoItem(
+                              email: 'Correo@gmail.com',
+                              ganancia: '00,00€',
+                            ),
+                          ),
+                        )
+                      : const Center(
+                          child: Text(
+                            'Aun no tienes afiliados, comparte tu codigo con tus amigos para poder ganar comisiones.',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w500,
+                              fontStyle: FontStyle.italic,
+                              fontSize: 18.0,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+              const SizedBox(height: 24.0),
+              const Text(
+                'TOTAL:',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Montserrat',
+                  fontSize: 15.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const Text(
+                '00,00€',
+                style: TextStyle(
+                  color: Color(0xFF05FF00),
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 40.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32.0),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 90.0),
+                child: CustomTextButton(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const RetirarMenu()),
+                    );
+                  },
+                  text: 'Retirar',
+                  buttonPrimary: true,
+                  width: 100,
+                  height: 40,
+                ),
+              ),
+              const SizedBox(height: 32.0),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Image.asset(
+                  'assets/images/Logo.png',
+                  width: 104,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

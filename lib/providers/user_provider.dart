@@ -1,3 +1,4 @@
+import 'package:bro_app_to/utils/referido_model.dart';
 import 'package:bro_app_to/utils/tarjeta_model.dart';
 import 'package:bro_app_to/utils/video_model.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class PlayerProvider extends ChangeNotifier {
   String? videoPathToUpload;
   Uint8List? imagePathToUpload;
   List<Video> userVideos = [];
+  List<Afiliado> afiliados = [];
 
   void updateTemporalPlayer({
     String? customerStripeId,
@@ -125,6 +127,11 @@ class PlayerProvider extends ChangeNotifier {
 
   void updateRefCode(String code) {
     _player = _player.copyWith(referralCode: code);
+    notifyListeners();
+  }
+
+  void setAfiliados(List<Afiliado> afiliado) {
+    afiliados = afiliado;
     notifyListeners();
   }
 }

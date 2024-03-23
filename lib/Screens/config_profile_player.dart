@@ -8,11 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 
+import 'bottom_navigation_bar_player.dart';
+
 class ConfigProfilePlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playerProvider = Provider.of<PlayerProvider>(context);
     final player = playerProvider.getPlayer()!;
+    print("este es el codigo, ${player.referralCode}");
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -43,7 +46,12 @@ class ConfigProfilePlayer extends StatelessWidget {
         backgroundColor: Colors.transparent,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFF05FF00)),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    CustomBottomNavigationBarPlayer(initialIndex: 4)),
+          ),
         ),
       ),
       body: Container(
@@ -74,7 +82,7 @@ class ConfigProfilePlayer extends StatelessWidget {
                       'AFILIADOS',
                       context,
                       true,
-                      player.referralCode != null
+                      player.referralCode != null && player.referralCode != ""
                           ? const ListaReferidosScreen()
                           : const AfiliadosPlayer()),
                   _buildListItem('PEDIDOS', context, true, Pedidos()),
