@@ -163,7 +163,9 @@ class _PlanesPagoState extends State<Servicios> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MetodoDePagoScreen()),
+                              builder: (context) => const MetodoDePagoScreen(
+                                    valueToPay: 50.99,
+                                  )),
                         );
                       },
                       text: 'Siguiente',

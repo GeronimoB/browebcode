@@ -27,7 +27,7 @@ List<Plan> planes = [
     descripcion:
         'Posibilita subir 5 videos de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD.',
     descripcionLarga:
-        'ube nuevo video una vez tengas el cupo de 5 cubierto, para ello deberás eliminar uno de la plataforma para que sea efectiva la subida y seguir manteniendo tus 5 videos activos..',
+        'Sube nuevo video una vez tengas el cupo de 5 cubierto, para ello deberás eliminar uno de la plataforma para que sea efectiva la subida y seguir manteniendo tus 5 videos activos..',
   ),
   Plan(
     idPlan: 'price_1Owcf5IkdX2ffauudm4v0KAQ',
@@ -105,10 +105,19 @@ class _PlanesPagoState extends State<PlanesPago> {
                   padding: const EdgeInsets.all(22.0),
                   child: CustomTextButton(
                       onTap: () {
+                        final playerProvider =
+                            Provider.of<PlayerProvider>(context, listen: false);
+                        final precio = playerProvider
+                            .getActualPlan()!
+                            .precio
+                            .replaceAll(',', '.');
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MetodoDePagoScreen()),
+                              builder: (context) => MetodoDePagoScreen(
+                                    valueToPay: precio as double,
+                                  )),
                         );
                       },
                       text: 'Siguiente',
@@ -146,9 +155,9 @@ class _PlanesPagoState extends State<PlanesPago> {
         playerProvider.selectPlan(plan);
         setState(() {
           if (isSelected) {
-            _selectedCardIndex = -1; // Deseleccionar
+            _selectedCardIndex = -1;
           } else {
-            _selectedCardIndex = index; // Seleccionar la tarjeta
+            _selectedCardIndex = index;
           }
         });
       },

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1041057820042",
+    "project_id": "bro-app-ef8ef",
+    "storage_bucket": "bro-app-ef8ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041057820042:android:e63c5f40c7840166bdac73",
+        "android_client_info": {
+          "package_name": "com.esloogan.bro_app_to"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxuV7SB6yz-KN2En3ZPA6LReX8gctsbC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

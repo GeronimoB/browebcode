@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:bro_app_to/firebase_options.dart';
 import 'package:bro_app_to/utils/agente_model.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Intro.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -10,9 +12,13 @@ import 'package:flutter/services.dart';
 import 'providers/agent_provider.dart';
 import 'providers/player_provider.dart';
 import 'providers/user_provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   Stripe.publishableKey = ApiConstants.stripePublicKey;
   await Stripe.instance.applySettings();
 
@@ -65,6 +71,14 @@ class MyApp extends StatelessWidget {
         ),
         home: const MySplashScreen(),
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('es'),
+        ],
       ),
     );
   }

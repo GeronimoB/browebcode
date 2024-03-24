@@ -1,8 +1,6 @@
 import 'package:bro_app_to/utils/agente_model.dart';
 import 'package:flutter/material.dart';
 
-
-
 class AgenteProvider extends ChangeNotifier {
   Agente _agente = Agente();
 
@@ -13,5 +11,10 @@ class AgenteProvider extends ChangeNotifier {
 
   Agente getAgente() {
     return _agente;
+  }
+
+  void updateLocalImage(String image) {
+    _agente = _agente.copyWith(imageUrl: image);
+    notifyListeners();
   }
 }

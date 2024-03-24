@@ -1,8 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:bro_app_to/providers/agent_provider.dart';
+import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/agente_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+
+import '../../utils/api_constants.dart';
 
 class EditarInfo extends StatefulWidget {
   @override
@@ -18,7 +25,7 @@ class _EditarInfoState extends State<EditarInfo> {
   late TextEditingController _provinciaController;
   late AgenteProvider provider;
   late Agente agente;
-  Future<void> _seleccionarImagen() async {}
+  final picker = ImagePicker();
 
   @override
   void initState() {
@@ -37,183 +44,260 @@ class _EditarInfoState extends State<EditarInfo> {
     _paisController = TextEditingController(text: agente.pais);
     _provinciaController = TextEditingController(text: agente.provincia);
   }
-@override
-Widget build(BuildContext context) {
-  return Container(
-    decoration: const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-            colors: [Color(0xFF212121), Color(0xFF121212)],
+
+  Future<void> _openGallery() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      await _uploadImage(File(pickedFile.path));
+    } else {
+      print('No image selected.');
+    }
+  }
+
+  Future<void> _uploadImage(File imageFile) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final agenteProvider = Provider.of<AgenteProvider>(context, listen: false);
+    final usuario = userProvider.getCurrentUser();
+    const url = '${ApiConstants.baseUrl}/auth/upload-player-image';
+
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+
+    request.files
+        .add(await http.MultipartFile.fromPath('imagen', imageFile.path));
+    request.fields["userId"] = usuario.userId.toString();
+    request.fields["isAgent"] = "true";
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      var responseBody = await response.stream.bytesToString();
+      final image = jsonDecode(responseBody)["image"];
+      agenteProvider.updateLocalImage(image);
+      userProvider.updateLocalImage(image);
+    } else {
+      print('Failed to upload image. Error code: ${response.statusCode}');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print("imagen: ${agente.imageUrl}");
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xFF212121), Color(0xFF121212)],
+        ),
       ),
-    ),
-    child: Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'EDITAR INFORMACIÓN',
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.bold,
-            fontSize: 24.0,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            'EDITAR INFORMACIÓN',
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
+            ),
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFF00E050),
+              size: 32,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ),
         backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Color(0xFF00E050),
-            size: 32,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      backgroundColor: Colors.transparent,
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: 20),
-            GestureDetector(
-              onTap: _seleccionarImagen,
-              child: CircleAvatar(
-                backgroundColor: Colors.grey[300],
-                radius: 59,
-                child: const CircleAvatar(
-                  radius: 55,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.camera_alt,
-                    color: Color(0xFF00E050),
-                  ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: _openGallery,
+                child: Stack(
+                  children: [
+                    ClipOval(
+                      child: agente.imageUrl != ''
+                          ? ColorFiltered(
+                              colorFilter: ColorFilter.mode(
+                                Colors.grey.withOpacity(0.5),
+                                BlendMode.dstATop,
+                              ),
+                              child: FadeInImage.assetNetwork(
+                                placeholder: 'assets/images/fot.png',
+                                imageErrorBuilder:
+                                    (context, error, stackTrace) {
+                                  print("hubo error");
+                                  return Image.asset(
+                                    'assets/images/fot.png',
+                                    width: 150,
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
+                                image: agente.imageUrl ?? '',
+                                width: 150,
+                                height: 150,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : ColorFiltered(
+                              colorFilter: ColorFilter.mode(
+                                Colors.grey.withOpacity(0.5),
+                                BlendMode.dstATop,
+                              ),
+                              child: Image.asset(
+                                'assets/images/fot.png',
+                                width: 150,
+                                height: 150,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                    ),
+                    const Positioned(
+                      bottom: 0,
+                      top: 0,
+                      right: 0,
+                      left: 0,
+                      child: Icon(
+                        Icons.camera_alt,
+                        color: Colors.white,
+                        size: 42,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            _buildTextField(label: 'NOMBRE', controller: _nombreController),
-            _buildTextField(label: 'APELLIDO', controller: _apellidoController),
-            _buildTextField(label: 'CORREO', controller: _correoController),
-            _buildTextField(label: 'USUARIO', controller: _usuarioController),
-            _buildTextField(label: 'PAÍS', controller: _paisController),
-            _buildTextField(label: 'PROVINCIA', controller: _provinciaController),
-          ],
+              const SizedBox(height: 20),
+              _buildTextField(label: 'NOMBRE', controller: _nombreController),
+              _buildTextField(
+                  label: 'APELLIDO', controller: _apellidoController),
+              _buildTextField(label: 'CORREO', controller: _correoController),
+              _buildTextField(label: 'USUARIO', controller: _usuarioController),
+              _buildTextField(label: 'PAÍS', controller: _paisController),
+              _buildTextField(
+                  label: 'PROVINCIA', controller: _provinciaController),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget _buildTextField({required String label, required TextEditingController controller}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-    child: Row(
-      children: [
-        const SizedBox(width: 20),
-        Expanded(
-          flex: 2,
-          child: Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Montserrat',
-            ),
-          ),
-        ),
-        Expanded(
-          flex: 3,
-          child: Text(
-            controller.text,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.w300,
-            ),
-            textAlign: TextAlign.right,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF00E050)),
-          onPressed: () => _editarCampo(context, label, controller),
-        ),
-      ],
-    ),
-  );
-}
-void _editarCampo(BuildContext context, String label, TextEditingController controller) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      TextEditingController editingController = TextEditingController(text: controller.text);
-      return AlertDialog(
-        backgroundColor: Colors.grey[800], 
-        title: Text(
-          'Editar $label',
-          style: const TextStyle(
-            fontFamily: 'Montserrat',
-            color: Colors.white,
-          ),
-        ),
-        content: TextField(
-          controller: editingController,
-          style: const TextStyle(
-            fontFamily: 'Montserrat',
-            color: Colors.white, 
-          ),
-          decoration: InputDecoration(
-            hintText: 'Introduce tu $label',
-            hintStyle: const TextStyle(
-              fontFamily: 'Montserrat',
-              color: Colors.white54, 
-            ),
-            border: const OutlineInputBorder(),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white), 
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.green), 
-            ),
-          ),
-          cursorColor: Colors.white, 
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: const Text(
-              'Cancelar',
-              style: TextStyle(
+  Widget _buildTextField(
+      {required String label, required TextEditingController controller}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      child: Row(
+        children: [
+          const SizedBox(width: 20),
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
                 fontFamily: 'Montserrat',
-                color: Colors.white, 
               ),
             ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
           ),
-          TextButton(
-            child: const Text(
-              'Guardar',
-              style: TextStyle(
+          Expanded(
+            flex: 3,
+            child: Text(
+              controller.text,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
                 fontFamily: 'Montserrat',
-                color: Colors.white, 
+                fontWeight: FontWeight.w300,
               ),
+              textAlign: TextAlign.right,
+              overflow: TextOverflow.ellipsis,
             ),
-            onPressed: () {
-              if (mounted) {
-                setState(() {
-                  controller.text = editingController.text;
-                });
-              }
-              Navigator.of(context).pop();
-            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF00E050)),
+            onPressed: () => _editarCampo(context, label, controller),
           ),
         ],
-      );
-    },
-  );
-}
+      ),
+    );
+  }
 
+  void _editarCampo(
+      BuildContext context, String label, TextEditingController controller) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        TextEditingController editingController =
+            TextEditingController(text: controller.text);
+        return Theme(
+            data: ThemeData(dialogBackgroundColor: const Color(0xff3B3B3B)),
+            child: AlertDialog(
+              backgroundColor: Color(0xff3B3B3B),
+              title: Text(
+                'Editar $label',
+                style: const TextStyle(
+                  fontFamily: 'Montserrat',
+                  color: Color(0xff00E050),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              content: TextField(
+                controller: editingController,
+                style: const TextStyle(
+                  fontFamily: 'Montserrat',
+                  color: Colors.white,
+                ),
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 5),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF00E050), width: 2),
+                  ),
+                ),
+                cursorColor: Colors.white,
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text(
+                    'Cancelar',
+                    style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text(
+                    'Guardar',
+                    style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900),
+                  ),
+                  onPressed: () {
+                    if (mounted) {
+                      setState(() {
+                        controller.text = editingController.text;
+                      });
+                    }
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ));
+      },
+    );
+  }
 }

@@ -8,7 +8,8 @@ import 'package:provider/provider.dart';
 import '../providers/player_provider.dart';
 
 class MetodoDePagoScreen extends StatefulWidget {
-  const MetodoDePagoScreen({super.key});
+  final double valueToPay;
+  const MetodoDePagoScreen({super.key, required this.valueToPay});
 
   @override
   State<MetodoDePagoScreen> createState() => _MetodoDePagoScreenState();
@@ -58,7 +59,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Text(
-                '${playerProvider.getActualPlan()!.precio} €',
+                '${widget.valueToPay} €',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Color(0xFF00E050),
@@ -194,102 +195,101 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
   }
 
   void _mostrarMenuTransferencia() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ), // Esta línea le da bordes redondeados al Dialog
-        child: Container(
-          padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            color: const Color(0xFF3B3B3B),
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: const Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  'Gracias por tu compra',
-                  style: TextStyle(
-                    color: Color(0xff05FF00), // Color de los títulos
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w800, // ExtraBold
-                    fontSize: 15,
+          ), // Esta línea le da bordes redondeados al Dialog
+          child: Container(
+            padding: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: const Color(0xFF3B3B3B),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    'Gracias por tu compra',
+                    style: TextStyle(
+                      color: Color(0xff05FF00), // Color de los títulos
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w800, // ExtraBold
+                      fontSize: 15,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Titular XXXXXXXXX',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w600, // SemiBold
-                  fontSize: 13,
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Banco XXXXXXXXX',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w600, // SemiBold
-                  fontSize: 13,
-                ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Cuenta XXXXXXXXXXXXXXXXXX',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w600, // SemiBold
-                  fontSize: 13,
-                ),
-              ),
-              SizedBox(height: 10),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 5),
-                child: Text(
-                  'Instrucciones',
+                SizedBox(height: 10),
+                Text(
+                  'Titular XXXXXXXXX',
                   style: TextStyle(
-                    color: Color(0xff05FF00), // Color de los títulos
+                    color: Colors.white,
                     fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w800, // ExtraBold
-                    fontSize: 15,
+                    fontWeight: FontWeight.w600, // SemiBold
+                    fontSize: 13,
                   ),
                 ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Montserrat',
-                  fontSize: 11,
+                SizedBox(height: 10),
+                Text(
+                  'Banco XXXXXXXXX',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w600, // SemiBold
+                    fontSize: 13,
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-              Center(
-                child: CustomTextButton(
-                text: 'Subir Comprobante',
-                buttonPrimary: true,
-                width: 233,
-                height: 30),
-              ),
-              SizedBox(height: 10),
-            ],
+                SizedBox(height: 10),
+                Text(
+                  'Cuenta XXXXXXXXXXXXXXXXXX',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w600, // SemiBold
+                    fontSize: 13,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5),
+                  child: Text(
+                    'Instrucciones',
+                    style: TextStyle(
+                      color: Color(0xff05FF00), // Color de los títulos
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w800, // ExtraBold
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontSize: 11,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Center(
+                  child: CustomTextButton(
+                      text: 'Subir Comprobante',
+                      buttonPrimary: true,
+                      width: 233,
+                      height: 30),
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
-
+        );
+      },
+    );
+  }
 }

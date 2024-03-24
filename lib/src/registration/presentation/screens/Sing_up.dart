@@ -126,6 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       initialDate: _selectedDate,
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
+      locale: const Locale('es', "ES"),
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {

@@ -1,3 +1,4 @@
+import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:flutter/material.dart';
 
 class Pedidos extends StatefulWidget {
@@ -45,8 +46,10 @@ class _PedidosState extends State<Pedidos> {
               ),
             ),
             const SizedBox(height: 20),
-            _buildPedidoItem('Pedido 1', '20.00', 'Pedido 1' == _selectedPedido),
-            _buildPedidoItem('Pedido 2', '30.00', 'Pedido 2' == _selectedPedido),
+            _buildPedidoItem(
+                'Pedido 1', '20.00', 'Pedido 1' == _selectedPedido),
+            _buildPedidoItem(
+                'Pedido 2', '30.00', 'Pedido 2' == _selectedPedido),
             // Agrega más elementos de pedido aquí si es necesario
             Expanded(
               child: Align(
@@ -70,25 +73,33 @@ class _PedidosState extends State<Pedidos> {
     return InkWell(
       onTap: () {
         setState(() {
-          _selectedPedido = pedido; 
+          _selectedPedido = pedido;
         });
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          border: Border.all(color: isSelected ? Colors.green : Colors.transparent, width: 2.0),
+          border: Border.all(
+              color: isSelected ? Color(0xff05FF00) : Colors.transparent,
+              width: 2.0),
           borderRadius: BorderRadius.circular(10),
+          boxShadow: isSelected
+              ? [const CustomBoxShadow(color: Color(0xff05FF00), blurRadius: 5)]
+              : null,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Text(
-                pedido,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Montserrat',
-                  fontSize: 16,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  pedido,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),
@@ -102,8 +113,8 @@ class _PedidosState extends State<Pedidos> {
                     fontSize: 16,
                   ),
                 ),
-                const SizedBox(width: 10), // Espacio entre el precio y el símbolo >
-                const Icon(Icons.chevron_right, color: Colors.green), // Siempre muestra el símbolo >
+                const SizedBox(width: 10),
+                const Icon(Icons.chevron_right, color: Color(0xff05FF00)),
               ],
             ),
           ],

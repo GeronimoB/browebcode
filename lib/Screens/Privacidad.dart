@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class Privacidad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -39,22 +38,6 @@ class Privacidad extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20),
-            ListTile(
-              title: const Text(
-                'Cuenta Privada',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Montserrat',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              trailing: Switch(
-                value: true,
-                onChanged: (bool newValue) {},
-                activeColor: Color(0xff00E050),
-              ),
-            ),
             InkWell(
               onTap: () {
                 // Agrega la lógica para cambiar la contraseña
@@ -84,42 +67,39 @@ class Privacidad extends StatelessWidget {
                 ),
               ),
               trailing: PopupMenuButton<String>(
-              onSelected: (String result) {
-                if (result == 'google_authenticator') {
-                }
-              },
-              offset: const Offset(0, 50), 
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0), 
-              ),
-              color: const Color(0xff3B3B3B), 
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                PopupMenuItem<String>(
-                  value: 'google_authenticator',
-                  child: Material(
-                    borderRadius: BorderRadius.circular(5.0),
-                    color: Colors.transparent,
-                    child: const Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        'Google Authenticator',
-                        style: TextStyle(
-                          color: Color(0xff00E050), 
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Montserrat',
-                          fontSize: 16,
+                onSelected: (String result) {
+                  if (result == 'google_authenticator') {}
+                },
+                offset: const Offset(0, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                color: const Color(0xff3B3B3B),
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: 'google_authenticator',
+                    child: Material(
+                      borderRadius: BorderRadius.circular(5.0),
+                      color: Colors.transparent,
+                      child: const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          'Google Authenticator',
+                          style: TextStyle(
+                            color: Color(0xff00E050),
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-              icon: const Icon(Icons.chevron_right, color: Color(0xff00E050)),
-            ),
-
+                ],
+                icon: const Icon(Icons.chevron_right, color: Color(0xff00E050)),
               ),
-              const SizedBox(height: 10),
-            
+            ),
+            const SizedBox(height: 10),
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,

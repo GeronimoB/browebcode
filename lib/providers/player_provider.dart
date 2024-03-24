@@ -15,7 +15,7 @@ class PlayerProvider extends ChangeNotifier {
   String? videoPathToUpload;
   Uint8List? imagePathToUpload;
   List<Video> userVideos = [];
-
+  bool isLoading = false;
 
   void updateTemporalPlayer({
     String? customerStripeId,
@@ -119,4 +119,13 @@ class PlayerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateLocalImage(String image) {
+    _player = _player.copyWith(userImage: image);
+    notifyListeners();
+  }
+
+  void setIsLoading(bool val) {
+    isLoading = val;
+    notifyListeners();
+  }
 }

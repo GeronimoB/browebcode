@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../components/custom_box_shadow.dart';
 import '../providers/player_provider.dart';
+import '../providers/user_provider.dart';
 import '../utils/api_client.dart';
 import '../utils/video_model.dart';
 import 'player/bottom_navigation_bar_player.dart';
@@ -50,6 +52,8 @@ class _PlayerProfileState extends State<PlayerProfile> {
     final player = playerProvider.getPlayer()!;
     final videos = playerProvider.userVideos;
     final widthVideo = MediaQuery.of(context).size.width / 3;
+    final userProvider = Provider.of<UserProvider>(context, listen: true);
+    final user = userProvider.getCurrentUser();
 
     return Scaffold(
       body: Container(
@@ -83,23 +87,33 @@ class _PlayerProfileState extends State<PlayerProfile> {
               ),
             ),
             const SizedBox(height: 15.0),
-            ClipOval(
-              child: FadeInImage.assetNetwork(
-                placeholder: 'assets/images/fot.png',
-                imageErrorBuilder: (context, error, stackTrace) {
-                  return Image.asset(
-                    'assets/images/fot.png',
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
-                  );
-                },
-                image: 'assets/images/fot.png',
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
+            if (user.imageUrl != '')
+              ClipOval(
+                child: FadeInImage.assetNetwork(
+                  placeholder: 'assets/images/fot.png',
+                  imageErrorBuilder: (context, error, stackTrace) {
+                    return Image.asset(
+                      'assets/images/fot.png',
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                    );
+                  },
+                  image: user.imageUrl,
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
+            if (user.imageUrl == '')
+              ClipOval(
+                child: Image.asset(
+                  'assets/images/fot.png',
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.cover,
+                ),
+              ),
             const SizedBox(height: 15.0),
             Text(
               '${player.name} ${player.lastName}',

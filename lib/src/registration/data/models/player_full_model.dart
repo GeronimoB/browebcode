@@ -140,9 +140,8 @@ class PlayerFullModel extends PlayerFullEntity {
       dateCreated:
           json['dateCreated'] != null ? json['dateCreated'].toDate() : null,
       dateUpdated:
-          json['dateUpdated'] != null ? json['dateUpdated'].toDate() : null,
-      userImage:
-          "https://tmssl.akamaized.net/images/foto/galerie/ngolo-kante-fc-chelsea-2020-21-1621596438-63083.jpg?lm=1621596451",
+          json['dateCreated'] != null ? json['dateUpdated'].toDate() : null,
+      userImage: json['image_url'] ?? '',
     );
   }
 

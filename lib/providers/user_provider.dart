@@ -20,6 +20,11 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateLocalImage(String image) {
+    _currentUser = _currentUser.copyWith(imageUrl: image);
+    notifyListeners();
+  }
+
   void setAfiliados(List<Afiliado> afiliado) {
     afiliados = afiliado;
     notifyListeners();

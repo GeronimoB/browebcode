@@ -175,25 +175,14 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                     ),
                   ),
                 ),
-                // const PopupMenuItem<String>(
-                //   child: Padding(
-                //     padding:
-                //         EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                //     child: Text('Editar',
-                //         style: TextStyle(
-                //             color: Colors.white,
-                //             fontFamily: 'Montserrat',
-                //             fontStyle: FontStyle.italic)),
-                //   ),
-                // ),
                 PopupMenuItem<String>(
                   child: GestureDetector(
                     onTap: () {
                       _handleDownload(widget.video);
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 1.0),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
                       child: Text(
                         'Guardar',
                         style: TextStyle(
@@ -205,23 +194,6 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                     ),
                   ),
                 ),
-
-                // PopupMenuItem<String>(
-                //   child: GestureDetector(
-                //     onTap: () {
-                //       _handleHide(widget.index);
-                //     },
-                //     child: const Padding(
-                //       padding:
-                //           EdgeInsets.symmetric(horizontal: 8.0, vertical: 1.0),
-                //       child: Text('Ocultar',
-                //           style: TextStyle(
-                //               color: Colors.white,
-                //               fontFamily: 'Montserrat',
-                //               fontStyle: FontStyle.italic)),
-                //     ),
-                //   ),
-                // )
               ],
             ),
           ),

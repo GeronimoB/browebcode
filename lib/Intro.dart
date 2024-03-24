@@ -1,7 +1,7 @@
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/Sing_up.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/src/auth/presentation/screens/Sing_in.dart';
-import 'package:bro_app_to/sing_up.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
 

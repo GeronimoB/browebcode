@@ -1,4 +1,4 @@
-package com.example.bro_app_to
+package com.esloogan.bro_app_to
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.FlutterFragmentActivity

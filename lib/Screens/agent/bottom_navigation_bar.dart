@@ -1,8 +1,8 @@
+import 'package:bro_app_to/Screens/agent/perfil.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/agent/inicio.dart'; // Importa los archivos de las pantallas
 import 'package:bro_app_to/Screens/agent/Match.dart';
 import 'package:bro_app_to/Screens/mensajes.dart';
-import 'package:bro_app_to/Screens/perfil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
@@ -133,7 +133,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           ],
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white.withOpacity(0.8),
           onTap: _onItemTapped,
         ),
       ),

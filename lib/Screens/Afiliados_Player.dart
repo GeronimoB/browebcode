@@ -259,7 +259,7 @@ class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
                   ? const Center(
                       child: CircularProgressIndicator(
                         valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.green), // Color del loader
+                            Color(0xFF05FF00)), // Color del loader
                       ),
                     )
                   : provider.afiliados.isNotEmpty

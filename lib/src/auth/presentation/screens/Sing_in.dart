@@ -38,6 +38,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final playerProvider = Provider.of<PlayerProvider>(context, listen: true);
     return Scaffold(
         body: Stack(
       children: [
@@ -134,11 +135,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               CustomTextButton(
                   onTap: () {
-                    setState(() {
-                      isLoading = true;
-                    });
-                    final playerProvider =
-                        Provider.of<PlayerProvider>(context, listen: false);
+                    FocusScope.of(context).unfocus();
                     RemoteDataSourceImpl(playerProvider).signIn(
                         UserEntity(
                             username: emailController.text,
@@ -204,7 +201,7 @@ class _SignInScreenState extends State<SignInScreen> {
             ],
           ),
         ),
-        if (isLoading)
+        if (playerProvider.isLoading)
           Container(
             width: double.infinity,
             height: double.infinity,

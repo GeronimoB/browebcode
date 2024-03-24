@@ -1,11 +1,15 @@
 import 'dart:convert';
 
 import 'package:bro_app_to/Screens/agent/match_profile.dart';
+import 'package:bro_app_to/providers/agent_provider.dart';
+import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/initial_video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../components/slidedable_video.dart';
 
@@ -19,11 +23,20 @@ class _InicioPageState extends State<InicioPage> {
   double _rotation = 0.0;
   int _currentIndex = 0;
   List<InitialVideoModel> _videoUrls = [];
+  late UserProvider provider;
+  int currentUserId = 0;
 
   @override
   void initState() {
     super.initState();
     _fetchVideoUrls();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    provider = Provider.of<UserProvider>(context, listen: false);
+    currentUserId = provider.getCurrentUser().userId;
   }
 
   Future<void> _fetchVideoUrls() async {
@@ -50,13 +63,13 @@ class _InicioPageState extends State<InicioPage> {
     });
   }
 
-  void _onHorizontalDragEnd(DragEndDetails details) {
+  void _onHorizontalDragEnd(DragEndDetails details) async {
     if (_xOffset > 100) {
-      //Obtener id antes de cambiar
       final userId = _videoUrls[_currentIndex].userId;
       setState(() {
         _currentIndex = (_currentIndex + 1) % _videoUrls.length;
       });
+      _writeMatchData(userId);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => MatchProfile(userId: userId)),
@@ -72,11 +85,36 @@ class _InicioPageState extends State<InicioPage> {
     });
   }
 
+  Future<void> _writeMatchData(int userId) async {
+    await FirebaseFirestore.instance
+        .collection('Matches')
+        .doc('agente-$currentUserId')
+        .collection('AgentMatches')
+        .doc('jugador-$userId')
+        .set(
+      {
+        'playerId': 'jugador-$userId',
+        'createdAt': Timestamp.now(),
+      },
+    );
+
+    await FirebaseFirestore.instance
+        .collection('Matches')
+        .doc('jugador-$userId')
+        .collection('PlayerMatches')
+        .doc('agente-$currentUserId')
+        .set({
+      'agentId': 'agente-$currentUserId',
+      'createdAt': Timestamp.now(),
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double scale = 1 - (_xOffset.abs() * 0.001);
     double height = MediaQuery.of(context).size.height;
     Widget child;
+
     if (_videoUrls.isEmpty) {
       child = const Center(
         child: Column(

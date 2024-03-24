@@ -30,7 +30,7 @@ class UserModel extends UserEntity {
       referralCode: json['referral_code'] ?? '',
       name: json["name"],
       lastName: json["lastname"],
-      imageUrl: json['image_url'],
+      imageUrl: json['image_url'] ?? '',
     );
   }
 
