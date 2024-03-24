@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String baseUrl = 'http://172.20.10.9:8080';
+  static const String baseUrl = 'http://192.168.56.1:8080';
 
   //static const String baseUrl = 'https://back.xn--br-6ja.com';
   static const String stripePublicKey =

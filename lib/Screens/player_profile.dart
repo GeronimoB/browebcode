@@ -20,6 +20,8 @@ class PlayerProfile extends StatefulWidget {
 
 class _PlayerProfileState extends State<PlayerProfile> {
   double gridSpacing = 4.0;
+  bool _isExpanded = false; 
+
   @override
   void initState() {
     fetchVideos();
@@ -54,6 +56,8 @@ class _PlayerProfileState extends State<PlayerProfile> {
     final widthVideo = MediaQuery.of(context).size.width / 3;
     final userProvider = Provider.of<UserProvider>(context, listen: true);
     final user = userProvider.getCurrentUser();
+    String shortInfo = '${player.name} ${player.lastName}\n${player.provincia}, ${player.pais}';
+    String fullInfo = '${player.name} ${player.lastName}\n${player.provincia}, ${player.pais}\n${player.club}\n${player.altura} cm\n${player.pieDominante}\n${player.seleccionNacional}\n${player.position}\n${player.categoria}\n${player.logrosIndividuales}';
 
     return Scaffold(
       body: Container(
@@ -126,7 +130,7 @@ class _PlayerProfileState extends State<PlayerProfile> {
               textAlign: TextAlign.center,
             ),
             Text(
-              ' ${player.provincia}, ${player.pais}\n${player.club}, ${player.altura} cm\n${player.pieDominante}, ${player.seleccionNacional}\n${player.position}, ${player.categoria}\n ${player.logrosIndividuales}',
+              _isExpanded ? fullInfo : shortInfo, 
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16.0,
@@ -136,9 +140,22 @@ class _PlayerProfileState extends State<PlayerProfile> {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 15.0),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _isExpanded = !_isExpanded; 
+                });
+              },
+              child: Text(
+                _isExpanded ? 'Ver menos' : 'Ver más',
+                style: const TextStyle(
+                  color: Color(0xFF05FF00),
+                  fontSize: 16.0,
+                ),
+              ),
+            ),
             Container(
-              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
+              margin: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 15),
               height: 4.0,
               width: double.infinity,
               decoration: const BoxDecoration(

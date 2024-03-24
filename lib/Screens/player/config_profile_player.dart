@@ -1,6 +1,7 @@
 import 'package:bro_app_to/Screens/afiliados_player.dart';
 import 'package:bro_app_to/Screens/player/cuenta_player.dart';
 import 'package:bro_app_to/Screens/notificaciones.dart';
+import 'package:bro_app_to/Screens/player/edit_player_info.dart';
 import 'package:bro_app_to/Screens/player/pedidos.dart';
 import 'package:bro_app_to/Screens/privacidad.dart';
 import 'package:bro_app_to/Screens/player/servicios.dart';
@@ -71,6 +72,7 @@ class ConfigProfilePlayer extends StatelessWidget {
                 children: [
                   SizedBox(height: 22),
                   _buildListItem('CUENTA', context, true, CuentaPage()),
+                  _buildListItem('EDITAR INFORMACION', context, true, EditarInfoPlayer()),
                   _buildListItem('PRIVACIDAD', context, true, Privacidad()),
                   SizedBox(height: 15),
                   _buildListItem('CENTRO DE AYUDA (FAQ)', context, false,

@@ -1,9 +1,9 @@
-import 'package:bro_app_to/Screens/agent/perfil.dart';
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Screens/agent/inicio.dart'; // Importa los archivos de las pantallas
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:bro_app_to/Screens/agent/inicio.dart';
 import 'package:bro_app_to/Screens/agent/Match.dart';
 import 'package:bro_app_to/Screens/mensajes.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:bro_app_to/Screens/agent/perfil.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final int initialIndex;
@@ -23,22 +23,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     Matche(),
     MensajesPage(),
     PerfilPage(),
-  ];
-
-  // Lista de nombres de archivos de iconos no seleccionados
-  final List<String> _iconNames = [
-    'Inicio.svg',
-    'Match.svg',
-    'Mensaje.svg',
-    'Perfil.svg',
-  ];
-
-  // Lista de nombres de archivos de iconos seleccionados
-  final List<String> _selectedIconNames = [
-    'Inicio-1.svg',
-    'Match-1.svg',
-    'Mensaje-1.svg',
-    'Perfil-1.svg',
   ];
 
   @override
@@ -70,72 +54,40 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         backgroundColor: Colors.transparent,
         extendBody: true,
         body: _pages[_selectedIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.black,
-          items: [
-            BottomNavigationBarItem(
-              icon: _selectedIndex == 0
-                  ? SvgPicture.asset(
-                      'assets/icons/${_selectedIconNames[0]}',
-                      height: 32,
-                      width: 32,
-                    )
-                  : SvgPicture.asset(
-                      'assets/icons/${_iconNames[0]}',
-                      height: 32,
-                      width: 32,
-                    ),
-              label: 'Inicio',
-            ),
-            BottomNavigationBarItem(
-              icon: _selectedIndex == 1
-                  ? SvgPicture.asset(
-                      'assets/icons/${_selectedIconNames[1]}',
-                      height: 32,
-                      width: 32,
-                    )
-                  : SvgPicture.asset(
-                      'assets/icons/${_iconNames[1]}',
-                      height: 32,
-                      width: 32,
-                    ),
-              label: 'Match',
-            ),
-            BottomNavigationBarItem(
-              icon: _selectedIndex == 2
-                  ? SvgPicture.asset(
-                      'assets/icons/${_selectedIconNames[2]}',
-                      height: 32,
-                      width: 32,
-                    )
-                  : SvgPicture.asset(
-                      'assets/icons/${_iconNames[2]}',
-                      height: 32,
-                      width: 32,
-                    ),
-              label: 'Mensajes',
-            ),
-            BottomNavigationBarItem(
-              icon: _selectedIndex == 3
-                  ? SvgPicture.asset(
-                      'assets/icons/${_selectedIconNames[3]}',
-                      height: 32,
-                      width: 32,
-                    )
-                  : SvgPicture.asset(
-                      'assets/icons/${_iconNames[3]}',
-                      height: 32,
-                      width: 32,
-                    ),
-              label: 'Perfil',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white.withOpacity(0.8),
-          onTap: _onItemTapped,
+        bottomNavigationBar: Container(
+          color: Colors.black,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(_pages.length, (index) => _buildNavItem(index)),
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(int index) {
+    // Lista de nombres de archivos de iconos
+    final iconNames = ['Inicio.svg', 'Match.svg', 'Mensaje.svg', 'Perfil.svg'];
+    final selectedIconNames = ['Inicio-1.svg', 'Match-1.svg', 'Mensaje-1.svg', 'Perfil-1.svg'];
+    final labels = ['Inicio', 'Match', 'Mensajes', 'Perfil'];
+
+    return InkWell(
+      onTap: () => _onItemTapped(index),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SvgPicture.asset(
+            'assets/icons/${_selectedIndex == index ? selectedIconNames[index] : iconNames[index]}',
+            height: 32,
+            width: 32,
+          ),
+          Text(
+            labels[index],
+            style: TextStyle(
+              color: _selectedIndex == index ? Colors.white : Colors.white.withOpacity(0.8),
+            ),
+          ),
+        ],
       ),
     );
   }
