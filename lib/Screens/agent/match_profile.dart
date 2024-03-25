@@ -4,6 +4,7 @@ import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:intl/intl.dart';
 
 class MatchProfile extends StatelessWidget {
   final int userId;
@@ -22,9 +23,15 @@ class MatchProfile extends StatelessWidget {
               ),
             );
           } else if (snapshot.hasError) {
-            return const Center(child: Text('Error al cargar la información del usuario'));
+            return const Center(
+                child: Text('Error al cargar la información del usuario'));
           } else {
             final userData = snapshot.data!;
+            DateTime? birthDate = userData.birthDate;
+
+            String formattedDate = birthDate != null
+                ? DateFormat('yyyy-MM-dd').format(birthDate)
+                : '';
             return Container(
               color: Colors.black,
               child: SingleChildScrollView(
@@ -34,17 +41,18 @@ class MatchProfile extends StatelessWidget {
                       children: [
                         Container(
                           width: double.infinity,
-                          height: MediaQuery.of(context).size.height * 0.5, 
+                          height: MediaQuery.of(context).size.height * 0.5,
                           child: Image.asset(
-                            'assets/images/jugador1.png', 
-                            fit: BoxFit.fill, 
+                            'assets/images/jugador1.png',
+                            fit: BoxFit.fill,
                           ),
                         ),
                         SafeArea(
                           child: Align(
                             alignment: Alignment.topLeft,
                             child: IconButton(
-                              icon: const Icon(Icons.arrow_back, color: Color(0xFF05FF00)),
+                              icon: const Icon(Icons.arrow_back,
+                                  color: Color(0xFF05FF00)),
                               onPressed: () => Navigator.pop(context),
                             ),
                           ),
@@ -62,17 +70,19 @@ class MatchProfile extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    _buildDataRow(context, '${userData.birthDate}'),
-                    _buildDataRow(context, '${userData.provincia}, ${userData.pais}'),
+                    _buildDataRow(context, formattedDate),
+                    _buildDataRow(
+                        context, '${userData.provincia}, ${userData.pais}'),
                     _buildDataRow(context, '${userData.categoria}'),
                     _buildDataRow(context, '${userData.club}'),
                     _buildDataRow(context, '${userData.logrosIndividuales}'),
-                    _buildDataRow(context, '${userData.seleccionNacional} ${userData.categoriaSeleccion}'),
+                    _buildDataRow(context,
+                        '${userData.seleccionNacional} ${userData.categoriaSeleccion}'),
                     const SizedBox(height: 20),
                     CustomTextButton(
                       onTap: () {},
                       text: '¡Vamos al Chat!',
-                      buttonPrimary: true,
+                      buttonPrimary: false,
                       width: 154,
                       height: 39,
                     ),
@@ -90,7 +100,8 @@ class MatchProfile extends StatelessWidget {
     final response = await ApiClient().get('auth/player/$id');
     try {
       if (response.statusCode == 200) {
-        final userData = PlayerFullModel.fromJson(json.decode(response.body)["player"]);
+        final userData =
+            PlayerFullModel.fromJson(json.decode(response.body)["player"]);
         return userData;
       } else {
         throw Exception('Error al cargar la información del usuario');
