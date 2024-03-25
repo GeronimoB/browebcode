@@ -275,7 +275,7 @@ class _CuentaPageState extends State<CuentaPage> {
                             fontSize: 14,
                             color: Colors.grey,
                           ),
-                          maxLines: expanded ? 6 : 2,
+                          maxLines: expanded ? 100 : 2,
                           overflow: TextOverflow.ellipsis, // Manejo de overflow
                         ),
                         TextButton(
