@@ -3,7 +3,14 @@ import 'package:video_player/video_player.dart';
 
 class SlidableVideo extends StatefulWidget {
   final String videoUrl;
-  const SlidableVideo({Key? key, required this.videoUrl}) : super(key: key);
+  final String? nextVideoUrl;
+  final bool showCurrentVideo;
+  const SlidableVideo(
+      {Key? key,
+      required this.videoUrl,
+      this.nextVideoUrl,
+      required this.showCurrentVideo})
+      : super(key: key);
 
   @override
   State<SlidableVideo> createState() => _SlidableVideoState();
@@ -11,12 +18,15 @@ class SlidableVideo extends StatefulWidget {
 
 class _SlidableVideoState extends State<SlidableVideo> {
   late VideoPlayerController _controller;
+  VideoPlayerController? _nextController;
+
   bool _showPauseIcon = false;
 
   @override
   void initState() {
     super.initState();
     _initializeVideoPlayer();
+    _initializeNextVideoPlayer(); // Inicializar el controlador del próximo video si hay una URL proporcionada
   }
 
   @override
@@ -25,6 +35,10 @@ class _SlidableVideoState extends State<SlidableVideo> {
     if (widget.videoUrl != oldWidget.videoUrl) {
       _controller.dispose();
       _initializeVideoPlayer();
+    }
+    if (widget.nextVideoUrl != oldWidget.nextVideoUrl) {
+      _nextController?.dispose(); // Dispose del controlador anterior si existe
+      _initializeNextVideoPlayer(); // Inicializar el controlador del próximo video si hay una URL proporcionada
     }
   }
 
@@ -38,10 +52,20 @@ class _SlidableVideoState extends State<SlidableVideo> {
       });
   }
 
+  void _initializeNextVideoPlayer() {
+    if (widget.nextVideoUrl != null) {
+      Uri nextUrl = Uri.parse(widget.nextVideoUrl!);
+      _nextController = VideoPlayerController.networkUrl(nextUrl)
+        ..initialize().then((_) {});
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
     _controller.dispose();
+    _nextController
+        ?.dispose(); // Dispose del controlador del próximo video si existe
   }
 
   void _showPauseIconForAMoment() {
@@ -68,21 +92,32 @@ class _SlidableVideoState extends State<SlidableVideo> {
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.showCurrentVideo) {
+      if (_nextController != null && _nextController!.value.isInitialized) {
+        _nextController!.play();
+        setState(() {});
+      }
+    }
     return GestureDetector(
       onTap: _togglePlayPause,
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          _controller.value.isInitialized
-              ? VideoPlayer(_controller)
-              : const Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.green), // Color del loader
-                  ),
-                ),
+          if (widget.showCurrentVideo)
+            _controller.value.isInitialized
+                ? VideoPlayer(_controller)
+                : const Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.green), // Color del loader
+                    ),
+                  )
+          else
+            _nextController!.value.isInitialized
+                ? VideoPlayer(_nextController!)
+                : const SizedBox.shrink(),
           VideoProgressIndicator(
-            _controller,
+            widget.showCurrentVideo ? _controller : _nextController!,
             allowScrubbing: true,
             colors: const VideoProgressColors(
               playedColor: Color(0xFF00E050),

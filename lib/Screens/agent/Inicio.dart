@@ -25,6 +25,7 @@ class _InicioPageState extends State<InicioPage> {
   List<InitialVideoModel> _videoUrls = [];
   late UserProvider provider;
   int currentUserId = 0;
+  bool changeVideo = true;
 
   @override
   void initState() {
@@ -76,7 +77,8 @@ class _InicioPageState extends State<InicioPage> {
       );
     } else if (_xOffset < -100) {
       setState(() {
-        _currentIndex = (_currentIndex + 1) % _videoUrls.length;
+        changeVideo = false;
+        //_currentIndex = (_currentIndex + 1) % _videoUrls.length;
       });
     }
     setState(() {
@@ -127,7 +129,10 @@ class _InicioPageState extends State<InicioPage> {
         ),
       );
     } else {
-      child = SlidableVideo(videoUrl: _videoUrls[_currentIndex].url);
+      child = SlidableVideo(
+          videoUrl: _videoUrls[_currentIndex].url,
+          nextVideoUrl: _videoUrls[_currentIndex + 1].url,
+          showCurrentVideo: changeVideo);
     }
     return SizedBox(
       height: height * 0.9,
