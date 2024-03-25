@@ -135,7 +135,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
               icon: const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                side: BorderSide(color: Color(0xFF00E050)),
+
               ),
               color: const Color(0xff3B3B3B),
               onSelected: (String result) {},
@@ -262,13 +262,13 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                                 'auth/delete-video',
                                 {"videoId": videoId.toString()});
                             print(response.body);
-                            await Future.delayed(Duration(seconds: 1));
+                            await Future.delayed(const Duration(seconds: 1));
                             if (response.statusCode == 200) {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        CustomBottomNavigationBarPlayer(
+                                        const CustomBottomNavigationBarPlayer(
                                             initialIndex: 4)),
                               );
                             } else {
@@ -278,12 +278,12 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                                     content: Text(
                                         'Hubo un error al borrar el video intentelo de nuevo.')),
                               );
-                              await Future.delayed(Duration(seconds: 2));
+                              await Future.delayed(const Duration(seconds: 2));
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        CustomBottomNavigationBarPlayer(
+                                        const CustomBottomNavigationBarPlayer(
                                             initialIndex: 4)),
                               );
                             }
@@ -321,8 +321,8 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              CustomBottomNavigationBarPlayer(initialIndex: 4)),
+        builder: (context) =>
+        const CustomBottomNavigationBarPlayer(initialIndex: 4)),
     );
   }
 }

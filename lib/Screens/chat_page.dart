@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {
   final String name;
+  
 
   const ChatPage({
     super.key,
@@ -10,6 +11,7 @@ class ChatPage extends StatefulWidget {
 
   @override
   _ChatPageState createState() => _ChatPageState();
+  
 }
 
 class _ChatPageState extends State<ChatPage> {
@@ -17,6 +19,8 @@ class _ChatPageState extends State<ChatPage> {
   final List<String> _messages = [];
   final FocusNode _messageFocusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
+  
+OverlayEntry? _overlayEntry;
 
   void _sendMessage() {
     final String text = _messageController.text;
@@ -69,6 +73,12 @@ class _ChatPageState extends State<ChatPage> {
                 ),
               ),
               const Spacer(),
+            IconButton(
+              icon: const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
+              onPressed: () {
+                _showCustomMenu(context);
+              },
+            ),
             ],
           ),
           leading: IconButton(
@@ -77,108 +87,7 @@ class _ChatPageState extends State<ChatPage> {
               color: Color(0xFF00E050),
             ),
             onPressed: () => Navigator.of(context).pop(),
-          ),
-actions: [
-  PopupMenuButton<String>(
-    onSelected: (String result) {
-      switch (result) {
-        case 'Perfil':
-          break;
-        case 'Anclar':
-          break;
-        case 'Buscar':
-          break;
-        case 'Silenciar':
-          break;
-        case 'Bloquear':
-          break;
-        case 'Archivos':
-          break;
-      }
-    },
-    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-      const PopupMenuItem<String>(
-        value: 'Perfil',
-        child: Text(
-          'Ver Perfil',
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Montserrat',
-            fontStyle: FontStyle.italic,
-            fontSize: 13,
-          ),
-        ),
-      ),
-      const PopupMenuItem<String>(
-        value: 'Anclar',
-        child: Text(
-          'Anclar arriba',
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Montserrat',
-            fontStyle: FontStyle.italic,
-            fontSize: 13,
-          ),
-        ),
-      ),
-      const PopupMenuItem<String>(
-        value: 'Buscar',
-        child: Text(
-          'Buscar',
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Montserrat',
-            fontStyle: FontStyle.italic,
-            fontSize: 13,
-          ),
-        ),
-      ),
-      const PopupMenuItem<String>(
-        value: 'Silenciar',
-        child: Text(
-          'Silenciar notificaciones',
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Montserrat',
-            fontStyle: FontStyle.italic,
-            fontSize: 13,
-          ),
-        ),
-      ),
-      const PopupMenuItem<String>(
-        value: 'Bloquear',
-        child: Text(
-          'Bloquear',
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Montserrat',
-            fontStyle: FontStyle.italic,
-            fontSize: 13,
-          ),
-        ),
-      ),
-      const PopupMenuItem<String>(
-        value: 'Archivos',
-        child: Text(
-          'Buscar Archivos',
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Montserrat',
-            fontStyle: FontStyle.italic,
-            fontSize: 13,
-          ),
-        ),
-      ),
-    ],
-    color: const Color(0xFF3B3B3B),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10.0),
-    ),
-    offset: const Offset(0, 50), // Ajusta el offset si es necesario
-    icon: const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
-  ),
-],
-
+            ),
 
         ),
         body: Column(
@@ -282,4 +191,105 @@ actions: [
     _messageController.dispose();
     super.dispose();
   }
+void _showCustomMenu(BuildContext context) {
+  _overlayEntry?.remove();
+  _overlayEntry = _createOverlayEntry(context);
+  Overlay.of(context)?.insert(_overlayEntry!);
+}
+
+OverlayEntry _createOverlayEntry(BuildContext context) {
+  RenderBox renderBox = context.findRenderObject() as RenderBox;
+  var size = renderBox.size;
+  var offset = renderBox.localToGlobal(Offset.zero);
+
+  return OverlayEntry(
+  builder: (context) => Stack(
+    children: [
+      GestureDetector(
+        onTap: () {
+          _overlayEntry?.remove();
+          _overlayEntry = null;
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          color: Colors.transparent,
+        ),
+      ),
+      Positioned(
+        left: offset.dx + size.width - 230,
+        top: offset.dy + 80, 
+        width: 220, 
+        child: Material(
+          borderRadius: BorderRadius.circular(15),
+          elevation: 5.0,
+          shadowColor: Colors.black.withOpacity(0.4), // Ajusta la opacidad de la sombra según sea necesario
+          color: const Color(0xFF3B3B3B), 
+          child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xff3B3B3B),
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.4), 
+                blurRadius: 10,
+                offset: const Offset(5, 4),
+              ),
+            ],
+          ),
+            child: ListView(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              children: <Widget>[
+                ListTile(
+                  title: const Text('Ver Perfil', style: TextStyle(color: Colors.white)),
+                  onTap: () {
+                    _overlayEntry?.remove();
+                    _overlayEntry = null;
+                  },
+                ),
+                ListTile(
+                  title: const Text('Anclar arriba', style: TextStyle(color: Colors.white)),
+                  onTap: () {
+                    _overlayEntry?.remove();
+                    _overlayEntry = null;
+                  },
+                ),
+                ListTile(
+                  title: const Text('Buscar', style: TextStyle(color: Colors.white)),
+                  onTap: () {
+                    _overlayEntry?.remove();
+                    _overlayEntry = null;
+                  },
+                ),
+                ListTile(
+                  title: const Text('Silenciar notificaciones', style: TextStyle(color: Colors.white)),
+                  onTap: () {
+                    _overlayEntry?.remove();
+                    _overlayEntry = null;
+                  },
+                ),
+                ListTile(
+                  title: const Text('Bloquear', style: TextStyle(color: Colors.white)),
+                  onTap: () {
+                    _overlayEntry?.remove();
+                    _overlayEntry = null;
+                  },
+                ),
+                ListTile(
+                  title: const Text('Buscar Archivos', style: TextStyle(color: Colors.white)),
+                  onTap: () {
+                    _overlayEntry?.remove();
+                    _overlayEntry = null;
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ],
+  ),
+);
+}
 }

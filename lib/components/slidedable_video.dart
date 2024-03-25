@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class SlidableVideo extends StatefulWidget {
-  final String videoUrl;
-  const SlidableVideo({Key? key, required this.videoUrl}) : super(key: key);
+  final VideoPlayerController controller;
+  const SlidableVideo({Key? key, required this.controller}) : super(key: key);
 
   @override
   State<SlidableVideo> createState() => _SlidableVideoState();
@@ -11,38 +11,59 @@ class SlidableVideo extends StatefulWidget {
 
 class _SlidableVideoState extends State<SlidableVideo> {
   late VideoPlayerController _controller;
+  VideoPlayerController? _nextController;
+
   bool _showPauseIcon = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeVideoPlayer();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _initializeVideoPlayer();
+  //   _initializeNextVideoPlayer(); // Inicializar el controlador del próximo video si hay una URL proporcionada
+  // }
 
-  @override
-  void didUpdateWidget(covariant SlidableVideo oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.videoUrl != oldWidget.videoUrl) {
-      _controller.dispose();
-      _initializeVideoPlayer();
-    }
-  }
+  // @override
+  // void didUpdateWidget(covariant SlidableVideo oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   if (widget.videoUrl != oldWidget.videoUrl) {
+  //     _controller.dispose();
+  //     _initializeVideoPlayer();
+  //   }
+  //   if (widget.nextVideoUrl != oldWidget.nextVideoUrl) {
+  //     _nextController?.dispose(); // Dispose del controlador anterior si existe
+  //     _initializeNextVideoPlayer(); // Inicializar el controlador del próximo video si hay una URL proporcionada
+  //   }
+  // }
 
-  void _initializeVideoPlayer() {
-    Uri url = Uri.parse(widget.videoUrl);
-    _controller = VideoPlayerController.networkUrl(url)
-      ..initialize().then((_) {
-        setState(() {});
-        _controller.play();
-        _controller.setLooping(true);
-      });
-  }
+  // void _initializeVideoPlayer() {
+  //   Uri url = Uri.parse(widget.videoUrl);
+  //   _controller = VideoPlayerController.networkUrl(url)
+  //     ..initialize().then((_) {
+  //       setState(() {});
+  //       //_controller.play();
+  //       _controller.setLooping(true);
+  //     });
+  // }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
+  // void _initializeNextVideoPlayer() {
+  //   if (widget.nextVideoUrl != null) {
+  //     Uri nextUrl = Uri.parse(widget.nextVideoUrl!);
+  //     _nextController = VideoPlayerController.networkUrl(nextUrl)
+  //       ..initialize().then((_) {
+  //         setState(() {
+  //           _nextController!.setLooping(true);
+  //         });
+  //       });
+  //   }
+  // }
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _controller.dispose();
+  //   _nextController
+  //       ?.dispose(); // Dispose del controlador del próximo video si existe
+  // }
 
   void _showPauseIconForAMoment() {
     setState(() {
@@ -57,10 +78,10 @@ class _SlidableVideoState extends State<SlidableVideo> {
   }
 
   void _togglePlayPause() {
-    if (_controller.value.isPlaying) {
-      _controller.pause();
+    if (widget.controller.value.isPlaying) {
+      widget.controller.pause();
     } else {
-      _controller.play();
+      widget.controller.play();
       _showPauseIconForAMoment();
     }
     setState(() {});
@@ -68,13 +89,14 @@ class _SlidableVideoState extends State<SlidableVideo> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.controller.value);
     return GestureDetector(
       onTap: _togglePlayPause,
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          _controller.value.isInitialized
-              ? VideoPlayer(_controller)
+          widget.controller.value.isInitialized
+              ? VideoPlayer(widget.controller)
               : const Center(
                   child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(
@@ -82,7 +104,7 @@ class _SlidableVideoState extends State<SlidableVideo> {
                   ),
                 ),
           VideoProgressIndicator(
-            _controller,
+            widget.controller,
             allowScrubbing: true,
             colors: const VideoProgressColors(
               playedColor: Color(0xFF00E050),
@@ -90,17 +112,18 @@ class _SlidableVideoState extends State<SlidableVideo> {
               backgroundColor: Colors.grey,
             ),
           ),
-          if (_showPauseIcon || !_controller.value.isPlaying)
+          if (_showPauseIcon || !widget.controller.value.isPlaying)
             AnimatedOpacity(
-              opacity:
-                  _showPauseIcon || !_controller.value.isPlaying ? 1.0 : 0.0,
+              opacity: _showPauseIcon || !widget.controller.value.isPlaying
+                  ? 1.0
+                  : 0.0,
               duration: const Duration(milliseconds: 300),
               child: Center(
                 child: Icon(
-                  _controller.value.isPlaying
+                  widget.controller.value.isPlaying
                       ? Icons.pause_circle_filled
                       : Icons.play_circle_fill,
-                  color: _controller.value.isPlaying
+                  color: widget.controller.value.isPlaying
                       ? const Color.fromARGB(142, 255, 255, 255)
                       : Colors.white,
                   size: 64,

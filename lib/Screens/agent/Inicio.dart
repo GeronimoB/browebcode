@@ -25,6 +25,8 @@ class _InicioPageState extends State<InicioPage> {
   List<InitialVideoModel> _videoUrls = [];
   late UserProvider provider;
   int currentUserId = 0;
+  bool changeVideo = true;
+  late List<VideoPlayerController?> controllers = [];
 
   @override
   void initState() {
@@ -45,9 +47,12 @@ class _InicioPageState extends State<InicioPage> {
       if (response.statusCode == 200) {
         final videos = jsonDecode(response.body)["video"];
         final List<InitialVideoModel> videosA = mapListToInitialVideos(videos);
+        controllers = List.generate(videosA.length, (index) => null);
         setState(() {
           _videoUrls = videosA;
         });
+        _initializeVideoPlayer(_currentIndex);
+        _initializeNextVideoPlayer(_currentIndex + 1);
       } else {
         throw Exception('Error al obtener las URLs de los videos');
       }
@@ -67,6 +72,7 @@ class _InicioPageState extends State<InicioPage> {
     if (_xOffset > 100) {
       final userId = _videoUrls[_currentIndex].userId;
       setState(() {
+        changeVideo = !changeVideo;
         _currentIndex = (_currentIndex + 1) % _videoUrls.length;
       });
       _writeMatchData(userId);
@@ -75,9 +81,12 @@ class _InicioPageState extends State<InicioPage> {
         MaterialPageRoute(builder: (context) => MatchProfile(userId: userId)),
       );
     } else if (_xOffset < -100) {
-      setState(() {
-        _currentIndex = (_currentIndex + 1) % _videoUrls.length;
-      });
+      controllers[_currentIndex]?.dispose();
+      controllers[_currentIndex] = null;
+
+      _currentIndex = (_currentIndex + 1) % _videoUrls.length;
+      controllers[_currentIndex]!.play();
+      _initializeNextVideoPlayer((_currentIndex + 1) % _videoUrls.length);
     }
     setState(() {
       _xOffset = 0;
@@ -109,13 +118,36 @@ class _InicioPageState extends State<InicioPage> {
     });
   }
 
+  void _initializeVideoPlayer(int index) {
+    Uri url = Uri.parse(_videoUrls[index].url);
+    final controller = VideoPlayerController.networkUrl(url);
+    controller.initialize().then((_) {
+      controller.setLooping(true);
+      setState(() {
+        controllers[index] = controller;
+      });
+      controllers[index]!.play();
+    });
+  }
+
+  void _initializeNextVideoPlayer(int index) {
+    Uri nextUrl = Uri.parse(_videoUrls[index].url);
+    final controller = VideoPlayerController.networkUrl(nextUrl);
+    controller.initialize().then((_) {
+      controller.setLooping(true);
+    });
+    setState(() {
+      controllers[index] = controller;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double scale = 1 - (_xOffset.abs() * 0.001);
     double height = MediaQuery.of(context).size.height;
     Widget child;
 
-    if (_videoUrls.isEmpty) {
+    if (_videoUrls.isEmpty || controllers[_currentIndex] == null) {
       child = const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -127,7 +159,10 @@ class _InicioPageState extends State<InicioPage> {
         ),
       );
     } else {
-      child = SlidableVideo(videoUrl: _videoUrls[_currentIndex].url);
+      child = SlidableVideo(
+        controller: controllers[_currentIndex]!,
+      );
+      setState(() {});
     }
     return SizedBox(
       height: height * 0.9,

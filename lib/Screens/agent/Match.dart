@@ -210,7 +210,8 @@ class _MatcheState extends State<Matche> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ClipOval(
                     child: FadeInImage.assetNetwork(
@@ -232,9 +233,10 @@ class _MatcheState extends State<Matche> {
                   const SizedBox(width: 30),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start, //
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
                       children: [
-                        const SizedBox(height: 30),
                         Text(
                           '${player.name} ${player.lastName}',
                           style: const TextStyle(

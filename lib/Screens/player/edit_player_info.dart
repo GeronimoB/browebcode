@@ -266,7 +266,7 @@ void _editarCampo(BuildContext context, String label, TextEditingController cont
               BoxShadow(
                 color: Colors.black.withOpacity(0.4), 
                 blurRadius: 10,
-                offset: const Offset(4, 2),
+                offset: const Offset(5, 4),
               ),
             ],
           ),
