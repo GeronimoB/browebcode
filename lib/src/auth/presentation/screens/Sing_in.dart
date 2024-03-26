@@ -140,7 +140,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         UserEntity(
                             username: emailController.text,
                             password: passwordController.text),
-                        context);
+                        context,
+                        rememberMe);
                   },
                   text: 'Entrar',
                   buttonPrimary: true,
@@ -163,8 +164,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   Checkbox(
-                    value:
-                        rememberMe, // Deberías manejar el estado del checkbox en tu lógica
+                    value: rememberMe,
                     onChanged: (value) {
                       setState(() {
                         rememberMe = !rememberMe;
@@ -179,7 +179,6 @@ class _SignInScreenState extends State<SignInScreen> {
                         return Colors.white; // Color por defecto (fondo blanco)
                       },
                     ),
-
                     shape: RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(5), // Bordes redondeados

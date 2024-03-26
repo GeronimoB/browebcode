@@ -16,10 +16,12 @@ class UserCubit extends Cubit<UserState> {
   }) : super(UserInitial());
 
   Future<void> submitSignIn(
-      {required UserEntity user, required BuildContext context}) async {
+      {required UserEntity user,
+      required BuildContext context,
+      required bool remember}) async {
     emit(UserLoading());
     try {
-      await signInUseCase.call(user, context);
+      await signInUseCase.call(user, context, remember);
       emit(UserSuccess());
     } on SocketException catch (e) {
       emit(UserFailure(message: e.message));

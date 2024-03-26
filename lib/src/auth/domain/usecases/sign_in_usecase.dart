@@ -8,7 +8,8 @@ class SignInUseCase {
 
   SignInUseCase({required this.authenticationRepository});
 
-  Future<void> call(UserEntity user, BuildContext context) async {
-    return await authenticationRepository.signIn(user, context);
+  Future<void> call(
+      UserEntity user, BuildContext context, bool remember) async {
+    return await authenticationRepository.signIn(user, context, remember);
   }
 }

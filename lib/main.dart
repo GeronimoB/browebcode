@@ -9,10 +9,14 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'providers/agent_provider.dart';
 import 'providers/player_provider.dart';
 import 'providers/user_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'src/auth/data/datasources/remote_data_source_impl.dart';
+import 'src/auth/domain/entitites/user_entity.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -95,11 +99,27 @@ class _MySplashScreenState extends State<MySplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => SignInPage()),
-      );
+    loadRememberMe();
+  }
+
+  Future<void> loadRememberMe() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      final String savedUsername = prefs.getString('username') ?? '';
+      final String savedPassword = prefs.getString('password') ?? '';
+      if (savedUsername.isNotEmpty && savedPassword.isNotEmpty) {
+        final playerProvider =
+            Provider.of<PlayerProvider>(context, listen: false);
+        RemoteDataSourceImpl(playerProvider).signIn(
+            UserEntity(username: savedUsername, password: savedPassword),
+            context,
+            true);
+      } else {
+        Timer(
+          const Duration(seconds: 2),
+          () => Navigator.pushReplacementNamed(context, '/login'),
+        );
+      }
     });
   }
 

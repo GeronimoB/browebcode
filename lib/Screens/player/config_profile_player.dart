@@ -70,11 +70,12 @@ class ConfigProfilePlayer extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  SizedBox(height: 22),
+                  const SizedBox(height: 22),
                   _buildListItem('CUENTA', context, true, CuentaPage()),
-                  _buildListItem('EDITAR INFORMACION', context, true, EditarInfoPlayer()),
+                  _buildListItem(
+                      'EDITAR INFORMACION', context, true, EditarInfoPlayer()),
                   _buildListItem('PRIVACIDAD', context, true, Privacidad()),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   _buildListItem('CENTRO DE AYUDA (FAQ)', context, false,
                       ConfigProfilePlayer()),
                   _buildListItem(
@@ -91,6 +92,9 @@ class ConfigProfilePlayer extends StatelessWidget {
                   ),
                   _buildListItem('PEDIDOS', context, true, Pedidos()),
                   _buildListItem('SERVICIOS', context, true, const Servicios()),
+                  const SizedBox(height: 15),
+                  _buildListItem('CERRAR SESIÓN', context, false,
+                      const Servicios(), handleLogOut()),
                 ],
               ),
             ),
@@ -108,8 +112,11 @@ class ConfigProfilePlayer extends StatelessWidget {
     );
   }
 
+  void handleLogOut() {}
+
   Widget _buildListItem(
-      String title, BuildContext context, bool showTrailingIcon, Widget page) {
+      String title, BuildContext context, bool showTrailingIcon, Widget page,
+      {Function? callback}) {
     return ListTile(
       title: Text(
         title,
@@ -124,9 +131,13 @@ class ConfigProfilePlayer extends StatelessWidget {
           ? const Icon(Icons.chevron_right, color: Color(0xFF05FF00))
           : null,
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => page),
-        );
+        if (callback != null) {
+          callback.call();
+        } else {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => page),
+          );
+        }
       },
     );
   }

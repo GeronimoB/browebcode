@@ -11,6 +11,7 @@ import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../../../../Screens/player/bottom_navigation_bar_player.dart';
 import '../../domain/entitites/user_entity.dart';
@@ -22,9 +23,9 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   RemoteDataSourceImpl(this.playerProvider);
 
   @override
-  Future<void> signIn(UserEntity user, BuildContext context) async {
+  Future<void> signIn(
+      UserEntity user, BuildContext context, bool rememberMe) async {
     try {
-      // Antes de hacer la solicitud, establece isLoading en true
       playerProvider.setIsLoading(true);
 
       final response = await ApiClient().post(
@@ -39,6 +40,11 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
         final userData = jsonData["userInfo"];
+        if (rememberMe) {
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString('username', user.username);
+          prefs.setString('password', user.password);
+        }
 
         final userProvider = Provider.of<UserProvider>(context, listen: false);
         userProvider.setCurrentUser(UserModel.fromJson(userData));
