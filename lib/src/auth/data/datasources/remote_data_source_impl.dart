@@ -24,7 +24,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   @override
   Future<void> signIn(
-      UserEntity user, BuildContext context, bool rememberMe) async {
+      UserEntity user, BuildContext context, bool rememberMe, bool comingFromAutoLogin) async {
     try {
       playerProvider.setIsLoading(true);
 
@@ -70,14 +70,42 @@ class RemoteDataSourceImpl implements RemoteDataSource {
           );
         }
       } else {
-        final jsonData = json.decode(response.body);
-        final errorMessage = jsonData["error"];
+        if (comingFromAutoLogin) {
+          Navigator.pushReplacementNamed(context, '/login');
+        } else {
+          final jsonData = json.decode(response.body);
+          final errorMessage = jsonData["error"];
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.redAccent,
+              content: Text(
+                errorMessage,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w500,
+                  fontStyle: FontStyle.italic,
+                  fontSize: 12,
+                ),
+              ),
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (comingFromAutoLogin) {
+        Navigator.pushReplacementNamed(context, '/login');
+      } else {
+        print(e);
+        playerProvider.setIsLoading(false);
+
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             backgroundColor: Colors.redAccent,
             content: Text(
-              errorMessage,
-              style: const TextStyle(
+              "Ha ocurrido un error intentelo de nuevo",
+              style: TextStyle(
                 color: Colors.white,
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.w500,
@@ -85,31 +113,10 @@ class RemoteDataSourceImpl implements RemoteDataSource {
                 fontSize: 12,
               ),
             ),
-            duration: const Duration(seconds: 3),
+            duration: Duration(seconds: 3),
           ),
         );
       }
-    } catch (e) {
-      print(e);
-      // En caso de error, establece isLoading en false para quitar el loader
-      playerProvider.setIsLoading(false);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(
-            "Ha ocurrido un error intentelo de nuevo",
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.w500,
-              fontStyle: FontStyle.italic,
-              fontSize: 12,
-            ),
-          ),
-          duration: Duration(seconds: 3),
-        ),
-      );
     } finally {
       // Independientemente de si hubo éxito o error, establece isLoading en false al final
       playerProvider.setIsLoading(false);

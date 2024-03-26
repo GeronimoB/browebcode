@@ -29,4 +29,10 @@ class UserProvider extends ChangeNotifier {
     afiliados = afiliado;
     notifyListeners();
   }
+
+  void logOut() {
+    _currentUser = const UserModel(username: '', password: '');
+    afiliados.clear();
+    notifyListeners();
+  }
 }

@@ -10,5 +10,5 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   AuthenticationRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<void> signIn(UserEntity user, BuildContext context, bool remember) async => remoteDataSource.signIn(user, context, remember);
+  Future<void> signIn(UserEntity user, BuildContext context, bool remember, bool co) async => remoteDataSource.signIn(user, context, remember, co);
 }

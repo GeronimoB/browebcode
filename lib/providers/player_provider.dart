@@ -128,4 +128,17 @@ class PlayerProvider extends ChangeNotifier {
     isLoading = val;
     notifyListeners();
   }
+
+  void logOut() {
+    _player = const PlayerFullModel(name: '', email: '');
+    _temporalUser = const PlayerFullModel(name: '', email: '');
+    _plan = null;
+    _savedCards.clear();
+    selectedCard = null;
+    videoPathToUpload = null;
+    imagePathToUpload = null;
+    userVideos.clear();
+    isLoading = false;
+    notifyListeners();
+  }
 }

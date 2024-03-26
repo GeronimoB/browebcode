@@ -141,7 +141,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             username: emailController.text,
                             password: passwordController.text),
                         context,
-                        rememberMe);
+                        rememberMe,
+                        false);
                   },
                   text: 'Entrar',
                   buttonPrimary: true,

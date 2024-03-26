@@ -5,7 +5,9 @@ import 'package:bro_app_to/Screens/player/edit_player_info.dart';
 import 'package:bro_app_to/Screens/player/pedidos.dart';
 import 'package:bro_app_to/Screens/privacidad.dart';
 import 'package:bro_app_to/Screens/player/servicios.dart';
+import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/src/auth/presentation/screens/Sing_in.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
@@ -93,8 +95,11 @@ class ConfigProfilePlayer extends StatelessWidget {
                   _buildListItem('PEDIDOS', context, true, Pedidos()),
                   _buildListItem('SERVICIOS', context, true, const Servicios()),
                   const SizedBox(height: 15),
-                  _buildListItem('CERRAR SESIÓN', context, false,
-                      const Servicios(), handleLogOut()),
+                  _buildListItem(
+                      'CERRAR SESIÓN', context, false, const Servicios(),
+                      callback: () {
+                    handleLogOut(context);
+                  }),
                 ],
               ),
             ),
@@ -112,7 +117,149 @@ class ConfigProfilePlayer extends StatelessWidget {
     );
   }
 
-  void handleLogOut() {}
+  void handleLogOut(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.2),
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: const Color(0xff3B3B3B),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 10,
+                  offset: const Offset(5, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const Text(
+                  "¿Esta seguro de que desea cerrar sesión?",
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomTextButton(
+                      onTap: () => Navigator.of(context).pop(),
+                      text: 'Cancelar',
+                      buttonPrimary: false,
+                      width: 90,
+                      height: 35,
+                    ),
+                    CustomTextButton(
+                      onTap: () {
+                        final playerProvider =
+                            Provider.of<PlayerProvider>(context, listen: false);
+                        final userProvider =
+                            Provider.of<UserProvider>(context, listen: false);
+
+                        playerProvider.logOut();
+                        userProvider.logOut();
+
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/login', (route) => false);
+                      },
+                      text: 'Continuar',
+                      buttonPrimary: true,
+                      width: 90,
+                      height: 35,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void handleDeleteAccount(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.2),
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: const Color(0xff3B3B3B),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 10,
+                  offset: const Offset(5, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const Text(
+                  "¿Esta seguro de que desea borrar la cuenta? Se borraran todos los datos asociados.",
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomTextButton(
+                      onTap: () => Navigator.of(context).pop(),
+                      text: 'Cancelar',
+                      buttonPrimary: false,
+                      width: 90,
+                      height: 35,
+                    ),
+                    CustomTextButton(
+                      onTap: () {
+                        final playerProvider =
+                            Provider.of<PlayerProvider>(context, listen: false);
+                        final userProvider =
+                            Provider.of<UserProvider>(context, listen: false);
+
+                        playerProvider.logOut();
+                        userProvider.logOut();
+
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/intro', (route) => false);
+                      },
+                      text: 'Continuar',
+                      buttonPrimary: true,
+                      width: 90,
+                      height: 35,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   Widget _buildListItem(
       String title, BuildContext context, bool showTrailingIcon, Widget page,
