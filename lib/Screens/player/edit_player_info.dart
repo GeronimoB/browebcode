@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bro_app_to/Screens/player_profile.dart';
+import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -248,26 +249,41 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
     );
   }
 
-  void _editarCampo(
-      BuildContext context, String label, TextEditingController controller) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        TextEditingController editingController =
-            TextEditingController(text: controller.text);
-        return Theme(
-            data: ThemeData(dialogBackgroundColor: const Color(0xff3B3B3B)),
-            child: AlertDialog(
-              backgroundColor: Color(0xff3B3B3B),
-              title: Text(
-                'Editar $label',
+void _editarCampo(BuildContext context, String label, TextEditingController controller) {
+  showDialog(
+    context: context,
+    barrierColor: Colors.black.withOpacity(0.2),
+    builder: (BuildContext context) {
+      TextEditingController editingController = TextEditingController(text: controller.text);
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: const Color(0xff3B3B3B),
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.4), 
+                blurRadius: 10,
+                offset: const Offset(5, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, 
+            crossAxisAlignment: CrossAxisAlignment.start, 
+            children: <Widget>[
+              Text(
+                label,
                 style: const TextStyle(
                   fontFamily: 'Montserrat',
                   color: Color(0xff00E050),
                   fontWeight: FontWeight.bold,
+                  fontSize: 15,
                 ),
               ),
-              content: TextField(
+              TextField(
                 controller: editingController,
                 style: const TextStyle(
                   fontFamily: 'Montserrat',
@@ -281,39 +297,38 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
                 ),
                 cursorColor: Colors.white,
               ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text(
-                    'Cancelar',
-                    style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CustomTextButton(
+                    onTap: () => Navigator.of(context).pop(),
+                    text: 'Cancelar',
+                    buttonPrimary: false,
+                    width: 90,
+                    height: 27,
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: const Text(
-                    'Guardar',
-                    style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900),
+                  CustomTextButton(
+                    onTap: () {
+                      if (mounted) {
+                        setState(() {
+                          controller.text = editingController.text;
+                        });
+                      }
+                      Navigator.of(context).pop();
+                    },
+                    text: 'Guardar',
+                    buttonPrimary: true,
+                    width: 90,
+                    height: 27,
                   ),
-                  onPressed: () {
-                    if (mounted) {
-                      setState(() {
-                        controller.text = editingController.text;
-                      });
-                    }
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ));
-      },
-    );
-  }
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
 }

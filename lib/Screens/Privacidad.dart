@@ -66,38 +66,10 @@ class Privacidad extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              trailing: PopupMenuButton<String>(
-                onSelected: (String result) {
-                  if (result == 'google_authenticator') {}
-                },
-                offset: const Offset(0, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                color: const Color(0xff3B3B3B),
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(
-                    value: 'google_authenticator',
-                    child: Material(
-                      borderRadius: BorderRadius.circular(5.0),
-                      color: Colors.transparent,
-                      child: const Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          'Google Authenticator',
-                          style: TextStyle(
-                            color: Color(0xff00E050),
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Montserrat',
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-                icon: const Icon(Icons.chevron_right, color: Color(0xff00E050)),
-              ),
+              onTap: () {
+                _editarCampo(context, 'Autenticación de Doble Factor', TextEditingController());
+              },
+              trailing: Icon(Icons.chevron_right, color: Color(0xff00E050)),
             ),
             const SizedBox(height: 10),
             Expanded(
@@ -115,6 +87,53 @@ class Privacidad extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _editarCampo(BuildContext context, String label, TextEditingController controller) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.2),
+      builder: (BuildContext context) {
+        TextEditingController editingController = TextEditingController(text: controller.text);
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: const Color(0xff3B3B3B),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4), 
+                  blurRadius: 10,
+                  offset: const Offset(5, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min, 
+              crossAxisAlignment: CrossAxisAlignment.start, 
+              children: <Widget>[
+                ListTile(
+                  onTap: () {
+                    // Agrega la lógica para Google Authenticator
+                    Navigator.pop(context);
+                  },
+                  title: Text(
+                    'Google Authenticator',
+                    style: TextStyle(
+                      color: Color(0xff00E050),
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
