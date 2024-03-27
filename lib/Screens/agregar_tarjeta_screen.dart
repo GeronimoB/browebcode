@@ -380,6 +380,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
 
       final customerId = player.customerStripeId;
       controller.clear();
+      print("customerID: $customerId");
       final asociatePaymentMethod = await ApiClient().post(
         'security_filter/v1/api/payment/payment-method',
         {

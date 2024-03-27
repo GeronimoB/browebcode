@@ -4,6 +4,7 @@ import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
 import 'package:bro_app_to/components/modal_decision.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/utils/video_model.dart';
+import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,7 +14,8 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import '../../components/custom_text_button.dart';
 import '../../utils/api_client.dart';
 import 'bottom_navigation_bar_player.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as path;
 
 class FullScreenVideoPage extends StatefulWidget {
   final Video video;
@@ -42,17 +44,14 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
       });
   }
 
-  void _handleDownload(Video video) async {
+  Future<void> _handleDownload(Video video) async {
     String? videoUrl = video.videoUrl;
-
     if (videoUrl == null || videoUrl.isEmpty) {
       print('URL del video nula o vacía. No se puede iniciar la descarga.');
       return;
     }
-
-    print('Iniciando descarga del video desde la URL: $videoUrl');
-
     final status = await Permission.storage.status;
+
     if (!status.isGranted) {
       print('Solicitando permiso de almacenamiento...');
       final result = await Permission.storage.request();
@@ -62,27 +61,103 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
         return;
       }
     }
-
-    final directory = (await getExternalStorageDirectory())!.absolute.path;
-    final savedDir = Directory(directory);
-    if (!savedDir.existsSync()) {
-      await savedDir.create();
-    }
-
-    // Verifica la ruta del directorio de destino
-    print('Directorio de descarga: $savedDir');
-
     try {
-      final taskId = await FlutterDownloader.enqueue(
-          url: videoUrl,
-          savedDir: directory,
-          fileName: 'video_${video.id}.mp4',
-          showNotification: true,
-          openFileFromNotification: true,
-          saveInPublicStorage: true);
-      print('Descarga iniciada correctamente. ID de tarea: $taskId');
-    } catch (error) {
-      print('Error al iniciar la descarga: $error');
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+            ),
+          );
+        },
+      );
+      final videoExtension = path.extension(videoUrl);
+      final response = await http.get(Uri.parse(videoUrl));
+      final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
+      final apkFile = File(
+          '${downloadsDirectory!.path}/video_${video.id}_${DateTime.now().millisecondsSinceEpoch}.$videoExtension');
+
+      await apkFile.writeAsBytes(response.bodyBytes);
+
+      Navigator.of(context).pop();
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+              backgroundColor: Colors.transparent,
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: const Color(0xff3B3B3B),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: 10,
+                      offset: const Offset(5, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Felicitaciones!',
+                      style: TextStyle(
+                          color: Color(0xff00E050),
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'El video se ha guardado en la carpeta de descargas.',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                ),
+              ));
+        },
+      );
+    } catch (e) {
+      Navigator.of(context).pop();
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: const Text(
+                'Ha habido un error en la descarga, intente nuevamente.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+
+      print(e.toString());
     }
   }
 

@@ -65,7 +65,16 @@ class MensajesPage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final chat = messagesWithUsers[index];
                       return GestureDetector(
-                        onTap: () {
+                        onTap: () async {
+                          final userParsedId = user.isAgent
+                              ? "agente_${user.userId}"
+                              : "jugador_${user.userId}";
+                          final friendParsedId = chat.friendUser.isAgent
+                              ? "agente_${chat.friendUser.userId}"
+                              : "jugador_${chat.friendUser.userId}";
+                          await FirebaseMessageRepository()
+                              .markAllMessagesAsRead(
+                                  userParsedId, friendParsedId);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

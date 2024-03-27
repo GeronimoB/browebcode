@@ -16,65 +16,68 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            color: Color.fromARGB(255, 0, 0, 0),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-          ),
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/Background_1.png',
-              fit: BoxFit.cover,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Container(
+              color: Color.fromARGB(255, 0, 0, 0),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
             ),
-          ),
-          Positioned(
-            bottom: 150,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    width: 239,
-                    height: 117,
-                    fit: BoxFit.fill,
-                    'assets/icons/Logo.svg',
-                  ),
-                  const SizedBox(height: 35),
-                  CustomTextButton(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignInScreen()),
-                        );
-                      },
-                      text: 'Iniciar Sesión',
-                      buttonPrimary: false,
-                      width: 304,
-                      height: 39),
-                  const SizedBox(height: 20),
-                  CustomTextButton(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SignUpScreen()),
-                        );
-                      },
-                      text: 'Crear Cuenta',
-                      buttonPrimary: true,
-                      width: 304,
-                      height: 39),
-                ],
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/Background_1.png',
+                fit: BoxFit.cover,
               ),
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 150,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      width: 239,
+                      height: 117,
+                      fit: BoxFit.fill,
+                      'assets/icons/Logo.svg',
+                    ),
+                    const SizedBox(height: 35),
+                    CustomTextButton(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignInScreen()),
+                          );
+                        },
+                        text: 'Iniciar Sesión',
+                        buttonPrimary: false,
+                        width: 304,
+                        height: 39),
+                    const SizedBox(height: 20),
+                    CustomTextButton(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignUpScreen()),
+                          );
+                        },
+                        text: 'Crear Cuenta',
+                        buttonPrimary: true,
+                        width: 304,
+                        height: 39),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

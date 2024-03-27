@@ -111,12 +111,13 @@ class _PlanesPagoState extends State<PlanesPago> {
                             .getActualPlan()!
                             .precio
                             .replaceAll(',', '.');
+                        final precioDouble = double.parse(precio);
 
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MetodoDePagoScreen(
-                                    valueToPay: precio as double,
+                                    valueToPay: precioDouble,
                                   )),
                         );
                       },

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../common/sizes.dart';
+
 Widget chatItem(
   String message,
   DateTime datetime,
@@ -7,10 +9,14 @@ Widget chatItem(
   bool read,
 ) {
   return Container(
-    padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+    width: Sizes.width,
+    padding: EdgeInsets.symmetric(horizontal: Sizes.padding),
     alignment: sent ? Alignment.centerRight : Alignment.centerLeft,
     child: Container(
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+      width: Sizes.width * 0.65,
+      margin: EdgeInsets.symmetric(vertical: Sizes.padding / 4),
+      padding: EdgeInsets.symmetric(
+          horizontal: Sizes.padding / 2, vertical: Sizes.padding / 4),
       decoration: BoxDecoration(
           color: sent
               ? const Color.fromARGB(51, 4, 255, 0)
@@ -55,7 +61,7 @@ Widget chatItem(
               ? Icon(
                   read ? Icons.done_all : Icons.check,
                   size: 16,
-                  color: Color.fromARGB(255, 215, 214, 214),
+                  color: const Color.fromARGB(255, 215, 214, 214),
                 )
               : Container(),
         ],

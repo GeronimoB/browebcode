@@ -48,9 +48,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         final jsonData = json.decode(response.body);
         final userData = jsonData["userInfo"];
 
-        if (rememberMe) {
-          _saveCredentialsLocally(user.username, user.password);
-        }
+        _saveCredentialsLocally(
+            rememberMe ? user.username : "", rememberMe ? user.password : "");
 
         _handleSuccessfulSignIn(context, jsonData, userData);
       } else {

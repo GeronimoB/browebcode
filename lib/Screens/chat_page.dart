@@ -1,14 +1,23 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/components/chat_item.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:bro_app_to/utils/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../common/sizes.dart';
+import '../components/image_item.dart';
 import '../infrastructure/firebase_message_repository.dart';
 import '../src/auth/data/models/user_model.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class ChatPage extends StatefulWidget {
   final UserModel friend;
@@ -69,11 +78,11 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(_buildSenderId());
-    print(_buildReceiverId());
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    Sizes.initSizes(width, height);
     return WillPopScope(
       onWillPop: () async {
-        print("si entro aca");
         final userProvider = Provider.of<UserProvider>(context, listen: false);
         final user = userProvider.getCurrentUser();
         Navigator.pushReplacement(
@@ -177,7 +186,15 @@ class _ChatPageState extends State<ChatPage> {
                       if (snapshot.hasData) {
                         if (snapshot.data.docs.length < 1) {
                           return const Center(
-                            child: Text("Saluda!"),
+                            child: Text(
+                              "Saluda!",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24.0,
+                              ),
+                            ),
                           );
                         }
                         return ListView.builder(
@@ -191,6 +208,13 @@ class _ChatPageState extends State<ChatPage> {
                               if (snapshot.data.docs[index]['type'] == "text") {
                                 return chatItem(
                                   snapshot.data.docs[index]['message'],
+                                  dateTime,
+                                  snapshot.data.docs[index]['sent'],
+                                  snapshot.data.docs[index]['read'],
+                                );
+                              } else {
+                                return imageItem(
+                                  snapshot.data.docs[index]['url'],
                                   dateTime,
                                   snapshot.data.docs[index]['sent'],
                                   snapshot.data.docs[index]['read'],
@@ -241,9 +265,7 @@ class _ChatPageState extends State<ChatPage> {
             IconButton(
               icon: const Icon(Icons.photo_camera_outlined,
                   color: Color(0xff00E050), size: 26),
-              onPressed: () {
-                // Acciones para enviar imágenes.
-              },
+              onPressed: _handleImageSelection,
             ),
             IconButton(
               icon: const Icon(Icons.attach_file,
@@ -260,6 +282,94 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleImageSelection() async {
+    final result = await ImagePicker().pickImage(
+      imageQuality: 70,
+      maxWidth: 1440,
+      source: ImageSource.gallery,
+    );
+
+    if (result != null) {
+      final file = File(result.path);
+      final bytes = await file.readAsBytes();
+      final image = await decodeImageFromList(bytes);
+
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${ApiConstants.baseUrl}/auth/upload-file'),
+      );
+
+      request.files.add(http.MultipartFile.fromBytes(
+        'file',
+        bytes,
+        filename: '${DateTime.now().millisecondsSinceEpoch}.jpg',
+        contentType: MediaType('image', 'jpg'),
+      ));
+      var response = await request.send();
+      var imageUrl = '';
+      if (response.statusCode == 200) {
+        var responseBody = await response.stream.bytesToString();
+        imageUrl = jsonDecode(responseBody)["url"];
+      } else {
+        print('Failed to upload image. Error code: ${response.statusCode}');
+      }
+
+      final senderId = _buildSenderId();
+      final receiverId = _buildReceiverId();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(senderId)
+          .collection('messages')
+          .doc(receiverId)
+          .collection('chats')
+          .add({
+        "senderId": senderId,
+        "receiverId": receiverId,
+        "url": imageUrl,
+        "type": "image",
+        "height": image.height.toDouble(),
+        "size": bytes.length,
+        "width": image.width.toDouble(),
+        "date": DateTime.now(),
+        "sent": true,
+        "read": false
+      }).then((value) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(senderId)
+            .collection('messages')
+            .doc(receiverId)
+            .set({'last_msg': "[image]", 'time_msg': DateTime.now()});
+      });
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(receiverId)
+          .collection('messages')
+          .doc(senderId)
+          .collection("chats")
+          .add({
+        "senderId": senderId,
+        "receiverId": receiverId,
+        "url": imageUrl,
+        "height": image.height.toDouble(),
+        "size": bytes.length,
+        "width": image.width.toDouble(),
+        "type": "image",
+        "date": DateTime.now(),
+        "sent": false,
+        "read": false
+      }).then((value) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(receiverId)
+            .collection('messages')
+            .doc(senderId)
+            .set({"last_msg": "[image]", 'time_msg': DateTime.now()});
+      });
+    }
   }
 
   @override

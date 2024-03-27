@@ -89,7 +89,7 @@ class PlayerProvider extends ChangeNotifier {
   }
 
   PlayerFullModel? getPlayer() {
-    return _player;
+    return _player.name == '' ? null : _player;
   }
 
   void setCards(List<Tarjeta> cards) {

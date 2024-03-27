@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:bro_app_to/Screens/chat_page.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:intl/intl.dart';
+
+import '../../src/auth/data/models/user_model.dart';
 
 class MatchProfile extends StatelessWidget {
   final int userId;
@@ -80,12 +83,19 @@ class MatchProfile extends StatelessWidget {
                         '${userData.seleccionNacional} ${userData.categoriaSeleccion}'),
                     const SizedBox(height: 20),
                     CustomTextButton(
-                      onTap: () {},
-                      text: '¡Vamos al Chat!',
-                      buttonPrimary: false,
-                      width: 154,
-                      height: 39,
-                    ),
+                        onTap: () {
+                          final friend = UserModel.fromPlayer(userData);
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatPage(
+                                        friend: friend,
+                                      )));
+                        },
+                        text: '¡Vamos al Chat!',
+                        buttonPrimary: false,
+                        width: 154,
+                        height: 40),
                   ],
                 ),
               ),

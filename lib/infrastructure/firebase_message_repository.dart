@@ -103,6 +103,40 @@ class FirebaseMessageRepository implements MessageUseCase {
     return unreadCount;
   }
 
+  Future<void> markAllMessagesAsRead(String userId, String chatId) async {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(userId)
+        .collection('messages')
+        .doc(chatId)
+        .collection('chats')
+        .where('receiverId', isEqualTo: userId)
+        .get();
+
+    for (var doc in snapshot.docs) {
+      batch.update(doc.reference, {'read': true});
+    }
+
+    QuerySnapshot<Map<String, dynamic>> snapshot2 = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(chatId)
+        .collection('messages')
+        .doc(userId)
+        .collection('chats')
+        .where('receiverId', isEqualTo: userId)
+        .get();
+
+    for (var doc in snapshot2.docs) {
+      batch.update(doc.reference, {'read': true});
+    }
+
+    await batch.commit();
+  }
+
   Future<Timestamp> getLastTimeMessage(String userId, String chatId) async {
     dynamic lastTimeMessage = (await FirebaseFirestore.instance
             .collection('users')

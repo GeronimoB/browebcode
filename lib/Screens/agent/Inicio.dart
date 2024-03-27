@@ -24,7 +24,7 @@ class _InicioPageState extends State<InicioPage> {
   int _currentIndex = 0;
   List<InitialVideoModel> _videoUrls = [];
   late UserProvider provider;
-  int currentUserId = 0;
+  String currentUserId = '';
   bool changeVideo = true;
   late List<VideoPlayerController?> controllers = [];
 
@@ -38,7 +38,7 @@ class _InicioPageState extends State<InicioPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     provider = Provider.of<UserProvider>(context, listen: false);
-    currentUserId = provider.getCurrentUser().userId as int;
+    currentUserId = provider.getCurrentUser().userId;
   }
 
   Future<void> _fetchVideoUrls() async {
