@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
+import 'package:bro_app_to/components/modal_decision.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/utils/video_model.dart';
 import 'package:flutter/material.dart';
@@ -61,22 +63,23 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
       }
     }
 
-    final directory = await getApplicationDocumentsDirectory();
-    final savedDir = '${directory.path}/BroAppVideos/';
-    final exists = await Directory(savedDir).exists();
-    if (!exists) {
-      print('El directorio no existe. Creando...');
-      await Directory(savedDir).create(recursive: true);
+    final directory = (await getExternalStorageDirectory())!.absolute.path;
+    final savedDir = Directory(directory);
+    if (!savedDir.existsSync()) {
+      await savedDir.create();
     }
+
+    // Verifica la ruta del directorio de destino
+    print('Directorio de descarga: $savedDir');
 
     try {
       final taskId = await FlutterDownloader.enqueue(
-        url: videoUrl,
-        savedDir: savedDir,
-        fileName: 'video_${video.id}.mp4',
-        showNotification: true,
-        openFileFromNotification: true,
-      );
+          url: videoUrl,
+          savedDir: directory,
+          fileName: 'video_${video.id}.mp4',
+          showNotification: true,
+          openFileFromNotification: true,
+          saveInPublicStorage: true);
       print('Descarga iniciada correctamente. ID de tarea: $taskId');
     } catch (error) {
       print('Error al iniciar la descarga: $error');
@@ -135,7 +138,6 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
               icon: const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
-
               ),
               color: const Color(0xff3B3B3B),
               onSelected: (String result) {},
@@ -159,7 +161,8 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                 PopupMenuItem<String>(
                   child: GestureDetector(
                     onTap: () {
-                      _handleDestacar(widget.index, widget.video);
+                      _handleDestacar(
+                          widget.index, widget.video, widget.video.isFavorite);
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -232,97 +235,86 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
   void _showConfirmationDeleteDialog(int videoId) {
     showDialog(
       context: context,
+      barrierColor: Colors.black.withOpacity(0.6),
       builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(23)),
-              backgroundColor: const Color(0xFF3B3B3B),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    "¿Estas seguro de borrar este video?",
-                    style: TextStyle(
-                        color: Color(0xff00E050),
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      CustomTextButton(
-                          onTap: () async {
-                            final response = await ApiClient().post(
-                                'auth/delete-video',
-                                {"videoId": videoId.toString()});
-                            print(response.body);
-                            await Future.delayed(const Duration(seconds: 1));
-                            if (response.statusCode == 200) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CustomBottomNavigationBarPlayer(
-                                            initialIndex: 4)),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    backgroundColor: Colors.redAccent,
-                                    content: Text(
-                                        'Hubo un error al borrar el video intentelo de nuevo.')),
-                              );
-                              await Future.delayed(const Duration(seconds: 2));
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CustomBottomNavigationBarPlayer(
-                                            initialIndex: 4)),
-                              );
-                            }
-                          },
-                          text: "Si",
-                          buttonPrimary: true,
-                          width: 50,
-                          height: 25),
-                      CustomTextButton(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          text: "No",
-                          buttonPrimary: false,
-                          width: 50,
-                          height: 25),
-                    ],
-                  ),
-                ],
-              ),
-            );
+        return ModalDecition(
+          text: "¿Estas seguro de borrar este video?",
+          confirmCallback: () async {
+            final response = await ApiClient()
+                .post('auth/delete-video', {"videoId": videoId.toString()});
+            await Future.delayed(const Duration(seconds: 1));
+            if (response.statusCode == 200) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const CustomBottomNavigationBarPlayer(initialIndex: 4)),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    backgroundColor: Colors.redAccent,
+                    content: Text(
+                        'Hubo un error al borrar el video intentelo de nuevo.')),
+              );
+              await Future.delayed(const Duration(seconds: 2));
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const CustomBottomNavigationBarPlayer(initialIndex: 4)),
+              );
+            }
+          },
+          cancelCallback: () {
+            Navigator.of(context).pop();
           },
         );
       },
     );
   }
 
-  void _handleDestacar(int index, Video video) async {
+  void _handleDestacar(int index, Video video, bool dDestacar) async {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
-    playerProvider.updateIsFavoriteById(index);
-    await ApiClient().post('auth/update-video', {
-      'videoId': video.id.toString(),
-      'destacado': video.isFavorite.toString(),
-    });
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-        const CustomBottomNavigationBarPlayer(initialIndex: 4)),
-    );
+    playerProvider.setVideoAndIndex(index, video);
+
+    if (dDestacar) {
+      showDialog(
+        context: context,
+        barrierColor: Colors.black.withOpacity(0.6),
+        builder: (BuildContext context) {
+          return ModalDecition(
+            text:
+                "¿Esta seguro de dejar de destacar este video? Si desea volverlo a destacar en un futuro, deberá volver a pagar.",
+            confirmCallback: () async {
+              playerProvider.updateIsFavoriteById();
+              await ApiClient().post('auth/update-video', {
+                'videoId': video.id.toString(),
+                'destacado': video.isFavorite.toString(),
+              });
+              playerProvider.indexProcessingVideoFavoritePayment = 0;
+              playerProvider.videoProcessingFavoritePayment = null;
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const CustomBottomNavigationBarPlayer(initialIndex: 4)),
+              );
+            },
+            cancelCallback: () {
+              Navigator.of(context).pop();
+            },
+          );
+        },
+      );
+    } else {
+      playerProvider.isSubscriptionPayment = false;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MetodoDePagoScreen(valueToPay: 0.99),
+        ),
+      );
+    }
   }
 }

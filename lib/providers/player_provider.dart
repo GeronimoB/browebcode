@@ -16,6 +16,15 @@ class PlayerProvider extends ChangeNotifier {
   Uint8List? imagePathToUpload;
   List<Video> userVideos = [];
   bool isLoading = false;
+  int indexProcessingVideoFavoritePayment = 0;
+  Video? videoProcessingFavoritePayment;
+  bool isSubscriptionPayment = false;
+
+  void setVideoAndIndex(int index, Video video) {
+    indexProcessingVideoFavoritePayment = index;
+    videoProcessingFavoritePayment = video;
+    notifyListeners();
+  }
 
   void updateTemporalPlayer({
     String? customerStripeId,
@@ -114,8 +123,9 @@ class PlayerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateIsFavoriteById(int index) {
-    userVideos[index].isFavorite = !userVideos[index].isFavorite;
+  void updateIsFavoriteById() {
+    userVideos[indexProcessingVideoFavoritePayment].isFavorite =
+        !userVideos[indexProcessingVideoFavoritePayment].isFavorite;
     notifyListeners();
   }
 

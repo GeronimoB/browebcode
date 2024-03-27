@@ -1,5 +1,5 @@
+import 'package:bro_app_to/Screens/mensajes.dart';
 import 'package:bro_app_to/Screens/player/match_player.dart';
-import 'package:bro_app_to/Screens/mensajes_player.dart';
 import 'package:bro_app_to/Screens/player/upload_video.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
@@ -9,7 +9,7 @@ final List<Widget> _pages = [
   PlayerProfile(),
   const MatchePlayer(),
   const UploadVideoWidget(),
-  const MensajesPage_player(),
+  MensajesPage(),
   PlayerProfile(),
 ];
 
@@ -24,7 +24,7 @@ final List<String> _iconNames = [
 final List<String> _selectedIconNames = [
   'Inicio-1.svg',
   'Match-1.svg',
-  'Player-1.svg',  // Asegúrate de tener este icono para el estado seleccionado, si no, usa 'Player.svg'
+  'Player-1.svg', // Asegúrate de tener este icono para el estado seleccionado, si no, usa 'Player.svg'
   'Mensaje-1.svg',
   'Perfil-1.svg',
 ];

@@ -1,4 +1,5 @@
 class Agente {
+  String? userId;
   String? nombre;
   String? apellido;
   String? correo;
@@ -9,6 +10,7 @@ class Agente {
   String? imageUrl;
 
   Agente({
+    this.userId,
     this.nombre,
     this.apellido,
     this.correo,
@@ -20,6 +22,7 @@ class Agente {
   });
 
   Agente copyWith({
+    String? userId,
     String? nombre,
     String? apellido,
     String? correo,
@@ -30,6 +33,7 @@ class Agente {
     String? imageUrl,
   }) {
     return Agente(
+        userId: userId ?? this.userId,
         nombre: nombre ?? this.nombre,
         apellido: apellido ?? this.apellido,
         correo: correo ?? this.correo,
@@ -47,6 +51,7 @@ class Agente {
       birthDate = DateTime.parse(json['birthday']);
     }
     return Agente(
+        userId: json['user_id'].toString(),
         nombre: json['name'],
         apellido: json['lastname'],
         correo: json['email'],
@@ -59,7 +64,7 @@ class Agente {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> map = {};
-
+    map['user_id'] = userId;
     map['name'] = nombre;
     map['lastname'] = apellido;
     map['email'] = correo;

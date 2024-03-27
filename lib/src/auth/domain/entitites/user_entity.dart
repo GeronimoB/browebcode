@@ -4,7 +4,7 @@ class UserEntity extends Equatable {
   final String username;
   final String password;
   final bool isAgent;
-  final int userId;
+  final String userId;
   final String referralCode;
   final String name;
   final String lastName;
@@ -14,7 +14,7 @@ class UserEntity extends Equatable {
     required this.username,
     required this.password,
     this.isAgent = false,
-    this.userId = 0,
+    this.userId = '',
     this.referralCode = '',
     this.name = '',
     this.lastName = '',

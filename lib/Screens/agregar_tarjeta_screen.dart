@@ -117,8 +117,10 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                       itemBuilder: (context, index) {
                         Tarjeta tarjeta =
                             playerProvider.getSavedCards()![index];
+                        final player = playerProvider.getPlayer() ??
+                            playerProvider.getTemporalUser();
                         final String titular =
-                            '${playerProvider.getTemporalUser().name} ${playerProvider.getTemporalUser().lastName}';
+                            '${player.name} ${player.lastName}';
                         return _buildListCard(
                             tarjeta, index, titular, playerProvider);
                       },
@@ -147,12 +149,14 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                     },
                     controller: controller,
                     style: CardFormStyle(
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.white,
                       borderWidth: 2,
-                      borderColor: Colors.green,
+                      borderColor: const Color(0xFF00E050),
+                      cursorColor: const Color(0xFF00E050),
                       borderRadius: 15,
                       fontSize: 14,
                       textColor: Colors.black,
+                      placeholderColor: Colors.black,
                     ),
                   ),
                   CustomTextButton(
@@ -160,7 +164,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                           ? () {
                               _handleAddCard();
                             }
-                          : null,
+                          : () => FocusScope.of(context).unfocus(),
                       text: 'Añadir Tarjeta',
                       buttonPrimary: false,
                       width: 233,
@@ -250,88 +254,101 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         });
       },
       child: Container(
-  margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
-  child: Container(
-    decoration: BoxDecoration(
-      border: Border.all(color: const Color(0xFF00E050)),
-      borderRadius: BorderRadius.circular(10.0),
-      boxShadow: isSelected == index
-          ? [const CustomBoxShadow(color: Color(0xFF05FF00), blurRadius: 6)]
-          : null,
-    ),
-    child: ListTile(
-      contentPadding: EdgeInsets.all(5),
-      leading: Image.asset(
-        tarjeta.displayBrand == 'visa'
-            ? 'assets/images/Visa_icon.png'
-            : 'assets/images/Mastercard_icon.png',
-        width: 70,
-      ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            titular,
-            style: const TextStyle(
-              fontFamily: 'Montserrat',
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic,
-            ),
-            textAlign: TextAlign.left,
-            overflow: TextOverflow.ellipsis,
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color(0xFF00E050)),
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: isSelected == index
+                ? [
+                    const CustomBoxShadow(
+                        color: Color(0xFF05FF00), blurRadius: 6)
+                  ]
+                : null,
           ),
-          Text(
-            'Número *****${tarjeta.last4Numbers}',
-            style: const TextStyle(
-              fontFamily: 'Montserrat',
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.italic,
+          child: ListTile(
+            contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+            leading: Image.asset(
+              tarjeta.displayBrand == 'visa'
+                  ? 'assets/images/Visa_icon.png'
+                  : 'assets/images/Mastercard_icon.png',
+              width: 70,
             ),
-            softWrap: false,
-            textAlign: TextAlign.left,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  titular,
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                  ),
+                  textAlign: TextAlign.left,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  '************${tarjeta.last4Numbers}',
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic,
+                  ),
+                  softWrap: false,
+                  textAlign: TextAlign.left,
+                ),
+              ],
+            ),
+            trailing: IconButton(
+              icon: const Icon(Icons.close, color: Color(0xFF00E050), size: 32),
+              onPressed: () async {
+                setState(() {
+                  _isLoading = true;
+                });
+                final player = playerProvider.getPlayer() ??
+                    playerProvider.getTemporalUser();
+                final asociatePaymentMethod = await ApiClient().post(
+                  'security_filter/v1/api/payment/delete-payment-method',
+                  {
+                    "paymentMethodId": tarjeta.cardId,
+                    "customerId": player.customerStripeId,
+                  },
+                );
+
+                if (asociatePaymentMethod.statusCode != 200) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      backgroundColor: Colors.redAccent,
+                      content: Text(
+                          'Error al eliminar la tarjeta, intentelo de nuevo.'),
+                    ),
+                  );
+                  setState(() {
+                    _isLoading = false;
+                  });
+                  return;
+                }
+                setState(() {
+                  _isLoading = false;
+                });
+                final savedCards =
+                    jsonDecode(asociatePaymentMethod.body)["paymentMethods"];
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      backgroundColor: Colors.lightGreen,
+                      content:
+                          Text('La tarjeta se ha eliminado exitosamente.')),
+                );
+                playerProvider.setCards(mapListToTarjetas(savedCards));
+              },
+            ),
           ),
-        ],
+        ),
       ),
-      trailing: IconButton(
-        icon: const Icon(Icons.close, color: Color(0xFF00E050), size: 32),
-        onPressed: () async {
-          final asociatePaymentMethod = await ApiClient().post(
-            'security_filter/v1/api/payment/delete-payment-method',
-            {
-              "paymentMethodId": tarjeta.cardId,
-              "customerId":
-                  playerProvider.getTemporalUser().customerStripeId,
-            },
-          );
-
-          if (asociatePaymentMethod.statusCode != 200) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                backgroundColor: Colors.redAccent,
-                content: Text(
-                    'Error al eliminar la tarjeta, intentelo de nuevo.'),
-              ),
-            );
-            return;
-          }
-
-          final savedCards =
-              jsonDecode(asociatePaymentMethod.body)["paymentMethods"];
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                backgroundColor: Colors.lightGreen,
-                content: Text('La tarjeta se ha eliminado exitosamente.')),
-          );
-          playerProvider.setCards(mapListToTarjetas(savedCards));
-        },
-      ),
-    ),
-  ),
-),
     );
   }
 
@@ -347,9 +364,10 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       // 1. Gather customer billing information (ex. email)
       final playerProvider =
           Provider.of<PlayerProvider>(context, listen: false);
-
+      final player =
+          playerProvider.getPlayer() ?? playerProvider.getTemporalUser();
       final billingDetails = BillingDetails(
-        email: playerProvider.getTemporalUser().email,
+        email: player.email,
       );
 
       // 2. Create payment method
@@ -360,7 +378,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         ),
       ));
 
-      final customerId = playerProvider.getTemporalUser().customerStripeId;
+      final customerId = player.customerStripeId;
       controller.clear();
       final asociatePaymentMethod = await ApiClient().post(
         'security_filter/v1/api/payment/payment-method',
@@ -407,6 +425,9 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
 
   Future<void> _handlePressPay() async {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
+    final isSubscription = playerProvider.isSubscriptionPayment;
+    final player =
+        playerProvider.getPlayer() ?? playerProvider.getTemporalUser();
 
     if (playerProvider.selectedCard == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -423,91 +444,81 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         _isLoading = true;
       });
 
-      final subscriptionIntent = await ApiClient().post(
-        'security_filter/v1/api/payment/subscription',
-        {
-          "planId": playerProvider.getActualPlan()!.idPlan,
-          "customerId": playerProvider.getTemporalUser().customerStripeId,
-          "paymentMethodId": playerProvider.selectedCard!.cardId,
-        },
-      );
+      if (isSubscription) {
+        final subscriptionIntent = await ApiClient().post(
+          'security_filter/v1/api/payment/subscription',
+          {
+            "planId": playerProvider.getActualPlan()!.idPlan,
+            "customerId": player.customerStripeId,
+            "paymentMethodId": playerProvider.selectedCard!.cardId,
+          },
+        );
 
-      if (subscriptionIntent.statusCode != 200) {
+        if (subscriptionIntent.statusCode != 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.redAccent,
+              content: Text('Error al pagar, intentelo de nuevo.'),
+            ),
+          );
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Text('Error al pagar, intentelo de nuevo.'),
-          ),
+              backgroundColor: Colors.lightGreen,
+              content: Text('Su pago se he procesado exitosamente.')),
         );
         setState(() {
           _isLoading = false;
         });
-        return;
+        Future.delayed(Duration(seconds: 1));
+        playerProvider.setNewUser();
+        _showUploadDialog();
+        final video = playerProvider.videoPathToUpload;
+        final image = playerProvider.imagePathToUpload;
+        final userId = playerProvider.getPlayer()!.userId;
+        uploadVideoAndImage(video, image, userId);
+      } else {
+        final paymentIntent = await ApiClient().post(
+          'security_filter/v1/api/payment/payment',
+          {
+            "amount": 99.toString(),
+            "customerId": player.customerStripeId,
+            "paymentMethodId": playerProvider.selectedCard!.cardId,
+          },
+        );
+
+        if (paymentIntent.statusCode != 200) {
+          print(paymentIntent.body);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.redAccent,
+              content: Text('Error al pagar, intentelo de nuevo.'),
+            ),
+          );
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
+        playerProvider.updateIsFavoriteById();
+        final video = playerProvider.videoProcessingFavoritePayment;
+        await ApiClient().post('auth/update-video', {
+          'videoId': video?.id.toString(),
+          'destacado': video?.isFavorite.toString(),
+        });
+        playerProvider.indexProcessingVideoFavoritePayment = 0;
+        playerProvider.videoProcessingFavoritePayment = null;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  const CustomBottomNavigationBarPlayer(initialIndex: 4)),
+        );
       }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            backgroundColor: Colors.lightGreen,
-            content: Text('Su pago se he procesado exitosamente.')),
-      );
-      setState(() {
-        _isLoading = false;
-      });
-      Future.delayed(Duration(seconds: 1));
-      playerProvider.setNewUser();
-      _showUploadDialog();
-      final video = playerProvider.videoPathToUpload;
-      final image = playerProvider.imagePathToUpload;
-      final userId = playerProvider.getPlayer()!.userId;
-      uploadVideoAndImage(video, image, userId);
-      // // 3. call API to create PaymentIntent
-      // final paymentIntentResult = await callNoWebhookPayEndpointMethodId(
-      //   useStripeSdk: true,
-      //   paymentMethodId: paymentMethod.id,
-      //   currency: 'eur', // mocked data
-      //   items: ['id-1'],
-      // );
-
-      // if (paymentIntentResult['error'] != null) {
-      //   // Error during creating or confirming Intent
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //       SnackBar(content: Text('Error: ${paymentIntentResult['error']}')));
-      //   return;
-      // }
-
-      // if (paymentIntentResult['clientSecret'] != null &&
-      //     paymentIntentResult['requiresAction'] == null) {
-      //   // Payment succedeed
-
-      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //       content:
-      //           Text('Success!: The payment was confirmed successfully!')));
-      //   return;
-      // }
-
-      // if (paymentIntentResult['clientSecret'] != null &&
-      //     paymentIntentResult['requiresAction'] == true) {
-      //   // 4. if payment requires action calling handleNextAction
-      //   final paymentIntent = await Stripe.instance
-      //       .handleNextAction(paymentIntentResult['clientSecret']);
-
-      //   // todo handle error
-      //   /*if (cardActionError) {
-      //   Alert.alert(
-      //   `Error code: ${cardActionError.code}`,
-      //   cardActionError.message
-      //   );
-      // } else*/
-
-      //   if (paymentIntent.status == PaymentIntentsStatus.RequiresConfirmation) {
-      //     // 5. Call API to confirm intent
-      //     await confirmIntent(paymentIntent.id);
-      //   } else {
-      //     // Payment succedeed
-      //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //         content: Text('Error: ${paymentIntentResult['error']}')));
-      //   }
-      // }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.redAccent, content: Text('Error: $e')));

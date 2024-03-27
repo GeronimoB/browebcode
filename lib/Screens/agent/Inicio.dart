@@ -38,7 +38,7 @@ class _InicioPageState extends State<InicioPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     provider = Provider.of<UserProvider>(context, listen: false);
-    currentUserId = provider.getCurrentUser().userId;
+    currentUserId = provider.getCurrentUser().userId as int;
   }
 
   Future<void> _fetchVideoUrls() async {

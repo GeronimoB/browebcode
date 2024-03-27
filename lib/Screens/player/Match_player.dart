@@ -23,12 +23,12 @@ class MatchePlayer extends StatefulWidget {
 class _MatcheState extends State<MatchePlayer> {
   final List<bool> _isSelected = [];
   final List<bool> _isSelectedAux = [];
-  final List<Agente> players = [];
+  final List<Agente> agentes = [];
   late UserProvider provider;
   late UserModel user;
   bool isLoading = false;
 
-  Future<void> fetchPlayerMatches(int currentUserId) async {
+  Future<void> fetchPlayerMatches(String currentUserId) async {
     setState(() {
       isLoading = true;
     });
@@ -58,9 +58,9 @@ class _MatcheState extends State<MatchePlayer> {
           }
         }
       }
-      players.addAll(playersAux);
+      agentes.addAll(playersAux);
       _isSelected.clear();
-      final llenando = List.generate(players.length, (index) => false);
+      final llenando = List.generate(agentes.length, (index) => false);
       _isSelected.addAll(llenando);
 
       _isSelectedAux.addAll(llenando);
@@ -123,15 +123,15 @@ class _MatcheState extends State<MatchePlayer> {
                   valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
                 ),
               )
-            : players.isNotEmpty
+            : agentes.isNotEmpty
                 ? Column(
                     children: [
                       Expanded(
                         child: ListView.builder(
                           itemCount: _isSelected.length,
                           itemBuilder: (context, index) {
-                            final agente = players[index];
-                            return _buildMatchComponent(agente, index);
+                            final agente = agentes[index];
+                            return _buildMatchComponent(agente, index, context);
                           },
                         ),
                       ),
@@ -151,7 +151,7 @@ class _MatcheState extends State<MatchePlayer> {
     );
   }
 
-  Widget _buildMatchComponent(Agente agente, int index) {
+  Widget _buildMatchComponent(Agente agente, int index, BuildContext context) {
     DateTime? birthDate = agente.birthDate;
 
     String formattedDate =
@@ -176,7 +176,7 @@ class _MatcheState extends State<MatchePlayer> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.fastOutSlowIn,
-        height: _isSelected[index] ? 170 : 109,
+        height: _isSelected[index] ? 200 : 109,
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         width: MediaQuery.of(context).size.width * 0.95,
         decoration: BoxDecoration(
@@ -211,7 +211,8 @@ class _MatcheState extends State<MatchePlayer> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ClipOval(
                     child: FadeInImage.assetNetwork(
@@ -233,9 +234,10 @@ class _MatcheState extends State<MatchePlayer> {
                   const SizedBox(width: 30),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start, //
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
                       children: [
-                        const SizedBox(height: 30),
                         Text(
                           '${agente.nombre} ${agente.apellido}',
                           style: const TextStyle(
@@ -267,15 +269,24 @@ class _MatcheState extends State<MatchePlayer> {
                 duration: const Duration(milliseconds: 400),
                 opacity: _isSelected[index] ? 1.0 : 0.0,
                 child: Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.all(25.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       CustomTextButton(
+                          onTap: () {
+                            final friend = UserModel.fromAgent(agente);
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatPage(
+                                          friend: friend,
+                                        )));
+                          },
                           text: '¡Vamos al Chat!',
                           buttonPrimary: false,
-                          width: 135,
-                          height: 32),
+                          width: 145,
+                          height: 38),
                       CustomTextButton(
                           text: 'Ver Perfil',
                           buttonPrimary: true,

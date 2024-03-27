@@ -1,3 +1,6 @@
+import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
+
+import '../../../../utils/agente_model.dart';
 import '../../domain/entitites/user_entity.dart';
 
 class UserModel extends UserEntity {
@@ -5,7 +8,7 @@ class UserModel extends UserEntity {
     required String username,
     required String password,
     bool isAgent = false,
-    int userId = 0,
+    String userId = '',
     String referralCode = '',
     String name = '',
     String lastName = '',
@@ -24,13 +27,37 @@ class UserModel extends UserEntity {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       username: json['username'] ?? '',
-      userId: json["user_id"],
+      userId: (json["user_id"] ?? json["id"]).toString(),
       isAgent: json["isAgent"],
       password: json['email'],
       referralCode: json['referral_code'] ?? '',
       name: json["name"],
       lastName: json["lastname"],
       imageUrl: json['image_url'] ?? '',
+    );
+  }
+
+  factory UserModel.fromAgent(Agente agente) {
+    return UserModel(
+      username: agente.usuario!,
+      password: '',
+      isAgent: true,
+      userId: agente.userId!,
+      name: agente.nombre!,
+      lastName: agente.apellido!,
+      imageUrl: agente.imageUrl!,
+    );
+  }
+
+  factory UserModel.fromPlayer(PlayerFullModel player) {
+    return UserModel(
+      username: '',
+      password: '',
+      isAgent: false,
+      userId: player.userId!,
+      name: player.name!,
+      lastName: player.lastName!,
+      imageUrl: player.userImage!,
     );
   }
 

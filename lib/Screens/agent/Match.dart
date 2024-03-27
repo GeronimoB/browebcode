@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bro_app_to/Screens/chat_page.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
@@ -27,7 +28,7 @@ class _MatcheState extends State<Matche> {
   late UserModel user;
   bool isLoading = false;
 
-  Future<void> fetchAgentMatches(int currentUserId) async {
+  Future<void> fetchAgentMatches(String currentUserId) async {
     setState(() {
       isLoading = true;
     });
@@ -130,7 +131,7 @@ class _MatcheState extends State<Matche> {
                           itemCount: players.length,
                           itemBuilder: (context, index) {
                             final player = players[index];
-                            return _buildMatchComponent(player, index);
+                            return _buildMatchComponent(player, index, context);
                           },
                         ),
                       ),
@@ -150,7 +151,8 @@ class _MatcheState extends State<Matche> {
     );
   }
 
-  Widget _buildMatchComponent(PlayerFullModel player, int index) {
+  Widget _buildMatchComponent(
+      PlayerFullModel player, int index, BuildContext context) {
     DateTime? birthDate = player.birthDate;
 
     String formattedDate =
@@ -314,15 +316,24 @@ class _MatcheState extends State<Matche> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     CustomTextButton(
+                        onTap: () {
+                          final friend = UserModel.fromPlayer(player);
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatPage(
+                                        friend: friend,
+                                      )));
+                        },
                         text: '¡Vamos al Chat!',
                         buttonPrimary: false,
-                        width: 133,
-                        height: 28),
+                        width: 145,
+                        height: 38),
                     CustomTextButton(
                         text: 'Ver Perfil',
                         buttonPrimary: true,
-                        width: 133,
-                        height: 28)
+                        width: 135,
+                        height: 32)
                   ],
                 ),
               ),

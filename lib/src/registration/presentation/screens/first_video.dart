@@ -133,7 +133,7 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
           Provider.of<PlayerProvider>(context, listen: false);
 
       playerProvider.updateDataToUpload(videoPath, uint8list);
-
+      playerProvider.isSubscriptionPayment = true;
       _temporalVideoController?.dispose();
       _videoController?.dispose();
       _videoController = VideoPlayerController.file(File(videoPath));

@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../../../../Screens/player/bottom_navigation_bar_player.dart';
+import '../../../../utils/tarjeta_model.dart';
 import '../../domain/entitites/user_entity.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,8 +25,13 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   @override
   Future<void> signIn(
-      UserEntity user, BuildContext context, bool rememberMe, bool comingFromAutoLogin) async {
+    UserEntity user,
+    BuildContext context,
+    bool rememberMe,
+    bool comingFromAutoLogin,
+  ) async {
     try {
+      print("intento");
       playerProvider.setIsLoading(true);
 
       final response = await ApiClient().post(
@@ -37,89 +43,120 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       );
 
       print(response.body);
+
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
         final userData = jsonData["userInfo"];
+
         if (rememberMe) {
-          final prefs = await SharedPreferences.getInstance();
-          prefs.setString('username', user.username);
-          prefs.setString('password', user.password);
+          _saveCredentialsLocally(user.username, user.password);
         }
 
-        final userProvider = Provider.of<UserProvider>(context, listen: false);
-        userProvider.setCurrentUser(UserModel.fromJson(userData));
-
-        final isAgent = jsonData["isAgent"];
-
-        if (isAgent) {
-          final agentProvider =
-              Provider.of<AgenteProvider>(context, listen: false);
-          agentProvider.setAgente(Agente.fromJson(userData));
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CustomBottomNavigationBar()),
-          );
-        } else {
-          final player = PlayerFullModel.fromJson(userData);
-          playerProvider.setPlayer(player);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CustomBottomNavigationBarPlayer()),
-          );
-        }
+        _handleSuccessfulSignIn(context, jsonData, userData);
       } else {
-        if (comingFromAutoLogin) {
-          Navigator.pushReplacementNamed(context, '/login');
-        } else {
-          final jsonData = json.decode(response.body);
-          final errorMessage = jsonData["error"];
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.redAccent,
-              content: Text(
-                errorMessage,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w500,
-                  fontStyle: FontStyle.italic,
-                  fontSize: 12,
-                ),
-              ),
-              duration: const Duration(seconds: 3),
-            ),
-          );
-        }
+        _handleSignInError(context, response, comingFromAutoLogin);
       }
     } catch (e) {
-      if (comingFromAutoLogin) {
-        Navigator.pushReplacementNamed(context, '/login');
-      } else {
-        print(e);
-        playerProvider.setIsLoading(false);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Text(
-              "Ha ocurrido un error intentelo de nuevo",
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w500,
-                fontStyle: FontStyle.italic,
-                fontSize: 12,
-              ),
-            ),
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
+      _handleSignInException(context, e, comingFromAutoLogin);
     } finally {
-      // Independientemente de si hubo éxito o error, establece isLoading en false al final
       playerProvider.setIsLoading(false);
+    }
+  }
+
+  void _saveCredentialsLocally(String username, String password) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', username);
+    prefs.setString('password', password);
+  }
+
+  void _handleSuccessfulSignIn(
+    BuildContext context,
+    dynamic jsonData,
+    dynamic userData,
+  ) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.setCurrentUser(UserModel.fromJson(userData));
+
+    final isAgent = jsonData["isAgent"];
+
+    if (isAgent) {
+      final agentProvider = Provider.of<AgenteProvider>(context, listen: false);
+      agentProvider.setAgente(Agente.fromJson(userData));
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => CustomBottomNavigationBar()),
+      );
+    } else {
+      final player = PlayerFullModel.fromJson(userData);
+      final savedCards = jsonData["paymentMethods"]["data"];
+
+      playerProvider.setCards(mapListToTarjetas(savedCards));
+      playerProvider.setPlayer(player);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CustomBottomNavigationBarPlayer()),
+      );
+    }
+  }
+
+  void _handleSignInError(
+    BuildContext context,
+    dynamic response,
+    bool comingFromAutoLogin,
+  ) {
+    print("hay un error");
+    if (comingFromAutoLogin) {
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
+      final jsonData = json.decode(response.body);
+      final errorMessage = jsonData["error"];
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text(
+            errorMessage,
+            style: const TextStyle(
+              color: Colors.white,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w500,
+              fontStyle: FontStyle.italic,
+              fontSize: 12,
+            ),
+          ),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
+  }
+
+  void _handleSignInException(
+    BuildContext context,
+    dynamic e,
+    bool comingFromAutoLogin,
+  ) {
+    if (comingFromAutoLogin) {
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
+      print(e);
+      playerProvider.setIsLoading(false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text(
+            "Ha ocurrido un error intentelo de nuevo",
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w500,
+              fontStyle: FontStyle.italic,
+              fontSize: 12,
+            ),
+          ),
+          duration: Duration(seconds: 3),
+        ),
+      );
     }
   }
 }
