@@ -23,22 +23,13 @@ class _InicioPageState extends State<InicioPage> {
   double _rotation = 0.0;
   int _currentIndex = 0;
   List<InitialVideoModel> _videoUrls = [];
-  late UserProvider provider;
-  String currentUserId = '';
-  bool changeVideo = true;
-  late List<VideoPlayerController?> controllers = [];
+  late VideoPlayerController? currentController;
+  late VideoPlayerController? nextController;
 
   @override
   void initState() {
     super.initState();
     _fetchVideoUrls();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    provider = Provider.of<UserProvider>(context, listen: false);
-    currentUserId = provider.getCurrentUser().userId;
   }
 
   Future<void> _fetchVideoUrls() async {
@@ -47,9 +38,8 @@ class _InicioPageState extends State<InicioPage> {
       if (response.statusCode == 200) {
         final videos = jsonDecode(response.body)["video"];
         final List<InitialVideoModel> videosA = mapListToInitialVideos(videos);
-        controllers = List.generate(videosA.length, (index) => null);
         setState(() {
-          _videoUrls = videosA;
+          _videoUrls.addAll(videosA);
         });
         _initializeVideoPlayer(_currentIndex);
         _initializeNextVideoPlayer(_currentIndex + 1);
@@ -71,22 +61,15 @@ class _InicioPageState extends State<InicioPage> {
   void _onHorizontalDragEnd(DragEndDetails details) async {
     if (_xOffset > 100) {
       final userId = _videoUrls[_currentIndex].userId;
-      setState(() {
-        changeVideo = !changeVideo;
-        _currentIndex = (_currentIndex + 1) % _videoUrls.length;
-      });
-      _writeMatchData(userId);
-      Navigator.push(
-        context,
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => MatchProfile(userId: userId)),
       );
     } else if (_xOffset < -100) {
-      controllers[_currentIndex]?.dispose();
-      controllers[_currentIndex] = null;
-
+      currentController!.dispose();
+      currentController = nextController;
       _currentIndex = (_currentIndex + 1) % _videoUrls.length;
-      controllers[_currentIndex]!.play();
       _initializeNextVideoPlayer((_currentIndex + 1) % _videoUrls.length);
+      currentController!.play();
     }
     setState(() {
       _xOffset = 0;
@@ -94,76 +77,38 @@ class _InicioPageState extends State<InicioPage> {
     });
   }
 
-  Future<void> _writeMatchData(int userId) async {
-    await FirebaseFirestore.instance
-        .collection('Matches')
-        .doc('agente-$currentUserId')
-        .collection('AgentMatches')
-        .doc('jugador-$userId')
-        .set(
-      {
-        'playerId': 'jugador-$userId',
-        'createdAt': Timestamp.now(),
-      },
-    );
-
-    await FirebaseFirestore.instance
-        .collection('Matches')
-        .doc('jugador-$userId')
-        .collection('PlayerMatches')
-        .doc('agente-$currentUserId')
-        .set({
-      'agentId': 'agente-$currentUserId',
-      'createdAt': Timestamp.now(),
-    });
-  }
-
   void _initializeVideoPlayer(int index) {
     Uri url = Uri.parse(_videoUrls[index].url);
-    final controller = VideoPlayerController.networkUrl(url);
-    controller.initialize().then((_) {
-      controller.setLooping(true);
-      setState(() {
-        controllers[index] = controller;
+    currentController = VideoPlayerController.networkUrl(url)
+      ..initialize().then((_) {
+        setState(() {});
+        currentController!.setLooping(true);
+        currentController!.play();
       });
-      controllers[index]!.play();
-    });
   }
 
   void _initializeNextVideoPlayer(int index) {
-    Uri nextUrl = Uri.parse(_videoUrls[index].url);
-    final controller = VideoPlayerController.networkUrl(nextUrl);
-    controller.initialize().then((_) {
-      controller.setLooping(true);
-    });
-    setState(() {
-      controllers[index] = controller;
-    });
+    if (_videoUrls.isNotEmpty) {
+      Uri nextUrl = Uri.parse(_videoUrls[index].url);
+      nextController = VideoPlayerController.networkUrl(nextUrl)
+        ..initialize().then((_) {
+          nextController!.setLooping(true);
+        });
+    }
+  }
+
+  @override
+  void dispose() {
+    currentController?.dispose();
+    nextController?.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     double scale = 1 - (_xOffset.abs() * 0.001);
     double height = MediaQuery.of(context).size.height;
-    Widget child;
 
-    if (_videoUrls.isEmpty || controllers[_currentIndex] == null) {
-      child = const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 20),
-            Text('Cargando videos...'),
-          ],
-        ),
-      );
-    } else {
-      child = SlidableVideo(
-        controller: controllers[_currentIndex]!,
-      );
-      setState(() {});
-    }
     return SizedBox(
       height: height * 0.9,
       child: GestureDetector(
@@ -177,7 +122,22 @@ class _InicioPageState extends State<InicioPage> {
                 child: Transform.rotate(
                   angle: _rotation,
                   child: Transform.translate(
-                      offset: Offset(_xOffset, 0), child: child),
+                    offset: Offset(_xOffset, 0),
+                    child: _videoUrls.isEmpty
+                        ? const Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(),
+                                SizedBox(height: 20),
+                                Text('Cargando videos...'),
+                              ],
+                            ),
+                          )
+                        : SlidableVideo(
+                            controller: currentController!,
+                          ),
+                  ),
                 ),
               ),
             ),

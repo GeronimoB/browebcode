@@ -19,6 +19,7 @@ class FirebaseMessageRepository implements MessageUseCase {
       String userId, bool isAgent) async {
     final id = isAgent ? "agente_$userId" : "jugador_$userId";
     try {
+      print(id);
       final userDocSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(id)
@@ -29,6 +30,7 @@ class FirebaseMessageRepository implements MessageUseCase {
 
       for (var otherUserDoc in userDocSnapshot.docs) {
         final otherUserId = otherUserDoc.id;
+        print(otherUserId);
         final userDBId = otherUserId.split('_')[1];
         final response = await ApiClient().get('auth/user/$userDBId');
         final lastMsg = await getLastMessage(id, otherUserId);
@@ -153,7 +155,7 @@ class FirebaseMessageRepository implements MessageUseCase {
   }
 
   @override
-  Future<void> sendMessage(Message message) async {
+  Future<void> sendMessage(Message message, String username) async {
     try {
       await FirebaseFirestore.instance
           .collection('users')
@@ -177,9 +179,13 @@ class FirebaseMessageRepository implements MessageUseCase {
           .doc(message.receiverId)
           .set({'last_msg': message.message, 'time_msg': DateTime.now()});
 
-      // Enviar notificación
-      // Puedes manejar esto de manera diferente según tus necesidades.
-      // await OrderController().sendNotificationMessage(message.receiverId, [message.senderId, message.message]);
+      const uri = "auth/notification-message";
+      Map<String, dynamic> body = {
+        "title": username,
+        "body": message.message,
+        "friendID": message.receiverId,
+      };
+      ApiClient().post(uri, body);
 
       await FirebaseFirestore.instance
           .collection('users')

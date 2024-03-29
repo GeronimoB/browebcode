@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:bro_app_to/firebase_options.dart';
-import 'package:bro_app_to/src/auth/presentation/screens/Sing_in.dart';
-import 'package:bro_app_to/utils/agente_model.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
+import 'package:bro_app_to/utils/current_state.dart';
+import 'package:bro_app_to/utils/firebase_api.dart';
 import 'package:bro_app_to/utils/router_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Intro.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -22,21 +22,17 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'src/auth/data/datasources/remote_data_source_impl.dart';
 import 'src/auth/domain/entitites/user_entity.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterDownloader.initialize(
-      debug:
-          true, // optional: set to false to disable printing logs to console (default: true)
-      ignoreSsl:
-          true // option: set to false to disable working with http links (default: false)
-      );
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseApi().initNotifications();
   Stripe.publishableKey = ApiConstants.stripePublicKey;
   await Stripe.instance.applySettings();
 
-  // Bloquear la orientación del dispositivo en modo vertical
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -133,8 +129,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
       } else {
         Timer(
           const Duration(seconds: 2),
-          () => Navigator.pushReplacement(
-            context,
+          () => Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => SignInPage()),
           ),
         );

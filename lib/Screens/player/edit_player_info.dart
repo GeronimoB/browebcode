@@ -50,13 +50,13 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
     _provinciaController = TextEditingController(text: player.provincia);
     _posicionController = TextEditingController(text: player.position);
     _categoriaController = TextEditingController(text: player.categoria);
-    _logrosIndividualesController = TextEditingController(text: player.logrosIndividuales);
-    _AlturaController =TextEditingController(text: player.altura);
-    _pieDominanteController =TextEditingController(text: player.pieDominante);
-    _seleccionNacionalController =TextEditingController(text: player.seleccionNacional);
-    
-
-}
+    _logrosIndividualesController =
+        TextEditingController(text: player.logrosIndividuales);
+    _AlturaController = TextEditingController(text: player.altura);
+    _pieDominanteController = TextEditingController(text: player.pieDominante);
+    _seleccionNacionalController =
+        TextEditingController(text: player.seleccionNacional);
+  }
 
   Future<void> _openGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -93,7 +93,7 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-      final userProvider = Provider.of<UserProvider>(context, listen: true);
+    final userProvider = Provider.of<UserProvider>(context, listen: true);
     final user = userProvider.getCurrentUser();
     print("imagen: ${user.imageUrl}");
     return Container(
@@ -190,16 +190,23 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
               ),
               const SizedBox(height: 20),
               _buildTextField(label: 'NOMBRE', controller: _nombreController),
-              _buildTextField(label: 'APELLIDO', controller: _apellidoController),
+              _buildTextField(
+                  label: 'APELLIDO', controller: _apellidoController),
               _buildTextField(label: 'CORREO', controller: _correoController),
               _buildTextField(label: 'PAÍS', controller: _paisController),
-              _buildTextField(label: 'PROVINCIA', controller: _provinciaController),
-              _buildTextField(label: 'POSICIÓN', controller: _posicionController),
-              _buildTextField(label: 'CATEGORÍA', controller: _categoriaController),
-              _buildTextField(label: 'LOGROS', controller: _logrosIndividualesController),
+              _buildTextField(
+                  label: 'PROVINCIA', controller: _provinciaController),
+              _buildTextField(
+                  label: 'POSICIÓN', controller: _posicionController),
+              _buildTextField(
+                  label: 'CATEGORÍA', controller: _categoriaController),
+              _buildTextField(
+                  label: 'LOGROS', controller: _logrosIndividualesController),
               _buildTextField(label: 'ALTURA', controller: _AlturaController),
-              _buildTextField(label: 'PIE DOMINANTE', controller: _pieDominanteController),
-              _buildTextField(label: 'SELECCION', controller: _seleccionNacionalController),
+              _buildTextField(
+                  label: 'PIE DOMINANTE', controller: _pieDominanteController),
+              _buildTextField(
+                  label: 'SELECCION', controller: _seleccionNacionalController),
             ],
           ),
         ),
@@ -249,86 +256,89 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
     );
   }
 
-void _editarCampo(BuildContext context, String label, TextEditingController controller) {
-  showDialog(
-    context: context,
-    barrierColor: Colors.black.withOpacity(0.2),
-    builder: (BuildContext context) {
-      TextEditingController editingController = TextEditingController(text: controller.text);
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            color: const Color(0xff3B3B3B),
-            borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.4), 
-                blurRadius: 10,
-                offset: const Offset(5, 4),
-              ),
-            ],
+  void _editarCampo(
+      BuildContext context, String label, TextEditingController controller) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.2),
+      builder: (BuildContext context) {
+        TextEditingController editingController =
+            TextEditingController(text: controller.text);
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: const Color(0xff3B3B3B),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 10,
+                  offset: const Offset(5, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Color(0xff00E050),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+                TextField(
+                  controller: editingController,
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                  ),
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xFF00E050), width: 2),
+                    ),
+                  ),
+                  cursorColor: Colors.white,
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomTextButton(
+                      onTap: () => Navigator.of(context).pop(),
+                      text: 'Cancelar',
+                      buttonPrimary: false,
+                      width: 90,
+                      height: 27,
+                    ),
+                    CustomTextButton(
+                      onTap: () {
+                        if (mounted) {
+                          setState(() {
+                            controller.text = editingController.text;
+                          });
+                        }
+                        Navigator.of(context).pop();
+                      },
+                      text: 'Guardar',
+                      buttonPrimary: true,
+                      width: 90,
+                      height: 27,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min, 
-            crossAxisAlignment: CrossAxisAlignment.start, 
-            children: <Widget>[
-              Text(
-                label,
-                style: const TextStyle(
-                  fontFamily: 'Montserrat',
-                  color: Color(0xff00E050),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                ),
-              ),
-              TextField(
-                controller: editingController,
-                style: const TextStyle(
-                  fontFamily: 'Montserrat',
-                  color: Colors.white,
-                ),
-                decoration: const InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 5),
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF00E050), width: 2),
-                  ),
-                ),
-                cursorColor: Colors.white,
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CustomTextButton(
-                    onTap: () => Navigator.of(context).pop(),
-                    text: 'Cancelar',
-                    buttonPrimary: false,
-                    width: 90,
-                    height: 27,
-                  ),
-                  CustomTextButton(
-                    onTap: () {
-                      if (mounted) {
-                        setState(() {
-                          controller.text = editingController.text;
-                        });
-                      }
-                      Navigator.of(context).pop();
-                    },
-                    text: 'Guardar',
-                    buttonPrimary: true,
-                    width: 90,
-                    height: 27,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 }

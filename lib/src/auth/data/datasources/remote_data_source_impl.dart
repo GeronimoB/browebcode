@@ -9,6 +9,7 @@ import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/agente_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,15 +32,11 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     bool comingFromAutoLogin,
   ) async {
     try {
-      print("intento");
       playerProvider.setIsLoading(true);
 
       final response = await ApiClient().post(
         'auth/login',
-        {
-          'UserName': user.username,
-          'Password': user.password,
-        },
+        {'UserName': user.username, 'Password': user.password, 'fcm': fcmToken},
       );
 
       print(response.body);
@@ -81,9 +78,9 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     if (isAgent) {
       final agentProvider = Provider.of<AgenteProvider>(context, listen: false);
       agentProvider.setAgente(Agente.fromJson(userData));
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => CustomBottomNavigationBar()),
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+            builder: (context) => const CustomBottomNavigationBar()),
       );
     } else {
       final player = PlayerFullModel.fromJson(userData);
@@ -91,10 +88,9 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
       playerProvider.setCards(mapListToTarjetas(savedCards));
       playerProvider.setPlayer(player);
-      Navigator.pushReplacement(
-        context,
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-            builder: (context) => CustomBottomNavigationBarPlayer()),
+            builder: (context) => const CustomBottomNavigationBarPlayer()),
       );
     }
   }

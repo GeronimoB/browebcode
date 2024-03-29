@@ -3,6 +3,7 @@ import 'package:bro_app_to/components/chat_avatar.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/utils/chat_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,7 @@ class MensajesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final user = userProvider.getCurrentUser();
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
@@ -75,8 +77,8 @@ class MensajesPage extends StatelessWidget {
                           await FirebaseMessageRepository()
                               .markAllMessagesAsRead(
                                   userParsedId, friendParsedId);
-                          Navigator.pushReplacement(
-                            context,
+
+                          Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) => ChatPage(
                                 friend: chat.friendUser,
@@ -103,10 +105,9 @@ class MensajesPage extends StatelessWidget {
   }
 }
 
-class ChatWidget extends StatelessWidget {
+class ChatWidget extends StatefulWidget {
   final ChatPreview chat;
   final VoidCallback onDelete;
-
   const ChatWidget({
     Key? key,
     required this.chat,
@@ -114,25 +115,66 @@ class ChatWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<ChatWidget> createState() => _ChatWidgetState();
+}
+
+class _ChatWidgetState extends State<ChatWidget>
+    with SingleTickerProviderStateMixin {
+  late final controller = SlidableController(this);
+  Color backgroundColor = Colors.transparent;
+  @override
+  void initState() {
+    super.initState();
+    controller.animation.addListener(() {
+      setState(() {
+        final currentRatio = controller.animation.value;
+        if (currentRatio > 0) {
+          backgroundColor = Colors.grey;
+        } else {
+          backgroundColor = Colors.transparent;
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: key!,
-      direction: DismissDirection.endToStart,
-      onDismissed: (direction) {
-        onDelete();
-      },
-      background: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.only(right: 20.0),
-        child: SvgPicture.asset(
-          width: 34,
-          'assets/icons/X.svg',
-        ),
+    return Slidable(
+      key: widget.key!,
+      controller: controller,
+      endActionPane: ActionPane(
+        motion: const StretchMotion(),
+        dismissible: DismissiblePane(onDismissed: () {}),
+        children: const [
+          SlidableAction(
+            flex: 1,
+            onPressed: null,
+            backgroundColor: Colors.transparent,
+            foregroundColor: Color(0xff05FF00),
+            icon: Icons.close,
+            label: null,
+            spacing: 8,
+          ),
+        ],
       ),
       child: Container(
         height: 101,
-        decoration: const BoxDecoration(
-          color: Colors.transparent,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.center,
+            end: Alignment.centerRight,
+            colors: [
+              Color.fromARGB(255, 62, 62, 62),
+              Color.fromARGB(0, 44, 44, 44),
+            ],
+          ),
+          color: backgroundColor,
           border: Border(
             top: BorderSide(color: Color.fromARGB(255, 62, 174, 100), width: 2),
             bottom:
@@ -144,7 +186,7 @@ class ChatWidget extends StatelessWidget {
           child: Row(
             children: [
               const SizedBox(width: 16.0),
-              chatAvatar(chat.count, chat.friendUser.imageUrl),
+              chatAvatar(widget.chat.count, widget.chat.friendUser.imageUrl),
               const SizedBox(width: 30.0),
               Expanded(
                 child: Column(
@@ -152,7 +194,7 @@ class ChatWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${chat.friendUser.name} ${chat.friendUser.lastName}',
+                      '${widget.chat.friendUser.name} ${widget.chat.friendUser.lastName}',
                       style: const TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w900,
@@ -162,7 +204,7 @@ class ChatWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      chat.message,
+                      widget.chat.message,
                       style: const TextStyle(
                           fontSize: 12.0,
                           fontFamily: 'Montserrat',
@@ -180,7 +222,7 @@ class ChatWidget extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    chat.time,
+                    widget.chat.time,
                     style: const TextStyle(
                       fontSize: 11,
                       color: Color.fromARGB(255, 204, 203, 203),

@@ -55,7 +55,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFF444444), Color(0xFF000000)],
+          colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
         ),
       ),
       child: Stack(
@@ -513,8 +513,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         });
         playerProvider.indexProcessingVideoFavoritePayment = 0;
         playerProvider.videoProcessingFavoritePayment = null;
-        Navigator.pushReplacement(
-          context,
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(
               builder: (context) =>
                   const CustomBottomNavigationBarPlayer(initialIndex: 4)),
@@ -561,8 +560,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
     // Verificar el estado de la respuesta
     if (response.statusCode == 200) {
       Navigator.pop(context);
-      Navigator.pushReplacement(
-        context,
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
             builder: (context) => CustomBottomNavigationBarPlayer()),
       );
@@ -573,8 +571,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
           content: Text(
               'Hubo un error al cargar tu video, intentalo de nuevo desde tu perfil.')));
       Future.delayed(Duration(seconds: 2));
-      Navigator.pushReplacement(
-        context,
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
             builder: (context) => CustomBottomNavigationBarPlayer()),
       );

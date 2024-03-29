@@ -55,10 +55,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         extendBody: true,
         body: _pages[_selectedIndex],
         bottomNavigationBar: Container(
+          padding: EdgeInsets.all(8),
           color: Colors.black,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(_pages.length, (index) => _buildNavItem(index)),
+            children:
+                List.generate(_pages.length, (index) => _buildNavItem(index)),
           ),
         ),
       ),
@@ -68,7 +70,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   Widget _buildNavItem(int index) {
     // Lista de nombres de archivos de iconos
     final iconNames = ['Inicio.svg', 'Match.svg', 'Mensaje.svg', 'Perfil.svg'];
-    final selectedIconNames = ['Inicio-1.svg', 'Match-1.svg', 'Mensaje-1.svg', 'Perfil-1.svg'];
+    final selectedIconNames = [
+      'Inicio-1.svg',
+      'Match-1.svg',
+      'Mensaje-1.svg',
+      'Perfil-1.svg'
+    ];
     final labels = ['Inicio', 'Match', 'Mensajes', 'Perfil'];
 
     return InkWell(
@@ -84,7 +91,9 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           Text(
             labels[index],
             style: TextStyle(
-              color: _selectedIndex == index ? Colors.white : Colors.white.withOpacity(0.8),
+              color: _selectedIndex == index
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.8),
             ),
           ),
         ],

@@ -15,5 +15,5 @@ class Message {
 
 // message_use_case.dart (Caso de uso)
 abstract class MessageUseCase {
-  Future<void> sendMessage(Message message);
+  Future<void> sendMessage(Message message, String user);
 }

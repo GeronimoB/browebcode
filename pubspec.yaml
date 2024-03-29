@@ -42,13 +42,15 @@ dependencies:
   flutter_stripe: ^10.1.1
   image_picker: ^1.0.7
   carousel_slider: ^4.2.1
-  flutter_downloader: ^1.11.6
   path_provider: ^2.0.2
   permission_handler: ^8.0.0
   firebase_core: ^2.27.0
   cloud_firestore: ^4.15.8
   intl: ^0.18.1
   downloads_path_provider_28: ^0.1.2
+  flutter_slidable: ^3.1.0
+  firebase_messaging: ^14.7.19
+  flutter_local_notifications: ^17.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

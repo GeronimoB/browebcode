@@ -139,7 +139,7 @@ class _MatcheState extends State<MatchePlayer> {
                   )
                 : const Center(
                     child: Text(
-                      "Aun no tienes match!",
+                      "¡Aun no tienes match!",
                       style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat',
@@ -176,7 +176,7 @@ class _MatcheState extends State<MatchePlayer> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.fastOutSlowIn,
-        height: _isSelected[index] ? 200 : 109,
+        height: _isSelected[index] ? 220 : 109,
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         width: MediaQuery.of(context).size.width * 0.95,
         decoration: BoxDecoration(
@@ -269,7 +269,7 @@ class _MatcheState extends State<MatchePlayer> {
                 duration: const Duration(milliseconds: 400),
                 opacity: _isSelected[index] ? 1.0 : 0.0,
                 child: Padding(
-                  padding: const EdgeInsets.all(25.0),
+                  padding: const EdgeInsets.all(35.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

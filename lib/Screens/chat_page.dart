@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
+import 'package:bro_app_to/Screens/agent/user_profile_to_agent.dart';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/components/chat_item.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
@@ -60,19 +61,17 @@ class _ChatPageState extends State<ChatPage> {
         receiverId: _buildReceiverId(),
         message: text,
       );
+      _messageController.clear();
+      _messageFocusNode.unfocus();
 
+      final friend = widget.friend;
+      final friendName = '${friend.name} ${friend.lastName}';
       try {
-        await FirebaseMessageRepository().sendMessage(message);
+        await FirebaseMessageRepository().sendMessage(message, friendName);
+        _scrollController.jumpTo(0);
       } catch (e) {
         print(e);
       }
-
-      setState(() {
-        _messages.add(text);
-        _messageController.clear();
-      });
-      _messageFocusNode.unfocus();
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     }
   }
 
@@ -85,8 +84,7 @@ class _ChatPageState extends State<ChatPage> {
       onWillPop: () async {
         final userProvider = Provider.of<UserProvider>(context, listen: false);
         final user = userProvider.getCurrentUser();
-        Navigator.pushReplacement(
-          context,
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(
               builder: (context) => user.isAgent
                   ? const CustomBottomNavigationBar(initialIndex: 2)
@@ -159,8 +157,7 @@ class _ChatPageState extends State<ChatPage> {
                 final userProvider =
                     Provider.of<UserProvider>(context, listen: false);
                 final user = userProvider.getCurrentUser();
-                Navigator.pushReplacement(
-                  context,
+                Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                       builder: (context) => user.isAgent
                           ? const CustomBottomNavigationBar(initialIndex: 2)
@@ -198,9 +195,10 @@ class _ChatPageState extends State<ChatPage> {
                           );
                         }
                         return ListView.builder(
+                            controller: _scrollController,
                             itemCount: snapshot.data.docs.length,
-                            reverse: true,
                             physics: const BouncingScrollPhysics(),
+                            reverse: true,
                             itemBuilder: (context, index) {
                               Timestamp timestamp =
                                   snapshot.data.docs[index]['date'];
@@ -265,7 +263,9 @@ class _ChatPageState extends State<ChatPage> {
             IconButton(
               icon: const Icon(Icons.photo_camera_outlined,
                   color: Color(0xff00E050), size: 26),
-              onPressed: _handleImageSelection,
+              onPressed: () async {
+                await _handleImageSelection();
+              },
             ),
             IconButton(
               icon: const Icon(Icons.attach_file,

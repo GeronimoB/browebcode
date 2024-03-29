@@ -25,9 +25,10 @@ class UserModel extends UserEntity {
         );
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    final userid = json["user_id"] != null ? json["user_id"] : json["id"];
     return UserModel(
       username: json['username'] ?? '',
-      userId: (json["user_id"] ?? json["id"]).toString(),
+      userId: userid.toString(),
       isAgent: json["isAgent"],
       password: json['email'],
       referralCode: json['referral_code'] ?? '',

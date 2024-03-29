@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bro_app_to/Screens/agent/user_profile_to_agent.dart';
 import 'package:bro_app_to/Screens/chat_page.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
@@ -139,7 +140,7 @@ class _MatcheState extends State<Matche> {
                   )
                 : const Center(
                     child: Text(
-                      "Aun no tienes match!",
+                      "¡Aun no tienes match!",
                       style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat',
@@ -177,7 +178,7 @@ class _MatcheState extends State<Matche> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.fastOutSlowIn,
-        height: _isSelected[index] ? 260 : 109,
+        height: _isSelected[index] ? 290 : 109,
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         width: MediaQuery.of(context).size.width * 0.95,
         decoration: BoxDecoration(
@@ -312,29 +313,40 @@ class _MatcheState extends State<Matche> {
               AnimatedOpacity(
                 duration: const Duration(milliseconds: 400),
                 opacity: _isSelected[index] ? 1.0 : 0.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomTextButton(
-                        onTap: () {
-                          final friend = UserModel.fromPlayer(player);
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatPage(
-                                        friend: friend,
-                                      )));
-                        },
-                        text: '¡Vamos al Chat!',
-                        buttonPrimary: false,
-                        width: 145,
-                        height: 38),
-                    CustomTextButton(
-                        text: 'Ver Perfil',
-                        buttonPrimary: true,
-                        width: 135,
-                        height: 32)
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      CustomTextButton(
+                          onTap: () {
+                            final friend = UserModel.fromPlayer(player);
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatPage(
+                                          friend: friend,
+                                        )));
+                          },
+                          text: '¡Vamos al Chat!',
+                          buttonPrimary: false,
+                          width: 145,
+                          height: 38),
+                      CustomTextButton(
+                          onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PlayerProfileToAgent(
+                                    player: player,
+                                  ),
+                                ),
+                              ),
+                          text: 'Ver Perfil',
+                          buttonPrimary: true,
+                          width: 135,
+                          height: 32)
+                    ],
+                  ),
                 ),
               ),
             ],

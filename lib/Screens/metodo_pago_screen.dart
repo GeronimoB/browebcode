@@ -29,7 +29,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFF444444), Color(0xFF000000)],
+          colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
         ),
       ),
       child: Scaffold(

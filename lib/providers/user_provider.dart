@@ -1,6 +1,7 @@
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/utils/referido_model.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider extends ChangeNotifier {
   UserModel _currentUser = const UserModel(username: '', password: '');
@@ -30,9 +31,12 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void logOut() {
+  void logOut() async {
     _currentUser = const UserModel(username: '', password: '');
     afiliados.clear();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('username', "");
+    prefs.setString('password', "");
     notifyListeners();
   }
 }

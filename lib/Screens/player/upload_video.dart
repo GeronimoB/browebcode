@@ -64,8 +64,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
                   CustomTextButton(
                       onTap: () {
                         success
-                            ? Navigator.pushReplacement(
-                                context,
+                            ? Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         CustomBottomNavigationBarPlayer()),
@@ -186,14 +185,13 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
           backgroundColor: Colors.greenAccent,
           content: Text('Video subido exitosamente.')));
       Future.delayed(Duration(seconds: 3));
-      Navigator.pushReplacement(
-        context,
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
             builder: (context) =>
                 CustomBottomNavigationBarPlayer(initialIndex: 4)),
       );
     } else {
-      Navigator.pop(context);
+      Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.redAccent,
           content:

@@ -8,11 +8,13 @@ import 'package:bro_app_to/Screens/player/servicios.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/presentation/screens/Sing_in.dart';
+import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 
 import 'bottom_navigation_bar_player.dart';
+import 'package:http/http.dart' as http;
 
 class ConfigProfilePlayer extends StatelessWidget {
   @override
@@ -95,6 +97,11 @@ class ConfigProfilePlayer extends StatelessWidget {
                   _buildListItem('PEDIDOS', context, true, Pedidos()),
                   _buildListItem('SERVICIOS', context, true, const Servicios()),
                   const SizedBox(height: 15),
+                  _buildListItem(
+                      'BORRAR CUENTA', context, false, const Servicios(),
+                      callback: () {
+                    handleDeleteAccount(context);
+                  }),
                   _buildListItem(
                       'CERRAR SESIÓN', context, false, const Servicios(),
                       callback: () {
@@ -234,17 +241,29 @@ class ConfigProfilePlayer extends StatelessWidget {
                       height: 35,
                     ),
                     CustomTextButton(
-                      onTap: () {
+                      onTap: () async {
                         final playerProvider =
                             Provider.of<PlayerProvider>(context, listen: false);
                         final userProvider =
                             Provider.of<UserProvider>(context, listen: false);
-
-                        playerProvider.logOut();
-                        userProvider.logOut();
-
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, '/intro', (route) => false);
+                        final userId = userProvider.getCurrentUser().userId;
+                        final url = Uri.parse(
+                            '${ApiConstants.baseUrl}/player/$userId'); // Reemplaza con la URL de tu endpoint DELETE
+                        try {
+                          final response = await http.delete(url);
+                          if (response.statusCode == 200) {
+                            playerProvider.logOut();
+                            userProvider.logOut();
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/intro', (route) => false);
+                          } else {
+                            print(
+                                'Error al eliminar el usuario: ${response.statusCode}');
+                          }
+                        } catch (error) {
+                          print(
+                              'Error al realizar la solicitud DELETE: $error');
+                        }
                       },
                       text: 'Continuar',
                       buttonPrimary: true,

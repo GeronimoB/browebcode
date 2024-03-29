@@ -1,26 +1,28 @@
 import 'dart:convert';
 
+import 'package:bro_app_to/Screens/player/full_screen_video_page.dart';
+import 'package:bro_app_to/components/custom_box_shadow.dart';
+import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
+import 'package:bro_app_to/utils/api_client.dart';
+import 'package:bro_app_to/utils/video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../components/custom_box_shadow.dart';
-import '../providers/player_provider.dart';
-import '../providers/user_provider.dart';
-import '../utils/api_client.dart';
-import '../utils/video_model.dart';
-import 'player/bottom_navigation_bar_player.dart';
-import 'player/config_profile_player.dart';
-import 'player/full_screen_video_page.dart';
+class PlayerProfileToAgent extends StatefulWidget {
+  final PlayerFullModel player;
 
-class PlayerProfile extends StatefulWidget {
+  const PlayerProfileToAgent({super.key, required this.player});
+
   @override
-  _PlayerProfileState createState() => _PlayerProfileState();
+  _PlayerProfileToAgentState createState() => _PlayerProfileToAgentState();
 }
 
-class _PlayerProfileState extends State<PlayerProfile> {
+class _PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
   double gridSpacing = 4.0;
   bool _isExpanded = false;
+  List<Video> videosUsuario = [];
 
   @override
   void initState() {
@@ -29,37 +31,36 @@ class _PlayerProfileState extends State<PlayerProfile> {
   }
 
   Future<void> fetchVideos() async {
-    final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
-    final userId = playerProvider.getPlayer()!.userId;
+    final userId = widget.player.userId;
     try {
       final videosResponse = await ApiClient().get('auth/videos/$userId');
-      print(videosResponse.body);
       if (videosResponse.statusCode == 200) {
         final jsonData = jsonDecode(videosResponse.body);
         final videos = jsonData["videos"];
-        playerProvider.setUserVideos(mapListToVideos(videos));
+        videosUsuario.clear();
+        videosUsuario.addAll(mapListToVideos(videos));
+        setState(() {});
       } else {
-        playerProvider.setUserVideos([]);
+        videosUsuario.clear();
         print('Error al obtener los videos: ${videosResponse.statusCode}');
       }
     } catch (e) {
-      playerProvider.setUserVideos([]);
+      videosUsuario.clear();
       print('Error en la solicitud de videos: $e');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final playerProvider = Provider.of<PlayerProvider>(context, listen: true);
-    final player = playerProvider.getPlayer()!;
-    final videos = playerProvider.userVideos;
+    final player = widget.player;
+    final videos = videosUsuario;
     final widthVideo = MediaQuery.of(context).size.width / 3;
-    final userProvider = Provider.of<UserProvider>(context, listen: true);
-    final user = userProvider.getCurrentUser();
+
     String shortInfo = '${player.provincia}, ${player.pais}';
     String fullInfo =
         '${player.provincia}, ${player.pais}\nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: r${player.logrosIndividuales}';
     print("esta es la imagen ${player.userImage!.isNotEmpty}");
+    print("esta es la imagen2 ${player.userImage!.isEmpty}");
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -70,31 +71,19 @@ class _PlayerProfileState extends State<PlayerProfile> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent, // AppBar transparente
+          elevation: 0, // Quitar sombra
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Color(0xFF00E050)),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
         extendBody: true,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top,
-                right: 8.0,
-              ),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: const Icon(Icons.settings, color: Color(0xFF00E050)),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ConfigProfilePlayer(),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(height: 15.0),
-            if (user.imageUrl != '')
+            if (player.userImage!.isNotEmpty)
               ClipOval(
                 child: FadeInImage.assetNetwork(
                   placeholder: 'assets/images/fot.png',
@@ -106,13 +95,13 @@ class _PlayerProfileState extends State<PlayerProfile> {
                       fit: BoxFit.cover,
                     );
                   },
-                  image: user.imageUrl,
+                  image: player.userImage!,
                   width: 80,
                   height: 80,
                   fit: BoxFit.cover,
                 ),
               ),
-            if (user.imageUrl == '')
+            if (player.userImage!.isEmpty)
               ClipOval(
                 child: Image.asset(
                   'assets/images/fot.png',
@@ -150,11 +139,11 @@ class _PlayerProfileState extends State<PlayerProfile> {
                 });
               },
               child: Text(
-                _isExpanded ? 'Ver menos' : 'Ver más',
+                _isExpanded ? 'Ver menos...' : 'Ver más...',
                 style: const TextStyle(
-                  color: Color(0xFF05FF00),
-                  fontSize: 16.0,
-                ),
+                    color: Color(0xFF05FF00),
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w900),
               ),
             ),
             const SizedBox(
@@ -188,12 +177,12 @@ class _PlayerProfileState extends State<PlayerProfile> {
 
                     return GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushReplacement(
+                        Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => FullScreenVideoPage(
                               video: video,
                               index: index,
-                              showOptions: true,
+                              showOptions: false,
                             ),
                           ),
                         );
@@ -218,8 +207,7 @@ class _PlayerProfileState extends State<PlayerProfile> {
                             height: 175,
                             fit: BoxFit.fill,
                           ),
-                          if (video
-                              .isFavorite) // Mostrar estrella si el video está destacado
+                          if (video.isFavorite)
                             const Positioned(
                               top: 8.0,
                               right: 8.0,

@@ -22,7 +22,7 @@ class AfiliadosPlayer extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFF212121), Color(0xFF121212)],
+          colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
         ),
       ),
       padding: const EdgeInsets.all(16.0),
@@ -67,8 +67,7 @@ class AfiliadosPlayer extends StatelessWidget {
                   final code = jsonData["referralCode"];
                   userProvider.updateRefCode(code);
 
-                  Navigator.pushReplacement(
-                    context,
+                  Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                         builder: (context) => const ListaReferidosScreen()),
                   );
@@ -157,47 +156,77 @@ class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
     user = provider.getCurrentUser();
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  user.isAgent ? const ConfigProfile() : ConfigProfilePlayer()),
+        Navigator.of(context).pushReplacementNamed(
+          user.isAgent ? '/config-agent' : '/config-player',
         );
         return false;
       },
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFF444444), Color(0xFF000000)],
+      child: Container(
+        height: double.maxFinite,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          extendBody: true,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            centerTitle: true,
+            elevation: 0,
+            title: const Text(
+              'AFILIADOS',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
+                decoration: TextDecoration.none,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Color(0xFF00E050),
+              ),
+              onPressed: () {
+                final userProvider =
+                    Provider.of<UserProvider>(context, listen: false);
+                final user = userProvider.getCurrentUser();
+                Navigator.of(context).pushReplacementNamed(
+                  user.isAgent ? '/config-agent' : '/config-player',
+                );
+              },
             ),
           ),
-          child: Column(
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              const SizedBox(height: 32.0),
-              const Text(
-                'Afiliados',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
-                ),
-                textAlign: TextAlign.center,
-              ),
               const SizedBox(height: 16.0),
-              SelectableText(
-                'https://Ejemplo.Com/Ref?=${user.referralCode!}',
-                style: const TextStyle(
-                  color: Color(0xFF05FF00),
-                  fontFamily: 'Montserrat',
-                  fontSize: 15.0,
+              GestureDetector(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(
+                      text: 'https://Ejemplo.Com/Ref?=${user.referralCode!}'));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        backgroundColor: Colors.greenAccent,
+                        content: Text('Link de afiliado copiado.')),
+                  );
+                },
+                child: Text(
+                  'https://Ejemplo.Com/Ref?=${user.referralCode!}',
+                  style: const TextStyle(
+                    color: Color(0xFF05FF00),
+                    fontFamily: 'Montserrat',
+                    fontSize: 15.0,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16.0),
               GestureDetector(
@@ -210,6 +239,7 @@ class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
                   );
                 },
                 child: Container(
+                  margin: const EdgeInsets.all(25),
                   padding: const EdgeInsets.symmetric(
                       vertical: 8.0, horizontal: 10.0),
                   decoration: BoxDecoration(

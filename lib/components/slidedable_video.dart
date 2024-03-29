@@ -10,17 +10,7 @@ class SlidableVideo extends StatefulWidget {
 }
 
 class _SlidableVideoState extends State<SlidableVideo> {
-  late VideoPlayerController _controller;
-  VideoPlayerController? _nextController;
-
   bool _showPauseIcon = false;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _initializeVideoPlayer();
-  //   _initializeNextVideoPlayer(); // Inicializar el controlador del próximo video si hay una URL proporcionada
-  // }
 
   // @override
   // void didUpdateWidget(covariant SlidableVideo oldWidget) {
@@ -35,41 +25,10 @@ class _SlidableVideoState extends State<SlidableVideo> {
   //   }
   // }
 
-  // void _initializeVideoPlayer() {
-  //   Uri url = Uri.parse(widget.videoUrl);
-  //   _controller = VideoPlayerController.networkUrl(url)
-  //     ..initialize().then((_) {
-  //       setState(() {});
-  //       //_controller.play();
-  //       _controller.setLooping(true);
-  //     });
-  // }
-
-  // void _initializeNextVideoPlayer() {
-  //   if (widget.nextVideoUrl != null) {
-  //     Uri nextUrl = Uri.parse(widget.nextVideoUrl!);
-  //     _nextController = VideoPlayerController.networkUrl(nextUrl)
-  //       ..initialize().then((_) {
-  //         setState(() {
-  //           _nextController!.setLooping(true);
-  //         });
-  //       });
-  //   }
-  // }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   _controller.dispose();
-  //   _nextController
-  //       ?.dispose(); // Dispose del controlador del próximo video si existe
-  // }
-
   void _showPauseIconForAMoment() {
     setState(() {
       _showPauseIcon = true;
     });
-    // Después de 1 segundo, ocultar el ícono de pausa
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         _showPauseIcon = false;
@@ -84,12 +43,10 @@ class _SlidableVideoState extends State<SlidableVideo> {
       widget.controller.play();
       _showPauseIconForAMoment();
     }
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.controller.value);
     return GestureDetector(
       onTap: _togglePlayPause,
       child: Stack(
@@ -112,24 +69,23 @@ class _SlidableVideoState extends State<SlidableVideo> {
               backgroundColor: Colors.grey,
             ),
           ),
-          if (_showPauseIcon || !widget.controller.value.isPlaying)
-            AnimatedOpacity(
-              opacity: _showPauseIcon || !widget.controller.value.isPlaying
-                  ? 1.0
-                  : 0.0,
-              duration: const Duration(milliseconds: 300),
-              child: Center(
-                child: Icon(
-                  widget.controller.value.isPlaying
-                      ? Icons.pause_circle_filled
-                      : Icons.play_circle_fill,
-                  color: widget.controller.value.isPlaying
-                      ? const Color.fromARGB(142, 255, 255, 255)
-                      : Colors.white,
-                  size: 64,
-                ),
+          AnimatedOpacity(
+            opacity: _showPauseIcon || !widget.controller.value.isPlaying
+                ? 1.0
+                : 0.0,
+            duration: const Duration(milliseconds: 300),
+            child: Center(
+              child: Icon(
+                widget.controller.value.isPlaying
+                    ? Icons.pause_circle_filled
+                    : Icons.play_circle_fill,
+                color: widget.controller.value.isPlaying
+                    ? const Color.fromARGB(142, 255, 255, 255)
+                    : Colors.white,
+                size: 64,
               ),
             ),
+          ),
         ],
       ),
     );

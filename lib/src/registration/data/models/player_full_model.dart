@@ -1,4 +1,5 @@
 import 'package:bro_app_to/src/registration/domain/entities/player_full_entity.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 
 @immutable
@@ -171,7 +172,7 @@ class PlayerFullModel extends PlayerFullEntity {
     if (categoriaSeleccion != null)
       map['CategoriaSeleccion'] = categoriaSeleccion;
     if (userImage != null) map['userImage'] = userImage;
-
+    map['fcm'] = fcmToken;
     return map;
   }
 }
