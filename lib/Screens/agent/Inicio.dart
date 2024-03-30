@@ -54,7 +54,7 @@ class _InicioPageState extends State<InicioPage> {
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
     setState(() {
       _xOffset += details.primaryDelta!;
-      _rotation = -_xOffset / 1000;
+      _rotation = _xOffset / 1000;
     });
   }
 

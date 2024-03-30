@@ -111,21 +111,26 @@ class _MatchProfileState extends State<MatchProfile> {
                 return SingleChildScrollView(
                   child: Column(
                     children: [
+                      const SizedBox(height: 20),
                       Stack(
                         children: [
-                          SizedBox(
-                            width: double.infinity,
-                            height: MediaQuery.of(context).size.height * 0.5,
-                            child: FadeInImage.assetNetwork(
-                              placeholder: 'assets/images/jugador1.png',
-                              imageErrorBuilder: (context, error, stackTrace) {
-                                return Image.asset(
-                                  'assets/images/jugador1.png',
-                                  fit: BoxFit.fill,
-                                );
-                              },
-                              image: userData.userImage!,
-                              fit: BoxFit.fill,
+                          Center(
+                            child: Container(
+                              width: 250,
+                              height: 250,
+                              child: ClipOval(
+                                child: FadeInImage.assetNetwork(
+                                  placeholder: 'assets/images/jugador1.png',
+                                  imageErrorBuilder: (context, error, stackTrace) {
+                                    return Image.asset(
+                                      'assets/images/jugador1.png',
+                                      fit: BoxFit.fill,
+                                    );
+                                  },
+                                  image: userData.userImage!,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
                           ),
                           SafeArea(
@@ -157,9 +162,8 @@ class _MatchProfileState extends State<MatchProfile> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      _buildDataRow(context, formattedDate),
-                      _buildDataRow(
-                          context, '${userData.provincia}, ${userData.pais}'),
+                      _buildDataRow(context,'fecha de nacimiento: ${formattedDate}'),
+                      _buildDataRow(context, 'Provincia: ${userData.provincia}, ${userData.pais}'),
                       _buildDataRow(context, 'Altura: ${userData.altura} cm'),
                       _buildDataRow(
                           context, 'Pie Dominante: ${userData.pieDominante}'),

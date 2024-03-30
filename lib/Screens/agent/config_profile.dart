@@ -176,7 +176,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                   children: [
                     CustomTextButton(
                       onTap: () => Navigator.of(context).pop(),
-                      text: 'Cancelar',
+                      text: 'No',
                       buttonPrimary: false,
                       width: 90,
                       height: 35,
@@ -194,7 +194,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                         Navigator.pushNamedAndRemoveUntil(
                             context, '/login', (route) => false);
                       },
-                      text: 'Continuar',
+                      text: 'Si',
                       buttonPrimary: true,
                       width: 90,
                       height: 35,
@@ -234,7 +234,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const Text(
-                  "¿Esta seguro de que desea borrar la cuenta? Se borraran todos los datos asociados.",
+                  "¿Esta seguro de que quiere borrar la cuenta? Se borraran todos los datos asociados a la cuenta.",
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     color: Colors.white,
