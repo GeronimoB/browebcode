@@ -339,7 +339,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                     jsonDecode(asociatePaymentMethod.body)["paymentMethods"];
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                      backgroundColor: Colors.lightGreen,
+                      backgroundColor: Color(0xFF05FF00),
                       content:
                           Text('La tarjeta se ha eliminado exitosamente.')),
                 );
@@ -406,7 +406,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
           jsonDecode(asociatePaymentMethod.body)["paymentMethods"];
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            backgroundColor: Colors.lightGreen,
+            backgroundColor: Color(0xFF05FF00),
             content: Text('La tarjeta se ha agregado exitosamente.')),
       );
       playerProvider.setCards(mapListToTarjetas(savedCards));
@@ -469,7 +469,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         }
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              backgroundColor: Colors.lightGreen,
+              backgroundColor: Color(0xFF05FF00),
               content: Text('Su pago se he procesado exitosamente.')),
         );
         setState(() {

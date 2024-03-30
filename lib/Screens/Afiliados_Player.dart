@@ -214,7 +214,7 @@ class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
                       text: 'https://Ejemplo.Com/Ref?=${user.referralCode!}'));
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        backgroundColor: Colors.greenAccent,
+                        backgroundColor: Color(0xFF05FF00),
                         content: Text('Link de afiliado copiado.')),
                   );
                 },
@@ -234,7 +234,7 @@ class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
                   Clipboard.setData(ClipboardData(text: user.referralCode));
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        backgroundColor: Colors.greenAccent,
+                        backgroundColor: Color(0xFF05FF00),
                         content: Text('Codigo de afiliado copiado.')),
                   );
                 },

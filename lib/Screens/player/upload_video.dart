@@ -182,7 +182,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     // Verificar el estado de la respuesta
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.greenAccent,
+          backgroundColor: Color(0xFF05FF00),
           content: Text('Video subido exitosamente.')));
       Future.delayed(Duration(seconds: 3));
       Navigator.of(context).pushReplacement(

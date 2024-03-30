@@ -254,8 +254,6 @@ class _PerfilPageState extends State<PerfilPage> {
                     'Ver Perfil...',
                     style: TextStyle(
                         color: Color(0xff00E050),
-                        decoration: TextDecoration.underline,
-                        decorationColor: Color(0xff00E050),
                         decorationStyle: TextDecorationStyle.solid,
                         decorationThickness: 2.0,
                         fontSize: 15,

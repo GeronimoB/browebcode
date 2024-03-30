@@ -265,7 +265,7 @@ class Privacidad extends StatelessWidget {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         const SnackBar(
-                                            backgroundColor: Colors.greenAccent,
+                                            backgroundColor: Color(0xFF05FF00),
                                             content: Text(
                                                 "Su contraseña se ha actualizado con exito.")),
                                       );
@@ -298,7 +298,7 @@ class Privacidad extends StatelessWidget {
               },
               child: const ListTile(
                 title: Text(
-                  'Cambiar Contraseña',
+                  'CAMBIAR CONTRASEÑA',
                   style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
@@ -312,7 +312,7 @@ class Privacidad extends StatelessWidget {
             const SizedBox(height: 20),
             ListTile(
               title: const Text(
-                'Autenticación de Doble Factor',
+                'AUTENTICACION DE DOBLE FACTOR',
                 style: TextStyle(
                   color: Colors.white,
                   fontFamily: 'Montserrat',

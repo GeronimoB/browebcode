@@ -310,7 +310,7 @@ class SelectCampState extends State<SelectCamp> {
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  backgroundColor: Colors.lightGreen,
+                                  backgroundColor: Color(0xFF05FF00),
                                   content: Text(
                                       'Su cuenta se ha creado exitosamente, tiene 3 días para confirmar su correo.')),
                             );

@@ -180,7 +180,7 @@ class _PlayerProfileState extends State<PlayerProfile> {
                     crossAxisCount: 3,
                     crossAxisSpacing: gridSpacing,
                     mainAxisSpacing: gridSpacing,
-                    childAspectRatio: (widthVideo - gridSpacing * 2) / 183,
+                  childAspectRatio: (9 / 16),
                   ),
                   itemCount: videos.length,
                   itemBuilder: (context, index) {
