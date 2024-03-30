@@ -1,4 +1,5 @@
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
+import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/referido_model.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +19,16 @@ class UserProvider extends ChangeNotifier {
 
   void updateRefCode(String code) {
     _currentUser = _currentUser.copyWith(referralCode: code);
+    notifyListeners();
+  }
+
+  void updateUserFromPlayer(PlayerFullModel player) {
+    _currentUser = _currentUser.copyWith(
+      nombre: player.name,
+      apellido: player.lastName,
+      birthDate: player.birthDate,
+      correo: player.email,
+    );
     notifyListeners();
   }
 

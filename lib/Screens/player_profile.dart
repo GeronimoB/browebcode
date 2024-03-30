@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../components/custom_box_shadow.dart';
@@ -56,9 +57,13 @@ class _PlayerProfileState extends State<PlayerProfile> {
     final widthVideo = MediaQuery.of(context).size.width / 3;
     final userProvider = Provider.of<UserProvider>(context, listen: true);
     final user = userProvider.getCurrentUser();
-    String shortInfo = '${player.provincia}, ${player.pais}';
+    DateTime? birthDate = player.birthDate;
+
+    String formattedDate =
+        birthDate != null ? DateFormat('yyyy-MM-dd').format(birthDate) : '';
+    String shortInfo = 'Provincia, pais: ${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
     String fullInfo =
-        '${player.provincia}, ${player.pais}\nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: r${player.logrosIndividuales}';
+        'Provincia, pais: ${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate \nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: ${player.logrosIndividuales}';
     print("esta es la imagen ${player.userImage!.isNotEmpty}");
     return Container(
       decoration: const BoxDecoration(

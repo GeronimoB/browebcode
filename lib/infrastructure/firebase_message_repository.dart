@@ -154,6 +154,30 @@ class FirebaseMessageRepository implements MessageUseCase {
     }
   }
 
+  Future<void> deleteAllMessages(String senderId, String receiverId) async {
+    try {
+      // Borrar el documento del remitente al receptor
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(senderId)
+          .collection('messages')
+          .doc(receiverId)
+          .delete();
+
+      // Borrar el documento del receptor al remitente
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(receiverId)
+          .collection('messages')
+          .doc(senderId)
+          .delete();
+    } catch (e) {
+      // Manejar errores
+      print("Error deleting messages: $e");
+      throw e;
+    }
+  }
+
   @override
   Future<void> sendMessage(Message message, String username) async {
     try {

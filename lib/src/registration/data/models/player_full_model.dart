@@ -150,8 +150,6 @@ class PlayerFullModel extends PlayerFullEntity {
     final Map<String, dynamic> map = {};
 
     if (userId != null) map['userId'] = userId;
-    if (customerStripeId != null) map['customerStripeId'] = customerStripeId;
-    if (uid != null) map['uid'] = uid;
     if (name != null) map['Name'] = name;
     if (lastName != null) map['LastName'] = lastName;
     if (email != null) map['Email'] = email;
@@ -165,12 +163,10 @@ class PlayerFullModel extends PlayerFullEntity {
     if (altura != null) map['Altura'] = altura;
     if (categoria != null) map['Categoria'] = categoria;
     if (club != null) map['Club'] = club;
-    if (logrosIndividuales != null)
-      map['LogrosIndividuales'] = logrosIndividuales;
+    map['LogrosIndividuales'] = logrosIndividuales ?? '';
     if (pieDominante != null) map['PieDominante'] = pieDominante;
     if (seleccionNacional != null) map['SeleccionNacional'] = seleccionNacional;
-    if (categoriaSeleccion != null)
-      map['CategoriaSeleccion'] = categoriaSeleccion;
+    map['CategoriaSeleccion'] = categoriaSeleccion ?? '';
     if (userImage != null) map['userImage'] = userImage;
     map['fcm'] = fcmToken;
     return map;

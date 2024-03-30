@@ -5,10 +5,12 @@ import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/agent/user_profile_to_agent.dart';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/components/chat_item.dart';
+import 'package:bro_app_to/components/file_item.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:bro_app_to/utils/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -210,13 +212,21 @@ class _ChatPageState extends State<ChatPage> {
                                   snapshot.data.docs[index]['sent'],
                                   snapshot.data.docs[index]['read'],
                                 );
-                              } else {
+                              } else if (snapshot.data.docs[index]['type'] ==
+                                  "image") {
                                 return imageItem(
                                   snapshot.data.docs[index]['url'],
                                   dateTime,
                                   snapshot.data.docs[index]['sent'],
                                   snapshot.data.docs[index]['read'],
                                 );
+                              } else {
+                                return fileItem(
+                                    snapshot.data.docs[index]['url'],
+                                    dateTime,
+                                    snapshot.data.docs[index]['sent'],
+                                    snapshot.data.docs[index]['read'],
+                                    context);
                               }
                             });
                       }
@@ -270,8 +280,8 @@ class _ChatPageState extends State<ChatPage> {
             IconButton(
               icon: const Icon(Icons.attach_file,
                   color: Color(0xff00E050), size: 26),
-              onPressed: () {
-                // Acciones para adjuntar archivos.
+              onPressed: () async {
+                await _handleFileSelection();
               },
             ),
             IconButton(
@@ -368,6 +378,93 @@ class _ChatPageState extends State<ChatPage> {
             .collection('messages')
             .doc(senderId)
             .set({"last_msg": "[image]", 'time_msg': DateTime.now()});
+      });
+    }
+  }
+
+  Future<void> _handleFileSelection() async {
+    final FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      final PlatformFile file = result.files.first;
+      final String filePath = file.path ?? '';
+      final String fileName = file.name;
+
+      final bytes = await File(filePath).readAsBytes();
+
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${ApiConstants.baseUrl}/auth/upload-file'),
+      );
+
+      request.files.add(http.MultipartFile.fromBytes(
+        'file',
+        bytes,
+        filename: fileName,
+        contentType: MediaType('application', 'octet-stream'),
+      ));
+
+      var response = await request.send();
+      var fileUrl = '';
+
+      if (response.statusCode == 200) {
+        var responseBody = await response.stream.bytesToString();
+        fileUrl = jsonDecode(responseBody)["url"];
+      } else {
+        print('Failed to upload file. Error code: ${response.statusCode}');
+      }
+
+      final senderId = _buildSenderId();
+      final receiverId = _buildReceiverId();
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(senderId)
+          .collection('messages')
+          .doc(receiverId)
+          .collection('chats')
+          .add({
+        "senderId": senderId,
+        "receiverId": receiverId,
+        "url": fileUrl,
+        "type": "file",
+        "name": fileName,
+        "size": bytes.length,
+        "date": DateTime.now(),
+        "sent": true,
+        "read": false
+      }).then((value) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(senderId)
+            .collection('messages')
+            .doc(receiverId)
+            .set({'last_msg': "[file]", 'time_msg': DateTime.now()});
+      });
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(receiverId)
+          .collection('messages')
+          .doc(senderId)
+          .collection("chats")
+          .add({
+        "senderId": senderId,
+        "receiverId": receiverId,
+        "url": fileUrl,
+        "type": "file",
+        "name": fileName,
+        "size": bytes.length,
+        "date": DateTime.now(),
+        "sent": false,
+        "read": false
+      }).then((value) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(receiverId)
+            .collection('messages')
+            .doc(senderId)
+            .set({"last_msg": "[file]", 'time_msg': DateTime.now()});
       });
     }
   }

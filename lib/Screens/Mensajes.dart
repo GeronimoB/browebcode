@@ -61,11 +61,24 @@ class MensajesPage extends StatelessWidget {
               } else {
                 final messagesWithUsers = snapshot.data ?? [];
 
+                if (messagesWithUsers.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      "¡Aun no tienes mensajes!",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22.0),
+                    ),
+                  );
+                }
                 return Expanded(
                   child: ListView.builder(
                     itemCount: messagesWithUsers.length,
                     itemBuilder: (context, index) {
                       final chat = messagesWithUsers[index];
+
                       return GestureDetector(
                         onTap: () async {
                           final userParsedId = user.isAgent
@@ -150,7 +163,24 @@ class _ChatWidgetState extends State<ChatWidget>
       controller: controller,
       endActionPane: ActionPane(
         motion: const StretchMotion(),
-        dismissible: DismissiblePane(onDismissed: () {}),
+        dismissible: DismissiblePane(onDismissed: () async {
+          try {
+            final userProvider =
+                Provider.of<UserProvider>(context, listen: false);
+            final user = userProvider.getCurrentUser();
+            final sender = user.isAgent
+                ? "agente_${user.userId}"
+                : "jugador_${user.userId}";
+            final friend = widget.chat.friendUser;
+            final receiver = friend.isAgent
+                ? "agente_${friend.userId}"
+                : "jugador_${friend.userId}";
+            await FirebaseMessageRepository()
+                .deleteAllMessages(sender, receiver);
+          } catch (e) {
+            print(e);
+          }
+        }),
         children: const [
           SlidableAction(
             flex: 1,

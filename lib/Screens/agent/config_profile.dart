@@ -144,6 +144,8 @@ class _ConfigProfileState extends State<ConfigProfile> {
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 400), 
           child: Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
@@ -204,6 +206,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
               ],
             ),
           ),
+        ),
         );
       },
     );
@@ -216,6 +219,8 @@ class _ConfigProfileState extends State<ConfigProfile> {
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 400), 
           child: Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
@@ -273,6 +278,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
               ],
             ),
           ),
+        )
         );
       },
     );

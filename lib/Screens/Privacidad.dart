@@ -250,6 +250,10 @@ class Privacidad extends StatelessWidget {
                                         .getCurrentUser()
                                         .userId
                                         .toString();
+                                    final isAgent = userProvider
+                                        .getCurrentUser()
+                                        .isAgent
+                                        .toString();
                                     final response = await ApiClient()
                                         .post('auth/change-pssw', {
                                       "UserId": id,
