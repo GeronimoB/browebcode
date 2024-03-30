@@ -70,6 +70,39 @@ class PlayerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updatePlayer({required String fieldName, required String value}) {
+    // Mapa que mapea los nombres de campo a los métodos correspondientes de copyWith
+    final Map<String, Function> fieldMap = {
+      'name': (String value) => _player.copyWith(name: value),
+      'email': (String value) => _player.copyWith(email: value),
+      'birthdate': (String value) =>
+          _player.copyWith(birthDate: DateTime.tryParse(value)),
+      'password': (String value) => _player.copyWith(password: value),
+      'lastname': (String value) => _player.copyWith(lastName: value),
+      'provincia': (String value) => _player.copyWith(provincia: value),
+      'pais': (String value) => _player.copyWith(pais: value),
+      'categoria': (String value) => _player.copyWith(categoria: value),
+      'club': (String value) => _player.copyWith(club: value),
+      'logros': (String value) => _player.copyWith(logrosIndividuales: value),
+      'codigoreferido': (String value) => _player.copyWith(referralCode: value),
+      'altura': (String value) => _player.copyWith(altura: value),
+      'piedominante': (String value) => _player.copyWith(pieDominante: value),
+      'seleccion': (String value) => _player.copyWith(seleccionNacional: value),
+      'categoriaseleccion': (String value) =>
+          _player.copyWith(categoriaSeleccion: value),
+      'position': (String value) => _player.copyWith(position: value),
+      'dni': (String value) => _player.copyWith(dni: value),
+    };
+
+    final Function? copyWithMethod = fieldMap[fieldName.toLowerCase()];
+
+    if (copyWithMethod != null) {
+      _player = copyWithMethod(value);
+      notifyListeners(); 
+    }
+  }
+
+
   PlayerFullModel getTemporalUser() {
     return _temporalUser;
   }

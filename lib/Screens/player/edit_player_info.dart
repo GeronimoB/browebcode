@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/src/auth/data/models/user_model.dart';
+import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
+import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -13,11 +15,13 @@ import 'package:http/http.dart' as http;
 import '../../utils/api_constants.dart';
 
 class EditarInfoPlayer extends StatefulWidget {
+  const EditarInfoPlayer({super.key});
+
   @override
-  _EditarInfoPlayerState createState() => _EditarInfoPlayerState();
+  EditarInfoPlayerState createState() => EditarInfoPlayerState();
 }
 
-class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
+class EditarInfoPlayerState extends State<EditarInfoPlayer> {
   late TextEditingController _nombreController;
   late TextEditingController _apellidoController;
   late TextEditingController _correoController;
@@ -26,11 +30,15 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
   late TextEditingController _posicionController;
   late TextEditingController _categoriaController;
   late TextEditingController _logrosIndividualesController;
-  late TextEditingController _AlturaController;
+  late TextEditingController _alturaController;
   late TextEditingController _pieDominanteController;
   late TextEditingController _seleccionNacionalController;
+  late TextEditingController _dniController;
+  late TextEditingController _clubController;
+  late TextEditingController _categoriaSeleccionController;
 
   late PlayerProvider provider;
+  late PlayerFullModel player;
   final picker = ImagePicker();
 
   @override
@@ -41,8 +49,8 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final playerProvider = Provider.of<PlayerProvider>(context, listen: true);
-    final player = playerProvider.getPlayer()!;
+    provider = Provider.of<PlayerProvider>(context, listen: true);
+    player = provider.getPlayer()!;
     _nombreController = TextEditingController(text: player.name);
     _apellidoController = TextEditingController(text: player.lastName);
     _correoController = TextEditingController(text: player.email);
@@ -52,10 +60,14 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
     _categoriaController = TextEditingController(text: player.categoria);
     _logrosIndividualesController =
         TextEditingController(text: player.logrosIndividuales);
-    _AlturaController = TextEditingController(text: player.altura);
+    _alturaController = TextEditingController(text: player.altura);
     _pieDominanteController = TextEditingController(text: player.pieDominante);
     _seleccionNacionalController =
         TextEditingController(text: player.seleccionNacional);
+    _categoriaSeleccionController =
+        TextEditingController(text: player.categoriaSeleccion);
+    _dniController = TextEditingController(text: player.dni);
+    _clubController = TextEditingController(text: player.club);
   }
 
   Future<void> _openGallery() async {
@@ -95,7 +107,6 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: true);
     final user = userProvider.getCurrentUser();
-    print("imagen: ${user.imageUrl}");
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -147,7 +158,6 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
                                 placeholder: 'assets/images/fot.png',
                                 imageErrorBuilder:
                                     (context, error, stackTrace) {
-                                  print("hubo error");
                                   return Image.asset(
                                     'assets/images/fot.png',
                                     width: 150,
@@ -155,7 +165,7 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
                                     fit: BoxFit.cover,
                                   );
                                 },
-                                image: user.imageUrl ?? '',
+                                image: user.imageUrl,
                                 width: 150,
                                 height: 150,
                                 fit: BoxFit.cover,
@@ -189,24 +199,54 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
                 ),
               ),
               const SizedBox(height: 20),
-              _buildTextField(label: 'NOMBRE', controller: _nombreController),
               _buildTextField(
-                  label: 'APELLIDO', controller: _apellidoController),
-              _buildTextField(label: 'CORREO', controller: _correoController),
-              _buildTextField(label: 'PAÍS', controller: _paisController),
+                  label: 'NOMBRE', controller: _nombreController, camp: 'name'),
               _buildTextField(
-                  label: 'PROVINCIA', controller: _provinciaController),
+                  label: 'APELLIDO',
+                  controller: _apellidoController,
+                  camp: 'lastname'),
               _buildTextField(
-                  label: 'POSICIÓN', controller: _posicionController),
+                  label: 'CORREO',
+                  controller: _correoController,
+                  camp: 'email'),
               _buildTextField(
-                  label: 'CATEGORÍA', controller: _categoriaController),
+                  label: 'DNI', controller: _dniController, camp: 'dni'),
               _buildTextField(
-                  label: 'LOGROS', controller: _logrosIndividualesController),
-              _buildTextField(label: 'ALTURA', controller: _AlturaController),
+                  label: 'PAÍS', controller: _paisController, camp: 'pais'),
               _buildTextField(
-                  label: 'PIE DOMINANTE', controller: _pieDominanteController),
+                  label: 'PROVINCIA',
+                  controller: _provinciaController,
+                  camp: 'provincia'),
               _buildTextField(
-                  label: 'SELECCION', controller: _seleccionNacionalController),
+                  label: 'POSICIÓN',
+                  controller: _posicionController,
+                  camp: 'position'),
+              _buildTextField(
+                  label: 'CLUB', controller: _clubController, camp: 'club'),
+              _buildTextField(
+                  label: 'CATEGORÍA',
+                  controller: _categoriaController,
+                  camp: 'categoria'),
+              _buildTextField(
+                  label: 'LOGROS',
+                  controller: _logrosIndividualesController,
+                  camp: 'logros'),
+              _buildTextField(
+                  label: 'ALTURA',
+                  controller: _alturaController,
+                  camp: 'altura'),
+              _buildTextField(
+                  label: 'PIE DOMINANTE',
+                  controller: _pieDominanteController,
+                  camp: 'piedominante'),
+              _buildTextField(
+                  label: 'SELECCION',
+                  controller: _seleccionNacionalController,
+                  camp: 'seleccion'),
+              _buildTextField(
+                  label: 'CATEGORIA SELECCION',
+                  controller: _categoriaSeleccionController,
+                  camp: 'categoriaseleccion'),
             ],
           ),
         ),
@@ -215,7 +255,9 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
   }
 
   Widget _buildTextField(
-      {required String label, required TextEditingController controller}) {
+      {required String label,
+      required TextEditingController controller,
+      required String camp}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       child: Row(
@@ -249,15 +291,16 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
           ),
           IconButton(
             icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF00E050)),
-            onPressed: () => _editarCampo(context, label, controller),
+            onPressed: () => _editarCampo(context, label, controller, camp),
           ),
         ],
       ),
     );
   }
 
-  void _editarCampo(
-      BuildContext context, String label, TextEditingController controller) {
+  void _editarCampo(BuildContext context, String label,
+      TextEditingController controller, String camp,
+      {bool? isNumber}) {
     showDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.2),
@@ -294,6 +337,9 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
                 ),
                 TextField(
                   controller: editingController,
+                  keyboardType: isNumber ?? false
+                      ? TextInputType.number
+                      : TextInputType.text,
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: Colors.white,
@@ -319,12 +365,25 @@ class _EditarInfoPlayerState extends State<EditarInfoPlayer> {
                       height: 27,
                     ),
                     CustomTextButton(
-                      onTap: () {
+                      onTap: () async {
                         if (mounted) {
                           setState(() {
                             controller.text = editingController.text;
                           });
                         }
+                        provider.updatePlayer(
+                          fieldName: camp.toLowerCase(),
+                          value: editingController.text,
+                        );
+                        final player = provider.getPlayer()!;
+
+                        final userProvider =
+                            Provider.of<UserProvider>(context, listen: false);
+
+                        userProvider.updateUserFromPlayer(player);
+
+                        await ApiClient().post(
+                            'auth/edit-player', provider.getPlayer()!.toMap());
                         Navigator.of(context).pop();
                       },
                       text: 'Guardar',

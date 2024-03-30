@@ -74,6 +74,7 @@ class UserModel extends UserEntity {
     String? imageUrl,
   }) {
     return UserModel(
+      userId: userId,
       username: usuario ?? username,
       password: '',
       referralCode: referralCode ?? this.referralCode,

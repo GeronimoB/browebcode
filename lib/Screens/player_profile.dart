@@ -58,7 +58,7 @@ class _PlayerProfileState extends State<PlayerProfile> {
     final user = userProvider.getCurrentUser();
     String shortInfo = '${player.provincia}, ${player.pais}';
     String fullInfo =
-        '${player.provincia}, ${player.pais}\nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: r${player.logrosIndividuales}';
+        '${player.provincia}, ${player.pais}\nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: ${player.logrosIndividuales}';
     print("esta es la imagen ${player.userImage!.isNotEmpty}");
     return Container(
       decoration: const BoxDecoration(
