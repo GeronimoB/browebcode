@@ -39,8 +39,8 @@ class PlanDetailsScreen extends StatelessWidget {
               children: <Widget>[
                 SvgPicture.asset(
                 'assets/icons/Logo.svg',
-                width: 30, // Ancho de 30
-                height: 30, // Alto de 30
+                width: 30, 
+                height: 30, 
               ),
                 Text(
                   goldPlan,
@@ -66,9 +66,7 @@ class PlanDetailsScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            // Espacio
             SizedBox(height: 20),
-            // Precios y botón de subscripción en dos columnas
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -132,7 +130,7 @@ List<Widget> generatePlanItems(List<String> items) {
         item,
         style: TextStyle(fontFamily: 'Montserrat', color: Colors.white),
       ),
-      leading: Icon(Icons.check_circle, color: Color(0xff00E050)), // Icono con check verde
+      leading: Icon(Icons.check, color: Color(0xff00E050)), // Icono con check verde
     );
   }).toList();
 }

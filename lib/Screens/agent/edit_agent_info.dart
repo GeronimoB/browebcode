@@ -242,7 +242,9 @@ void _editarCampo(BuildContext context, String label, TextEditingController cont
       TextEditingController editingController = TextEditingController(text: controller.text);
       return Dialog(
         backgroundColor: Colors.transparent,
-        child: Container(
+       child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 400), 
+          child: Container(
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
             color: const Color(0xff3B3B3B),
@@ -312,6 +314,7 @@ void _editarCampo(BuildContext context, String label, TextEditingController cont
             ],
           ),
         ),
+       )
       );
     },
   );

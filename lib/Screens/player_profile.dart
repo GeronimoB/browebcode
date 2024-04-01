@@ -20,7 +20,7 @@ class PlayerProfile extends StatefulWidget {
 }
 
 class _PlayerProfileState extends State<PlayerProfile> {
-  double gridSpacing = 4.0;
+  double gridSpacing = 5.0;
   bool _isExpanded = false;
 
   @override
@@ -184,8 +184,8 @@ class _PlayerProfileState extends State<PlayerProfile> {
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     crossAxisSpacing: gridSpacing,
-                    mainAxisSpacing: gridSpacing,
-                    childAspectRatio: (9 / 16),
+                    mainAxisSpacing: 0,
+                  childAspectRatio: (9 / 16),
                   ),
                   itemCount: videos.length,
                   itemBuilder: (context, index) {
