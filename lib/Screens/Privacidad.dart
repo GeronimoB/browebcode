@@ -21,7 +21,11 @@ class Privacidad extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xff00E050)),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color(0xFF00E050),
+            size: 32,
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -40,9 +44,9 @@ class Privacidad extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: MediaQuery.of(context).padding.top + 20),
-            const Text(
+             Text(
               'PRIVACIDAD',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontFamily: 'Montserrat',
                 fontSize: 24,
@@ -79,9 +83,9 @@ class Privacidad extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            const Text(
+                             Text(
                               "Cambiar Contraseña",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: 'Montserrat',
                                 color: Color(0xff00E050),
                                 fontWeight: FontWeight.bold,
@@ -93,16 +97,16 @@ class Privacidad extends StatelessWidget {
                               key: _formKey,
                               child: TextFormField(
                                 controller: oldPasswordCtlr,
-                                decoration: const InputDecoration(
+                                decoration:  InputDecoration(
                                   labelText: 'Contraseña Antigua',
-                                  labelStyle: TextStyle(
+                                  labelStyle: const TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Montserrat',
                                     fontWeight: FontWeight.w500,
                                     fontStyle: FontStyle.italic,
                                     fontSize: 12,
                                   ),
-                                  errorStyle: TextStyle(
+                                  errorStyle:  TextStyle(
                                     color: Color.fromARGB(255, 255, 106, 106),
                                     fontFamily: 'Montserrat',
                                     fontWeight: FontWeight.w500,
@@ -111,7 +115,7 @@ class Privacidad extends StatelessWidget {
                                   ),
                                   contentPadding:
                                       EdgeInsets.symmetric(vertical: 5),
-                                  enabledBorder: UnderlineInputBorder(
+                                  enabledBorder: const UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: Color(0xFF00E050), width: 2),
                                   ),
@@ -136,14 +140,14 @@ class Privacidad extends StatelessWidget {
                                 controller: newPasswordCtlr,
                                 decoration: const InputDecoration(
                                   labelText: 'Nueva Contraseña',
-                                  labelStyle: TextStyle(
+                                  labelStyle: const TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Montserrat',
                                     fontWeight: FontWeight.w500,
                                     fontStyle: FontStyle.italic,
                                     fontSize: 12,
                                   ),
-                                  errorStyle: TextStyle(
+                                  errorStyle: const TextStyle(
                                     color: Color.fromARGB(255, 255, 106, 106),
                                     fontFamily: 'Montserrat',
                                     fontWeight: FontWeight.w500,
@@ -152,7 +156,7 @@ class Privacidad extends StatelessWidget {
                                   ),
                                   contentPadding:
                                       EdgeInsets.symmetric(vertical: 5),
-                                  enabledBorder: UnderlineInputBorder(
+                                  enabledBorder: const UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: Color(0xFF00E050), width: 2),
                                   ),
@@ -193,14 +197,14 @@ class Privacidad extends StatelessWidget {
                                 controller: confirmPasswordCtlr,
                                 decoration: const InputDecoration(
                                   labelText: 'Confirmar Nueva Contraseña',
-                                  labelStyle: TextStyle(
+                                  labelStyle: const TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Montserrat',
                                     fontWeight: FontWeight.w500,
                                     fontStyle: FontStyle.italic,
                                     fontSize: 12,
                                   ),
-                                  errorStyle: TextStyle(
+                                  errorStyle: const TextStyle(
                                     color: Color.fromARGB(255, 255, 106, 106),
                                     fontFamily: 'Montserrat',
                                     fontWeight: FontWeight.w500,
@@ -209,7 +213,7 @@ class Privacidad extends StatelessWidget {
                                   ),
                                   contentPadding:
                                       EdgeInsets.symmetric(vertical: 5),
-                                  enabledBorder: UnderlineInputBorder(
+                                  enabledBorder: const UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: Color(0xFF00E050), width: 2),
                                   ),
@@ -303,7 +307,7 @@ class Privacidad extends StatelessWidget {
               child: const ListTile(
                 title: Text(
                   'CAMBIAR CONTRASEÑA',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
                     fontWeight: FontWeight.bold,
@@ -314,22 +318,22 @@ class Privacidad extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            ListTile(
-              title: const Text(
-                'AUTENTICACION DE DOBLE FACTOR',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Montserrat',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onTap: () {
-                _editarCampo(context, 'Autenticación de Doble Factor',
-                    TextEditingController());
-              },
-              trailing: Icon(Icons.chevron_right, color: Color(0xff00E050)),
-            ),
+            // ListTile(
+            //   title: const Text(
+            //     'AUTENTICACION DE DOBLE FACTOR',
+            //     style: const TextStyle(
+            //       color: Colors.white,
+            //       fontFamily: 'Montserrat',
+            //       fontSize: 16,
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //   ),
+            //   onTap: () {
+            //     _editarCampo(context, 'Autenticación de Doble Factor',
+            //         TextEditingController());
+            //   },
+            //   trailing: Icon(Icons.chevron_right, color: Color(0xff00E050)),
+            // ),
             const SizedBox(height: 10),
             Expanded(
               child: Align(
@@ -383,7 +387,7 @@ class Privacidad extends StatelessWidget {
                   },
                   title: Text(
                     'Google Authenticator',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color(0xff00E050),
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Montserrat',

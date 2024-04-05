@@ -14,6 +14,27 @@ class AgenteProvider extends ChangeNotifier {
     return _agente;
   }
 
+  void updateAgent({required String fieldName, required String value}) {
+    // Mapa que mapea los nombres de campo a los métodos correspondientes de copyWith
+    final Map<String, Function> fieldMap = {
+      'name': (String value) => _agente.copyWith(nombre: value),
+      'email': (String value) => _agente.copyWith(correo: value),
+      'birthdate': (String value) =>
+          _agente.copyWith(birthDate: DateTime.tryParse(value)),
+      'lastname': (String value) => _agente.copyWith(apellido: value),
+      'provincia': (String value) => _agente.copyWith(provincia: value),
+      'c': (String value) => _agente.copyWith(pais: value),
+      'username': (String value) => _agente.copyWith(usuario: value),
+    };
+
+    final Function? copyWithMethod = fieldMap[fieldName.toLowerCase()];
+
+    if (copyWithMethod != null) {
+      _agente = copyWithMethod(value);
+      notifyListeners();
+    }
+  }
+
   void updateLocalImage(String image) {
     _agente = _agente.copyWith(imageUrl: image);
     notifyListeners();

@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../components/custom_text_button.dart';
 import '../../../../providers/player_provider.dart';
+import '../../../../utils/current_state.dart';
 
 class SignUpScreen2 extends StatefulWidget {
   const SignUpScreen2({super.key});
@@ -27,8 +28,8 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
   late TextEditingController achivementController;
   late TextEditingController referralCodeCtlr;
   late TextEditingController heightController;
-  String dominantFoot = 'Zurdo';
-  String selection = 'Masculina';
+  String dominantFoot = translations!['left_feet'];
+  String selection = translations!['male'];
   String catSelection = '12';
 
   Future<bool> validateForm(BuildContext context) async {
@@ -40,9 +41,9 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
         achivementController.text.isEmpty ||
         heightController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
             backgroundColor: Colors.redAccent,
-            content: Text('Por favor, complete todos los campos.')),
+            content: Text(translations!['complete_all_fields'])),
       );
       return false;
     }
@@ -55,31 +56,28 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
 
         if (response.statusCode != 200) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
                 backgroundColor: Colors.redAccent,
-                content: Text('El código de afiliado ingresado no existe.')),
+                content: Text(translations!['ref_code_no_exist'])),
           );
           referralCodeCtlr.text = "";
           return false;
         }
         return true;
       } on TimeoutException {
-        // Si se produce un timeout, muestra un mensaje de error y devuelve false
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: Colors.redAccent,
-            content: Text(
-                'Se ha producido un error. Por favor, inténtalo de nuevo.'),
+            content: Text(translations!['error_try_again']),
           ),
         );
         return false;
       } catch (e) {
         // Captura cualquier otra excepción y muestra un mensaje de error genérico
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: Colors.redAccent,
-            content: Text(
-                'Se ha producido un error. Por favor, intentelo de nuevo.'),
+            content: Text(translations!['error_try_again']),
           ),
         );
         return false;
@@ -135,9 +133,9 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Regístrate',
-                  style: TextStyle(
+                Text(
+                  translations!['sign_up'],
+                  style: const TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -151,17 +149,17 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                 ),
                 TextField(
                   controller: dniController,
-                  decoration: const InputDecoration(
-                    labelText: 'Introduce tu DNI/NIE/NIF',
-                    labelStyle: TextStyle(
+                  decoration: InputDecoration(
+                    labelText: translations!['dni_label'],
+                    labelStyle: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: UnderlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
@@ -171,17 +169,17 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                 ),
                 TextField(
                   controller: countryController,
-                  decoration: const InputDecoration(
-                    labelText: 'Pais',
-                    labelStyle: TextStyle(
+                  decoration: InputDecoration(
+                    labelText: translations!['country_label'],
+                    labelStyle: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: UnderlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
@@ -191,17 +189,17 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                 ),
                 TextField(
                   controller: stateController,
-                  decoration: const InputDecoration(
-                    labelText: 'Provincia',
-                    labelStyle: TextStyle(
+                  decoration: InputDecoration(
+                    labelText: translations!['state_label'],
+                    labelStyle: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: UnderlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
@@ -211,37 +209,36 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                 ),
                 TextField(
                   controller: heightController,
-                  decoration: const InputDecoration(
-                    labelText: 'Altura',
-                    labelStyle: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
+                  keyboardType: TextInputType.number,
+                  maxLength: 4,
+                  decoration: InputDecoration(
+                    labelText: translations!['height_label'],
+                    labelStyle: const TextStyle(
+                      color: Colors.black,
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFF00F056), width: 2),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 2),
                     ),
                   ),
-                  style: const TextStyle(
-                      color: Colors.white, fontFamily: 'Montserrat'),
+                  style: const TextStyle(color: Colors.black),
                 ),
                 TextField(
                   controller: categoryController,
-                  decoration: const InputDecoration(
-                    labelText: 'Categoría en la que juega',
-                    labelStyle: TextStyle(
+                  decoration: InputDecoration(
+                    labelText: translations!['category_label'],
+                    labelStyle: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: UnderlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
@@ -251,17 +248,17 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                 ),
                 TextField(
                   controller: clubController,
-                  decoration: const InputDecoration(
-                    labelText: 'Club/Escuela deportivo/a en el/la que juega',
-                    labelStyle: TextStyle(
+                  decoration: InputDecoration(
+                    labelText: translations!['club_label'],
+                    labelStyle: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: UnderlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
@@ -271,17 +268,17 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                 ),
                 TextField(
                   controller: achivementController,
-                  decoration: const InputDecoration(
-                    labelText: 'Logros individuales',
-                    labelStyle: TextStyle(
+                  decoration: InputDecoration(
+                    labelText: translations!['individual_achievements'],
+                    labelStyle: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: UnderlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
@@ -293,9 +290,9 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Pie dominante',
-                      style: TextStyle(
+                    Text(
+                      translations!['individual_achievements'],
+                      style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.w500,
@@ -306,10 +303,14 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                     const SizedBox(width: 10),
                     DropdownWidget<String>(
                       value: dominantFoot,
-                      items: ['Zurdo', 'Diestro', 'Ambidiestro'].toList(),
+                      items: [
+                        translations!['left_feet'].toString(),
+                        translations!['right_feet'].toString(),
+                        translations!['both_feet'].toString(),
+                      ].toList(),
                       onChanged: (String? newValue) {
                         setState(() {
-                          dominantFoot = newValue ?? 'Zurdo';
+                          dominantFoot = newValue ?? translations!['left_feet'];
                         });
                       },
                       itemBuilder: (String item) {
@@ -323,9 +324,9 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Selección nacional',
-                      style: TextStyle(
+                    Text(
+                      translations!['left_feet'],
+                      style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.w500,
@@ -336,10 +337,13 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                     const SizedBox(width: 10),
                     DropdownWidget<String>(
                       value: selection,
-                      items: ['Masculina', 'Femenino'].toList(),
+                      items: [
+                        translations!['male'].toString(),
+                        translations!['female'].toString(),
+                      ].toList(),
                       onChanged: (String? newValue) {
                         setState(() {
-                          selection = newValue ?? 'Masculina';
+                          selection = newValue ?? translations!['male'];
                         });
                       },
                       itemBuilder: (String item) {
@@ -366,17 +370,17 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                 const SizedBox(height: 10),
                 TextField(
                   controller: referralCodeCtlr,
-                  decoration: const InputDecoration(
-                    labelText: 'Código Afiliado',
-                    labelStyle: TextStyle(
+                  decoration: InputDecoration(
+                    labelText: translations!['referral_code'],
+                    labelStyle: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: UnderlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
@@ -414,14 +418,16 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const SelectCamp()),
+                              builder: (context) => const SelectCamp(
+                                    registrando: true,
+                                  )),
                         );
                       }
                       setState(() {
                         isLoading = false; // Ocultar el loader
                       });
                     },
-                    text: 'Siguiente',
+                    text: translations!['next'],
                     buttonPrimary: true,
                     width: 116,
                     height: 39),
@@ -441,8 +447,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                   .withOpacity(0.5), // Color de fondo semitransparente
               child: const Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Colors.green), // Color del loader
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
                 ),
               ),
             ),

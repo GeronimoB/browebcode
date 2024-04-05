@@ -51,6 +51,8 @@ dependencies:
   flutter_slidable: ^3.1.0
   firebase_messaging: ^14.7.19
   flutter_local_notifications: ^17.0.0
+  cached_network_image: ^3.3.1
+  shimmer: ^3.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -62,6 +64,11 @@ flutter:
     - assets/images/
     - assets/images/
     - assets/icons/
+    - assets/language/en/
+    - assets/language/es/
+    - assets/language/fr/
+    - assets/language/it/
+    - assets/language/de/
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

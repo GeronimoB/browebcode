@@ -25,7 +25,7 @@ class PlanDetailsScreen extends StatelessWidget {
           children: <Widget>[
             const Text(
               'PLANES',
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Montserrat',
                 color: Colors.white,
                 fontSize: 24,
@@ -38,10 +38,10 @@ class PlanDetailsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SvgPicture.asset(
-                'assets/icons/Logo.svg',
-                width: 30, 
-                height: 30, 
-              ),
+                  'assets/icons/Logo.svg',
+                  width: 30,
+                  height: 30,
+                ),
                 Text(
                   goldPlan,
                   style: const TextStyle(
@@ -62,7 +62,7 @@ class PlanDetailsScreen extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
               child: Text(
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-                style: TextStyle(fontFamily: 'Montserrat'),
+                style: const TextStyle(fontFamily: 'Montserrat'),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -75,7 +75,7 @@ class PlanDetailsScreen extends StatelessWidget {
                   children: <Widget>[
                     const Text(
                       '1 MES',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Montserrat',
                         color: Color(0xff00E050),
                         fontSize: 16,
@@ -114,7 +114,6 @@ class PlanDetailsScreen extends StatelessWidget {
                   width: 116,
                   height: 39,
                 ),
-
               ],
             ),
           ],
@@ -123,16 +122,16 @@ class PlanDetailsScreen extends StatelessWidget {
     );
   }
 
-List<Widget> generatePlanItems(List<String> items) {
-  return items.map((item) {
-    return ListTile(
-      title: Text(
-        item,
-        style: TextStyle(fontFamily: 'Montserrat', color: Colors.white),
-      ),
-      leading: Icon(Icons.check, color: Color(0xff00E050)), // Icono con check verde
-    );
-  }).toList();
-}
-
+  List<Widget> generatePlanItems(List<String> items) {
+    return items.map((item) {
+      return ListTile(
+        title: Text(
+          item,
+          style: const TextStyle(fontFamily: 'Montserrat', color: Colors.white),
+        ),
+        leading: Icon(Icons.check,
+            color: Color(0xff00E050)), // Icono con check verde
+      );
+    }).toList();
+  }
 }

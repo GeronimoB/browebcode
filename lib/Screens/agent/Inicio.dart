@@ -22,9 +22,11 @@ class _InicioPageState extends State<InicioPage> {
   double _xOffset = 0.0;
   double _rotation = 0.0;
   int _currentIndex = 0;
-  List<InitialVideoModel> _videoUrls = [];
+  final List<InitialVideoModel> _videoUrls = [];
   late VideoPlayerController? currentController;
   late VideoPlayerController? nextController;
+  bool _isLoading = false;
+  String currentUserId = '0';
 
   @override
   void initState() {
@@ -33,38 +35,49 @@ class _InicioPageState extends State<InicioPage> {
   }
 
   Future<void> _fetchVideoUrls() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
-      final response = await ApiClient().post('auth/random-videos', {"a": "a"});
-      if (response.statusCode == 200) {
-        final videos = jsonDecode(response.body)["video"];
-        final List<InitialVideoModel> videosA = mapListToInitialVideos(videos);
-        setState(() {
-          _videoUrls.addAll(videosA);
-        });
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final id = userProvider.getCurrentUser().userId;
+      final response =
+          await ApiClient().post('auth/random-videos', {"userId": id});
+
+      final videos = jsonDecode(response.body)["video"];
+      final List<InitialVideoModel> videosA = mapListToInitialVideos(videos);
+      setState(() {
+        currentUserId = id;
+        _videoUrls.clear();
+        _videoUrls.addAll(videosA);
+        _isLoading = false;
+      });
+
+      if (_videoUrls.isNotEmpty) {
         _initializeVideoPlayer(_currentIndex);
         _initializeNextVideoPlayer(_currentIndex + 1);
-      } else {
-        throw Exception('Error al obtener las URLs de los videos');
       }
     } catch (error) {
-      print('Error al obtener las URLs de los videos: $error');
+      print(error);
+      throw Exception('Error al obtener las URLs de los videos');
     }
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
     setState(() {
       _xOffset += details.primaryDelta!;
-      _rotation = _xOffset / 1000;
+      _rotation = -_xOffset / 2000;
     });
   }
 
   void _onHorizontalDragEnd(DragEndDetails details) async {
+    final userId = _videoUrls[_currentIndex].userId;
     if (_xOffset > 100) {
-      final userId = _videoUrls[_currentIndex].userId;
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => MatchProfile(userId: userId)),
       );
     } else if (_xOffset < -100) {
+      _writeRejectionData(userId, currentUserId);
       currentController!.dispose();
       currentController = nextController;
       _currentIndex = (_currentIndex + 1) % _videoUrls.length;
@@ -104,9 +117,19 @@ class _InicioPageState extends State<InicioPage> {
     super.dispose();
   }
 
+  void _writeRejectionData(int userId, String currentUserId) async {
+    FirebaseFirestore.instance
+        .collection('Rejects')
+        .doc('agente-$currentUserId')
+        .collection('AgentRejects')
+        .doc('jugador-$userId')
+        .set({});
+  }
+
   @override
   Widget build(BuildContext context) {
-    double scale = 1 - (_xOffset.abs() * 0.001);
+    //double scale = 1 - (_xOffset.abs() * 0.001);
+    double scale = 1;
     double height = MediaQuery.of(context).size.height;
 
     return SizedBox(
@@ -116,31 +139,61 @@ class _InicioPageState extends State<InicioPage> {
         onHorizontalDragEnd: _onHorizontalDragEnd,
         child: Stack(
           children: <Widget>[
-            Positioned.fill(
-              child: Transform.scale(
-                scale: scale,
-                child: Transform.rotate(
-                  angle: _rotation,
-                  child: Transform.translate(
-                    offset: Offset(_xOffset, 0),
-                    child: _videoUrls.isEmpty
-                        ? const Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator(),
-                                SizedBox(height: 20),
-                                Text('Cargando videos...'),
-                              ],
+            _isLoading
+                ? const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFF05FF00))),
+                        SizedBox(height: 20),
+                        Text('Cargando videos...'),
+                      ],
+                    ),
+                  )
+                : _videoUrls.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _fetchVideoUrls();
+                            },
+                            icon: const Icon(
+                              Icons.refresh,
+                              size: 48,
+                              color: Color(0xffffffff),
                             ),
-                          )
-                        : SlidableVideo(
-                            controller: currentController!,
                           ),
-                  ),
-                ),
-              ),
-            ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Has llegado al final de los videos!',
+                            style: const TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      )
+                    : Positioned.fill(
+                        child: Transform.scale(
+                          scale: scale,
+                          child: Transform.rotate(
+                            angle: _rotation,
+                            child: Transform.translate(
+                              offset: Offset(_xOffset, 0),
+                              child: SlidableVideo(
+                                controller: currentController!,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
             if (_xOffset > 0)
               Positioned(
                 top: MediaQuery.of(context).size.height / 2 - 50,

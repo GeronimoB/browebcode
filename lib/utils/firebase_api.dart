@@ -1,18 +1,39 @@
 import 'dart:convert';
 
+import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
+import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/main.dart';
+import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/src/auth/presentation/screens/Sing_in.dart';
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/notification_model.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void handleMessage(RemoteMessage? message) {
+void handleMessage(RemoteMessage? message) async {
   if (message == null) return;
   print("manejando el mensaje...");
   print(message);
-  //navigatorKey.currentState?.pushReplacementNamed('HomePage');
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  final agente = prefs.getBool("agente");
+  if (agente != null) {
+    if (agente) {
+      navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
+          builder: (context) =>
+              const CustomBottomNavigationBar(initialIndex: 2)));
+    } else {
+      navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
+          builder: (context) =>
+              const CustomBottomNavigationBarPlayer(initialIndex: 3)));
+    }
+  } else {
+    navigatorKey.currentState?.pushReplacement(
+        MaterialPageRoute(builder: (context) => const SignInScreen()));
+  }
 }
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
@@ -86,7 +107,7 @@ class FirebaseApi {
               channel.id,
               channel.name,
               channelDescription: channel.description,
-              icon: '@drawable/ic_launcher',
+              icon: '@drawable/ic_stat_ic_notification',
             ),
           ),
           payload: jsonEncode(message.toMap()));
@@ -95,7 +116,8 @@ class FirebaseApi {
 
   Future<void> initLocalNotifications() async {
     const iOS = DarwinInitializationSettings();
-    const android = AndroidInitializationSettings('@drawable/ic_launcher');
+    const android =
+        AndroidInitializationSettings('@drawable/ic_stat_ic_notification');
     const settings = InitializationSettings(android: android, iOS: iOS);
 
     await _localNotifications.initialize(settings,

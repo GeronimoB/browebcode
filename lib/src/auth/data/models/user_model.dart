@@ -81,6 +81,7 @@ class UserModel extends UserEntity {
       name: nombre ?? name,
       lastName: apellido ?? lastName,
       imageUrl: imageUrl ?? this.imageUrl,
+      isAgent: isAgent,
     );
   }
 }

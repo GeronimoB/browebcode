@@ -1,4 +1,5 @@
 import 'package:bro_app_to/components/custom_box_shadow.dart';
+import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
 
 class Pedidos extends StatefulWidget {
@@ -17,7 +18,11 @@ class _PedidosState extends State<Pedidos> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xff00E050)),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color(0xFF00E050),
+            size: 32,
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -38,7 +43,7 @@ class _PedidosState extends State<Pedidos> {
             SizedBox(height: MediaQuery.of(context).padding.top + 20),
             const Text(
               'PEDIDOS',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontFamily: 'Montserrat',
                 fontSize: 24,
@@ -75,6 +80,7 @@ class _PedidosState extends State<Pedidos> {
         setState(() {
           _selectedPedido = pedido;
         });
+        showOrder();
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -120,6 +126,109 @@ class _PedidosState extends State<Pedidos> {
           ],
         ),
       ),
+    );
+  }
+
+  void showOrder() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.7),
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(25),
+            decoration: BoxDecoration(
+              color: const Color(0xff3B3B3B),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 10,
+                  offset: const Offset(5, 4),
+                ),
+              ],
+            ),
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Gracias por tu compra",
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Color(0xff00E050),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                Text(
+                  "El producto XXXX",
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontStyle: FontStyle.italic,
+                    fontSize: 13,
+                  ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  "Fecha y hora de compra XXXXXXX",
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontStyle: FontStyle.italic,
+                    fontSize: 13,
+                  ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  "Método de pago XXXXXXX",
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontStyle: FontStyle.italic,
+                    fontSize: 13,
+                  ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  "Factura XXXXXXXX",
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontStyle: FontStyle.italic,
+                    fontSize: 13,
+                  ),
+                ),
+                SizedBox(
+                  height: 35,
+                ),
+                Center(
+                  child: CustomTextButton(
+                      text: "Descargar Factura",
+                      buttonPrimary: true,
+                      width: 164,
+                      height: 31),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -18,7 +18,11 @@ class PerfilDetallePage extends StatelessWidget {
         children: <Widget>[
           ListTile(
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Color(0xFF00E050)),
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Color(0xFF00E050),
+                size: 32,
+              ),
               onPressed: () => Navigator.pop(context),
             ),
             title: const Text(
@@ -41,14 +45,14 @@ class PerfilDetallePage extends StatelessWidget {
                 const SizedBox(height: 16),
                 const Text(
                   'Nombres y Apellidos',
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold),
                 ),
                 const Text(
                   'Fecha de Nacimiento\nPaís, Provincia\nCategoría en la que juega\nEscuela deportiva en la que juega\nLogros individuales\nSelección Nacional Masculina U18',
-                  style: TextStyle(color: Colors.grey),
+                  style: const TextStyle(color: Colors.grey),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -60,7 +64,7 @@ class PerfilDetallePage extends StatelessWidget {
                     // Acción para ir al chat
                   },
                   child: const Text('¡Vamos al Chat!',
-                      style: TextStyle(color: Colors.green)),
+                      style: const TextStyle(color: Colors.green)),
                 ),
               ],
             ),
@@ -70,4 +74,3 @@ class PerfilDetallePage extends StatelessWidget {
     );
   }
 }
-

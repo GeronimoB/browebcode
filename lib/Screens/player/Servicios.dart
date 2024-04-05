@@ -95,7 +95,7 @@ class _PlanesPagoState extends State<Servicios> {
                 const SizedBox(height: 50), // Espacio en la parte superior
                 const Text(
                   'Servicios',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
@@ -119,7 +119,7 @@ class _PlanesPagoState extends State<Servicios> {
                     const SizedBox(height: 20),
                     const Text(
                       'Seleccione una opción de pago:',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -150,7 +150,7 @@ class _PlanesPagoState extends State<Servicios> {
                         ),
                         const Text(
                           'Full Plan: Todos los servicios 149,99€/Mes',
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ],
                     ),
@@ -263,7 +263,7 @@ class _PlanesPagoState extends State<Servicios> {
             const SizedBox(height: 5),
             const Text(
               'Que Incluye:',
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 13),
@@ -282,7 +282,7 @@ class _PlanesPagoState extends State<Servicios> {
               InkWell(
                 child: const Text(
                   'Ver más...',
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Color(0xFF00F056),
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
@@ -304,7 +304,7 @@ class _PlanesPagoState extends State<Servicios> {
               InkWell(
                 child: const Text(
                   'Ver menos...',
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Color(0xFF00F056),
                       fontWeight: FontWeight.bold,
                       fontSize: 14,

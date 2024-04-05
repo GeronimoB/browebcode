@@ -7,6 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../components/custom_text_button.dart';
+import '../../../../injection_container.dart';
+import '../../../../utils/current_state.dart';
 import '../../../registration/presentation/screens/Sing_up.dart';
 import '../../data/datasources/remote_data_source_impl.dart';
 import '../../domain/entitites/user_entity.dart';
@@ -23,6 +25,7 @@ class _SignInScreenState extends State<SignInScreen> {
   late TextEditingController emailController;
   late TextEditingController passwordController;
   bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -62,9 +65,9 @@ class _SignInScreenState extends State<SignInScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Identifícate',
-                  style: TextStyle(
+                Text(
+                  translations!['identify'],
+                  style: const TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -75,52 +78,52 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 TextField(
                   controller: emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Usuario/Correo',
-                    labelStyle: TextStyle(
+                  decoration: InputDecoration(
+                    labelText: translations!['user_or_email'],
+                    labelStyle: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 10),
-                    enabledBorder: UnderlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                    enabledBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00E050), width: 2),
                     ),
-                    focusedBorder: UnderlineInputBorder(
+                    focusedBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00E050), width: 2),
                     ),
                   ),
-                  style:
-                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style: const TextStyle(
+                      color: Colors.white, fontFamily: 'Montserrat'),
                 ),
                 TextField(
                   controller: passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Contraseña',
-                    labelStyle: TextStyle(
+                  decoration: InputDecoration(
+                    labelText: translations!['password'],
+                    labelStyle: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 10),
-                    enabledBorder: UnderlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                    enabledBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00E050), width: 2),
                     ),
-                    focusedBorder: UnderlineInputBorder(
+                    focusedBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00E050), width: 2),
                     ),
                   ),
                   obscureText: true,
-                  style:
-                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style: const TextStyle(
+                      color: Colors.white, fontFamily: 'Montserrat'),
                 ),
                 Align(
                   child: TextButton(
@@ -130,9 +133,9 @@ class _SignInScreenState extends State<SignInScreen> {
                             builder: (context) => OlvideContrasenaPage()),
                       );
                     },
-                    child: const Text(
-                      '¿Se te ha olvidado la contraseña?',
-                      style: TextStyle(
+                    child: Text(
+                      translations!['forget_pass_mssg'],
+                      style: const TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
@@ -153,7 +156,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           rememberMe,
                           false);
                     },
-                    text: 'Entrar',
+                    text: translations!['enter'],
                     buttonPrimary: true,
                     width: 100,
                     height: 39),
@@ -163,9 +166,9 @@ class _SignInScreenState extends State<SignInScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Recordar sesión',
-                      style: TextStyle(
+                    Text(
+                      translations!['remember_session'],
+                      style: const TextStyle(
                         fontFamily: 'Montserrat',
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
@@ -208,9 +211,9 @@ class _SignInScreenState extends State<SignInScreen> {
                         builder: (context) => const SignUpScreen()),
                   ),
                   child: RichText(
-                      text: const TextSpan(
-                    text: "Si no tienes cuenta, ",
-                    style: TextStyle(
+                      text: TextSpan(
+                    text: translations!['if_you_dn_acct'],
+                    style: const TextStyle(
                       fontFamily: 'Montserrat',
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
@@ -219,9 +222,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     children: [
                       TextSpan(
-                          text: 'registrate aqui.',
-                          style:
-                              TextStyle(decoration: TextDecoration.underline)),
+                          text: translations!['register_here'],
+                          style: const TextStyle(
+                              decoration: TextDecoration.underline)),
                     ],
                   )),
                 ),
@@ -246,7 +249,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   .withOpacity(0.5), // Color de fondo semitransparente
               child: const Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
                 ),
               ),
             ),

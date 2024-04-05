@@ -131,7 +131,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                   children: <Widget>[
                     ListTile(
                       title: const Text('Borrar',
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.white,
                               fontFamily: 'Montserrat',
                               fontStyle: FontStyle.italic)),
@@ -159,7 +159,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                     ),
                     ListTile(
                       title: const Text('Guardar',
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.white,
                               fontFamily: 'Montserrat',
                               fontStyle: FontStyle.italic)),
@@ -192,13 +192,22 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                   height: videoHeight,
                   child: VideoPlayer(_controller),
                 )
-              : const Center(child: CircularProgressIndicator()),
+              : const Center(
+                  child: CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                  ),
+                ),
         ),
         Positioned(
           top: MediaQuery.of(context).padding.top,
           left: 8.0,
           child: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF00E050)),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFF00E050),
+              size: 32,
+            ),
             onPressed: () {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
@@ -343,7 +352,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                   children: [
                     const Text(
                       'Felicitaciones!',
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Color(0xff00E050),
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold,
@@ -354,7 +363,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
                     ),
                     Text(
                       'El video se ha guardado en la carpeta de descargas.',
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold,

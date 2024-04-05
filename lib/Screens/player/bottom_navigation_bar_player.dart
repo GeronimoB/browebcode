@@ -1,9 +1,12 @@
 import 'package:bro_app_to/Screens/mensajes.dart';
 import 'package:bro_app_to/Screens/player/match_player.dart';
 import 'package:bro_app_to/Screens/player/upload_video.dart';
+import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 final List<Widget> _pages = [
   PlayerProfile(),
@@ -74,7 +77,6 @@ class CustomBottomNavigationBarPlayerState
         body: _pages[_selectedIndex],
         bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(
-            // Personalización para evitar el efecto blanco
             splashColor: Colors.transparent,
             highlightColor: Colors.transparent,
             canvasColor: Colors.black,
@@ -108,10 +110,42 @@ class CustomBottomNavigationBarPlayerState
                 label: '',
               ),
               BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/icons/${_selectedIndex == 3 ? _selectedIconNames[3] : _iconNames[3]}',
-                  height: 32,
-                  width: 32,
+                icon: Consumer<UserProvider>(
+                  builder: (context, provider, _) => Stack(
+                    children: <Widget>[
+                      SvgPicture.asset(
+                        'assets/icons/${_selectedIndex == 3 ? _selectedIconNames[3] : _iconNames[3]}',
+                        height: 32,
+                        width: 32,
+                      ),
+                      provider.unreadTotalMessages != 0
+                          ? Positioned(
+                              top: 0,
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 16,
+                                  minHeight: 16,
+                                ),
+                                child: Text(
+                                  provider.unreadTotalMessages.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xff00E050),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink(),
+                    ],
+                  ),
                 ),
                 label: 'Mensajes',
               ),

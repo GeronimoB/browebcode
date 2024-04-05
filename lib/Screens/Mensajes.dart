@@ -30,7 +30,7 @@ class MensajesPage extends StatelessWidget {
           child: const Center(
             child: Text(
               'MENSAJE',
-              style: TextStyle(
+              style: const TextStyle(
                   fontFamily: 'Montserrat',
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -39,80 +39,90 @@ class MensajesPage extends StatelessWidget {
             ),
           ),
         ),
-        FutureBuilder<List<ChatPreview>>(
-            future: messageRepository.getLastMessagesWithUsers(
-                user.userId, user.isAgent),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
+        StreamBuilder<List<ChatPreview>>(
+          stream: messageRepository.streamLastMessagesWithUsers(
+              user.userId, user.isAgent, context),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Expanded(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                  ),
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Expanded(
+                child: Center(
+                  child: Text('Error: ${snapshot.error}'),
+                ),
+              );
+            } else {
+              final messagesWithUsers = snapshot.data ?? [];
+
+              if (messagesWithUsers.isEmpty) {
                 return const Expanded(
                   child: Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.green), // Color del loader
-                    ),
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return Expanded(
-                  child: Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  ),
-                );
-              } else {
-                final messagesWithUsers = snapshot.data ?? [];
-
-                if (messagesWithUsers.isEmpty) {
-                  return const Center(
                     child: Text(
-                      "¡Aun no tienes mensajes!",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22.0),
+                      "¡Aún no tienes mensajes!",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22.0,
+                      ),
                     ),
-                  );
-                }
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: messagesWithUsers.length,
-                    itemBuilder: (context, index) {
-                      final chat = messagesWithUsers[index];
-
-                      return GestureDetector(
-                        onTap: () async {
-                          final userParsedId = user.isAgent
-                              ? "agente_${user.userId}"
-                              : "jugador_${user.userId}";
-                          final friendParsedId = chat.friendUser.isAgent
-                              ? "agente_${chat.friendUser.userId}"
-                              : "jugador_${chat.friendUser.userId}";
-                          await FirebaseMessageRepository()
-                              .markAllMessagesAsRead(
-                                  userParsedId, friendParsedId);
-
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => ChatPage(
-                                friend: chat.friendUser,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: ChatWidget(
-                            key: ValueKey(index),
-                            chat: chat,
-                            onDelete: () {},
-                          ),
-                        ),
-                      );
-                    },
                   ),
                 );
               }
-            }),
+              return Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  itemCount: messagesWithUsers.length,
+                  itemBuilder: (context, index) {
+                    final chat = messagesWithUsers[index];
+
+                    return GestureDetector(
+                      onTap: () async {
+                        final userParsedId = user.isAgent
+                            ? "agente_${user.userId}"
+                            : "jugador_${user.userId}";
+                        final friendParsedId = chat.friendUser.isAgent
+                            ? "agente_${chat.friendUser.userId}"
+                            : "jugador_${chat.friendUser.userId}";
+                        await FirebaseMessageRepository().markAllMessagesAsRead(
+                          userParsedId,
+                          friendParsedId,
+                        );
+
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => ChatPage(
+                              friend: chat.friendUser,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 0,
+                        ),
+                        child: ChatWidget(
+                          key: ValueKey(index),
+                          chat: chat,
+                          onDelete: () {},
+                          first: index == 0,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            }
+          },
+        )
       ],
     );
   }
@@ -121,11 +131,13 @@ class MensajesPage extends StatelessWidget {
 class ChatWidget extends StatefulWidget {
   final ChatPreview chat;
   final VoidCallback onDelete;
-  const ChatWidget({
-    Key? key,
-    required this.chat,
-    required this.onDelete,
-  }) : super(key: key);
+  final bool first;
+  const ChatWidget(
+      {Key? key,
+      required this.chat,
+      required this.onDelete,
+      required this.first})
+      : super(key: key);
 
   @override
   State<ChatWidget> createState() => _ChatWidgetState();
@@ -163,30 +175,35 @@ class _ChatWidgetState extends State<ChatWidget>
       controller: controller,
       endActionPane: ActionPane(
         motion: const StretchMotion(),
-        dismissible: DismissiblePane(onDismissed: () async {
-          try {
-            final userProvider =
-                Provider.of<UserProvider>(context, listen: false);
-            final user = userProvider.getCurrentUser();
-            final sender = user.isAgent
-                ? "agente_${user.userId}"
-                : "jugador_${user.userId}";
-            final friend = widget.chat.friendUser;
-            final receiver = friend.isAgent
-                ? "agente_${friend.userId}"
-                : "jugador_${friend.userId}";
-            await FirebaseMessageRepository()
-                .deleteAllMessages(sender, receiver);
-          } catch (e) {
-            print(e);
-          }
-        }),
-        children: const [
+        dismissible: DismissiblePane(onDismissed: _deleteMessage),
+        children: [
           SlidableAction(
+            autoClose: false,
             flex: 1,
-            onPressed: null,
+            onPressed: (contexto) {
+              print('this should close');
+
+              final controller2 = Slidable.of(contexto);
+
+              if (controller2 == null) {
+                print('slidable controller is INDEED null');
+              } else {
+                print('slidable controller is NOT null');
+
+                controller2.dismiss(
+                  ResizeRequest(
+                    const Duration(milliseconds: 300),
+                    () {
+                      print('Dismiss from Button');
+                      _deleteMessage();
+                    },
+                  ),
+                  duration: const Duration(milliseconds: 300),
+                );
+              }
+            },
             backgroundColor: Colors.transparent,
-            foregroundColor: Color(0xff05FF00),
+            foregroundColor: const Color(0xff05FF00),
             icon: Icons.close,
             label: null,
             spacing: 8,
@@ -196,7 +213,7 @@ class _ChatWidgetState extends State<ChatWidget>
       child: Container(
         height: 101,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             begin: Alignment.center,
             end: Alignment.centerRight,
             colors: [
@@ -206,9 +223,12 @@ class _ChatWidgetState extends State<ChatWidget>
           ),
           color: backgroundColor,
           border: Border(
-            top: BorderSide(color: Color.fromARGB(255, 62, 174, 100), width: 2),
-            bottom:
-                BorderSide(color: Color.fromARGB(255, 62, 174, 100), width: 2),
+            top: widget.first
+                ? const BorderSide(
+                    color: Color.fromARGB(255, 62, 174, 100), width: 2)
+                : BorderSide.none,
+            bottom: const BorderSide(
+                color: Color.fromARGB(255, 62, 174, 100), width: 2),
           ),
         ),
         child: Padding(
@@ -266,5 +286,21 @@ class _ChatWidgetState extends State<ChatWidget>
         ),
       ),
     );
+  }
+
+  Future<void> _deleteMessage() async {
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final user = userProvider.getCurrentUser();
+      final sender =
+          user.isAgent ? "agente_${user.userId}" : "jugador_${user.userId}";
+      final friend = widget.chat.friendUser;
+      final receiver = friend.isAgent
+          ? "agente_${friend.userId}"
+          : "jugador_${friend.userId}";
+      await FirebaseMessageRepository().deleteAllMessages(sender, receiver);
+    } catch (e) {
+      print(e);
+    }
   }
 }

@@ -15,6 +15,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../../../providers/player_provider.dart';
+import '../../../../utils/current_state.dart';
 
 class FirstVideoWidget extends StatefulWidget {
   const FirstVideoWidget({super.key});
@@ -53,7 +54,7 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                   Text(
                     text,
                     style: TextStyle(
-                        color: success ? Color(0xff00E050) : Colors.white,
+                        color: success ? const Color(0xff00E050) : Colors.white,
                         fontFamily: 'Montserrat',
                         fontWeight: success ? FontWeight.w400 : FontWeight.bold,
                         fontSize: success ? 20 : 16),
@@ -64,7 +65,7 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                       onTap: () async {
                         Navigator.of(context).pop();
                       },
-                      text: "Listo",
+                      text: translations!['ready'],
                       buttonPrimary: true,
                       width: 174,
                       height: 30),
@@ -92,32 +93,20 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
 
       await _temporalVideoController?.initialize();
 
-      // Verificar duración del video
       Duration duration = _temporalVideoController!.value.duration;
       if (duration.inSeconds > 120) {
-        // Video dura más de 2 minutos
-        // Puedes mostrar un mensaje de error o realizar alguna acción apropiada
-        showUploadDialog("El video no puede durar más de 2 minutos", false);
+        showUploadDialog(translations!['video_max_2m'], false);
         return;
       }
 
-      // Verificar resolución del video
-      print(
-          "esta es la resolucion: ${_temporalVideoController!.value.size!.height} ${_temporalVideoController!.value.size!.width}");
-      if (_temporalVideoController!.value.size != null &&
-          (_temporalVideoController!.value.size!.height < 720 ||
-              _temporalVideoController!.value.size!.width < 720)) {
-        // Video tiene una resolución menor a 720p
-        // Puedes mostrar un mensaje de error o realizar alguna acción apropiada
-        showUploadDialog("La resolución minima es de 720p", false);
+      if (_temporalVideoController!.value.size.height < 720 ||
+          _temporalVideoController!.value.size.width < 720) {
+        showUploadDialog(translations!['video_720'], false);
         return;
       }
 
-      // Verificar orientación del video
       if (_temporalVideoController!.value.aspectRatio > 1) {
-        // Video es horizontal
-        // Puedes mostrar un mensaje de error o realizar alguna acción apropiada
-        showUploadDialog("Solo se pueden subir videos verticales", false);
+        showUploadDialog(translations!['video_vertical'], false);
         return;
       }
 
@@ -137,18 +126,18 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
       _temporalVideoController?.dispose();
       _videoController?.dispose();
       _videoController = VideoPlayerController.file(File(videoPath));
-      showUploadDialog("El video se cargo exitosamente", true);
+      showUploadDialog(translations!['video_scss'], true);
       await _videoController?.initialize();
 
       await _videoController?.play();
-      Future.delayed(Duration(seconds: 6), () {
+      Future.delayed(const Duration(seconds: 6), () {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const PlanesPago()),
         );
       });
 
-      _videoController?.setLooping(true); // Pone el video en bucle
+      _videoController?.setLooping(true);
 
       _videoController?.addListener(() {
         setState(() {
@@ -184,14 +173,7 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
     }
 
     // Enviar la solicitud al servidor y esperar la respuesta
-    var response = await request.send();
-
-    // Verificar el estado de la respuesta
-    if (response.statusCode == 200) {
-      print('Archivos subidos con éxito');
-    } else {
-      print('Error al subir los archivos: ${response.reasonPhrase}');
-    }
+    await request.send();
   }
 
   @override
@@ -223,7 +205,11 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xff00E050)),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFF00E050),
+              size: 32,
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
@@ -231,9 +217,9 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              'Mi Primer Video',
-              style: TextStyle(
+            Text(
+              translations!['first_video'],
+              style: const TextStyle(
                   color: Colors.white,
                   fontFamily: 'montserrat',
                   fontSize: 24,
@@ -249,7 +235,7 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                         child: VideoPlayer(_videoController!),
                       ),
                       Slider(
-                        activeColor: Color(0xff3EAE64),
+                        activeColor: const Color(0xff3EAE64),
                         inactiveColor: const Color(0xff00F056),
                         value: _sliderValue,
                         min: 0.0,
@@ -263,18 +249,18 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                           });
                         },
                       ),
-                      CustomTextButton(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const PlanesPago()),
-                            );
-                          },
-                          text: 'Subir',
-                          buttonPrimary: true,
-                          width: 100,
-                          height: 39)
+                      // CustomTextButton(
+                      //     onTap: () {
+                      //       Navigator.pushReplacement(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) => const PlanesPago()),
+                      //       );
+                      //     },
+                      //     text: 'Subir',
+                      //     buttonPrimary: true,
+                      //     width: 100,
+                      //     height: 39)
                     ],
                   )
                 : GestureDetector(

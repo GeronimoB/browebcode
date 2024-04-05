@@ -10,19 +10,18 @@ class CustomBottomNavigationBar extends StatefulWidget {
 
   const CustomBottomNavigationBar({super.key, this.initialIndex = 0});
   @override
-  _CustomBottomNavigationBarState createState() =>
-      _CustomBottomNavigationBarState();
+  CustomBottomNavigationBarState createState() =>
+      CustomBottomNavigationBarState();
 }
 
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   int _selectedIndex = 0;
 
-  // Lista de páginas que quieres mostrar en el BottomNavigationBar
   final List<Widget> _pages = [
     InicioPage(),
-    Matche(),
+    const Matche(),
     MensajesPage(),
-    PerfilPage(),
+    const PerfilPage(),
   ];
 
   @override
@@ -55,7 +54,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         extendBody: true,
         body: _pages[_selectedIndex],
         bottomNavigationBar: Container(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           color: Colors.black,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -68,7 +67,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   }
 
   Widget _buildNavItem(int index) {
-    // Lista de nombres de archivos de iconos
     final iconNames = ['Inicio.svg', 'Match.svg', 'Mensaje.svg', 'Perfil.svg'];
     final selectedIconNames = [
       'Inicio-1.svg',

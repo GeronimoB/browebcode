@@ -1,45 +1,78 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:convert';
 
-class Notificaciones extends StatelessWidget {
+import 'package:bro_app_to/utils/current_state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../utils/notification_model.dart';
+
+class Notificaciones extends StatefulWidget {
+  const Notificaciones({super.key});
+
+  @override
+  State<Notificaciones> createState() => _NotificacionesState();
+}
+
+class _NotificacionesState extends State<Notificaciones> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xff00E050)),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromARGB(255, 44, 44, 44),
+            Color.fromARGB(255, 0, 0, 0),
+          ],
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF212121), Color(0xFF121212)],
+      child: Scaffold(
+        extendBody: true,
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            'NOTIFICACIONES',
+            style: const TextStyle(
+              color: Colors.white,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
+              decoration: TextDecoration.none,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Colors.transparent, // AppBar transparente
+          elevation: 0, // Quitar sombra
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFF00E050),
+              size: 32,
+            ),
+            onPressed: () => Navigator.pop(context),
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
+        body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: MediaQuery.of(context).padding.top + 20),
-            const Text(
-              'NOTIFICACIONES',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.all(10),
+                itemCount: currentNotifications.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final noti = currentNotifications[index];
+                  return Container(
+                    alignment: Alignment.center,
+                    width: 400,
+                    child: _buildNotificacionItem(noti),
+                  );
+                },
               ),
             ),
-            const SizedBox(height: 20),
-            _buildNotificacionItem('Agente XXXXXXXX te ha hecho match al vídeo…'),
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -58,37 +91,89 @@ class Notificaciones extends StatelessWidget {
     );
   }
 
-Widget _buildNotificacionItem(String notificacion) {
-  return Dismissible(
-    key: UniqueKey(),
-    direction: DismissDirection.endToStart,
-    background: Container(
-      alignment: Alignment.centerRight,
-      padding: const EdgeInsets.only(right: 20),
-      child: SvgPicture.asset(
-        'assets/icons/X.svg',
-        width: 34,
+  Future<void> saveNotification(NotificationModel notification) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Recupera las notificaciones existentes
+    List<String>? savedNotifications =
+        prefs.getStringList('notifications') ?? [];
+
+    // Elimina la notificación de la lista
+    savedNotifications.removeWhere((item) =>
+        NotificationModel.fromJson(jsonDecode(item)).title ==
+            notification.title &&
+        NotificationModel.fromJson(jsonDecode(item)).content ==
+            notification.content);
+
+    // Guarda la lista actualizada
+    prefs.setStringList('notifications', savedNotifications);
+  }
+
+  Widget _buildNotificacionItem(NotificationModel noti) {
+    return Slidable(
+      key: UniqueKey(),
+      endActionPane: ActionPane(
+        motion: const StretchMotion(),
+        dismissible: DismissiblePane(onDismissed: () {
+          setState(() {
+            currentNotifications.remove(noti);
+            saveNotification(noti);
+          });
+        }),
+        children: [
+          SlidableAction(
+            autoClose: false,
+            flex: 1,
+            onPressed: (contexto) {
+              final controller2 = Slidable.of(contexto);
+              controller2?.dismiss(
+                ResizeRequest(
+                  const Duration(milliseconds: 300),
+                  () {
+                    setState(() {
+                      currentNotifications.remove(noti);
+                      saveNotification(noti);
+                    });
+                  },
+                ),
+                duration: const Duration(milliseconds: 300),
+              );
+            },
+            backgroundColor: Colors.transparent,
+            foregroundColor: const Color(0xff05FF00),
+            icon: Icons.close,
+            label: null,
+            spacing: 8,
+          ),
+        ],
       ),
-    ),
-    onDismissed: (direction) {
-    },
-    child: Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.green, width: 2),
-        borderRadius: BorderRadius.circular(50),
-      ),
-      child: Text(
-        notificacion,
-        style: const TextStyle(
-          color: Colors.white,
-          fontFamily: 'Montserrat',
-          fontSize: 14,
+      child: Container(
+        width: double.maxFinite,
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.green, width: 2),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: RichText(
+          text: TextSpan(
+            text: '${noti.title}: ',
+            children: [
+              TextSpan(
+                text: noti.content,
+                style: const TextStyle(
+                    fontSize: 14, fontWeight: FontWeight.normal),
+              )
+            ],
+            style: const TextStyle(
+              color: Colors.white,
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 }

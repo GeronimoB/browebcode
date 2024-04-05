@@ -112,7 +112,7 @@ class _PlanesPagoState extends State<PlanesPago> {
                 const SizedBox(height: 50), // Espacio en la parte superior
                 const Text(
                   'Planes',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
@@ -242,7 +242,7 @@ class _PlanesPagoState extends State<PlanesPago> {
             const SizedBox(height: 5),
             const Text(
               'Que Incluye:',
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 13),
@@ -261,7 +261,7 @@ class _PlanesPagoState extends State<PlanesPago> {
               InkWell(
                 child: const Text(
                   'Ver más...',
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Color(0xFF00F056),
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
@@ -283,7 +283,7 @@ class _PlanesPagoState extends State<PlanesPago> {
               InkWell(
                 child: const Text(
                   'Ver menos...',
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Color(0xFF00F056),
                       fontWeight: FontWeight.bold,
                       fontSize: 14,

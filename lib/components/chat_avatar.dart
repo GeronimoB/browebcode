@@ -1,4 +1,9 @@
+import 'dart:ffi';
+
+import 'package:bro_app_to/components/avatar_placeholder.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 Widget chatAvatar(int count, String imageUrl) {
   return Container(
@@ -8,20 +13,20 @@ Widget chatAvatar(int count, String imageUrl) {
     child: Stack(
       children: [
         ClipOval(
-          child: FadeInImage.assetNetwork(
-            placeholder: 'assets/images/fot.png',
-            imageErrorBuilder: (context, error, stackTrace) {
+          child: CachedNetworkImage(
+            placeholder: (context, url) => AvatarPlaceholder(64),
+            errorWidget: (context, error, stackTrace) {
               return Image.asset(
                 'assets/images/fot.png',
+                fit: BoxFit.fill,
                 width: 64,
                 height: 64,
-                fit: BoxFit.cover,
               );
             },
-            image: imageUrl,
+            imageUrl: imageUrl,
+            fit: BoxFit.fill,
             width: 64,
             height: 64,
-            fit: BoxFit.cover,
           ),
         ),
         if (count != 0)

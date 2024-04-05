@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/chat_page.dart';
+import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
@@ -66,92 +68,91 @@ class _MatchProfileState extends State<MatchProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-              builder: (context) =>
-                  const CustomBottomNavigationBar(initialIndex: 0)),
-        );
-        return false;
-      },
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 44, 44, 44),
-              Color.fromARGB(255, 0, 0, 0),
-            ],
+    final double appBarHeight = AppBar().preferredSize.height * 2.2;
+    final double availableHeight =
+        MediaQuery.of(context).size.height - appBarHeight;
+    final width = MediaQuery.of(context).size.width;
+    print(width);
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromARGB(255, 44, 44, 44),
+            Color.fromARGB(255, 0, 0, 0),
+          ],
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFF00E050),
+              size: 32,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          extendBody: true,
-          body: FutureBuilder(
-            future: _fetchUserData(widget.userId),
-            builder: (context, AsyncSnapshot<PlayerFullModel> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return const Center(
-                    child: Text('Error al cargar la información del usuario'));
-              } else {
-                final userData = snapshot.data!;
-                DateTime? birthDate = userData.birthDate;
+        extendBody: true,
+        body: FutureBuilder(
+          future: _fetchUserData(widget.userId),
+          builder: (context, AsyncSnapshot<PlayerFullModel> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return const Center(
+                  child: Text(
+                'Error al cargar la información del usuario',
+                style: const TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ));
+            } else {
+              final userData = snapshot.data!;
+              DateTime? birthDate = userData.birthDate;
 
-                String formattedDate = birthDate != null
-                    ? DateFormat('yyyy-MM-dd').format(birthDate)
-                    : '';
-                return SingleChildScrollView(
+              String formattedDate = birthDate != null
+                  ? DateFormat('dd-MM-yyyy').format(birthDate)
+                  : '';
+              return SingleChildScrollView(
+                padding: EdgeInsets.all(0),
+                child: SizedBox(
+                  height: availableHeight,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 20),
-                      Stack(
-                        children: [
-                          Center(
-                            child: Container(
-                              width: 250,
-                              height: 250,
-                              child: ClipOval(
-                                child: FadeInImage.assetNetwork(
-                                  placeholder: 'assets/images/jugador1.png',
-                                  imageErrorBuilder: (context, error, stackTrace) {
-                                    return Image.asset(
-                                      'assets/images/jugador1.png',
-                                      fit: BoxFit.fill,
-                                    );
-                                  },
-                                  image: userData.userImage!,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SafeArea(
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: IconButton(
-                                icon: const Icon(Icons.arrow_back,
-                                    color: Color(0xFF05FF00)),
-                                onPressed: () =>
-                                    Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CustomBottomNavigationBar(
-                                              initialIndex: 0)),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                      ClipOval(
+                        child: CachedNetworkImage(
+                          placeholder: (context, url) =>
+                              AvatarPlaceholder(width / 2),
+                          errorWidget: (context, error, stackTrace) {
+                            return Image.asset(
+                              'assets/images/jugador1.png',
+                              fit: BoxFit.fill,
+                              width: width / 2,
+                              height: width / 2,
+                            );
+                          },
+                          imageUrl: userData.userImage!,
+                          fit: BoxFit.fill,
+                          width: width / 2,
+                          height: width / 2,
+                        ),
                       ),
-                      const SizedBox(height: 20),
                       Text(
                         '${userData.name} ${userData.lastName}',
                         style: const TextStyle(
@@ -161,9 +162,10 @@ class _MatchProfileState extends State<MatchProfile> {
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      _buildDataRow(context,'fecha de nacimiento: ${formattedDate}'),
-                      _buildDataRow(context, 'Provincia: ${userData.provincia}, ${userData.pais}'),
+                      _buildDataRow(
+                          context, 'Fecha de nacimiento: ${formattedDate}'),
+                      _buildDataRow(context,
+                          'Provincia: ${userData.provincia}, ${userData.pais}'),
                       _buildDataRow(context, 'Altura: ${userData.altura} cm'),
                       _buildDataRow(
                           context, 'Pie Dominante: ${userData.pieDominante}'),
@@ -193,10 +195,10 @@ class _MatchProfileState extends State<MatchProfile> {
                           height: 40),
                     ],
                   ),
-                );
-              }
-            },
-          ),
+                ),
+              );
+            }
+          },
         ),
       ),
     );

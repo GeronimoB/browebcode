@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:bro_app_to/Screens/chat_page.dart';
+import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/utils/agente_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -108,7 +110,7 @@ class _MatcheState extends State<MatchePlayer> {
           centerTitle: true,
           title: const Text(
             'Match',
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.white,
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.bold,
@@ -140,7 +142,7 @@ class _MatcheState extends State<MatchePlayer> {
                 : const Center(
                     child: Text(
                       "¡Aun no tienes match!",
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold,
@@ -155,7 +157,7 @@ class _MatcheState extends State<MatchePlayer> {
     DateTime? birthDate = agente.birthDate;
 
     String formattedDate =
-        birthDate != null ? DateFormat('yyyy-MM-dd').format(birthDate) : '';
+        birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
     return GestureDetector(
       onTapDown: (_) {
         setState(() {
@@ -186,7 +188,7 @@ class _MatcheState extends State<MatchePlayer> {
                     Color.fromARGB(255, 0, 180, 64),
                     Color.fromARGB(255, 0, 225, 80),
                     Color.fromARGB(255, 0, 178, 63),
-                  ], // Colores de tu gradiente
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 )
@@ -215,20 +217,20 @@ class _MatcheState extends State<MatchePlayer> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ClipOval(
-                    child: FadeInImage.assetNetwork(
-                      placeholder: 'assets/images/fot.png',
-                      imageErrorBuilder: (context, error, stackTrace) {
+                    child: CachedNetworkImage(
+                      placeholder: (context, url) => AvatarPlaceholder(107),
+                      errorWidget: (context, error, stackTrace) {
                         return Image.asset(
                           'assets/images/fot.png',
+                          fit: BoxFit.fill,
                           width: 107,
                           height: 107,
-                          fit: BoxFit.fill,
                         );
                       },
-                      image: agente.imageUrl ?? '',
+                      imageUrl: agente.imageUrl ?? '',
+                      fit: BoxFit.fill,
                       width: 107,
                       height: 107,
-                      fit: BoxFit.fill,
                     ),
                   ),
                   const SizedBox(width: 30),

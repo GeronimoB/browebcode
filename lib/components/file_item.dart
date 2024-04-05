@@ -9,18 +9,14 @@ import '../common/sizes.dart';
 
 Future<void> _handleDownload(String fileUrl, BuildContext context) async {
   if (fileUrl.isEmpty) {
-    print('URL del archivo vacía. No se puede iniciar la descarga.');
     return;
   }
 
   final status = await Permission.storage.status;
 
   if (!status.isGranted) {
-    print('Solicitando permiso de almacenamiento...');
     final result = await Permission.storage.request();
     if (!result.isGranted) {
-      print(
-          'Permiso de almacenamiento denegado. No se puede continuar con la descarga.');
       return;
     }
   }
@@ -70,9 +66,9 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     'Felicitaciones!',
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Color(0xff00E050),
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.bold,
@@ -83,7 +79,7 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
                   ),
                   Text(
                     'El archivo se ha guardado en la carpeta de descargas.',
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.bold,
@@ -130,25 +126,26 @@ Icon getFileIcon(String fileType) {
   // Determinar el icono según la extensión del archivo
   switch (fileType) {
     case 'pdf':
-      return Icon(Icons.picture_as_pdf, color: Colors.red, size: 64);
+      return const Icon(Icons.picture_as_pdf, color: Colors.red, size: 64);
     case 'doc':
     case 'docx':
-      return Icon(Icons.description, color: Colors.blue, size: 64);
+      return const Icon(Icons.description, color: Colors.blue, size: 64);
     case 'xls':
     case 'xlsx':
-      return Icon(Icons.table_chart, color: Colors.green, size: 64);
+      return const Icon(Icons.table_chart, color: Colors.green, size: 64);
     case 'ppt':
     case 'pptx':
-      return Icon(Icons.slideshow, color: Colors.orange, size: 64);
+      return const Icon(Icons.slideshow, color: Colors.orange, size: 64);
     case 'mp4':
     case 'avi':
     case 'mkv':
-      return Icon(Icons.video_library, color: Colors.deepPurple, size: 64);
+      return const Icon(Icons.video_library,
+          color: Colors.deepPurple, size: 64);
     case 'mp3':
     case 'wav':
-      return Icon(Icons.music_note, color: Colors.deepOrange, size: 64);
+      return const Icon(Icons.music_note, color: Colors.deepOrange, size: 64);
     default:
-      return Icon(Icons.insert_drive_file, size: 64);
+      return const Icon(Icons.insert_drive_file, size: 64);
   }
 }
 
@@ -180,10 +177,8 @@ String getFileDisplayName(String fileUrl) {
 
 Widget fileItem(String fileUrl, DateTime datetime, bool sent, bool read,
     BuildContext context) {
-  print(fileUrl);
 
   String fileType = getFileType(fileUrl);
-  print(fileType);
   return Container(
     width: Sizes.width,
     padding: EdgeInsets.symmetric(horizontal: Sizes.padding),
@@ -217,7 +212,7 @@ Widget fileItem(String fileUrl, DateTime datetime, bool sent, bool read,
           SizedBox(height: Sizes.padding / 4),
           Text(
             getFileDisplayName(fileUrl),
-            style: TextStyle(
+            style:  TextStyle(
               color: Colors.white,
               fontSize: Sizes.font14,
             ),
@@ -228,7 +223,7 @@ Widget fileItem(String fileUrl, DateTime datetime, bool sent, bool read,
             children: [
               Text(
                 datetime.toIso8601String().substring(11, 16),
-                style: TextStyle(
+                style:  TextStyle(
                   color: Colors.white,
                   fontSize: Sizes.font14,
                 ),

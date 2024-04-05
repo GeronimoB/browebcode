@@ -44,9 +44,10 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
         final userData = jsonData["userInfo"];
+        final isAgent = jsonData["isAgent"];
 
-        _saveCredentialsLocally(
-            rememberMe ? user.username : "", rememberMe ? user.password : "");
+        _saveCredentialsLocally(rememberMe ? user.username : "",
+            rememberMe ? user.password : "", isAgent);
 
         _handleSuccessfulSignIn(context, jsonData, userData);
       } else {
@@ -59,10 +60,12 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     }
   }
 
-  void _saveCredentialsLocally(String username, String password) async {
+  void _saveCredentialsLocally(
+      String username, String password, bool? isAgent) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('username', username);
     prefs.setString('password', password);
+    if (isAgent != null) prefs.setBool('agente', isAgent);
   }
 
   void _handleSuccessfulSignIn(
@@ -141,7 +144,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
           backgroundColor: Colors.redAccent,
           content: Text(
             "Ha ocurrido un error intentelo de nuevo",
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.w500,

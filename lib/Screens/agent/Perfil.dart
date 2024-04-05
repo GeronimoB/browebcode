@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:bro_app_to/Screens/agent/user_profile_to_agent.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
+import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/providers/agent_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -107,20 +109,20 @@ class _PerfilPageState extends State<PerfilPage> {
               children: [
                 Center(
                   child: ClipOval(
-                    child: FadeInImage.assetNetwork(
-                      placeholder: 'assets/images/fot.png',
-                      imageErrorBuilder: (context, error, stackTrace) {
+                    child: CachedNetworkImage(
+                      placeholder: (context, url) => AvatarPlaceholder(160),
+                      errorWidget: (context, error, stackTrace) {
                         return Image.asset(
                           'assets/images/fot.png',
+                          fit: BoxFit.fill,
                           width: 160,
                           height: 160,
-                          fit: BoxFit.fill,
                         );
                       },
-                      image: agente.imageUrl!,
+                      imageUrl: agente.imageUrl!,
+                      fit: BoxFit.fill,
                       width: 160,
                       height: 160,
-                      fit: BoxFit.fill,
                     ),
                   ),
                 ),
@@ -180,7 +182,7 @@ class _PerfilPageState extends State<PerfilPage> {
     DateTime? birthDate = player.birthDate;
 
     String formattedDate =
-        birthDate != null ? DateFormat('yyyy-MM-dd').format(birthDate) : '';
+        birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
     return Container(
       height: 160.0,
       margin:
@@ -252,7 +254,7 @@ class _PerfilPageState extends State<PerfilPage> {
                   ),
                   child: const Text(
                     'Ver Perfil...',
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Color(0xff00E050),
                         decorationStyle: TextDecorationStyle.solid,
                         decorationThickness: 2.0,

@@ -22,7 +22,7 @@ class OlvideContrasenaPage extends StatelessWidget {
             const SizedBox(height: 400),
             const Text(
               'Recuperación de Cuenta',
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'Montserrat',
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -35,7 +35,7 @@ class OlvideContrasenaPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 5),
               child: Text(
                 'Te enviaremos un correo electrónico con un enlace con el que ingresarás de inmediato.',
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Montserrat',
                   fontSize: 13,
                   fontWeight: FontWeight.w600, // SemiBoldItalic
@@ -49,12 +49,12 @@ class OlvideContrasenaPage extends StatelessWidget {
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 40),
               child: TextField(
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   hintText: 'Email',
                   hintStyle:
                       TextStyle(color: Color.fromARGB(255, 255, 250, 250)),
-                  enabledBorder: UnderlineInputBorder(
+                  enabledBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
                   focusedBorder: UnderlineInputBorder(

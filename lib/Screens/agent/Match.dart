@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:bro_app_to/Screens/agent/user_profile_to_agent.dart';
 import 'package:bro_app_to/Screens/chat_page.dart';
+import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
@@ -107,9 +109,9 @@ class _MatcheState extends State<Matche> {
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: const Text(
+          title: Text(
             'Match',
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.white,
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.bold,
@@ -138,10 +140,10 @@ class _MatcheState extends State<Matche> {
                       ),
                     ],
                   )
-                : const Center(
+                : Center(
                     child: Text(
                       "¡Aun no tienes match!",
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold,
@@ -157,7 +159,8 @@ class _MatcheState extends State<Matche> {
     DateTime? birthDate = player.birthDate;
 
     String formattedDate =
-        birthDate != null ? DateFormat('yyyy-MM-dd').format(birthDate) : '';
+        birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
+
     return GestureDetector(
       onTapDown: (_) {
         setState(() {
@@ -188,7 +191,7 @@ class _MatcheState extends State<Matche> {
                     Color.fromARGB(255, 0, 180, 64),
                     Color.fromARGB(255, 0, 225, 80),
                     Color.fromARGB(255, 0, 178, 63),
-                  ], // Colores de tu gradiente
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 )
@@ -208,7 +211,7 @@ class _MatcheState extends State<Matche> {
           ),
         ),
         child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -217,20 +220,20 @@ class _MatcheState extends State<Matche> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ClipOval(
-                    child: FadeInImage.assetNetwork(
-                      placeholder: 'assets/images/fot.png',
-                      imageErrorBuilder: (context, error, stackTrace) {
+                    child: CachedNetworkImage(
+                      placeholder: (context, url) => AvatarPlaceholder(107),
+                      errorWidget: (context, error, stackTrace) {
                         return Image.asset(
                           'assets/images/fot.png',
+                          fit: BoxFit.fill,
                           width: 107,
                           height: 107,
-                          fit: BoxFit.fill,
                         );
                       },
-                      image: player.userImage ?? '',
+                      imageUrl: player.userImage ?? '',
+                      fit: BoxFit.fill,
                       width: 107,
                       height: 107,
-                      fit: BoxFit.fill,
                     ),
                   ),
                   const SizedBox(width: 30),
@@ -270,43 +273,57 @@ class _MatcheState extends State<Matche> {
               AnimatedOpacity(
                 duration: const Duration(milliseconds: 400),
                 opacity: _isSelected[index] ? 1.0 : 0.0,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      '${player.club}',
-                      style: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white,
+                    const SizedBox(
+                      width: 107,
+                      height: 107,
+                    ),
+                    const SizedBox(width: 30),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 10),
+                          Text(
+                            '${player.club}',
+                            style: const TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 5.0),
+                          Text(
+                            player.logrosIndividuales ?? '',
+                            style: const TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 5.0),
+                          Text(
+                            'Selección Nacional ${player.seleccionNacional} ${player.categoriaSeleccion}',
+                            style: const TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 5.0),
-                    Text(
-                      player.logrosIndividuales ?? '',
-                      style: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 5.0),
-                    Text(
-                      'Selección Nacional ${player.seleccionNacional} ${player.categoriaSeleccion}',
-                      style: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
                   ],
                 ),
               ),

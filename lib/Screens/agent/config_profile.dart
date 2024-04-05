@@ -1,5 +1,6 @@
 import 'package:bro_app_to/Screens/afiliados_player.dart';
 import 'package:bro_app_to/Screens/agent/edit_agent_info.dart';
+import 'package:bro_app_to/Screens/lista_afiliados.dart';
 import 'package:bro_app_to/Screens/notificaciones.dart';
 import 'package:bro_app_to/Screens/player/pedidos.dart';
 import 'package:bro_app_to/Screens/privacidad.dart';
@@ -15,6 +16,7 @@ import 'package:http/http.dart' as http;
 
 import '../../providers/agent_provider.dart';
 import '../../providers/user_provider.dart';
+import '../language_settings.dart';
 
 class ConfigProfile extends StatefulWidget {
   const ConfigProfile({super.key});
@@ -56,7 +58,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
               ),
               const Text(
                 'CONFIGURACIÓN',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontFamily: 'Montserrat',
                   fontWeight: FontWeight.bold,
@@ -108,6 +110,12 @@ class _ConfigProfileState extends State<ConfigProfile> {
                           ? const ListaReferidosScreen()
                           : const AfiliadosPlayer(),
                     ),
+                    _buildListItem(
+                      'IDIOMA',
+                      context,
+                      true,
+                      LanguageSettingsPage(),
+                    ),
                     const SizedBox(height: 15),
                     _buildListItem(
                         'BORRAR CUENTA', context, false, const Servicios(),
@@ -144,69 +152,75 @@ class _ConfigProfileState extends State<ConfigProfile> {
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 400), 
-          child: Container(
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: const Color(0xff3B3B3B),
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
-                  blurRadius: 10,
-                  offset: const Offset(5, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Text(
-                  "¿Esta seguro de que desea cerrar sesión?",
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xff3B3B3B),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.4),
+                    blurRadius: 10,
+                    offset: const Offset(5, 4),
                   ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomTextButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      text: 'No',
-                      buttonPrimary: false,
-                      width: 90,
-                      height: 35,
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const SizedBox(
+                    width: double.maxFinite,
+                    child: Text(
+                      "¿Estás seguro de cerrar sesión?",
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    CustomTextButton(
-                      onTap: () {
-                        final agenteProvider =
-                            Provider.of<AgenteProvider>(context, listen: false);
-                        final userProvider =
-                            Provider.of<UserProvider>(context, listen: false);
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      CustomTextButton(
+                        onTap: () => Navigator.of(context).pop(),
+                        text: 'No',
+                        buttonPrimary: false,
+                        width: 90,
+                        height: 35,
+                      ),
+                      CustomTextButton(
+                        onTap: () {
+                          final agenteProvider = Provider.of<AgenteProvider>(
+                              context,
+                              listen: false);
+                          final userProvider =
+                              Provider.of<UserProvider>(context, listen: false);
 
-                        agenteProvider.logOut();
-                        userProvider.logOut();
+                          agenteProvider.logOut();
+                          userProvider.logOut();
 
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, '/login', (route) => false);
-                      },
-                      text: 'Si',
-                      buttonPrimary: true,
-                      width: 90,
-                      height: 35,
-                    ),
-                  ],
-                ),
-              ],
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/login', (route) => false);
+                        },
+                        text: 'Si',
+                        buttonPrimary: true,
+                        width: 90,
+                        height: 35,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
         );
       },
     );
@@ -218,68 +232,73 @@ class _ConfigProfileState extends State<ConfigProfile> {
       barrierColor: Colors.black.withOpacity(0.2),
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: Colors.transparent,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 400), 
-          child: Container(
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: const Color(0xff3B3B3B),
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
-                  blurRadius: 10,
-                  offset: const Offset(5, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Text(
-                  "¿Esta seguro de que quiere borrar la cuenta? Se borraran todos los datos asociados a la cuenta.",
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomTextButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      text: 'Cancelar',
-                      buttonPrimary: false,
-                      width: 90,
-                      height: 35,
-                    ),
-                    CustomTextButton(
-                      onTap: () async {
-                        final agenteProvider =
-                            Provider.of<AgenteProvider>(context, listen: false);
-                        final userProvider =
-                            Provider.of<UserProvider>(context, listen: false);
-
-                        agenteProvider.logOut();
-                        userProvider.logOut();
-                      },
-                      text: 'Continuar',
-                      buttonPrimary: true,
-                      width: 90,
-                      height: 35,
+            backgroundColor: Colors.transparent,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: const Color(0xff3B3B3B),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: 10,
+                      offset: const Offset(5, 4),
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-        )
-        );
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(
+                      width: double.maxFinite,
+                      child: Text(
+                        "¿Éstas seguro de que quieres borrar la cuenta? Se borrarán todos los datos asociados a la cuenta.",
+                        style: const TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CustomTextButton(
+                          onTap: () => Navigator.of(context).pop(),
+                          text: 'NO',
+                          buttonPrimary: false,
+                          width: 90,
+                          height: 35,
+                        ),
+                        CustomTextButton(
+                          onTap: () async {
+                            final agenteProvider = Provider.of<AgenteProvider>(
+                                context,
+                                listen: false);
+                            final userProvider = Provider.of<UserProvider>(
+                                context,
+                                listen: false);
+
+                            agenteProvider.logOut();
+                            userProvider.logOut();
+                          },
+                          text: 'SI',
+                          buttonPrimary: true,
+                          width: 90,
+                          height: 35,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ));
       },
     );
   }
@@ -290,7 +309,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
     return ListTile(
       title: Text(
         title,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontFamily: 'Montserrat',
           fontSize: 16,

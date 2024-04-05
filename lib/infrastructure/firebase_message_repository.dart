@@ -1,6 +1,9 @@
+import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -10,56 +13,64 @@ import 'package:path/path.dart' as path;
 
 import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as Http;
+import 'package:provider/provider.dart';
 
 import '../utils/api_client.dart';
 import '../utils/chat_preview.dart';
 
 class FirebaseMessageRepository implements MessageUseCase {
-  Future<List<ChatPreview>> getLastMessagesWithUsers(
-      String userId, bool isAgent) async {
+  Stream<List<ChatPreview>> streamLastMessagesWithUsers(
+      String userId, bool isAgent, BuildContext context) async* {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     final id = isAgent ? "agente_$userId" : "jugador_$userId";
+    print(id);
     try {
-      print(id);
-      final userDocSnapshot = await FirebaseFirestore.instance
+      final userDocSnapshot = FirebaseFirestore.instance
           .collection('users')
           .doc(id)
           .collection('messages')
-          .get();
+          .snapshots();
+      int contadorTotal = 0;
+      await for (var snapshot in userDocSnapshot) {
+        List<ChatPreview> messagesWithUsers = [];
+        print(snapshot);
+        for (var otherUserDoc in snapshot.docs) {
+          final otherUserId = otherUserDoc.id;
+          print(otherUserId);
+          final userDBId = otherUserId.split('_')[1];
+          final response = await ApiClient().get('auth/user/$userDBId');
+          final lastMsg = await getLastMessage(id, otherUserId);
+          final lastTimeMessage = await getLastTimeMessage(id, otherUserId);
+          final count = await getUnreadMessageCount(id, otherUserId);
 
-      List<ChatPreview> messagesWithUsers = [];
+          if (count != 0) contadorTotal++;
 
-      for (var otherUserDoc in userDocSnapshot.docs) {
-        final otherUserId = otherUserDoc.id;
-        print(otherUserId);
-        final userDBId = otherUserId.split('_')[1];
-        final response = await ApiClient().get('auth/user/$userDBId');
-        final lastMsg = await getLastMessage(id, otherUserId);
-        final lastTimeMessage = await getLastTimeMessage(id, otherUserId);
-        final count = await getUnreadMessageCount(id, otherUserId);
-        print("sin leer $count");
-        String tiempo = "";
-        if (lastTimeMessage != Timestamp(0, 0)) {
-          DateTime dateTime = lastTimeMessage.toDate();
-          tiempo = dateTime.toIso8601String().substring(11, 16);
-        }
-        if (response.statusCode == 200) {
-          final jsonData = jsonDecode(response.body);
-          final user = jsonData['user'];
-          final userData = UserModel.fromJson(user);
-          final chat = ChatPreview(
+          String tiempo = "";
+          if (lastTimeMessage != Timestamp(0, 0)) {
+            DateTime dateTime = lastTimeMessage.toDate();
+            tiempo = dateTime.toIso8601String().substring(11, 16);
+          }
+
+          if (response.statusCode == 200) {
+            final jsonData = jsonDecode(response.body);
+            final user = jsonData['user'];
+            final userData = UserModel.fromJson(user);
+            final chat = ChatPreview(
               friendUser: userData,
               count: count,
               message: lastMsg,
-              time: tiempo);
-          messagesWithUsers.add(chat);
-        } else {
-          continue;
+              time: tiempo,
+            );
+            messagesWithUsers.add(chat);
+          } else {
+            continue;
+          }
         }
-      }
+        userProvider.unreadTotalMessages = contadorTotal;
 
-      return messagesWithUsers;
+        yield messagesWithUsers;
+      }
     } catch (e) {
-      // Manejar errores
       print("Error getting last messages with users: $e");
       throw e;
     }
@@ -156,7 +167,6 @@ class FirebaseMessageRepository implements MessageUseCase {
 
   Future<void> deleteAllMessages(String senderId, String receiverId) async {
     try {
-      // Borrar el documento del remitente al receptor
       await FirebaseFirestore.instance
           .collection('users')
           .doc(senderId)
@@ -164,15 +174,19 @@ class FirebaseMessageRepository implements MessageUseCase {
           .doc(receiverId)
           .delete();
 
-      // Borrar el documento del receptor al remitente
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(receiverId)
-          .collection('messages')
           .doc(senderId)
-          .delete();
+          .collection('messages')
+          .doc(receiverId)
+          .collection('chats')
+          .get()
+          .then((snapshot) {
+        for (DocumentSnapshot doc in snapshot.docs) {
+          doc.reference.delete();
+        }
+      });
     } catch (e) {
-      // Manejar errores
       print("Error deleting messages: $e");
       throw e;
     }

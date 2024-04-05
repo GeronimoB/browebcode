@@ -10,6 +10,8 @@ import '../../../../providers/player_provider.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../utils/api_client.dart';
+import '../../../../utils/current_state.dart';
+import '../../../../utils/language_localizations.dart';
 import 'sign_up_2.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -37,27 +39,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
         password.isEmpty ||
         name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
             backgroundColor: Colors.redAccent,
-            content: Text('Por favor, complete todos los campos.')),
+            content: Text(translations!['complete_all_fields'])),
       );
       return false;
     }
 
     if (email.isEmpty || !email.contains('@')) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
             backgroundColor: Colors.redAccent,
-            content:
-                Text('Por favor, introduce un correo electrónico válido.')),
+            content: Text(translations!['valid_email'])),
       );
       return false;
     }
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
             backgroundColor: Colors.redAccent,
-            content: Text('Ingrese una contraseña valida.')),
+            content: Text(translations!['valid_pssw'])),
       );
       return false;
     }
@@ -67,38 +68,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
           await ApiClient().post('auth/verify-email', {"email": email});
 
       if (response.statusCode != 200) {
-        print(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
               backgroundColor: Colors.redAccent,
-              content: Text('El correo electrónico ya está en uso.')),
+              content: Text(translations!['email_in_use'])),
         );
         return false;
       }
       return true;
     } on TimeoutException {
-      // Si se produce un timeout, muestra un mensaje de error y devuelve false
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           backgroundColor: Colors.redAccent,
-          content:
-              Text('Se ha producido un error. Por favor, inténtalo de nuevo.'),
+          content: Text(translations!['error_try_again']),
         ),
       );
       return false;
     } catch (e) {
-      // Captura cualquier otra excepción y muestra un mensaje de error genérico
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           backgroundColor: Colors.redAccent,
-          content:
-              Text('Se ha producido un error. Por favor, intentelo de nuevo.'),
+          content: Text(translations!['error_try_again']),
         ),
       );
       return false;
     }
-
-    return true;
   }
 
   @override
@@ -121,12 +115,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final LanguageLocalizations? localizations =
+        LanguageLocalizations.of(context);
+    Locale? locale = localizations?.locale;
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
-      locale: const Locale('es', "ES"),
+      locale: locale,
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
@@ -157,9 +154,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Regístrate',
-                  style: TextStyle(
+                Text(
+                  translations!['sign_up'],
+                  style: const TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -171,17 +168,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(height: 10),
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Nombre',
-                    labelStyle: TextStyle(
+                  decoration: InputDecoration(
+                    labelText: translations!['name'],
+                    labelStyle: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: UnderlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00E050), width: 2),
                     ),
@@ -192,17 +189,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(height: 10),
                 TextField(
                   controller: lastNameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Apellidos',
-                    labelStyle: TextStyle(
+                  decoration: InputDecoration(
+                    labelText: translations!['last_name'],
+                    labelStyle: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: UnderlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00E050), width: 2),
                     ),
@@ -216,16 +213,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     _selectDate(context);
                   },
                   child: InputDecorator(
-                    decoration: const InputDecoration(
-                      labelText: 'Fecha de Nacimiento',
-                      labelStyle: TextStyle(
+                    decoration: InputDecoration(
+                      labelText: translations!['birthdate'],
+                      labelStyle: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.w500,
                         fontStyle: FontStyle.italic,
                         fontSize: 12,
                       ),
-                      enabledBorder: UnderlineInputBorder(
+                      enabledBorder: const UnderlineInputBorder(
                         borderSide:
                             BorderSide(color: Color(0xFF00E050), width: 2),
                       ),
@@ -235,12 +232,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       children: <Widget>[
                         Text(
                           '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'Montserrat',
                           ),
                         ),
-                        Icon(Icons.calendar_today, color: Colors.white),
+                        const Icon(Icons.calendar_today, color: Colors.white),
                       ],
                     ),
                   ),
@@ -248,23 +245,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const SizedBox(height: 10),
                 TextField(
                   controller: mailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email Personal - Tutor (-18 años)',
-                    labelStyle: TextStyle(
+                  decoration: InputDecoration(
+                    labelText: translations!['personal_email'],
+                    labelStyle: const TextStyle(
                       color: Colors.white,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: UnderlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                    enabledBorder: const UnderlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0xFF00E050), width: 2),
                     ),
                   ),
-                  style:
-                      TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+                  style: const TextStyle(
+                      color: Colors.white, fontFamily: 'Montserrat'),
                 ),
                 const SizedBox(height: 10),
                 Form(
@@ -273,7 +270,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: TextFormField(
                     controller: passwordController,
                     decoration: InputDecoration(
-                      labelText: 'Contraseña',
+                      labelText: translations!['password'],
                       labelStyle: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
@@ -310,26 +307,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     obscureText: obscureText,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Por favor, ingresa una contraseña.';
+                        return translations!['enter_password'];
                       }
                       if (value.length < 8) {
-                        return 'La contraseña debe tener al menos 8 caracteres.';
+                        return translations!['pssw_8_characters'];
                       }
                       // Verifica si contiene al menos una mayúscula
                       if (!value.contains(RegExp(r'[A-Z]'))) {
-                        return 'La contraseña debe contener al menos una letra mayúscula.';
+                        return translations!['pssw_mayus_letter'];
                       }
                       // Verifica si contiene al menos una minúscula
                       if (!value.contains(RegExp(r'[a-z]'))) {
-                        return 'La contraseña debe contener al menos una letra minúscula.';
+                        return translations!['pssw_minus_letter'];
                       }
                       // Verifica si contiene al menos un número
                       if (!value.contains(RegExp(r'[0-9]'))) {
-                        return 'La contraseña debe contener al menos un número.';
+                        return translations!['pssw_number'];
                       }
                       // Verifica si contiene al menos un carácter especial
                       if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                        return 'La contraseña debe contener al menos un carácter especial.';
+                        return translations!['pssw_special'];
                       }
                       return null; // Retorna null si la contraseña cumple con todos los requisitos
                     },
@@ -365,10 +362,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       );
                     }
                     setState(() {
-                      isLoading = false; // Ocultar el loader
+                      isLoading = false;
                     });
                   },
-                  text: 'Siguiente',
+                  text: translations!['next'],
                   buttonPrimary: true,
                   width: 116,
                   height: 39,
@@ -394,8 +391,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   .withOpacity(0.5), // Color de fondo semitransparente
               child: const Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Colors.green), // Color del loader
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
                 ),
               ),
             ),

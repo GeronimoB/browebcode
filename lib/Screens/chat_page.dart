@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
-import 'package:bro_app_to/Screens/agent/user_profile_to_agent.dart';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
+import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/chat_item.dart';
 import 'package:bro_app_to/components/file_item.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:bro_app_to/utils/message.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,6 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
-  final List<String> _messages = [];
   final FocusNode _messageFocusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
 
@@ -110,25 +110,27 @@ class _ChatPageState extends State<ChatPage> {
           backgroundColor: Colors.transparent,
           extendBody: true,
           appBar: AppBar(
+            toolbarHeight: 100,
             backgroundColor: Colors.transparent,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 ClipOval(
-                  child: FadeInImage.assetNetwork(
-                    placeholder: 'assets/images/fot.png',
-                    imageErrorBuilder: (context, error, stackTrace) {
+                  child: CachedNetworkImage(
+                    placeholder: (context, url) => AvatarPlaceholder(40),
+                    errorWidget: (context, error, stackTrace) {
                       return Image.asset(
                         'assets/images/fot.png',
+                        fit: BoxFit.fill,
                         width: 40,
                         height: 40,
-                        fit: BoxFit.cover,
                       );
                     },
-                    image: widget.friend.imageUrl,
+                    imageUrl: widget.friend.imageUrl,
+                    fit: BoxFit.fill,
                     width: 40,
                     height: 40,
-                    fit: BoxFit.cover,
                   ),
                 ),
                 const SizedBox(width: 20),
@@ -143,7 +145,11 @@ class _ChatPageState extends State<ChatPage> {
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
+                  icon: const Icon(
+                    Icons.more_horiz,
+                    color: Color(0xFF00E050),
+                    size: 32,
+                  ),
                   onPressed: () {
                     _showCustomMenu(context);
                   },
@@ -154,6 +160,7 @@ class _ChatPageState extends State<ChatPage> {
               icon: const Icon(
                 Icons.arrow_back,
                 color: Color(0xFF00E050),
+                size: 32,
               ),
               onPressed: () {
                 final userProvider =
@@ -184,10 +191,10 @@ class _ChatPageState extends State<ChatPage> {
                     builder: (context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         if (snapshot.data.docs.length < 1) {
-                          return const Center(
+                          return  Center(
                             child: Text(
                               "Saluda!",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
@@ -230,7 +237,12 @@ class _ChatPageState extends State<ChatPage> {
                               }
                             });
                       }
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                        ),
+                      );
                     }),
               ),
               _buildTextComposer(),
@@ -265,7 +277,7 @@ class _ChatPageState extends State<ChatPage> {
                 maxLines: 3,
                 decoration: const InputDecoration(
                   hintText: "Enviar un mensaje...",
-                  hintStyle: TextStyle(color: Colors.white54),
+                  hintStyle: const TextStyle(color: Colors.white54),
                   border: InputBorder.none,
                 ),
               ),
@@ -528,7 +540,7 @@ class _ChatPageState extends State<ChatPage> {
                   children: <Widget>[
                     ListTile(
                       title: const Text('Ver Perfil',
-                          style: TextStyle(color: Colors.white)),
+                          style: const TextStyle(color: Colors.white)),
                       onTap: () {
                         _overlayEntry?.remove();
                         _overlayEntry = null;
@@ -536,7 +548,7 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                     ListTile(
                       title: const Text('Anclar arriba',
-                          style: TextStyle(color: Colors.white)),
+                          style: const TextStyle(color: Colors.white)),
                       onTap: () {
                         _overlayEntry?.remove();
                         _overlayEntry = null;
@@ -544,7 +556,7 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                     ListTile(
                       title: const Text('Buscar',
-                          style: TextStyle(color: Colors.white)),
+                          style: const TextStyle(color: Colors.white)),
                       onTap: () {
                         _overlayEntry?.remove();
                         _overlayEntry = null;
@@ -552,7 +564,7 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                     ListTile(
                       title: const Text('Silenciar notificaciones',
-                          style: TextStyle(color: Colors.white)),
+                          style: const TextStyle(color: Colors.white)),
                       onTap: () {
                         _overlayEntry?.remove();
                         _overlayEntry = null;

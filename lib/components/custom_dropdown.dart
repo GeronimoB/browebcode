@@ -196,7 +196,7 @@ class _OverlayDropdown<T> extends StatelessWidget {
       child: Container(
         width: width,
         decoration: BoxDecoration(
-          color: Color.fromARGB(230, 41, 41, 41),
+          color: const Color.fromARGB(230, 41, 41, 41),
           border: Border.all(
             color: const Color(0xFF00F056),
           ),
@@ -246,7 +246,7 @@ class _OverlayDropdownItem<T> extends StatelessWidget {
         child: Text(
           textBuilder.call(value),
           style: TextStyle(
-            color: isSelected ? Color(0xFF00F056) : Colors.white,
+            color: isSelected ? const Color(0xFF00F056) : Colors.white,
             fontFamily: 'Montserrat',
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,

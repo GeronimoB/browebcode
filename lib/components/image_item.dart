@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../common/sizes.dart';
 
 Widget imageItem(String imageUrl, DateTime datetime, bool sent, bool read) {
-  print(imageUrl);
   return Container(
     width: Sizes.width,
     padding: EdgeInsets.symmetric(horizontal: Sizes.padding),
@@ -50,11 +49,8 @@ Widget imageItem(String imageUrl, DateTime datetime, bool sent, bool read) {
               ),
               const SizedBox(width: 5),
               sent
-                  ? Icon(
-                      read ? Icons.done_all : Icons.check,
-                      size: 16,
-                      color: const Color.fromARGB(255, 215, 214, 214)
-                    )
+                  ? Icon(read ? Icons.done_all : Icons.check,
+                      size: 16, color: const Color.fromARGB(255, 215, 214, 214))
                   : Container(),
             ],
           ),

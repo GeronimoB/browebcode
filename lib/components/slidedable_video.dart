@@ -56,8 +56,8 @@ class _SlidableVideoState extends State<SlidableVideo> {
               ? VideoPlayer(widget.controller)
               : const Center(
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        Colors.green), // Color del loader
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
                   ),
                 ),
           VideoProgressIndicator(

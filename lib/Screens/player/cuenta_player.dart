@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/planes_pago.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
@@ -25,6 +27,7 @@ class _CuentaPageState extends State<CuentaPage> {
   bool deslizadorActivado = true;
   bool expanded = false;
   final picker = ImagePicker();
+  bool _isExpanded = false;
 
   Future<void> _openGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -68,7 +71,11 @@ class _CuentaPageState extends State<CuentaPage> {
     DateTime? birthDate = player.birthDate;
 
     String formattedDate =
-        birthDate != null ? DateFormat('yyyy-MM-dd').format(birthDate) : '';
+        birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
+    String shortInfo =
+        'Provincia, pais: ${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
+    String fullInfo =
+        'Provincia, pais: ${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate \nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: ${player.logrosIndividuales}';
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -87,7 +94,7 @@ class _CuentaPageState extends State<CuentaPage> {
           centerTitle: true,
           title: const Text(
             'CUENTA',
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.white,
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.bold,
@@ -118,20 +125,21 @@ class _CuentaPageState extends State<CuentaPage> {
                               Colors.grey.withOpacity(0.5),
                               BlendMode.dstATop,
                             ),
-                            child: FadeInImage.assetNetwork(
-                              placeholder: 'assets/images/fot.png',
-                              imageErrorBuilder: (context, error, stackTrace) {
+                            child: CachedNetworkImage(
+                              placeholder: (context, url) =>
+                                  AvatarPlaceholder(150),
+                              errorWidget: (context, error, stackTrace) {
                                 return Image.asset(
                                   'assets/images/fot.png',
+                                  fit: BoxFit.fill,
                                   width: 150,
                                   height: 150,
-                                  fit: BoxFit.cover,
                                 );
                               },
-                              image: player.userImage!,
+                              imageUrl: player.userImage!,
+                              fit: BoxFit.fill,
                               width: 150,
                               height: 150,
-                              fit: BoxFit.cover,
                             ),
                           )
                         : ColorFiltered(
@@ -173,7 +181,7 @@ class _CuentaPageState extends State<CuentaPage> {
             ),
             const SizedBox(height: 5),
             Text(
-              formattedDate,
+              _isExpanded ? fullInfo : shortInfo,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 16.0,
@@ -183,38 +191,19 @@ class _CuentaPageState extends State<CuentaPage> {
               ),
               textAlign: TextAlign.center,
             ),
-            Text(
-              '${player.provincia}, ${player.pais}  \n${player.club}, Sub ${player.categoria}',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Montserrat',
-                fontStyle: FontStyle.italic,
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+              },
+              child: Text(
+                _isExpanded ? 'Ver menos' : 'Ver más',
+                style: const TextStyle(
+                  color: Color(0xFF05FF00),
+                  fontSize: 16.0,
+                ),
               ),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              '${player.logrosIndividuales}',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Montserrat',
-                fontStyle: FontStyle.italic,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              'Seleccion Nacional ${player.seleccionNacional} ${player.categoriaSeleccion}',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Montserrat',
-                fontStyle: FontStyle.italic,
-              ),
-              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
             CarouselSlider(
@@ -261,7 +250,7 @@ class _CuentaPageState extends State<CuentaPage> {
                         const SizedBox(height: 20),
                         const Text(
                           'Que incluye:',
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 16,
                               color: Colors.white,
                               fontWeight: FontWeight.bold),

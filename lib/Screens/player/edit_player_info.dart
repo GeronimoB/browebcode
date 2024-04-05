@@ -1,12 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:bro_app_to/components/avatar_placeholder.dart';
+import 'package:bro_app_to/components/custom_dropdown.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/select_camp.dart';
 import 'package:bro_app_to/utils/api_client.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -90,7 +94,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     request.files
         .add(await http.MultipartFile.fromPath('imagen', imageFile.path));
     request.fields["userId"] = usuario.userId.toString();
-    request.fields["isAgent"] = "true";
+    request.fields["isAgent"] = "false";
     var response = await request.send();
 
     if (response.statusCode == 200) {
@@ -107,147 +111,162 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: true);
     final user = userProvider.getCurrentUser();
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF212121), Color(0xFF121212)],
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pushReplacementNamed('/config-player');
+        return false;
+      },
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF212121), Color(0xFF121212)],
+          ),
         ),
-      ),
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text(
-            'EDITAR INFORMACIÓN',
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.bold,
-              fontSize: 24.0,
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: const Text(
+              'EDITAR INFORMACIÓN',
+              style: const TextStyle(
+                color: Colors.white,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
+              ),
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Color(0xFF00E050),
+                size: 32,
+              ),
+              onPressed: () =>
+                  Navigator.of(context).pushReplacementNamed('/config-player'),
             ),
           ),
           backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Color(0xFF00E050),
-              size: 32,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: _openGallery,
-                child: Stack(
-                  children: [
-                    ClipOval(
-                      child: user.imageUrl != ''
-                          ? ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                Colors.grey.withOpacity(0.5),
-                                BlendMode.dstATop,
+          body: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: _openGallery,
+                  child: Stack(
+                    children: [
+                      ClipOval(
+                        child: user.imageUrl != ''
+                            ? ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                  Colors.grey.withOpacity(0.5),
+                                  BlendMode.dstATop,
+                                ),
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) =>
+                                      AvatarPlaceholder(150),
+                                  errorWidget: (context, error, stackTrace) {
+                                    return Image.asset(
+                                      'assets/images/fot.png',
+                                      fit: BoxFit.fill,
+                                      width: 150,
+                                      height: 150,
+                                    );
+                                  },
+                                  imageUrl: user.imageUrl,
+                                  fit: BoxFit.fill,
+                                  width: 150,
+                                  height: 150,
+                                ),
+                              )
+                            : ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                  Colors.grey.withOpacity(0.5),
+                                  BlendMode.dstATop,
+                                ),
+                                child: Image.asset(
+                                  'assets/images/fot.png',
+                                  width: 150,
+                                  height: 150,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                              child: FadeInImage.assetNetwork(
-                                placeholder: 'assets/images/fot.png',
-                                imageErrorBuilder:
-                                    (context, error, stackTrace) {
-                                  return Image.asset(
-                                    'assets/images/fot.png',
-                                    width: 150,
-                                    height: 150,
-                                    fit: BoxFit.cover,
-                                  );
-                                },
-                                image: user.imageUrl,
-                                width: 150,
-                                height: 150,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                Colors.grey.withOpacity(0.5),
-                                BlendMode.dstATop,
-                              ),
-                              child: Image.asset(
-                                'assets/images/fot.png',
-                                width: 150,
-                                height: 150,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                    ),
-                    const Positioned(
-                      bottom: 0,
-                      top: 0,
-                      right: 0,
-                      left: 0,
-                      child: Icon(
-                        Icons.camera_alt,
-                        color: Colors.white,
-                        size: 42,
                       ),
-                    ),
-                  ],
+                      const Positioned(
+                        bottom: 0,
+                        top: 0,
+                        right: 0,
+                        left: 0,
+                        child: Icon(
+                          Icons.camera_alt,
+                          color: Colors.white,
+                          size: 42,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              _buildTextField(
-                  label: 'NOMBRE', controller: _nombreController, camp: 'name'),
-              _buildTextField(
-                  label: 'APELLIDO',
-                  controller: _apellidoController,
-                  camp: 'lastname'),
-              _buildTextField(
-                  label: 'CORREO',
-                  controller: _correoController,
-                  camp: 'email'),
-              _buildTextField(
-                  label: 'DNI', controller: _dniController, camp: 'dni'),
-              _buildTextField(
-                  label: 'PAÍS', controller: _paisController, camp: 'pais'),
-              _buildTextField(
-                  label: 'PROVINCIA',
-                  controller: _provinciaController,
-                  camp: 'provincia'),
-              _buildTextField(
-                  label: 'POSICIÓN',
-                  controller: _posicionController,
-                  camp: 'position'),
-              _buildTextField(
-                  label: 'CLUB', controller: _clubController, camp: 'club'),
-              _buildTextField(
-                  label: 'CATEGORÍA',
-                  controller: _categoriaController,
-                  camp: 'categoria'),
-              _buildTextField(
-                  label: 'LOGROS',
-                  controller: _logrosIndividualesController,
-                  camp: 'logros'),
-              _buildTextField(
-                  label: 'ALTURA',
-                  controller: _alturaController,
-                  camp: 'altura'),
-              _buildTextField(
-                  label: 'PIE DOMINANTE',
-                  controller: _pieDominanteController,
-                  camp: 'piedominante'),
-              _buildTextField(
-                  label: 'SELECCION',
-                  controller: _seleccionNacionalController,
-                  camp: 'seleccion'),
-              _buildTextField(
-                  label: 'CATEGORIA SELECCION',
-                  controller: _categoriaSeleccionController,
-                  camp: 'categoriaseleccion'),
-            ],
+                const SizedBox(height: 20),
+                _buildTextField(
+                    label: 'NOMBRE',
+                    controller: _nombreController,
+                    camp: 'name'),
+                _buildTextField(
+                    label: 'APELLIDO',
+                    controller: _apellidoController,
+                    camp: 'lastname'),
+                _buildTextField(
+                    label: 'CORREO',
+                    controller: _correoController,
+                    camp: 'email'),
+                _buildTextField(
+                    label: 'DNI', controller: _dniController, camp: 'dni'),
+                _buildTextField(
+                    label: 'PAÍS', controller: _paisController, camp: 'pais'),
+                _buildTextField(
+                    label: 'PROVINCIA',
+                    controller: _provinciaController,
+                    camp: 'provincia'),
+                _buildTextField(
+                    label: 'POSICIÓN',
+                    controller: _posicionController,
+                    camp: 'position',
+                    goToSelCamp: true),
+                _buildTextField(
+                    label: 'CLUB', controller: _clubController, camp: 'club'),
+                _buildTextField(
+                    label: 'CATEGORÍA',
+                    controller: _categoriaController,
+                    camp: 'categoria'),
+                _buildTextField(
+                    label: 'LOGROS',
+                    controller: _logrosIndividualesController,
+                    camp: 'logros'),
+                _buildTextField(
+                    label: 'ALTURA',
+                    controller: _alturaController,
+                    camp: 'altura',
+                    isHeight: true),
+                _buildTextField(
+                    label: 'PIE DOMINANTE',
+                    controller: _pieDominanteController,
+                    camp: 'piedominante',
+                    foot: true,
+                    update: () {}),
+                _buildTextField(
+                    label: 'SELECCION',
+                    controller: _seleccionNacionalController,
+                    camp: 'seleccion',
+                    seleccion: true),
+                _buildTextField(
+                    label: 'CATEGORIA SELECCION',
+                    controller: _categoriaSeleccionController,
+                    camp: 'categoriaseleccion',
+                    categoriaSel: true),
+              ],
+            ),
           ),
         ),
       ),
@@ -257,7 +276,13 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
   Widget _buildTextField(
       {required String label,
       required TextEditingController controller,
-      required String camp}) {
+      required String camp,
+      bool? isHeight,
+      bool? goToSelCamp,
+      bool? foot,
+      bool? seleccion,
+      bool? categoriaSel,
+      Function? update}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       child: Row(
@@ -278,7 +303,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
           Expanded(
             flex: 3,
             child: Text(
-              controller.text,
+              '${controller.text} ${isHeight ?? false ? "cm" : ""}',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
@@ -291,7 +316,25 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
           ),
           IconButton(
             icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF00E050)),
-            onPressed: () => _editarCampo(context, label, controller, camp),
+            onPressed: () {
+              if (goToSelCamp ?? false) {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) =>
+                        const SelectCamp(registrando: false)));
+              } else {
+                _editarCampo(
+                  context,
+                  label,
+                  controller,
+                  camp,
+                  foot: foot,
+                  isHeight: isHeight,
+                  seleccion: seleccion,
+                  categoriaSel: categoriaSel,
+                  update: update,
+                );
+              }
+            },
           ),
         ],
       ),
@@ -300,106 +343,174 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
 
   void _editarCampo(BuildContext context, String label,
       TextEditingController controller, String camp,
-      {bool? isNumber}) {
+      {bool? foot,
+      bool? isHeight,
+      bool? seleccion,
+      bool? categoriaSel,
+      Function? update}) {
     showDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.2),
       builder: (BuildContext context) {
         TextEditingController editingController =
             TextEditingController(text: controller.text);
+        String valueFoot = '';
+        if (foot ?? false) valueFoot = editingController.text;
         return Dialog(
-          backgroundColor: Colors.transparent,
-       child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 400), 
-          child: Container(
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: const Color(0xff3B3B3B),
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
-                  blurRadius: 10,
-                  offset: const Offset(5, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Color(0xff00E050),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-                TextField(
-                  controller: editingController,
-                  keyboardType: isNumber ?? false
-                      ? TextInputType.number
-                      : TextInputType.text,
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Colors.white,
-                  ),
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFF00E050), width: 2),
-                    ),
-                  ),
-                  cursorColor: Colors.white,
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomTextButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      text: 'Cancelar',
-                      buttonPrimary: false,
-                      width: 90,
-                      height: 27,
-                    ),
-                    CustomTextButton(
-                      onTap: () async {
-                        if (mounted) {
-                          setState(() {
-                            controller.text = editingController.text;
-                          });
-                        }
-                        provider.updatePlayer(
-                          fieldName: camp.toLowerCase(),
-                          value: editingController.text,
-                        );
-                        final player = provider.getPlayer()!;
-
-                        final userProvider =
-                            Provider.of<UserProvider>(context, listen: false);
-
-                        userProvider.updateUserFromPlayer(player);
-
-                        await ApiClient().post(
-                            'auth/edit-player', provider.getPlayer()!.toMap());
-                        Navigator.of(context).pop();
-                      },
-                      text: 'Guardar',
-                      buttonPrimary: true,
-                      width: 90,
-                      height: 27,
+            backgroundColor: Colors.transparent,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: const Color(0xff3B3B3B),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: 10,
+                      offset: const Offset(5, 4),
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-       )
-        );
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      label,
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Color(0xff00E050),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                    if (!(foot ?? true) &&
+                        !(seleccion ?? true) &&
+                        !(categoriaSel ?? true))
+                      TextField(
+                        controller: editingController,
+                        keyboardType: isHeight ?? false
+                            ? TextInputType.number
+                            : TextInputType.text,
+                        maxLength: isHeight ?? false ? 4 : null,
+                        style: const TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Colors.white,
+                        ),
+                        decoration: const InputDecoration(
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 5),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Color(0xFF00E050), width: 2),
+                          ),
+                        ),
+                        cursorColor: Colors.white,
+                      ),
+                    if (foot ?? false)
+                      StatefulBuilder(
+                        builder: (context, StateSetter setState) {
+                          return DropdownWidget<String>(
+                            value: editingController.text,
+                            items: ['Zurdo', 'Diestro', 'Ambidiestro'].toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                editingController.text = newValue ?? 'Zurdo';
+                              });
+                            },
+                            itemBuilder: (String item) {
+                              return item;
+                            },
+                            width: 120,
+                          );
+                        },
+                      ),
+                    if (seleccion ?? false)
+                      StatefulBuilder(builder: (context, StateSetter setState) {
+                        return DropdownWidget<String>(
+                          value: editingController.text,
+                          items: ['Masculina', 'Femenino'].toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              editingController.text = newValue ?? 'Masculina';
+                            });
+                          },
+                          itemBuilder: (String item) {
+                            return item;
+                          },
+                          width: 150,
+                        );
+                      }),
+                    if (categoriaSel ?? false)
+                      StatefulBuilder(
+                        builder: (context, StateSetter setState) {
+                          return DropdownWidget<String>(
+                            value: editingController.text,
+                            items: ['12', '13', '14', '15', '16'].toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                editingController.text = newValue ?? '12';
+                              });
+                            },
+                            itemBuilder: (String item) {
+                              return item;
+                            },
+                            width: 70,
+                          );
+                        },
+                      ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CustomTextButton(
+                          onTap: () => Navigator.of(context).pop(),
+                          text: 'Cancelar',
+                          buttonPrimary: false,
+                          width: 90,
+                          height: 27,
+                        ),
+                        CustomTextButton(
+                          onTap: () async {
+                            if (mounted) {
+                              setState(() {
+                                if (camp.toLowerCase() == 'altura') {
+                                  controller.text =
+                                      '${editingController.text} cm';
+                                } else {
+                                  controller.text = editingController.text;
+                                }
+                              });
+                            }
+                            provider.updatePlayer(
+                              fieldName: camp.toLowerCase(),
+                              value: editingController.text,
+                            );
+                            final player = provider.getPlayer()!;
+
+                            final userProvider = Provider.of<UserProvider>(
+                                context,
+                                listen: false);
+
+                            userProvider.updateUserFromPlayer(player);
+
+                            await ApiClient().post('auth/edit-player',
+                                provider.getPlayer()!.toMap());
+                            Navigator.of(context).pop();
+                          },
+                          text: 'Guardar',
+                          buttonPrimary: true,
+                          width: 90,
+                          height: 27,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ));
       },
     );
   }

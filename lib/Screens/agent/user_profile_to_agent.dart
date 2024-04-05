@@ -1,13 +1,16 @@
 import 'dart:convert';
 
 import 'package:bro_app_to/Screens/player/full_screen_video_page.dart';
+import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/video_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class PlayerProfileToAgent extends StatefulWidget {
@@ -20,47 +23,40 @@ class PlayerProfileToAgent extends StatefulWidget {
 }
 
 class _PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
-  double gridSpacing = 4.0;
+  double gridSpacing = 2.0;
   bool _isExpanded = false;
-  List<Video> videosUsuario = [];
 
-  @override
-  void initState() {
-    fetchVideos();
-    super.initState();
-  }
-
-  Future<void> fetchVideos() async {
+  Future<List<Video>> fetchVideos() async {
     final userId = widget.player.userId;
     try {
       final videosResponse = await ApiClient().get('auth/videos/$userId');
       if (videosResponse.statusCode == 200) {
         final jsonData = jsonDecode(videosResponse.body);
         final videos = jsonData["videos"];
-        videosUsuario.clear();
-        videosUsuario.addAll(mapListToVideos(videos));
-        setState(() {});
+        return mapListToVideos(videos);
       } else {
-        videosUsuario.clear();
         print('Error al obtener los videos: ${videosResponse.statusCode}');
+        return [];
       }
     } catch (e) {
-      videosUsuario.clear();
       print('Error en la solicitud de videos: $e');
+      return [];
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final player = widget.player;
-    final videos = videosUsuario;
     final widthVideo = MediaQuery.of(context).size.width / 3;
+    DateTime? birthDate = player.birthDate;
 
-    String shortInfo = '${player.provincia}, ${player.pais}';
+    String formattedDate =
+        birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
+    String shortInfo =
+        'Provincia, pais: ${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
     String fullInfo =
-        '${player.provincia}, ${player.pais}\nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: r${player.logrosIndividuales}';
-    print("esta es la imagen ${player.userImage!.isNotEmpty}");
-    print("esta es la imagen2 ${player.userImage!.isEmpty}");
+        'Provincia, pais: ${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: r${player.logrosIndividuales}';
+
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -72,10 +68,14 @@ class _PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          backgroundColor: Colors.transparent, // AppBar transparente
-          elevation: 0, // Quitar sombra
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF00E050)),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFF00E050),
+              size: 32,
+            ),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -85,20 +85,20 @@ class _PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
           children: <Widget>[
             if (player.userImage!.isNotEmpty)
               ClipOval(
-                child: FadeInImage.assetNetwork(
-                  placeholder: 'assets/images/fot.png',
-                  imageErrorBuilder: (context, error, stackTrace) {
+                child: CachedNetworkImage(
+                  placeholder: (context, url) => AvatarPlaceholder(80),
+                  errorWidget: (context, error, stackTrace) {
                     return Image.asset(
                       'assets/images/fot.png',
+                      fit: BoxFit.fill,
                       width: 80,
                       height: 80,
-                      fit: BoxFit.cover,
                     );
                   },
-                  image: player.userImage!,
+                  imageUrl: player.userImage!,
+                  fit: BoxFit.fill,
                   width: 80,
                   height: 80,
-                  fit: BoxFit.cover,
                 ),
               ),
             if (player.userImage!.isEmpty)
@@ -159,71 +159,116 @@ class _PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
                     CustomBoxShadow(color: Color(0xFF05FF00), blurRadius: 4)
                   ]),
             ),
-            Expanded(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                child: GridView.builder(
-                  padding: EdgeInsets.all(0),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: gridSpacing,
-                    mainAxisSpacing: gridSpacing,
-                    childAspectRatio: (widthVideo - gridSpacing * 2) / 183,
-                  ),
-                  itemCount: videos.length,
-                  itemBuilder: (context, index) {
-                    final video = videos[index];
-
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => FullScreenVideoPage(
-                              video: video,
-                              index: index,
-                              showOptions: false,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Stack(
-                        children: [
-                          FadeInImage.assetNetwork(
-                            placeholder: 'assets/images/video_placeholder.jpg',
-                            placeholderFit: BoxFit.fill,
-                            placeholderCacheHeight: 175,
-                            placeholderCacheWidth: widthVideo.toInt(),
-                            imageErrorBuilder: (context, error, stackTrace) {
-                              return Image.asset(
-                                'assets/images/video_placeholder.jpg',
-                                height: 175,
-                                width: widthVideo,
-                                fit: BoxFit.cover,
-                              );
-                            },
-                            image: video.imageUrl ?? "",
-                            width: widthVideo,
-                            height: 175,
-                            fit: BoxFit.fill,
-                          ),
-                          if (video.isFavorite)
-                            const Positioned(
-                              top: 8.0,
-                              right: 8.0,
-                              child: Icon(
-                                Icons.star,
-                                color: Color(0xFF05FF00),
-                                size: 24.0,
-                              ),
-                            ),
-                        ],
+            FutureBuilder<List<Video>>(
+                future: fetchVideos(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                        ),
                       ),
                     );
-                  },
-                ),
-              ),
-            )
+                  } else if (snapshot.hasError) {
+                    return Expanded(
+                      child: Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      ),
+                    );
+                  } else {
+                    final videos = snapshot.data ?? [];
+
+                    if (videos.isEmpty) {
+                      return const Expanded(
+                        child: Center(
+                          child: Text(
+                            "¡Aun no hay videos!",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22.0),
+                          ),
+                        ),
+                      );
+                    }
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 15),
+                        child: GridView.builder(
+                          padding: const EdgeInsets.all(0),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: gridSpacing,
+                            mainAxisSpacing: gridSpacing,
+                            childAspectRatio: 1,
+                          ),
+                          itemCount: videos.length,
+                          itemBuilder: (context, index) {
+                            final video = videos[index];
+
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => FullScreenVideoPage(
+                                      video: video,
+                                      index: index,
+                                      showOptions: false,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Stack(
+                                children: [
+                                  CachedNetworkImage(
+                                    placeholder: (context, url) {
+                                      return AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/images/video_placeholder.jpg',
+                                          width: widthVideo,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      );
+                                    },
+                                    errorWidget: (context, error, stackTrace) {
+                                      return AspectRatio(
+                                        aspectRatio: 1,
+                                        child: Image.asset(
+                                          'assets/images/video_placeholder.jpg',
+                                          width: widthVideo,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      );
+                                    },
+                                    imageUrl: video.imageUrl ?? "",
+                                    width: widthVideo,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  if (video.isFavorite)
+                                    const Positioned(
+                                      top: 8.0,
+                                      right: 8.0,
+                                      child: Icon(
+                                        Icons.star,
+                                        color: Color(0xFF05FF00),
+                                        size: 24.0,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  }
+                }),
           ],
         ),
       ),

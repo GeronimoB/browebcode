@@ -6,8 +6,8 @@ class Afiliado {
 
   factory Afiliado.fromJson(Map<String, dynamic> json) {
     return Afiliado(
-      email: json['email'],
-      comision: json['comision'],
+      email: json['email'] ?? '',
+      comision: json['comision'] ?? 0,
     );
   }
 }

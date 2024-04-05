@@ -64,14 +64,14 @@ class Agente {
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> map = {};
-    map['user_id'] = userId;
-    map['name'] = nombre;
-    map['lastname'] = apellido;
-    map['email'] = correo;
-    map['username'] = usuario;
-    map['country'] = pais;
-    map['state'] = provincia;
-    map['birthday'] = provincia.toString();
+    map['userId'] = userId;
+    map['Name'] = nombre;
+    map['LastName'] = apellido;
+    map['Email'] = correo;
+    map['UserName'] = usuario;
+    map['Pais'] = pais;
+    map['Provincia'] = provincia;
+    map['Birthday'] = provincia.toString();
     map['image_url'] = imageUrl;
 
     return map;

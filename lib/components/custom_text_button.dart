@@ -32,13 +32,14 @@ class CustomTextButton extends StatelessWidget {
                     Color.fromARGB(255, 0, 180, 64),
                     Color.fromARGB(255, 0, 225, 80),
                     Color.fromARGB(255, 0, 178, 63),
-                  ], // Colores de tu gradiente
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 )
               : null,
           borderRadius: BorderRadius.circular(21),
-          border: Border.all(color: Color.fromARGB(255, 0, 224, 80), width: 2),
+          border: Border.all(
+              color: const Color.fromARGB(255, 0, 224, 80), width: 2),
           boxShadow: [
             buttonPrimary
                 ? const BoxShadow(

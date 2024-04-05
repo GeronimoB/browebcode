@@ -38,7 +38,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
           backgroundColor: Colors.transparent,
           title: const Text(
             'MÉTODO DE PAGO',
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontFamily: 'Montserrat',
               fontWeight: FontWeight.bold,
@@ -47,7 +47,11 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
           centerTitle: true,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF00E050)),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFF00E050),
+              size: 32,
+            ),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -165,7 +169,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
                 child: Center(
                   child: Text(
                     "TRANSFERENCIA BANCARIA",
-                    style: TextStyle(
+                    style:  TextStyle(
                         color: transferSelected
                             ? Colors.white
                             : const Color(0xff1D6937),
@@ -216,7 +220,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child: Text(
                     'Gracias por tu compra',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color(0xff05FF00), // Color de los títulos
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w800, // ExtraBold
@@ -227,7 +231,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
                 SizedBox(height: 10),
                 Text(
                   'Titular XXXXXXXXX',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
                     fontWeight: FontWeight.w600, // SemiBold
@@ -237,7 +241,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
                 SizedBox(height: 10),
                 Text(
                   'Banco XXXXXXXXX',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
                     fontWeight: FontWeight.w600, // SemiBold
@@ -247,7 +251,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
                 SizedBox(height: 10),
                 Text(
                   'Cuenta XXXXXXXXXXXXXXXXXX',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
                     fontWeight: FontWeight.w600, // SemiBold
@@ -259,7 +263,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
                   padding: EdgeInsets.symmetric(vertical: 5),
                   child: Text(
                     'Instrucciones',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color(0xff05FF00), // Color de los títulos
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w800, // ExtraBold
@@ -270,7 +274,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
                 SizedBox(height: 5),
                 Text(
                   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
                     fontSize: 11,

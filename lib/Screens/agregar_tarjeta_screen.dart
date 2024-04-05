@@ -65,7 +65,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
               centerTitle: true,
               title: const Text(
                 'MÉTODO DE PAGO',
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Montserrat',
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -95,7 +95,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                     width: double.maxFinite,
                     child: Text(
                       'Disponibles',
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Color(0xFF00E050),
                           fontSize: 18,
                           fontFamily: 'Montserrat',
@@ -131,7 +131,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                     width: double.maxFinite,
                     child: Text(
                       'Agregar Tarjeta',
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Color(0xFF00E050),
                           fontSize: 18,
                           fontFamily: 'Montserrat',
@@ -140,7 +140,6 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                   ),
                   const SizedBox(height: 16.0),
                   CardFormField(
-                    countryCode: 'ES',
                     enablePostalCode: false,
                     onCardChanged: (details) {
                       if (controller.details.complete) {
@@ -224,7 +223,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                 children: [
                   Text(
                     "Estamos subiendo tu vídeo, esto puede tardar unos segundos…",
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.bold,
@@ -267,7 +266,8 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                 : null,
           ),
           child: ListTile(
-            contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
             leading: Image.asset(
               tarjeta.displayBrand == 'visa'
                   ? 'assets/images/Visa_icon.png'
@@ -566,7 +566,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       );
     } else {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           backgroundColor: Colors.redAccent,
           content: Text(
               'Hubo un error al cargar tu video, intentalo de nuevo desde tu perfil.')));

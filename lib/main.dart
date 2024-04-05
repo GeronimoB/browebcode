@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:bro_app_to/firebase_options.dart';
+import 'package:bro_app_to/injection_container.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/firebase_api.dart';
+import 'package:bro_app_to/utils/language_localizations.dart';
+import 'package:bro_app_to/utils/notification_model.dart';
 import 'package:bro_app_to/utils/router_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Intro.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -25,13 +28,16 @@ import 'src/auth/domain/entitites/user_entity.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FirebaseApi().initNotifications();
   Stripe.publishableKey = ApiConstants.stripePublicKey;
   await Stripe.instance.applySettings();
+  List<NotificationModel> notificaciones = await getSavedNotifications();
+  if (notificaciones.isNotEmpty) {
+    currentNotifications.addAll(notificaciones.reversed);
+  }
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -41,8 +47,22 @@ void main() async {
   runApp(const MyApp());
 }
 
+Future<List<NotificationModel>> getSavedNotifications() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  List<String>? savedNotifications = prefs.getStringList('notifications') ?? [];
+
+  // Convierte las notificaciones de formato String a formato NotificationModel
+  List<NotificationModel> notifications = savedNotifications
+      .map((String notification) =>
+          NotificationModel.fromJson(jsonDecode(notification)))
+      .toList();
+
+  return notifications;
+}
+
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +85,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => PlayerProvider()),
         ChangeNotifierProvider(create: (_) => AgenteProvider()),
-        ChangeNotifierProvider(create: (_) => UserProvider())
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: GetMaterialApp(
         title: 'Bro app',
@@ -81,7 +101,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        locale: const Locale('es', 'ES'),
+        locale: const Locale('en', ''),
         initialRoute: RouteHelper.getInitialRoute(),
         getPages: RouteHelper.routes,
         defaultTransition: Transition.leftToRightWithFade,
@@ -90,9 +110,14 @@ class MyApp extends StatelessWidget {
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
+          LanguageLocalizations.delegate
         ],
         supportedLocales: const [
           Locale('es'),
+          Locale('en'),
+          Locale('it'),
+          Locale('fr'),
+          Locale('de'),
         ],
       ),
     );
@@ -115,6 +140,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
 
   Future<void> loadRememberMe() async {
     final prefs = await SharedPreferences.getInstance();
+    translations = LanguageLocalizations.of(context)!.getJsonTranslate();
     setState(() {
       final String savedUsername = prefs.getString('username') ?? '';
       final String savedPassword = prefs.getString('password') ?? '';

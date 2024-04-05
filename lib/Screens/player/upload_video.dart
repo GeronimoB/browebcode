@@ -54,7 +54,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
                   Text(
                     text,
                     style: TextStyle(
-                        color: success ? Color(0xff00E050) : Colors.white,
+                        color: success ? const Color(0xff00E050) : Colors.white,
                         fontFamily: 'Montserrat',
                         fontWeight: success ? FontWeight.w400 : FontWeight.bold,
                         fontSize: success ? 20 : 16),
@@ -228,7 +228,11 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xff00E050)),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFF00E050),
+              size: 32,
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
@@ -238,7 +242,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
           children: [
             const Text(
               'Subir video',
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.white,
                   fontFamily: 'montserrat',
                   fontSize: 24,
@@ -329,15 +333,15 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
                       //     ),
                       //   ],
                       // ),
-                      CustomTextButton(
-                          onTap: () {
-                            showChargeDialog(
-                                "El video se subio exitosamente!", true);
-                          },
-                          text: 'Subir',
-                          buttonPrimary: true,
-                          width: 100,
-                          height: 39)
+                      // CustomTextButton(
+                      //     onTap: () {
+                      //       showChargeDialog(
+                      //           "El video se subio exitosamente!", true);
+                      //     },
+                      //     text: 'Subir',
+                      //     buttonPrimary: true,
+                      //     width: 100,
+                      //     height: 39)
                     ],
                   )
                 : GestureDetector(
@@ -378,7 +382,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
                 children: [
                   Text(
                     "Estamos subiendo tu vídeo, esto puede tardar unos segundos…",
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.bold,

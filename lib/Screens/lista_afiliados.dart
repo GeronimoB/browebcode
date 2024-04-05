@@ -1,0 +1,311 @@
+import 'dart:convert';
+
+import 'package:bro_app_to/Screens/retiro.dart';
+import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/components/referido_item.dart';
+import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/src/auth/data/models/user_model.dart';
+import 'package:bro_app_to/utils/api_client.dart';
+import 'package:bro_app_to/utils/referido_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+class ListaReferidosScreen extends StatefulWidget {
+  const ListaReferidosScreen({Key? key}) : super(key: key);
+
+  @override
+  _ListaReferidosScreenState createState() => _ListaReferidosScreenState();
+}
+
+class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
+  late UserModel user;
+  late UserProvider provider;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    provider = Provider.of<UserProvider>(context, listen: false);
+    user = provider.getCurrentUser();
+    fetchReferrals();
+    super.initState();
+  }
+
+  Future<List<Afiliado>>? fetchReferrals() async {
+    try {
+      final referrals = await ApiClient()
+          .post('auth/afiliados', {"referralCode": user.referralCode});
+      if (referrals.statusCode == 200) {
+        final afiliados = jsonDecode(referrals.body)["players"];
+        return mapListToAfiliados(afiliados);
+        //provider.setAfiliados(mapListToAfiliados(afiliados));
+      } else {
+        return [];
+      }
+    } catch (error) {
+      print('Error al obtener los referidos: $error');
+      return [];
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    user = provider.getCurrentUser();
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pushReplacementNamed(
+          user.isAgent ? '/config-agent' : '/config-player',
+        );
+        return false;
+      },
+      child: Container(
+        height: double.maxFinite,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          extendBody: true,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            centerTitle: true,
+            elevation: 0,
+            title: const Text(
+              'AFILIADOS',
+              style: const TextStyle(
+                color: Colors.white,
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
+                decoration: TextDecoration.none,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Color(0xFF00E050),
+              ),
+              onPressed: () {
+                final userProvider =
+                    Provider.of<UserProvider>(context, listen: false);
+                final user = userProvider.getCurrentUser();
+                Navigator.of(context).pushReplacementNamed(
+                  user.isAgent ? '/config-agent' : '/config-player',
+                );
+              },
+            ),
+          ),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const SizedBox(height: 16.0),
+              GestureDetector(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(
+                      text: 'https://bró.com/ref?=${user.referralCode}'));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        backgroundColor: Color(0xFF05FF00),
+                        content: Text('Link de afiliado copiado.')),
+                  );
+                },
+                child: Text(
+                  'https://bró.com/ref?=${user.referralCode}',
+                  style: const TextStyle(
+                    color: Color(0xFF05FF00),
+                    fontFamily: 'Montserrat',
+                    fontSize: 15.0,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              GestureDetector(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: user.referralCode));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        backgroundColor: Color(0xFF05FF00),
+                        content: Text('Codigo de afiliado copiado.')),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.all(25),
+                  width: 400,
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(30.0),
+                    border:
+                        Border.all(color: const Color(0xFF05FF00), width: 1),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'TU CÓDIGO: ',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      Text(
+                        user.referralCode,
+                        style: const TextStyle(
+                          color: Color(0xFF05FF00),
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24.0),
+              const Text(
+                'Personas Referidas',
+                style: const TextStyle(
+                  color: Color(0xFF05FF00),
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 15.0),
+              FutureBuilder<List<Afiliado>>(
+                future: fetchReferrals(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Expanded(
+                      child: Center(
+                        child: Text(
+                          'Error: ${snapshot.error}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            fontSize: 18.0,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  } else {
+                    final afiliados = snapshot.data ?? [];
+
+                    if (afiliados.isEmpty) {
+                      return const Expanded(
+                        child: Center(
+                          child: Text(
+                            'Aun no tienes afiliados, comparte tu codigo con tus amigos para poder ganar comisiones.',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w500,
+                              fontStyle: FontStyle.italic,
+                              fontSize: 18.0,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    }
+                    return Container(
+                      color: Colors.transparent,
+                      height: 165,
+                      width: 400,
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          setState(() {});
+                        },
+                        child: ListView.builder(
+                            itemCount: afiliados.length,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              final afiliado = afiliados[index];
+
+                              return ReferidoItem(
+                                email: afiliado.email,
+                                ganancia: '00,00€',
+                              );
+                            }),
+                      ),
+                    );
+                  }
+                },
+              ),
+              RichText(
+                text: const TextSpan(
+                  text: 'TOTAL:',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontSize: 15.0,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: '\n00,00€',
+                      style: const TextStyle(
+                        color: Color(0xFF05FF00),
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40.0,
+                      ),
+                    )
+                  ],
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32.0),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 90.0),
+                child: CustomTextButton(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const RetirarMenu()),
+                    );
+                  },
+                  text: 'Retirar',
+                  buttonPrimary: true,
+                  width: 100,
+                  height: 40,
+                ),
+              ),
+              const SizedBox(height: 32.0),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Image.asset(
+                  'assets/images/Logo.png',
+                  width: 104,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

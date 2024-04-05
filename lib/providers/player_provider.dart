@@ -98,10 +98,9 @@ class PlayerProvider extends ChangeNotifier {
 
     if (copyWithMethod != null) {
       _player = copyWithMethod(value);
-      notifyListeners(); 
+      notifyListeners();
     }
   }
-
 
   PlayerFullModel getTemporalUser() {
     return _temporalUser;
