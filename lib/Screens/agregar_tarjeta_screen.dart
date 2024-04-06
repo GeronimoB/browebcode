@@ -1,9 +1,11 @@
 import 'dart:convert';
 
-import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/src/auth/data/models/user_model.dart';
+import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -22,11 +24,10 @@ class AgregarTarjetaScreen extends StatefulWidget {
   const AgregarTarjetaScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _AgregarTarjetaScreenState createState() => _AgregarTarjetaScreenState();
+  AgregarTarjetaScreenState createState() => AgregarTarjetaScreenState();
 }
 
-class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
+class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
   final controller = CardFormEditController();
   int isSelected = -1;
   bool _isLoading = false;
@@ -140,6 +141,7 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                   ),
                   const SizedBox(height: 16.0),
                   CardFormField(
+                    countryCode: 'ES',
                     enablePostalCode: false,
                     onCardChanged: (details) {
                       if (controller.details.complete) {
@@ -380,7 +382,6 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
 
       final customerId = player.customerStripeId;
       controller.clear();
-      print("customerID: $customerId");
       final asociatePaymentMethod = await ApiClient().post(
         'security_filter/v1/api/payment/payment-method',
         {
@@ -410,7 +411,6 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
             content: Text('La tarjeta se ha agregado exitosamente.')),
       );
       playerProvider.setCards(mapListToTarjetas(savedCards));
-      print(savedCards);
       setState(() {
         _isLoading = false;
       });
@@ -431,102 +431,130 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         playerProvider.getPlayer() ?? playerProvider.getTemporalUser();
 
     if (playerProvider.selectedCard == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text('Selecciona la tarjeta con la cual deseas pagar.'),
-        ),
-      );
+      _showErrorSnackBar('Selecciona la tarjeta con la cual deseas pagar.');
       return;
     }
 
     try {
-      setState(() {
-        _isLoading = true;
-      });
+      _setLoadingState(true);
 
       if (isSubscription) {
-        final subscriptionIntent = await ApiClient().post(
-          'security_filter/v1/api/payment/subscription',
-          {
-            "planId": playerProvider.getActualPlan()!.idPlan,
-            "customerId": player.customerStripeId,
-            "paymentMethodId": playerProvider.selectedCard!.cardId,
-          },
-        );
-
-        if (subscriptionIntent.statusCode != 200) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.redAccent,
-              content: Text('Error al pagar, intentelo de nuevo.'),
-            ),
-          );
-          setState(() {
-            _isLoading = false;
-          });
-          return;
-        }
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              backgroundColor: Color(0xFF05FF00),
-              content: Text('Su pago se he procesado exitosamente.')),
-        );
-        setState(() {
-          _isLoading = false;
-        });
-        Future.delayed(Duration(seconds: 1));
-        playerProvider.setNewUser();
-        _showUploadDialog();
-        final video = playerProvider.videoPathToUpload;
-        final image = playerProvider.imagePathToUpload;
-        final userId = playerProvider.getPlayer()!.userId;
-        uploadVideoAndImage(video, image, userId);
+        await _handleSubscriptionPayment(player, playerProvider);
       } else {
-        final paymentIntent = await ApiClient().post(
-          'security_filter/v1/api/payment/payment',
-          {
-            "amount": 99.toString(),
-            "customerId": player.customerStripeId,
-            "paymentMethodId": playerProvider.selectedCard!.cardId,
-          },
-        );
-
-        if (paymentIntent.statusCode != 200) {
-          print(paymentIntent.body);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.redAccent,
-              content: Text('Error al pagar, intentelo de nuevo.'),
-            ),
-          );
-          setState(() {
-            _isLoading = false;
-          });
-          return;
-        }
-        playerProvider.updateIsFavoriteById();
-        final video = playerProvider.videoProcessingFavoritePayment;
-        await ApiClient().post('auth/update-video', {
-          'videoId': video?.id.toString(),
-          'destacado': video?.isFavorite.toString(),
-        });
-        playerProvider.indexProcessingVideoFavoritePayment = 0;
-        playerProvider.videoProcessingFavoritePayment = null;
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-              builder: (context) =>
-                  const CustomBottomNavigationBarPlayer(initialIndex: 4)),
-        );
+        await _handleFavoriteVideoPayment(player, playerProvider);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.redAccent, content: Text('Error: $e')));
-      setState(() {
-        _isLoading = false;
-      });
+      _showErrorSnackBar('Error: $e');
+      _setLoadingState(false);
       rethrow;
     }
+  }
+
+  Future<void> _handleSubscriptionPayment(
+      PlayerFullModel player, PlayerProvider playerProvider) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final subscriptionIntent = await ApiClient().post(
+      'security_filter/v1/api/payment/subscription',
+      {
+        "planId": playerProvider.getActualPlan()!.idPlan,
+        "customerId": player.customerStripeId,
+        "paymentMethodId": playerProvider.selectedCard!.cardId,
+        "paymentMethod":
+            "${playerProvider.selectedCard!.displayBrand} *${playerProvider.selectedCard!.last4Numbers}",
+        "plan": playerProvider.getActualPlan()!.nombre,
+        "userId": player.userId,
+        "amount": playerProvider.getActualPlan()!.precio,
+        "isSuscription": "1"
+      },
+    );
+
+    if (subscriptionIntent.statusCode != 200) {
+      _showErrorSnackBar('Error al pagar, inténtelo de nuevo.');
+      _setLoadingState(false);
+      return;
+    }
+
+    _setLoadingState(false);
+
+    if (playerProvider.isNewSubscriptionPayment) {
+      _showSuccessSnackBar('Su pago se ha procesado exitosamente.');
+      await Future.delayed(const Duration(seconds: 1));
+
+      userProvider.setCurrentUser(UserModel.fromPlayer(player,
+          status: true, plan: playerProvider.getActualPlan()?.nombre));
+      playerProvider.setNewUser();
+      _showUploadDialog();
+      final video = playerProvider.videoPathToUpload;
+      final image = playerProvider.imagePathToUpload;
+      final userId = player.userId;
+      uploadVideoAndImage(video, image, userId);
+    } else {
+      userProvider.updatePlan(playerProvider.getActualPlan()!.nombre);
+      _showSuccessSnackBar('Felicitaciones, haz actualizado tu suscripcion.');
+      await Future.delayed(const Duration(seconds: 2));
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+            builder: (context) => const CustomBottomNavigationBarPlayer()),
+      );
+    }
+  }
+
+  Future<void> _handleFavoriteVideoPayment(
+      PlayerFullModel player, PlayerProvider playerProvider) async {
+    final video = playerProvider.videoProcessingFavoritePayment;
+    final destacarVideo = await ApiClient().post(
+      'security_filter/v1/api/payment/subscription',
+      {
+        "planId": "price_1P2RbpIkdX2ffauue0ZIWVUn",
+        "customerId": player.customerStripeId,
+        "paymentMethodId": playerProvider.selectedCard!.cardId,
+        "paymentMethod":
+            "${playerProvider.selectedCard!.displayBrand} *${playerProvider.selectedCard!.last4Numbers}",
+        "plan": "Destacar video",
+        "userId": player.userId,
+        "amount": "0.99",
+        "isSuscription": "0",
+        'videoId': video?.id.toString(),
+      },
+    );
+
+    if (destacarVideo.statusCode != 200) {
+      _showErrorSnackBar('Error al pagar, inténtelo de nuevo.');
+      _setLoadingState(false);
+      return;
+    }
+
+    playerProvider.indexProcessingVideoFavoritePayment = 0;
+    playerProvider.videoProcessingFavoritePayment = null;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+          builder: (context) =>
+              const CustomBottomNavigationBarPlayer(initialIndex: 4)),
+    );
+  }
+
+  void _setLoadingState(bool isLoading) {
+    setState(() {
+      _isLoading = isLoading;
+    });
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.redAccent,
+        content: Text(message),
+      ),
+    );
+  }
+
+  void _showSuccessSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: const Color(0xFF05FF00),
+        content: Text(message),
+      ),
+    );
   }
 
   Future<void> uploadVideoAndImage(
@@ -537,9 +565,8 @@ class _AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
     );
     request.fields["userId"] = userId ?? '';
     if (videoPath != null) {
-      // Adjuntar el archivo de video al cuerpo de la solicitud
       request.files.add(await http.MultipartFile.fromPath(
-        'video', // Nombre del campo en el servidor para el video
+        'video',
         videoPath,
       ));
     }

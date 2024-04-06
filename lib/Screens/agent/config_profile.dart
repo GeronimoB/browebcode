@@ -82,7 +82,10 @@ class _ConfigProfileState extends State<ConfigProfile> {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Color(0xFF212121), Color(0xFF121212)],
+              colors: [
+                Color.fromARGB(255, 44, 44, 44),
+                Color.fromARGB(255, 0, 0, 0),
+              ],
             ),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 15.0),

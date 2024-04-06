@@ -1,5 +1,4 @@
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
-import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:bro_app_to/providers/agent_provider.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
@@ -8,7 +7,6 @@ import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/agente_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
-import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

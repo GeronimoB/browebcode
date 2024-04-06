@@ -119,7 +119,7 @@ class _PerfilPageState extends State<PerfilPage> {
                           height: 160,
                         );
                       },
-                      imageUrl: agente.imageUrl!,
+                      imageUrl: agente.imageUrl ?? '',
                       fit: BoxFit.fill,
                       width: 160,
                       height: 160,
@@ -208,7 +208,7 @@ class _PerfilPageState extends State<PerfilPage> {
                   fit: BoxFit.cover,
                 );
               },
-              image: player.userImage!,
+              image: player.userImage ?? '',
               width: 80,
               height: 80,
               fit: BoxFit.cover,

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:bro_app_to/Screens/player/edit_player_info.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/Sing_up.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/first_video.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class SelectCamp extends StatefulWidget {
 }
 
 class SelectCampState extends State<SelectCamp> {
-  bool _acceptedTerms = false;
+
   late List<Player> players;
   bool isLoading = false;
 
@@ -176,208 +177,40 @@ class SelectCampState extends State<SelectCamp> {
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
                   children: <Widget>[
-                    if (widget.registrando)
-                      Row(
-                        children: <Widget>[
-                          Checkbox(
-                            value: _acceptedTerms,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                _acceptedTerms = value!;
-                              });
-                            },
-                            fillColor:
-                                MaterialStateProperty.resolveWith<Color?>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.selected)) {
-                                  return const Color(0xff00E050);
-                                }
-                                return Colors.white;
-                              },
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _acceptedTerms = !_acceptedTerms;
-                                });
-                              },
-                              child: RichText(
-                                text: TextSpan(
-                                  text: translations!['terms'],
-                                  style: const TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 11,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: translations!['terms2'],
-                                      style: const TextStyle(
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                     const SizedBox(height: 10),
                     CustomTextButton(
                         onTap: () async {
                           setState(() {
                             isLoading = true;
                           });
+
                           final playerProvider = Provider.of<PlayerProvider>(
                               context,
                               listen: false);
-                          if (widget.registrando) {
-                            if (!_acceptedTerms) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  backgroundColor: Colors.redAccent,
-                                  content: Text(
-                                    translations!['accept_terms'],
-                                  ),
-                                ),
-                              );
-                              setState(() {
-                                isLoading = false;
-                              });
-                              return;
-                            }
-                            if (!players.any((player) => player.isSelected)) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  backgroundColor: Colors.redAccent,
-                                  content:
-                                      Text(translations!['select_position']),
-                                ),
-                              );
-                              setState(() {
-                                isLoading = false;
-                              });
-                              return;
-                            }
-                            final selectedPlayer = players
-                                .firstWhere((element) => element.isSelected);
 
+                          if (!players.any((player) => player.isSelected)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.redAccent,
+                                content: Text(translations!['select_position']),
+                              ),
+                            );
+                            setState(() {
+                              isLoading = false;
+                            });
+                            return;
+                          }
+
+                          final selectedPlayer = players
+                              .firstWhere((element) => element.isSelected);
+
+                          if (widget.registrando) {
                             playerProvider.updateTemporalPlayer(
                               position: selectedPlayer.position,
                             );
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => const FirstVideoWidget()),
-                            // );
-                            try {
-                              final response = await ApiClient().post(
-                                'auth/player',
-                                playerProvider.getTemporalUser().toMap(),
-                              );
-
-                              if (response.statusCode == 200) {
-                                final jsonData = jsonDecode(response.body);
-                                final userId = jsonData["userInfo"]["userId"];
-
-                                playerProvider.updateTemporalPlayer(
-                                  userId: userId.toString(),
-                                );
-
-                                final name =
-                                    "${playerProvider.getTemporalUser().name} ${playerProvider.getTemporalUser().lastName}";
-                                final email =
-                                    playerProvider.getTemporalUser().email;
-
-                                final responseStripe = await ApiClient().post(
-                                  'security_filter/v1/api/payment/customer',
-                                  {
-                                    "userId": userId.toString(),
-                                    "CompleteName": name,
-                                    "Email": email
-                                  },
-                                );
-                                if (responseStripe.statusCode != 200) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      backgroundColor: Colors.redAccent,
-                                      content: Text(translations![
-                                          'error_create_account']),
-                                    ),
-                                  );
-                                  return;
-                                }
-                                final jsonDataCus =
-                                    jsonDecode(responseStripe.body);
-                                final customerId = jsonDataCus["customerId"];
-                                print("que me llega $customerId");
-                                playerProvider.updateTemporalPlayer(
-                                    customerStripeId: customerId);
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    backgroundColor: const Color(0xFF05FF00),
-                                    content: Text(
-                                        translations!['scss_create_account']),
-                                  ),
-                                );
-                                Future.delayed(const Duration(seconds: 2));
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const FirstVideoWidget()),
-                                );
-                              } else {
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                final jsonData = json.decode(response.body);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      backgroundColor: Colors.redAccent,
-                                      content: Text(jsonData["error"])),
-                                );
-                              }
-                            } on TimeoutException {
-                              // Si se produce un timeout, muestra un mensaje de error y devuelve false
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  backgroundColor: Colors.redAccent,
-                                  content:
-                                      Text(translations!['error_try_again']),
-                                ),
-                              );
-                              setState(() {
-                                isLoading = false;
-                              });
-                              return;
-                            }
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const SignUpScreen()));
                           } else {
-                            if (!players.any((player) => player.isSelected)) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  backgroundColor: Colors.redAccent,
-                                  content:
-                                      Text(translations!['select_position']),
-                                ),
-                              );
-                              setState(() {
-                                isLoading = false;
-                              });
-                              return;
-                            }
-
-                            final selectedPlayer = players
-                                .firstWhere((element) => element.isSelected);
-
                             playerProvider.updatePlayer(
                               fieldName: "position",
                               value: selectedPlayer.position,
@@ -528,54 +361,61 @@ class SelectCampState extends State<SelectCamp> {
   }
 
   Widget playerPic(String position, String number, double top, double left) {
-    // Encuentra el jugador correspondiente en la lista
     Player player = players.firstWhere(
       (element) => element.position == position,
       orElse: () => Player(position: position, number: number),
     );
 
-    return Positioned(
-      top: top,
-      left: left,
-      child: GestureDetector(
-        onTap: () {
-          _showPositionDialog(position, () {
-            setState(() {});
-          });
-          handlePlayerSelection(player);
-        },
-        child: Column(
-          children: [
-            Container(
-              width: 35,
-              height: 35,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: player.isSelected
-                      ? const Color(0xff05FF00)
-                      : Colors.white,
-                  width: 3,
-                ),
-                borderRadius: BorderRadius.circular(17.5),
-              ),
-              child: Center(
-                child: Text(
-                  number,
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    letterSpacing: 1,
-                    height: 1,
+    double initialTop = -100.0;
+
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: initialTop, end: top),
+      duration: const Duration(seconds: 2),
+      builder: (context, animatedTop, child) {
+        return Positioned(
+          top: animatedTop,
+          left: left,
+          child: GestureDetector(
+            onTap: () {
+              _showPositionDialog(position, () {
+                setState(() {});
+              });
+              handlePlayerSelection(player);
+            },
+            child: Column(
+              children: [
+                Container(
+                  width: 35,
+                  height: 35,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: player.isSelected
+                          ? const Color(0xff05FF00)
+                          : Colors.white,
+                      width: 3,
+                    ),
+                    borderRadius: BorderRadius.circular(17.5),
+                  ),
+                  child: Center(
+                    child: Text(
+                      number,
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        letterSpacing: 1,
+                        height: 1,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Image.asset('assets/images/football-player 1.png'),
+              ],
             ),
-            Image.asset('assets/images/football-player 1.png'),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

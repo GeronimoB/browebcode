@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bro_app_to/components/custom_dropdown.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/first_video.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/select_camp.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,7 @@ class SignUpScreen2 extends StatefulWidget {
 
 class _SignUpScreen2State extends State<SignUpScreen2> {
   bool isLoading = false;
+  bool _acceptedTerms = false;
   late TextEditingController dniController;
   late TextEditingController countryController;
   late TextEditingController stateController;
@@ -73,7 +76,6 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
         );
         return false;
       } catch (e) {
-        // Captura cualquier otra excepción y muestra un mensaje de error genérico
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.redAccent,
@@ -210,21 +212,23 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                 TextField(
                   controller: heightController,
                   keyboardType: TextInputType.number,
-                  maxLength: 4,
                   decoration: InputDecoration(
                     labelText: translations!['height_label'],
                     labelStyle: const TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
+                      fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w500,
                       fontStyle: FontStyle.italic,
                       fontSize: 12,
                     ),
                     contentPadding: const EdgeInsets.symmetric(vertical: 5),
                     enabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 2),
+                      borderSide:
+                          BorderSide(color: Color(0xFF00F056), width: 2),
                     ),
                   ),
-                  style: const TextStyle(color: Colors.black),
+                  style: const TextStyle(
+                      color: Colors.white, fontFamily: 'Montserrat'),
                 ),
                 TextField(
                   controller: categoryController,
@@ -291,7 +295,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      translations!['individual_achievements'],
+                      translations!['dominant_feet'],
                       style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
@@ -325,7 +329,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      translations!['left_feet'],
+                      translations!['national_selection'],
                       style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
@@ -388,6 +392,58 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                   style: const TextStyle(
                       color: Colors.white, fontFamily: 'Montserrat'),
                 ),
+                const SizedBox(height: 10),
+                Row(
+                  children: <Widget>[
+                    Checkbox(
+                      value: _acceptedTerms,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _acceptedTerms = value!;
+                        });
+                      },
+                      fillColor: MaterialStateProperty.resolveWith<Color?>(
+                        (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.selected)) {
+                            return const Color(0xff00E050);
+                          }
+                          return Colors.white;
+                        },
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _acceptedTerms = !_acceptedTerms;
+                          });
+                        },
+                        child: RichText(
+                          text: TextSpan(
+                            text: translations!['terms'],
+                            style: const TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: translations!['terms2'],
+                                style: const TextStyle(
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 55),
                 CustomTextButton(
                     onTap: () async {
@@ -399,6 +455,20 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                       bool isValid = await validateForm(
                         context,
                       );
+                      if (!_acceptedTerms) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.redAccent,
+                            content: Text(
+                              translations!['accept_terms'],
+                            ),
+                          ),
+                        );
+                        setState(() {
+                          isLoading = false;
+                        });
+                        return;
+                      }
                       if (isValid) {
                         final playerProvider =
                             Provider.of<PlayerProvider>(context, listen: false);
@@ -415,17 +485,87 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                           seleccion: selection,
                           categoriaSeleccion: catSelection,
                         );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SelectCamp(
-                                    registrando: true,
-                                  )),
-                        );
+                        try {
+                          final response = await ApiClient().post(
+                            'auth/player',
+                            playerProvider.getTemporalUser().toMap(),
+                          );
+
+                          if (response.statusCode == 200) {
+                            final jsonData = jsonDecode(response.body);
+                            final userId = jsonData["userInfo"]["userId"];
+
+                            playerProvider.updateTemporalPlayer(
+                              userId: userId.toString(),
+                            );
+
+                            final name =
+                                "${playerProvider.getTemporalUser().name} ${playerProvider.getTemporalUser().lastName}";
+                            final email =
+                                playerProvider.getTemporalUser().email;
+
+                            final responseStripe = await ApiClient().post(
+                              'security_filter/v1/api/payment/customer',
+                              {
+                                "userId": userId.toString(),
+                                "CompleteName": name,
+                                "Email": email
+                              },
+                            );
+                            if (responseStripe.statusCode != 200) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.redAccent,
+                                  content: Text(
+                                      translations!['error_create_account']),
+                                ),
+                              );
+                              return;
+                            }
+                            final jsonDataCus = jsonDecode(responseStripe.body);
+                            final customerId = jsonDataCus["customerId"];
+                            print("que me llega $customerId");
+                            playerProvider.updateTemporalPlayer(
+                                customerStripeId: customerId);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: const Color(0xFF05FF00),
+                                content:
+                                    Text(translations!['scss_create_account']),
+                              ),
+                            );
+                            await Future.delayed(const Duration(seconds: 2));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const FirstVideoWidget()),
+                            );
+                          } else {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            final jsonData = json.decode(response.body);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  backgroundColor: Colors.redAccent,
+                                  content: Text(jsonData["error"])),
+                            );
+                          }
+                        } on TimeoutException {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.redAccent,
+                              content: Text(translations!['error_try_again']),
+                            ),
+                          );
+                          setState(() {
+                            isLoading = false;
+                          });
+                          return;
+                        }
                       }
-                      setState(() {
-                        isLoading = false; // Ocultar el loader
-                      });
                     },
                     text: translations!['next'],
                     buttonPrimary: true,

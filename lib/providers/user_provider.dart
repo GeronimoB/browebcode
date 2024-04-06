@@ -25,6 +25,11 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updatePlan(String plan) {
+    _currentUser = _currentUser.copyWith(subscription: plan);
+    notifyListeners();
+  }
+
   void updateUserFromPlayer(PlayerFullModel player) {
     _currentUser = _currentUser.copyWith(
         nombre: player.name,
@@ -65,6 +70,7 @@ class UserProvider extends ChangeNotifier {
     );
     _currentUser = const UserModel(username: '', password: '');
     afiliados.clear();
+    unreadTotalMessages = 0;
 
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('username', "");

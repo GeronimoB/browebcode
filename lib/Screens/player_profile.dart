@@ -33,7 +33,6 @@ class _PlayerProfileState extends State<PlayerProfile> {
       if (videosResponse.statusCode == 200) {
         final jsonData = jsonDecode(videosResponse.body);
         final videos = jsonData["videos"];
-        print(videos.length);
         //playerProvider.setUserVideos(mapListToVideos(videos));
         return mapListToVideos(videos);
       } else {
@@ -265,7 +264,7 @@ class _PlayerProfileState extends State<PlayerProfile> {
                                     fit: BoxFit.cover,
                                   ),
                                   if (video
-                                      .isFavorite) // Mostrar estrella si el video está destacado
+                                      .isFavorite) 
                                     const Positioned(
                                       top: 8.0,
                                       right: 8.0,

@@ -13,6 +13,8 @@ class UserModel extends UserEntity {
     String name = '',
     String lastName = '',
     String imageUrl = '',
+    String subscription = '',
+    bool status = false,
   }) : super(
           username: username,
           password: password,
@@ -22,6 +24,8 @@ class UserModel extends UserEntity {
           name: name,
           lastName: lastName,
           imageUrl: imageUrl,
+          subscription: subscription,
+          status: status,
         );
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +39,8 @@ class UserModel extends UserEntity {
       name: json["name"],
       lastName: json["lastname"],
       imageUrl: json['image_url'] ?? '',
+      status: json['status'] == 1 ? true : false,
+      subscription: json['suscription'] ?? '',
     );
   }
 
@@ -46,11 +52,12 @@ class UserModel extends UserEntity {
       userId: agente.userId!,
       name: agente.nombre!,
       lastName: agente.apellido!,
-      imageUrl: agente.imageUrl!,
+      imageUrl: agente.imageUrl ?? '',
     );
   }
 
-  factory UserModel.fromPlayer(PlayerFullModel player) {
+  factory UserModel.fromPlayer(PlayerFullModel player,
+      {bool? status, String? plan}) {
     return UserModel(
       username: '',
       password: '',
@@ -58,21 +65,23 @@ class UserModel extends UserEntity {
       userId: player.userId!,
       name: player.name!,
       lastName: player.lastName!,
-      imageUrl: player.userImage!,
+      imageUrl: player.userImage ?? '',
+      status: status ?? false,
+      subscription: plan ?? '',
     );
   }
 
-  UserModel copyWith({
-    String? nombre,
-    String? apellido,
-    String? correo,
-    String? usuario,
-    String? pais,
-    String? provincia,
-    DateTime? birthDate,
-    String? referralCode,
-    String? imageUrl,
-  }) {
+  UserModel copyWith(
+      {String? nombre,
+      String? apellido,
+      String? correo,
+      String? usuario,
+      String? pais,
+      String? provincia,
+      DateTime? birthDate,
+      String? referralCode,
+      String? imageUrl,
+      String? subscription}) {
     return UserModel(
       userId: userId,
       username: usuario ?? username,
@@ -82,6 +91,8 @@ class UserModel extends UserEntity {
       lastName: apellido ?? lastName,
       imageUrl: imageUrl ?? this.imageUrl,
       isAgent: isAgent,
+      subscription: subscription ?? this.subscription,
+      status: status,
     );
   }
 }

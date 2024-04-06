@@ -9,6 +9,8 @@ class UserEntity extends Equatable {
   final String name;
   final String lastName;
   final String imageUrl;
+  final String subscription;
+  final bool status;
 
   const UserEntity({
     required this.username,
@@ -19,6 +21,8 @@ class UserEntity extends Equatable {
     this.name = '',
     this.lastName = '',
     this.imageUrl = '',
+    this.subscription = '',
+    this.status = false,
   });
 
   @override
@@ -30,6 +34,8 @@ class UserEntity extends Equatable {
         referralCode,
         name,
         lastName,
-        imageUrl
+        imageUrl,
+        subscription,
+        status
       ];
 }

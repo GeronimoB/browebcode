@@ -3,14 +3,12 @@ import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-// Define el widget de detalles de planes
 class PlanDetailsScreen extends StatelessWidget {
   final String goldPlan;
   final List<String> planItems;
   final String price;
 
-  // Constructor que asigna los parámetros
-  PlanDetailsScreen({
+  const PlanDetailsScreen({
     required this.goldPlan,
     required this.planItems,
     required this.price,
@@ -53,11 +51,8 @@ class PlanDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            // Espacio
             SizedBox(height: 20),
-            // Lista de elementos del plan
             ...generatePlanItems(planItems),
-            // Descripción en latín
             const Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
@@ -66,11 +61,10 @@ class PlanDetailsScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                // Columna del precio
                 Column(
                   children: <Widget>[
                     const Text(
@@ -105,9 +99,7 @@ class PlanDetailsScreen extends StatelessWidget {
                           ),
                         ),
                       );
-                    } else {
-                      print('El precio no es un número válido.');
-                    }
+                    } else {}
                   },
                   text: ' Subscribirse',
                   buttonPrimary: true,
@@ -129,8 +121,8 @@ class PlanDetailsScreen extends StatelessWidget {
           item,
           style: const TextStyle(fontFamily: 'Montserrat', color: Colors.white),
         ),
-        leading: Icon(Icons.check,
-            color: Color(0xff00E050)), // Icono con check verde
+        leading: const Icon(Icons.check,
+            color: Color(0xff00E050)), 
       );
     }).toList();
   }

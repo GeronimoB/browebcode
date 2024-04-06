@@ -1,4 +1,4 @@
-import 'package:bro_app_to/Intro.dart';
+import 'package:bro_app_to/Screens/Intro.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

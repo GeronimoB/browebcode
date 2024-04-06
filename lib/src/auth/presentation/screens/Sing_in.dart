@@ -1,7 +1,8 @@
 import 'package:bro_app_to/providers/player_provider.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/select_camp.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
-import 'package:bro_app_to/olvide_contrasena.dart';
+import 'package:bro_app_to/Screens/olvide_contrasena.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -208,7 +209,8 @@ class _SignInScreenState extends State<SignInScreen> {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const SignUpScreen()),
+                        builder: (context) =>
+                            const SelectCamp(registrando: true)),
                   ),
                   child: RichText(
                       text: TextSpan(

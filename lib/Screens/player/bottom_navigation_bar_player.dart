@@ -16,22 +16,6 @@ final List<Widget> _pages = [
   PlayerProfile(),
 ];
 
-final List<String> _iconNames = [
-  'Inicio.svg',
-  'Match.svg',
-  'Player.svg',
-  'Mensaje.svg',
-  'Perfil.svg',
-];
-
-final List<String> _selectedIconNames = [
-  'Inicio-1.svg',
-  'Match-1.svg',
-  'Player-1.svg', // Asegúrate de tener este icono para el estado seleccionado, si no, usa 'Player.svg'
-  'Mensaje-1.svg',
-  'Perfil-1.svg',
-];
-
 class CustomBottomNavigationBarPlayer extends StatefulWidget {
   final int initialIndex;
 
@@ -60,61 +44,68 @@ class CustomBottomNavigationBarPlayerState
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.fromARGB(255, 44, 44, 44),
-            Color.fromARGB(255, 0, 0, 0),
-          ],
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromARGB(255, 44, 44, 44),
+              Color.fromARGB(255, 0, 0, 0),
+            ],
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          extendBody: true,
+          body: _pages[_selectedIndex],
+          bottomNavigationBar: Container(
+            padding: const EdgeInsets.all(8),
+            color: Colors.black,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children:
+                  List.generate(_pages.length, (index) => _buildNavItem(index)),
+            ),
+          ),
         ),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        extendBody: true,
-        body: _pages[_selectedIndex],
-        bottomNavigationBar: Theme(
-          data: Theme.of(context).copyWith(
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            canvasColor: Colors.black,
-          ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.black,
-            items: [
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/icons/${_selectedIndex == 0 ? _selectedIconNames[0] : _iconNames[0]}',
-                  height: 32,
-                  width: 32,
-                ),
-                label: 'Inicio',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/icons/${_selectedIndex == 1 ? _selectedIconNames[1] : _iconNames[1]}',
-                  height: 32,
-                  width: 32,
-                ),
-                label: 'Match',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/icons/${_selectedIndex == 2 ? _selectedIconNames[2] : _iconNames[2]}',
-                  height: 32,
-                  width: 32,
-                ),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: Consumer<UserProvider>(
+    );
+  }
+
+  Widget _buildNavItem(int index) {
+    final List<String> iconNames = [
+      'Inicio.svg',
+      'Match.svg',
+      'Player.svg',
+      'Mensaje.svg',
+      'Perfil.svg',
+    ];
+
+    final List<String> selectedIconNames = [
+      'Inicio-1.svg',
+      'Match-1.svg',
+      'Player.svg',
+      'Mensaje-1.svg',
+      'Perfil-1.svg',
+    ];
+    final labels = ['Inicio', 'Match', '', 'Mensajes', 'Perfil'];
+
+    return InkWell(
+      onTap: () => _onItemTapped(index),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          index == 3
+              ? Consumer<UserProvider>(
                   builder: (context, provider, _) => Stack(
                     children: <Widget>[
                       SvgPicture.asset(
-                        'assets/icons/${_selectedIndex == 3 ? _selectedIconNames[3] : _iconNames[3]}',
+                        'assets/icons/${_selectedIndex == index ? selectedIconNames[index] : iconNames[index]}',
                         height: 32,
                         width: 32,
                       ),
@@ -146,24 +137,21 @@ class CustomBottomNavigationBarPlayerState
                           : SizedBox.shrink(),
                     ],
                   ),
-                ),
-                label: 'Mensajes',
-              ),
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/icons/${_selectedIndex == 4 ? _selectedIconNames[4] : _iconNames[4]}',
+                )
+              : SvgPicture.asset(
+                  'assets/icons/${_selectedIndex == index ? selectedIconNames[index] : iconNames[index]}',
                   height: 32,
                   width: 32,
                 ),
-                label: 'Perfil',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white.withOpacity(0.8),
-            onTap: _onItemTapped,
+          Text(
+            labels[index],
+            style: TextStyle(
+              color: _selectedIndex == index
+                  ? Colors.white
+                  : Colors.white.withOpacity(0.8),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

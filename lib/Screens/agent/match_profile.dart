@@ -147,7 +147,7 @@ class _MatchProfileState extends State<MatchProfile> {
                               height: width / 2,
                             );
                           },
-                          imageUrl: userData.userImage!,
+                          imageUrl: userData.userImage ?? '',
                           fit: BoxFit.fill,
                           width: width / 2,
                           height: width / 2,

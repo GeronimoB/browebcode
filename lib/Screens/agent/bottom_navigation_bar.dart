@@ -4,6 +4,9 @@ import 'package:bro_app_to/Screens/agent/inicio.dart';
 import 'package:bro_app_to/Screens/agent/Match.dart';
 import 'package:bro_app_to/Screens/mensajes.dart';
 import 'package:bro_app_to/Screens/agent/perfil.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/user_provider.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final int initialIndex;
@@ -38,28 +41,33 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.fromARGB(255, 44, 44, 44),
-            Color.fromARGB(255, 0, 0, 0),
-          ],
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromARGB(255, 44, 44, 44),
+              Color.fromARGB(255, 0, 0, 0),
+            ],
+          ),
         ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        extendBody: true,
-        body: _pages[_selectedIndex],
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.black,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children:
-                List.generate(_pages.length, (index) => _buildNavItem(index)),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          extendBody: true,
+          body: _pages[_selectedIndex],
+          bottomNavigationBar: Container(
+            padding: const EdgeInsets.all(8),
+            color: Colors.black,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children:
+                  List.generate(_pages.length, (index) => _buildNavItem(index)),
+            ),
           ),
         ),
       ),
@@ -81,11 +89,49 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SvgPicture.asset(
-            'assets/icons/${_selectedIndex == index ? selectedIconNames[index] : iconNames[index]}',
-            height: 32,
-            width: 32,
-          ),
+          index == 2
+              ? Consumer<UserProvider>(
+                  builder: (context, provider, _) => Stack(
+                    children: <Widget>[
+                      SvgPicture.asset(
+                        'assets/icons/${_selectedIndex == index ? selectedIconNames[index] : iconNames[index]}',
+                        height: 32,
+                        width: 32,
+                      ),
+                      provider.unreadTotalMessages != 0
+                          ? Positioned(
+                              top: 0,
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 16,
+                                  minHeight: 16,
+                                ),
+                                child: Text(
+                                  provider.unreadTotalMessages.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xff00E050),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink(),
+                    ],
+                  ),
+                )
+              : SvgPicture.asset(
+                  'assets/icons/${_selectedIndex == index ? selectedIconNames[index] : iconNames[index]}',
+                  height: 32,
+                  width: 32,
+                ),
           Text(
             labels[index],
             style: TextStyle(

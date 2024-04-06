@@ -1,4 +1,4 @@
-import 'package:bro_app_to/Intro.dart';
+import 'package:bro_app_to/Screens/Intro.dart';
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/agent/config_profile.dart';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';

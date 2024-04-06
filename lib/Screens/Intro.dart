@@ -1,12 +1,13 @@
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/injection_container.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/Sing_up.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/select_camp.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/src/auth/presentation/screens/Sing_in.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
 
-import 'utils/current_state.dart';
+import '../utils/current_state.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -68,7 +69,8 @@ class _SignInPageState extends State<SignInPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SignUpScreen()),
+                                builder: (context) =>
+                                    const SelectCamp(registrando: true)),
                           );
                         },
                         text: translations!['create_account'],

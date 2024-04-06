@@ -19,6 +19,7 @@ class PlayerProvider extends ChangeNotifier {
   int indexProcessingVideoFavoritePayment = 0;
   Video? videoProcessingFavoritePayment;
   bool isSubscriptionPayment = false;
+  bool isNewSubscriptionPayment = false;
 
   void setVideoAndIndex(int index, Video video) {
     indexProcessingVideoFavoritePayment = index;
@@ -71,7 +72,6 @@ class PlayerProvider extends ChangeNotifier {
   }
 
   void updatePlayer({required String fieldName, required String value}) {
-    // Mapa que mapea los nombres de campo a los métodos correspondientes de copyWith
     final Map<String, Function> fieldMap = {
       'name': (String value) => _player.copyWith(name: value),
       'email': (String value) => _player.copyWith(email: value),

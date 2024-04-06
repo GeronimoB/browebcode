@@ -10,7 +10,7 @@ import 'package:bro_app_to/utils/notification_model.dart';
 import 'package:bro_app_to/utils/router_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Intro.dart';
+import 'package:bro_app_to/Screens/Intro.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -52,7 +52,6 @@ Future<List<NotificationModel>> getSavedNotifications() async {
 
   List<String>? savedNotifications = prefs.getStringList('notifications') ?? [];
 
-  // Convierte las notificaciones de formato String a formato NotificationModel
   List<NotificationModel> notifications = savedNotifications
       .map((String notification) =>
           NotificationModel.fromJson(jsonDecode(notification)))
@@ -94,9 +93,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
           colorScheme: ColorScheme.fromSwatch(
-            primarySwatch: customGreen, // Color principal
-            backgroundColor: Colors.black, // Color de fondo
-            cardColor: Colors.white, // Color de la tarjeta
+            primarySwatch: customGreen, 
+            backgroundColor: Colors.black, 
+            cardColor: Colors.white, 
           ),
           useMaterial3: true,
           visualDensity: VisualDensity.adaptivePlatformDensity,

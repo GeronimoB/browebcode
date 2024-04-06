@@ -95,7 +95,7 @@ class _PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
                       height: 80,
                     );
                   },
-                  imageUrl: player.userImage!,
+                  imageUrl: player.userImage ?? '',
                   fit: BoxFit.fill,
                   width: 80,
                   height: 80,

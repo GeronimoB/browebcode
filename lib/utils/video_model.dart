@@ -7,17 +7,18 @@ class Video {
   String? imageKey;
   bool isHidden;
   bool isFavorite;
+  String? suscriptionId;
 
-  Video({
-    this.id,
-    this.userId,
-    this.videoUrl,
-    this.videoKey,
-    this.imageUrl,
-    this.imageKey,
-    this.isHidden = false,
-    this.isFavorite = false,
-  });
+  Video(
+      {this.id,
+      this.userId,
+      this.videoUrl,
+      this.videoKey,
+      this.imageUrl,
+      this.imageKey,
+      this.isHidden = false,
+      this.isFavorite = false,
+      this.suscriptionId});
 
   factory Video.fromJson(Map<String, dynamic> json) {
     return Video(
@@ -29,6 +30,7 @@ class Video {
       imageKey: json['image_key'],
       isFavorite: json['destacado'] == 1 ? true : false,
       isHidden: json['destacado'] == 1 ? true : false,
+      suscriptionId: json['suscription_id'],
     );
   }
 }

@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../utils/api_client.dart';
 
 class Pedidos extends StatefulWidget {
   @override
@@ -8,7 +14,26 @@ class Pedidos extends StatefulWidget {
 }
 
 class _PedidosState extends State<Pedidos> {
-  String _selectedPedido = ''; // Inicialmente ningún pedido seleccionado
+  int _selectedPedido = -1;
+
+  Future<List<PedidosModel>> fetchPedidos() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userId = userProvider.getCurrentUser().userId;
+    try {
+      final pedidos = await ApiClient().get('auth/orders/$userId');
+      if (pedidos.statusCode == 200) {
+        final jsonData = jsonDecode(pedidos.body);
+        final orders = jsonData["orders"];
+        return mapListToPedidos(orders).reversed.toList();
+      } else {
+        print('Error al obtener los videos.');
+        return [];
+      }
+    } catch (e) {
+      print('Error en la solicitud de videos: $e');
+      return [];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +76,58 @@ class _PedidosState extends State<Pedidos> {
               ),
             ),
             const SizedBox(height: 20),
-            _buildPedidoItem(
-                'Pedido 1', '20.00', 'Pedido 1' == _selectedPedido),
-            _buildPedidoItem(
-                'Pedido 2', '30.00', 'Pedido 2' == _selectedPedido),
-            // Agrega más elementos de pedido aquí si es necesario
+            FutureBuilder<List<PedidosModel>>(
+                future: fetchPedidos(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Expanded(
+                      child: Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      ),
+                    );
+                  } else {
+                    final orders = snapshot.data ?? [];
+
+                    if (orders.isEmpty) {
+                      return const Expanded(
+                        child: Center(
+                          child: Text(
+                            "¡Aun no tienes pedidos!",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 22.0),
+                          ),
+                        ),
+                      );
+                    }
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 15),
+                        child: ListView.builder(
+                            padding: const EdgeInsets.all(0),
+                            itemCount: orders.length,
+                            itemBuilder: (context, index) {
+                              final order = orders[index];
+
+                              return _buildPedidoItem(
+                                  order, _selectedPedido == index, index);
+                            }),
+                      ),
+                    );
+                  }
+                }),
             Expanded(
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -74,19 +146,19 @@ class _PedidosState extends State<Pedidos> {
     );
   }
 
-  Widget _buildPedidoItem(String pedido, String precio, bool isSelected) {
+  Widget _buildPedidoItem(PedidosModel pedido, bool isSelected, int index) {
     return InkWell(
       onTap: () {
         setState(() {
-          _selectedPedido = pedido;
+          _selectedPedido = index;
         });
-        showOrder();
+        showOrder(pedido);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           border: Border.all(
-              color: isSelected ? Color(0xff05FF00) : Colors.transparent,
+              color: isSelected ? const Color(0xff05FF00) : Colors.transparent,
               width: 2.0),
           borderRadius: BorderRadius.circular(10),
           boxShadow: isSelected
@@ -100,7 +172,7 @@ class _PedidosState extends State<Pedidos> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                  pedido,
+                  pedido.description,
                   style: const TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
@@ -112,7 +184,7 @@ class _PedidosState extends State<Pedidos> {
             Row(
               children: [
                 Text(
-                  '€ $precio',
+                  '€ ${pedido.amount}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
@@ -129,7 +201,7 @@ class _PedidosState extends State<Pedidos> {
     );
   }
 
-  void showOrder() {
+  void showOrder(PedidosModel pedido) {
     showDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.7),
@@ -149,7 +221,7 @@ class _PedidosState extends State<Pedidos> {
                 ),
               ],
             ),
-            child: const Column(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -162,11 +234,11 @@ class _PedidosState extends State<Pedidos> {
                     fontSize: 18,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 25,
                 ),
                 Text(
-                  "El producto XXXX",
+                  "Producto: ${pedido.description}",
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: Colors.white,
@@ -175,11 +247,11 @@ class _PedidosState extends State<Pedidos> {
                     fontSize: 13,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 Text(
-                  "Fecha y hora de compra XXXXXXX",
+                  "Fecha y hora de compra: ${pedido.datetime}",
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: Colors.white,
@@ -188,11 +260,11 @@ class _PedidosState extends State<Pedidos> {
                     fontSize: 13,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 Text(
-                  "Método de pago XXXXXXX",
+                  "Método de pago: ${pedido.paymentMethod}",
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: Colors.white,
@@ -201,11 +273,11 @@ class _PedidosState extends State<Pedidos> {
                     fontSize: 13,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8,
                 ),
                 Text(
-                  "Factura XXXXXXXX",
+                  "Factura: #${pedido.orderId}",
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: Colors.white,
@@ -214,10 +286,10 @@ class _PedidosState extends State<Pedidos> {
                     fontSize: 13,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 35,
                 ),
-                Center(
+                const Center(
                   child: CustomTextButton(
                       text: "Descargar Factura",
                       buttonPrimary: true,
@@ -231,4 +303,38 @@ class _PedidosState extends State<Pedidos> {
       },
     );
   }
+}
+
+class PedidosModel {
+  String description;
+  String amount;
+  DateTime datetime;
+  String paymentMethod;
+  String orderId;
+
+  PedidosModel({
+    required this.description,
+    required this.amount,
+    required this.datetime,
+    required this.paymentMethod,
+    required this.orderId,
+  });
+
+  factory PedidosModel.fromJson(Map<String, dynamic> json) {
+    DateTime parsedDatetime = DateTime.parse(json['fecha']);
+
+    String formattedOrderId = json['id'].toString().padLeft(6, '0');
+
+    return PedidosModel(
+      description: json['description'],
+      amount: json['amount'].toString(),
+      datetime: parsedDatetime,
+      paymentMethod: json['payment_method'],
+      orderId: formattedOrderId,
+    );
+  }
+}
+
+List<PedidosModel> mapListToPedidos(List<dynamic> lista) {
+  return lista.map((item) => PedidosModel.fromJson(item)).toList();
 }

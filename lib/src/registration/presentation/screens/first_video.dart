@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:bro_app_to/components/custom_text_button.dart';
-import 'package:bro_app_to/planes_pago.dart';
+import 'package:bro_app_to/Screens/planes_pago.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -123,6 +123,7 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
 
       playerProvider.updateDataToUpload(videoPath, uint8list);
       playerProvider.isSubscriptionPayment = true;
+      playerProvider.isNewSubscriptionPayment = true;
       _temporalVideoController?.dispose();
       _videoController?.dispose();
       _videoController = VideoPlayerController.file(File(videoPath));

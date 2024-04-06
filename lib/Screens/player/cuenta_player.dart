@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
-import 'package:bro_app_to/planes_pago.dart';
+import 'package:bro_app_to/components/custom_box_shadow.dart';
+import 'package:bro_app_to/Screens/planes_pago.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -20,14 +22,23 @@ class CuentaPage extends StatefulWidget {
   const CuentaPage({super.key});
 
   @override
-  _CuentaPageState createState() => _CuentaPageState();
+  CuentaPageState createState() => CuentaPageState();
 }
 
-class _CuentaPageState extends State<CuentaPage> {
+class CuentaPageState extends State<CuentaPage> {
   bool deslizadorActivado = true;
   bool expanded = false;
   final picker = ImagePicker();
   bool _isExpanded = false;
+  late UserProvider userProvider;
+  late PlayerProvider playerProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    userProvider = Provider.of<UserProvider>(context, listen: false);
+    playerProvider = Provider.of<PlayerProvider>(context, listen: false);
+  }
 
   Future<void> _openGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -40,8 +51,6 @@ class _CuentaPageState extends State<CuentaPage> {
   }
 
   Future<void> _uploadImage(File imageFile) async {
-    final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
     final player = playerProvider.getPlayer()!;
     const url = '${ApiConstants.baseUrl}/auth/upload-player-image';
 
@@ -136,7 +145,7 @@ class _CuentaPageState extends State<CuentaPage> {
                                   height: 150,
                                 );
                               },
-                              imageUrl: player.userImage!,
+                              imageUrl: player.userImage ?? '',
                               fit: BoxFit.fill,
                               width: 150,
                               height: 150,
@@ -205,10 +214,10 @@ class _CuentaPageState extends State<CuentaPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 35),
             CarouselSlider(
               options: CarouselOptions(
-                height: 280.0,
+                height: 310.0,
                 enlargeCenterPage: true,
                 autoPlay: false,
                 autoPlayCurve: Curves.fastOutSlowIn,
@@ -217,13 +226,22 @@ class _CuentaPageState extends State<CuentaPage> {
                 viewportFraction: 0.8,
               ),
               items: planes.map((plan) {
+                final isActualPlan =
+                    userProvider.getCurrentUser().subscription == plan.nombre;
                 return Container(
                   width: 360,
-                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
                     color: Colors.transparent,
-                    border: Border.all(color: Color(0xFF05FF00)),
+                    border: Border.all(color: const Color(0xFF05FF00)),
+                    boxShadow: isActualPlan
+                        ? [
+                            const CustomBoxShadow(
+                                color: Color(0xFF05FF00), blurRadius: 10)
+                          ]
+                        : null,
                     borderRadius: BorderRadius.circular(40),
                   ),
                   child: SingleChildScrollView(
@@ -270,7 +288,6 @@ class _CuentaPageState extends State<CuentaPage> {
                         TextButton(
                           onPressed: () {
                             setState(() {
-                              // Cambiar el estado de expansión al presionar el botón
                               expanded = !expanded;
                             });
                           },
@@ -279,15 +296,29 @@ class _CuentaPageState extends State<CuentaPage> {
                           ),
                           child: Text(expanded ? 'Ver menos...' : 'Ver más...'),
                         ),
-                        Center(
-                          child: CustomTextButton(
-                            onTap: () {},
-                            text: 'Subscribirse',
-                            buttonPrimary: true,
-                            width: 116,
-                            height: 42,
+                        if (!isActualPlan)
+                          Center(
+                            child: CustomTextButton(
+                              onTap: () {
+                                final precio = plan.precio.replaceAll(',', '.');
+                                final precioDouble = double.parse(precio);
+                                playerProvider.isSubscriptionPayment = true;
+                                playerProvider.isNewSubscriptionPayment = false;
+                                playerProvider.selectPlan(plan);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MetodoDePagoScreen(
+                                            valueToPay: precioDouble,
+                                          )),
+                                );
+                              },
+                              text: 'Subscribirse',
+                              buttonPrimary: true,
+                              width: 116,
+                              height: 42,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),

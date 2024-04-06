@@ -1,4 +1,4 @@
-import 'package:bro_app_to/DetallesPlan.dart';
+import 'package:bro_app_to/Screens/DetallesPlan.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import 'Screens/agent/bottom_navigation_bar.dart';
-import 'Screens/metodo_pago_screen.dart';
-import 'providers/player_provider.dart';
-import 'utils/plan_model.dart';
+import 'metodo_pago_screen.dart';
+import '../providers/player_provider.dart';
+import '../utils/plan_model.dart';
 
 List<Plan> planes = [
   Plan(
@@ -199,7 +198,7 @@ class _PlanesPagoState extends State<PlanesPago> {
             color: Colors.transparent,
             border: Border.all(
               color: const Color(
-                  0xFF00F056), // Cambiar el color del borde si está seleccionado
+                  0xFF00F056), 
               width: 1,
             ),
             borderRadius: BorderRadius.circular(20),
@@ -291,7 +290,7 @@ class _PlanesPagoState extends State<PlanesPago> {
                 ),
                 onTap: () => setState(() {
                   plan.isExpanded =
-                      false; // Aquí cambiamos el estado a no expandido
+                      false; 
                 }),
               ),
             ],

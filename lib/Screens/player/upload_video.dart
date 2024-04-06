@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
@@ -13,9 +16,17 @@ import 'package:http_parser/http_parser.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../providers/player_provider.dart';
+import '../../utils/api_client.dart';
 import '../../utils/api_constants.dart';
 
 // import 'package:video_thumbnail/video_thumbnail.dart';
+
+Map<String, int> videosForPlan = {
+  "Basic": 2,
+  "Gold": 5,
+  "Platinum": 10,
+  "Unlimited": 9999999,
+};
 
 class UploadVideoWidget extends StatefulWidget {
   const UploadVideoWidget({super.key});
@@ -30,6 +41,13 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
   double _sliderValue = 0.0;
   String? videoPathToUpload;
   Uint8List? imagePathToUpload;
+  late UserProvider userProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    userProvider = Provider.of<UserProvider>(context, listen: false);
+  }
 
   @override
   void dispose() {
@@ -151,6 +169,15 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     }
   }
 
+  void _showSubscriptionRe() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text(
+              'No tienes una suscripcion activa, ve a tu cuenta para poder subir videos e interactuar con los agentes.')),
+    );
+  }
+
   Future<void> uploadVideoAndImage(
       String? videoPath, Uint8List? uint8list, String? userId) async {
     var request = http.MultipartRequest(
@@ -181,7 +208,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
 
     // Verificar el estado de la respuesta
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           backgroundColor: Color(0xFF05FF00),
           content: Text('Video subido exitosamente.')));
       Future.delayed(Duration(seconds: 3));
@@ -204,162 +231,180 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 44, 44, 44),
-              Color.fromARGB(255, 33, 33, 33),
-              Color.fromARGB(255, 22, 22, 22),
-              Color.fromARGB(255, 22, 22, 22),
-              Color.fromARGB(255, 18, 18, 18),
-            ],
-            stops: [
-              0.0,
-              0.5,
-              0.8,
-              0.9,
-              1.0
-            ]),
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromARGB(255, 44, 44, 44),
+            Color.fromARGB(255, 0, 0, 0),
+          ],
+        ),
       ),
       child: Scaffold(
-        backgroundColor:
-            Colors.transparent, // Hacer el fondo del Scaffold transparente
+        backgroundColor: Colors.transparent,
         extendBody: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Color(0xFF00E050),
-              size: 32,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Subir video',
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'montserrat',
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            _videoController?.value.isInitialized ?? false
-                ? Column(
-                    children: [
-                      SizedBox(
-                        width: double.maxFinite,
-                        height: 500,
-                        child: VideoPlayer(_videoController!),
-                      ),
-                      Slider(
-                        activeColor: Color(0xff3EAE64),
-                        inactiveColor: const Color(0xff00F056),
-                        value: _sliderValue,
-                        min: 0.0,
-                        max: _videoController!.value.duration.inSeconds
-                            .toDouble(),
-                        onChanged: (value) {
-                          setState(() {
-                            _sliderValue = value;
-                            _videoController!
-                                .seekTo(Duration(seconds: value.toInt()));
-                          });
-                        },
-                      ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //   children: [
-                      //     IconButton(
-                      //       icon: const Icon(Icons.shuffle),
-                      //       color: const Color(0xff00F056),
-                      //       iconSize: 30,
-                      //       onPressed: () {
-                      //         // Retroceder 30 segundos
-                      //       },
-                      //     ),
-                      //     IconButton(
-                      //       icon: const Icon(Icons.fast_rewind),
-                      //       color: const Color(0xff00F056),
-                      //       iconSize: 30,
-                      //       onPressed: () {
-                      //         // Retroceder 30 segundos
-                      //         _videoController!.seekTo(Duration(
-                      //             seconds: _videoController!
-                      //                     .value.position.inSeconds -
-                      //                 10));
-                      //       },
-                      //     ),
-                      //     IconButton(
-                      //       color: const Color(0xff00F056),
-                      //       iconSize: 60,
-                      //       icon: _videoController!.value.isPlaying
-                      //           ? const Icon(Icons.pause_circle_filled)
-                      //           : const Icon(Icons.play_circle_fill),
-                      //       onPressed: () {
-                      //         setState(() {
-                      //           if (_videoController!.value.isPlaying) {
-                      //             _videoController!.pause();
-                      //           } else {
-                      //             _videoController!.play();
-                      //           }
-                      //         });
-                      //       },
-                      //     ),
-                      //     IconButton(
-                      //       icon: const Icon(Icons.fast_forward),
-                      //       color: const Color(0xff00F056),
-                      //       iconSize: 30,
-                      //       onPressed: () {
-                      //         // Avanzar 30 segundos
-                      //         _videoController!.seekTo(Duration(
-                      //             seconds: _videoController!
-                      //                     .value.position.inSeconds +
-                      //                 10));
-                      //       },
-                      //     ),
-                      //     IconButton(
-                      //       color: const Color(0xff00F056),
-                      //       iconSize: 30,
-                      //       icon: const Icon(Icons.star),
-                      //       onPressed: () {
-                      //         // Implementa la lógica para agregar a favoritos
-                      //       },
-                      //     ),
-                      //   ],
-                      // ),
-                      // CustomTextButton(
-                      //     onTap: () {
-                      //       showChargeDialog(
-                      //           "El video se subio exitosamente!", true);
-                      //     },
-                      //     text: 'Subir',
-                      //     buttonPrimary: true,
-                      //     width: 100,
-                      //     height: 39)
-                    ],
-                  )
-                : GestureDetector(
-                    onTap: _pickVideo,
-                    child: Image.asset(
-                      'assets/images/CloudIcon.png',
-                      height: 120,
-                    )),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 80),
-                child: SvgPicture.asset(
-                  width: 104,
-                  'assets/icons/Logo.svg',
+        body: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                'Subir video',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'montserrat',
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              _videoController?.value.isInitialized ?? false
+                  ? Column(
+                      children: [
+                        SizedBox(
+                          width: double.maxFinite,
+                          height: 500,
+                          child: VideoPlayer(_videoController!),
+                        ),
+                        Slider(
+                          activeColor: Color(0xff3EAE64),
+                          inactiveColor: const Color(0xff00F056),
+                          value: _sliderValue,
+                          min: 0.0,
+                          max: _videoController!.value.duration.inSeconds
+                              .toDouble(),
+                          onChanged: (value) {
+                            setState(() {
+                              _sliderValue = value;
+                              _videoController!
+                                  .seekTo(Duration(seconds: value.toInt()));
+                            });
+                          },
+                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        //   children: [
+                        //     IconButton(
+                        //       icon: const Icon(Icons.shuffle),
+                        //       color: const Color(0xff00F056),
+                        //       iconSize: 30,
+                        //       onPressed: () {
+                        //         // Retroceder 30 segundos
+                        //       },
+                        //     ),
+                        //     IconButton(
+                        //       icon: const Icon(Icons.fast_rewind),
+                        //       color: const Color(0xff00F056),
+                        //       iconSize: 30,
+                        //       onPressed: () {
+                        //         // Retroceder 30 segundos
+                        //         _videoController!.seekTo(Duration(
+                        //             seconds: _videoController!
+                        //                     .value.position.inSeconds -
+                        //                 10));
+                        //       },
+                        //     ),
+                        //     IconButton(
+                        //       color: const Color(0xff00F056),
+                        //       iconSize: 60,
+                        //       icon: _videoController!.value.isPlaying
+                        //           ? const Icon(Icons.pause_circle_filled)
+                        //           : const Icon(Icons.play_circle_fill),
+                        //       onPressed: () {
+                        //         setState(() {
+                        //           if (_videoController!.value.isPlaying) {
+                        //             _videoController!.pause();
+                        //           } else {
+                        //             _videoController!.play();
+                        //           }
+                        //         });
+                        //       },
+                        //     ),
+                        //     IconButton(
+                        //       icon: const Icon(Icons.fast_forward),
+                        //       color: const Color(0xff00F056),
+                        //       iconSize: 30,
+                        //       onPressed: () {
+                        //         // Avanzar 30 segundos
+                        //         _videoController!.seekTo(Duration(
+                        //             seconds: _videoController!
+                        //                     .value.position.inSeconds +
+                        //                 10));
+                        //       },
+                        //     ),
+                        //     IconButton(
+                        //       color: const Color(0xff00F056),
+                        //       iconSize: 30,
+                        //       icon: const Icon(Icons.star),
+                        //       onPressed: () {
+                        //         // Implementa la lógica para agregar a favoritos
+                        //       },
+                        //     ),
+                        //   ],
+                        // ),
+                        // CustomTextButton(
+                        //     onTap: () {
+                        //       showChargeDialog(
+                        //           "El video se subio exitosamente!", true);
+                        //     },
+                        //     text: 'Subir',
+                        //     buttonPrimary: true,
+                        //     width: 100,
+                        //     height: 39)
+                      ],
+                    )
+                  : GestureDetector(
+                      onTap: userProvider.getCurrentUser().status
+                          ? () async {
+                              final videosCount = await ApiClient().get(
+                                  'auth/videos_count/${userProvider.getCurrentUser().userId}');
+                              try {
+                                if (videosCount.statusCode == 200) {
+                                  final jsonData = jsonDecode(videosCount.body);
+                                  final total = jsonData["userVideosCount"];
+
+                                  if (total <
+                                      videosForPlan[userProvider
+                                          .getCurrentUser()
+                                          .subscription]) {
+                                    _pickVideo();
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        backgroundColor: Colors.redAccent,
+                                        content: Text(
+                                          'Superaste el limite de videos de tu plan, si deseas subir un nuevo video, borra un video de tu perfil.',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    backgroundColor: Colors.redAccent,
+                                    content: Text(
+                                      'Ocurrio un error intentalo de nuevo.',
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+                          : _showSubscriptionRe,
+                      child: Image.asset(
+                        'assets/images/CloudIcon.png',
+                        height: 120,
+                      )),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 25),
+                  child: SvgPicture.asset(
+                    width: 104,
+                    'assets/icons/Logo.svg',
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

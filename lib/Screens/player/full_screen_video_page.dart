@@ -449,7 +449,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
   void _handleDestacar(int index, Video video, bool dDestacar) async {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
     playerProvider.setVideoAndIndex(index, video);
-
+    print(index);
     if (dDestacar) {
       showDialog(
         context: context,
@@ -459,10 +459,9 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
             text:
                 "¿Esta seguro de dejar de destacar este video? Si desea volverlo a destacar en un futuro, deberá volver a pagar.",
             confirmCallback: () async {
-              playerProvider.updateIsFavoriteById();
               await ApiClient().post('auth/update-video', {
                 'videoId': video.id.toString(),
-                'destacado': video.isFavorite.toString(),
+                'subscriptionId': video.suscriptionId
               });
               playerProvider.indexProcessingVideoFavoritePayment = 0;
               playerProvider.videoProcessingFavoritePayment = null;
