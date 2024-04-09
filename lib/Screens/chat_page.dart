@@ -39,8 +39,26 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final FocusNode _messageFocusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
-
+  bool isMute = false;
+  bool isPinned = false;
   OverlayEntry? _overlayEntry;
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  void init() async {
+    final aux = await FirebaseMessageRepository()
+        .isMuted2(_buildSenderId(), _buildReceiverId());
+    final aux2 = await FirebaseMessageRepository()
+        .isPinned(_buildSenderId(), _buildReceiverId());
+    setState(() {
+      isMute = aux;
+      isPinned = aux2;
+    });
+  }
 
   String _buildSenderId() {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -75,6 +93,16 @@ class _ChatPageState extends State<ChatPage> {
         print(e);
       }
     }
+  }
+
+  void muteFriend() async {
+    await FirebaseMessageRepository()
+        .muteFriend(_buildSenderId(), _buildReceiverId(), !isMute);
+  }
+
+  void pinFriend() async {
+    await FirebaseMessageRepository()
+        .pinChat(_buildSenderId(), _buildReceiverId(), !isMute);
   }
 
   @override
@@ -191,7 +219,7 @@ class _ChatPageState extends State<ChatPage> {
                     builder: (context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         if (snapshot.data.docs.length < 1) {
-                          return  Center(
+                          return Center(
                             child: Text(
                               "Saluda!",
                               style: const TextStyle(
@@ -277,7 +305,7 @@ class _ChatPageState extends State<ChatPage> {
                 maxLines: 3,
                 decoration: const InputDecoration(
                   hintText: "Enviar un mensaje...",
-                  hintStyle: const TextStyle(color: Colors.white54),
+                  hintStyle: TextStyle(color: Colors.white54),
                   border: InputBorder.none,
                 ),
               ),
@@ -547,25 +575,33 @@ class _ChatPageState extends State<ChatPage> {
                       },
                     ),
                     ListTile(
-                      title: const Text('Anclar arriba',
+                      title: Text(
+                          isPinned ? 'Dejar de anclar' : 'Anclar arriba',
                           style: const TextStyle(color: Colors.white)),
                       onTap: () {
+                        pinFriend();
+                        init();
                         _overlayEntry?.remove();
                         _overlayEntry = null;
                       },
                     ),
+                    // ListTile(
+                    //   title: const Text('Buscar',
+                    //       style: const TextStyle(color: Colors.white)),
+                    //   onTap: () {
+                    //     _overlayEntry?.remove();
+                    //     _overlayEntry = null;
+                    //   },
+                    // ),
                     ListTile(
-                      title: const Text('Buscar',
+                      title: Text(
+                          isMute
+                              ? 'Dejar de silenciar'
+                              : 'Silenciar notificaciones',
                           style: const TextStyle(color: Colors.white)),
                       onTap: () {
-                        _overlayEntry?.remove();
-                        _overlayEntry = null;
-                      },
-                    ),
-                    ListTile(
-                      title: const Text('Silenciar notificaciones',
-                          style: const TextStyle(color: Colors.white)),
-                      onTap: () {
+                        muteFriend();
+                        init();
                         _overlayEntry?.remove();
                         _overlayEntry = null;
                       },

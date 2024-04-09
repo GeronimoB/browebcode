@@ -153,32 +153,34 @@ class _InicioPageState extends State<InicioPage> {
                     ),
                   )
                 : _videoUrls.isEmpty
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              _fetchVideoUrls();
-                            },
-                            icon: const Icon(
-                              Icons.refresh,
-                              size: 48,
-                              color: Color(0xffffffff),
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                _fetchVideoUrls();
+                              },
+                              icon: const Icon(
+                                Icons.refresh,
+                                size: 48,
+                                color: Color(0xffffffff),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Has llegado al final de los videos!',
-                            style: const TextStyle(
-                              fontFamily: 'Montserrat',
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                            const SizedBox(height: 10),
+                            const Text(
+                              'Has llegado al final de los videos!',
+                              style: const TextStyle(
+                                fontFamily: 'Montserrat',
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
+                          ],
+                        ),
                       )
                     : Positioned.fill(
                         child: Transform.scale(

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/firebase_options.dart';
-import 'package:bro_app_to/injection_container.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/firebase_api.dart';
@@ -9,6 +9,7 @@ import 'package:bro_app_to/utils/language_localizations.dart';
 import 'package:bro_app_to/utils/notification_model.dart';
 import 'package:bro_app_to/utils/router_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/Intro.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -31,7 +32,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseApi().initNotifications();
   Stripe.publishableKey = ApiConstants.stripePublicKey;
   await Stripe.instance.applySettings();
   List<NotificationModel> notificaciones = await getSavedNotifications();
@@ -93,14 +93,14 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
           colorScheme: ColorScheme.fromSwatch(
-            primarySwatch: customGreen, 
-            backgroundColor: Colors.black, 
-            cardColor: Colors.white, 
+            primarySwatch: customGreen,
+            backgroundColor: Colors.black,
+            cardColor: Colors.white,
           ),
           useMaterial3: true,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        locale: const Locale('en', ''),
+        locale: const Locale('es', ''),
         initialRoute: RouteHelper.getInitialRoute(),
         getPages: RouteHelper.routes,
         defaultTransition: Transition.leftToRightWithFade,
@@ -134,6 +134,19 @@ class _MySplashScreenState extends State<MySplashScreen> {
   @override
   void initState() {
     super.initState();
+    init();
+  }
+
+  Future<void> init() async {
+    await FirebaseApi().initNotifications(context);
+    Stream<RemoteMessage> _stream = FirebaseMessaging.onMessageOpenedApp;
+    _stream.listen((RemoteMessage event) async {
+      if (event.data != null) {
+        await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                const CustomBottomNavigationBarPlayer(initialIndex: 3)));
+      }
+    });
     loadRememberMe();
   }
 
@@ -154,7 +167,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
       } else {
         Timer(
           const Duration(seconds: 2),
-          () => Navigator.of(context).pushReplacement(
+          () => Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => SignInPage()),
           ),
         );

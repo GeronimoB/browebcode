@@ -73,16 +73,11 @@ class _NotificacionesState extends State<Notificaciones> {
                 },
               ),
             ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: Image.asset(
-                    'assets/images/Logo.png',
-                    width: 104,
-                  ),
-                ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Image.asset(
+                'assets/images/Logo.png',
+                width: 104,
               ),
             ),
           ],

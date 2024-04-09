@@ -1,9 +1,6 @@
-import 'dart:ffi';
-
 import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 
 Widget chatAvatar(int count, String imageUrl) {
   return Container(

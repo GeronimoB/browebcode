@@ -2,38 +2,19 @@ import 'dart:convert';
 
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
-import 'package:bro_app_to/main.dart';
-import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/presentation/screens/Sing_in.dart';
+
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/notification_model.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void handleMessage(RemoteMessage? message) async {
   if (message == null) return;
   print("manejando el mensaje...");
   print(message);
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final agente = prefs.getBool("agente");
-  if (agente != null) {
-    if (agente) {
-      navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
-          builder: (context) =>
-              const CustomBottomNavigationBar(initialIndex: 2)));
-    } else {
-      navigatorKey.currentState?.pushReplacement(MaterialPageRoute(
-          builder: (context) =>
-              const CustomBottomNavigationBarPlayer(initialIndex: 3)));
-    }
-  } else {
-    navigatorKey.currentState?.pushReplacement(
-        MaterialPageRoute(builder: (context) => const SignInScreen()));
-  }
 }
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
@@ -114,16 +95,35 @@ class FirebaseApi {
     });
   }
 
-  Future<void> initLocalNotifications() async {
+  Future<void> initLocalNotifications(BuildContext context) async {
     const iOS = DarwinInitializationSettings();
     const android =
         AndroidInitializationSettings('@drawable/ic_stat_ic_notification');
     const settings = InitializationSettings(android: android, iOS: iOS);
 
     await _localNotifications.initialize(settings,
-        onDidReceiveNotificationResponse: (payload) {
+        onDidReceiveNotificationResponse: (payload) async {
+      if (payload.payload == null) return;
       final message = RemoteMessage.fromMap(jsonDecode(payload.payload ?? ''));
-      handleMessage(message);
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final agente = prefs.getBool("agente");
+      if (agente == null) {
+        await Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const SignInScreen()));
+        return;
+      }
+
+      if (agente) {
+        await Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) =>
+                const CustomBottomNavigationBar(initialIndex: 2)));
+      } else {
+        bool isMatch =
+            message.notification!.body!.toLowerCase().contains('match');
+        await Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => CustomBottomNavigationBarPlayer(
+                initialIndex: isMatch ? 1 : 3)));
+      }
     });
 
     final platform = _localNotifications.resolvePlatformSpecificImplementation<
@@ -132,11 +132,12 @@ class FirebaseApi {
     await platform?.createNotificationChannel(channel);
   }
 
-  Future<void> initNotifications() async {
+  Future<void> initNotifications(BuildContext context) async {
     await _firebaseMessaging.requestPermission();
     fcmToken = await _firebaseMessaging.getToken() ?? "";
     print("Token: $fcmToken");
     initPushNotifications();
-    initLocalNotifications();
+    print(context);
+    initLocalNotifications(context);
   }
 }

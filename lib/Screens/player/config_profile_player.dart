@@ -1,4 +1,5 @@
 import 'package:bro_app_to/Screens/afiliados_player.dart';
+import 'package:bro_app_to/Screens/language_settings.dart';
 import 'package:bro_app_to/Screens/lista_afiliados.dart';
 import 'package:bro_app_to/Screens/player/cuenta_player.dart';
 import 'package:bro_app_to/Screens/notificaciones.dart';
@@ -96,7 +97,13 @@ class ConfigProfilePlayer extends StatelessWidget {
                         : const AfiliadosPlayer(),
                   ),
                   _buildListItem('PEDIDOS', context, true, Pedidos()),
-                  _buildListItem('SERVICIOS', context, true, const Servicios()),
+                  _buildListItem('SERVICIOS', context, true, const Servicios()),  
+                  _buildListItem(
+                    'IDIOMA',
+                    context,
+                    true,
+                    LanguageSettingsPage(),
+                  ),
                   const SizedBox(height: 15),
                   _buildListItem(
                       'BORRAR CUENTA', context, false, const Servicios(),

@@ -79,7 +79,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     if (isAgent) {
       final agentProvider = Provider.of<AgenteProvider>(context, listen: false);
       agentProvider.setAgente(Agente.fromJson(userData));
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => const CustomBottomNavigationBar()),
       );
@@ -89,7 +89,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
       playerProvider.setCards(mapListToTarjetas(savedCards));
       playerProvider.setPlayer(player);
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => const CustomBottomNavigationBarPlayer()),
       );
@@ -103,7 +103,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   ) {
     print("hay un error");
     if (comingFromAutoLogin) {
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushNamed(context, '/login');
     } else {
       final jsonData = json.decode(response.body);
       final errorMessage = jsonData["error"];
@@ -132,7 +132,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     bool comingFromAutoLogin,
   ) {
     if (comingFromAutoLogin) {
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushNamed(context, '/login');
     } else {
       print(e);
       playerProvider.setIsLoading(false);

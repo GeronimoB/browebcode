@@ -267,19 +267,47 @@ class _ChatWidgetState extends State<ChatWidget>
                   ],
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    widget.chat.time,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: Color.fromARGB(255, 204, 203, 203),
-                      fontFamily: 'Montserrat',
+              Column(
+                mainAxisAlignment: widget.chat.isMuted || widget.chat.isPinned
+                    ? MainAxisAlignment.spaceBetween
+                    : MainAxisAlignment.end,
+                children: [
+                  if (widget.chat.isMuted || widget.chat.isPinned)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        if (widget.chat.isMuted)
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(
+                              Icons.notifications_off,
+                              color: Color.fromARGB(255, 204, 203, 203),
+                              size: 24,
+                            ),
+                          ),
+                        if (widget.chat.isPinned)
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(
+                              Icons.push_pin,
+                              color: Color.fromARGB(255, 204, 203, 203),
+                              size: 24,
+                            ),
+                          ),
+                      ],
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      widget.chat.time,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Color.fromARGB(255, 204, 203, 203),
+                        fontFamily: 'Montserrat',
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ],
           ),

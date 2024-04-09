@@ -23,7 +23,6 @@ class FirebaseMessageRepository implements MessageUseCase {
       String userId, bool isAgent, BuildContext context) async* {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final id = isAgent ? "agente_$userId" : "jugador_$userId";
-    print(id);
     try {
       final userDocSnapshot = FirebaseFirestore.instance
           .collection('users')
@@ -33,14 +32,15 @@ class FirebaseMessageRepository implements MessageUseCase {
       int contadorTotal = 0;
       await for (var snapshot in userDocSnapshot) {
         List<ChatPreview> messagesWithUsers = [];
-        print(snapshot);
         for (var otherUserDoc in snapshot.docs) {
           final otherUserId = otherUserDoc.id;
-          print(otherUserId);
+          final mute = await isMuted2(id, otherUserId);
           final userDBId = otherUserId.split('_')[1];
           final response = await ApiClient().get('auth/user/$userDBId');
-          final lastMsg = await getLastMessage(id, otherUserId);
-          final lastTimeMessage = await getLastTimeMessage(id, otherUserId);
+          final chatInfo = await getChatInfo(id, otherUserId);
+          final lastMsg = await chatInfo["lastMessage"];
+          final lastTimeMessage = await chatInfo["lastTimeMessage"];
+          final isPinned = await chatInfo["isPinned"];
           final count = await getUnreadMessageCount(id, otherUserId);
 
           if (count != 0) contadorTotal++;
@@ -56,6 +56,8 @@ class FirebaseMessageRepository implements MessageUseCase {
             final user = jsonData['user'];
             final userData = UserModel.fromJson(user);
             final chat = ChatPreview(
+              isPinned: isPinned,
+              isMuted: mute,
               friendUser: userData,
               count: count,
               message: lastMsg,
@@ -66,6 +68,8 @@ class FirebaseMessageRepository implements MessageUseCase {
             continue;
           }
         }
+        messagesWithUsers.sort((a, b) => b.isPinned ? 1 : -1);
+
         userProvider.unreadTotalMessages = contadorTotal;
 
         yield messagesWithUsers;
@@ -76,18 +80,44 @@ class FirebaseMessageRepository implements MessageUseCase {
     }
   }
 
-  Future<String> getLastMessage(String userId, String chatId) async {
-    dynamic lastMessage = (await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .collection('messages')
-            .doc(chatId)
-            .get())
-        .data()?['last_msg'];
-    if (lastMessage != null && lastMessage is String) {
-      return lastMessage;
-    } else {
-      return "";
+  Future<Map<String, dynamic>> getChatInfo(String userId, String chatId) async {
+    try {
+      final messageDocSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('messages')
+          .doc(chatId)
+          .get();
+
+      final String lastMessage = messageDocSnapshot.data()?['last_msg'] ?? '';
+      final Timestamp lastTimeMessage =
+          messageDocSnapshot.data()?['time_msg'] ?? Timestamp(0, 0);
+      final bool isPinned = messageDocSnapshot.data()?['pinned'] == true;
+
+      return {
+        "lastMessage": lastMessage,
+        "lastTimeMessage": lastTimeMessage,
+        "isPinned": isPinned,
+      };
+    } catch (e) {
+      print("Error getting chat info: $e");
+      throw e;
+    }
+  }
+
+  Future<bool> isPinned(String userId, String otherUserId) async {
+    try {
+      final chatSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('messages')
+          .doc(otherUserId)
+          .get();
+
+      return chatSnapshot.exists && chatSnapshot.data()?['pinned'] == true;
+    } catch (e) {
+      print("Error checking if chat is pinned: $e");
+      throw e;
     }
   }
 
@@ -150,21 +180,6 @@ class FirebaseMessageRepository implements MessageUseCase {
     await batch.commit();
   }
 
-  Future<Timestamp> getLastTimeMessage(String userId, String chatId) async {
-    dynamic lastTimeMessage = (await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .collection('messages')
-            .doc(chatId)
-            .get())
-        .data()?['time_msg'];
-    if (lastTimeMessage != null && lastTimeMessage is Timestamp) {
-      return lastTimeMessage;
-    } else {
-      return Timestamp(0, 0);
-    }
-  }
-
   Future<void> deleteAllMessages(String senderId, String receiverId) async {
     try {
       await FirebaseFirestore.instance
@@ -188,6 +203,74 @@ class FirebaseMessageRepository implements MessageUseCase {
       });
     } catch (e) {
       print("Error deleting messages: $e");
+      throw e;
+    }
+  }
+
+  Future<void> muteFriend(String senderId, String receiverId, bool mute) async {
+    try {
+      final DocumentReference muteRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(senderId)
+          .collection('mutes')
+          .doc(receiverId);
+
+      if (mute) {
+        // Si el usuario quiere silenciar al otro usuario, se crea la colección "mutes"
+        await muteRef.set({"us": receiverId});
+      } else {
+        // Si el usuario quiere deshacer el silencio, se elimina la colección "mutes"
+        print("deshacer silencio");
+        await muteRef.delete();
+      }
+    } catch (e) {
+      print("Error muting/unmuting friend: $e");
+      throw e;
+    }
+  }
+
+  Future<bool> isMuted(String userId, String otherUserId) async {
+    try {
+      final DocumentSnapshot muteSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(otherUserId)
+          .collection('mutes')
+          .doc(userId)
+          .get();
+
+      return muteSnapshot.exists;
+    } catch (e) {
+      print("Error checking mute status: $e");
+      rethrow;
+    }
+  }
+
+  Future<bool> isMuted2(String userId, String otherUserId) async {
+    try {
+      final DocumentSnapshot muteSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('mutes')
+          .doc(otherUserId)
+          .get();
+
+      return muteSnapshot.exists;
+    } catch (e) {
+      print("Error checking mute status: $e");
+      rethrow;
+    }
+  }
+
+  Future<void> pinChat(String senderId, String receiverId, bool pin) async {
+    try {
+      final DocumentReference chatRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(senderId)
+          .collection('messages')
+          .doc(receiverId);
+      await chatRef.update({'pinned': pin});
+    } catch (e) {
+      print("Error pinning/unpinning chat: $e");
       throw e;
     }
   }
@@ -217,14 +300,17 @@ class FirebaseMessageRepository implements MessageUseCase {
           .doc(message.receiverId)
           .set({'last_msg': message.message, 'time_msg': DateTime.now()});
 
-      const uri = "auth/notification-message";
-      Map<String, dynamic> body = {
-        "title": username,
-        "body": message.message,
-        "friendID": message.receiverId,
-      };
-      ApiClient().post(uri, body);
-
+      final mute = await isMuted(message.senderId, message.receiverId);
+      print(mute);
+      if (!mute) {
+        const uri = "auth/notification-message";
+        Map<String, dynamic> body = {
+          "title": username,
+          "body": message.message,
+          "friendID": message.receiverId,
+        };
+        ApiClient().post(uri, body);
+      }
       await FirebaseFirestore.instance
           .collection('users')
           .doc(message.receiverId)
