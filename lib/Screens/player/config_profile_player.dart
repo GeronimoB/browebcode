@@ -9,7 +9,6 @@ import 'package:bro_app_to/Screens/privacidad.dart';
 import 'package:bro_app_to/Screens/player/servicios.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
-import 'package:bro_app_to/src/auth/presentation/screens/Sing_in.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,18 +18,20 @@ import 'bottom_navigation_bar_player.dart';
 import 'package:http/http.dart' as http;
 
 class ConfigProfilePlayer extends StatelessWidget {
+  const ConfigProfilePlayer({super.key});
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.getCurrentUser();
-    print("este es el codigo, ${user.referralCode}");
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         centerTitle: true,
         title: Column(
           children: [
-            SizedBox(height: 22),
+            const SizedBox(height: 22),
             Text(
               '${user.name} ${user.lastName}',
               style: const TextStyle(
@@ -53,12 +54,16 @@ class ConfigProfilePlayer extends StatelessWidget {
         ),
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF05FF00)),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color(0xFF05FF00),
+            size: 32,
+          ),
           onPressed: () => Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    CustomBottomNavigationBarPlayer(initialIndex: 4)),
+                    const CustomBottomNavigationBarPlayer(initialIndex: 4)),
           ),
         ),
       ),
@@ -77,17 +82,17 @@ class ConfigProfilePlayer extends StatelessWidget {
               child: ListView(
                 children: [
                   const SizedBox(height: 22),
-                  _buildListItem('CUENTA', context, true, CuentaPage()),
-                  _buildListItem(
-                      'EDITAR INFORMACION', context, true, EditarInfoPlayer()),
+                  _buildListItem('CUENTA', context, true, const CuentaPage()),
+                  _buildListItem('EDITAR INFORMACION', context, true,
+                      const EditarInfoPlayer()),
                   _buildListItem('PRIVACIDAD', context, true, Privacidad()),
                   const SizedBox(height: 15),
                   _buildListItem('CENTRO DE AYUDA (FAQ)', context, false,
-                      ConfigProfilePlayer()),
+                      const ConfigProfilePlayer()),
                   _buildListItem(
-                      'SOPORTE', context, false, ConfigProfilePlayer()),
+                      'SOPORTE', context, false, const ConfigProfilePlayer()),
                   _buildListItem(
-                      'NOTIFICACIONES', context, true, Notificaciones()),
+                      'NOTIFICACIONES', context, true, const Notificaciones()),
                   _buildListItem(
                     'AFILIADOS',
                     context,
@@ -97,12 +102,12 @@ class ConfigProfilePlayer extends StatelessWidget {
                         : const AfiliadosPlayer(),
                   ),
                   _buildListItem('PEDIDOS', context, true, Pedidos()),
-                  _buildListItem('SERVICIOS', context, true, const Servicios()),  
+                  _buildListItem('SERVICIOS', context, true, const Servicios()),
                   _buildListItem(
                     'IDIOMA',
                     context,
                     true,
-                    LanguageSettingsPage(),
+                    const LanguageSettingsPage(),
                   ),
                   const SizedBox(height: 15),
                   _buildListItem(
@@ -140,7 +145,7 @@ class ConfigProfilePlayer extends StatelessWidget {
         return Dialog(
           backgroundColor: Colors.transparent,
           child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 400),
+            constraints: const BoxConstraints(maxWidth: 400),
             child: Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
@@ -281,11 +286,11 @@ class ConfigProfilePlayer extends StatelessWidget {
                               Navigator.pushNamedAndRemoveUntil(
                                   context, '/intro', (route) => false);
                             } else {
-                              print(
+                              debugPrint(
                                   'Error al eliminar el usuario: ${response.statusCode}');
                             }
                           } catch (error) {
-                            print(
+                            debugPrint(
                                 'Error al realizar la solicitud DELETE: $error');
                           }
                         },

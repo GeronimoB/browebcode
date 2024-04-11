@@ -29,26 +29,11 @@ class _DropdownWidgetState<T> extends State<DropdownWidget<T>>
     with SingleTickerProviderStateMixin {
   var _expanded = false;
   OverlayEntry? overlay;
-  late AnimationController controller;
-  late Animation<double> arrowAngle;
+
   final key = GlobalKey();
 
   @override
   void initState() {
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(
-        milliseconds: 100,
-      ),
-    );
-    controller.addListener(() {
-      setState(() {});
-    });
-    arrowAngle = Tween<double>(
-      begin: 0,
-      end: pi,
-    ).animate(controller);
-
     super.initState();
   }
 
@@ -61,7 +46,6 @@ class _DropdownWidgetState<T> extends State<DropdownWidget<T>>
 
     setState(() {
       _expanded = !_expanded;
-      _expanded ? controller.forward() : controller.reverse();
     });
   }
 
@@ -105,7 +89,7 @@ class _DropdownWidgetState<T> extends State<DropdownWidget<T>>
       ),
     );
 
-    Overlay.of(context)?.insert(overlay!);
+    Overlay.of(context).insert(overlay!);
   }
 
   @override
@@ -137,7 +121,7 @@ class _DropdownWidgetState<T> extends State<DropdownWidget<T>>
               width: widget.width,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
                     width: widget.width * 0.6,
@@ -155,13 +139,10 @@ class _DropdownWidgetState<T> extends State<DropdownWidget<T>>
                       textAlign: TextAlign.left,
                     ),
                   ),
-                  Transform.rotate(
-                    angle: arrowAngle.value,
-                    child: const Icon(
-                      Icons.keyboard_arrow_down,
-                      size: 24,
-                      color: Color(0xFF00F056),
-                    ),
+                  const Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 24,
+                    color: Color(0xFF00F056),
                   )
                 ],
               ),
@@ -195,6 +176,8 @@ class _OverlayDropdown<T> extends StatelessWidget {
       color: color ?? Colors.transparent,
       child: Container(
         width: width,
+        height: null,
+        constraints: const BoxConstraints(maxHeight: 180),
         decoration: BoxDecoration(
           color: const Color.fromARGB(230, 41, 41, 41),
           border: Border.all(
@@ -202,17 +185,19 @@ class _OverlayDropdown<T> extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(7),
         ),
-        child: Column(
-          children: values
-              .map<_OverlayDropdownItem<T>>(
-                (e) => _OverlayDropdownItem<T>(
-                  value: e,
-                  textBuilder: textBuilder,
-                  onTap: onSelectedItem,
-                  isSelected: e == selectedValue,
-                ),
-              )
-              .toList(),
+        child: SingleChildScrollView(
+          child: Column(
+            children: values
+                .map<_OverlayDropdownItem<T>>(
+                  (e) => _OverlayDropdownItem<T>(
+                    value: e,
+                    textBuilder: textBuilder,
+                    onTap: onSelectedItem,
+                    isSelected: e == selectedValue,
+                  ),
+                )
+                .toList(),
+          ),
         ),
       ),
     );

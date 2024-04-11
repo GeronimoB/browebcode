@@ -1,10 +1,7 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:bro_app_to/Screens/player/edit_player_info.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
-import 'package:bro_app_to/src/registration/presentation/screens/Sing_up.dart';
-import 'package:bro_app_to/src/registration/presentation/screens/first_video.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/sign_up.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/sign_up_2.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,7 +9,6 @@ import 'package:provider/provider.dart';
 
 import '../../../../components/custom_text_button.dart';
 import '../../../../providers/player_provider.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../../utils/current_state.dart';
 
@@ -25,7 +21,6 @@ class SelectCamp extends StatefulWidget {
 }
 
 class SelectCampState extends State<SelectCamp> {
-
   late List<Player> players;
   bool isLoading = false;
 
@@ -203,13 +198,16 @@ class SelectCampState extends State<SelectCamp> {
 
                           final selectedPlayer = players
                               .firstWhere((element) => element.isSelected);
-
+                          setState(() {
+                            isLoading = false;
+                          });
                           if (widget.registrando) {
                             playerProvider.updateTemporalPlayer(
                               position: selectedPlayer.position,
                             );
+
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const SignUpScreen()));
+                                builder: (context) => const SignUpScreen2()));
                           } else {
                             playerProvider.updatePlayer(
                               fieldName: "position",
@@ -338,11 +336,11 @@ class SelectCampState extends State<SelectCamp> {
                   CustomTextButton(
                       onTap: () {
                         setState(() {
-                          players.forEach((player) {
+                          for (var player in players) {
                             if (player.position == position) {
                               player.isSelected = aux;
                             }
-                          });
+                          }
                           update.call();
                         });
                         Navigator.of(context).pop(isSelected);

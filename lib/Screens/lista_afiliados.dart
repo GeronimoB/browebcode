@@ -15,10 +15,10 @@ class ListaReferidosScreen extends StatefulWidget {
   const ListaReferidosScreen({Key? key}) : super(key: key);
 
   @override
-  _ListaReferidosScreenState createState() => _ListaReferidosScreenState();
+  ListaReferidosScreenState createState() => ListaReferidosScreenState();
 }
 
-class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
+class ListaReferidosScreenState extends State<ListaReferidosScreen> {
   late UserModel user;
   late UserProvider provider;
   bool isLoading = true;
@@ -89,6 +89,7 @@ class _ListaReferidosScreenState extends State<ListaReferidosScreen> {
               icon: const Icon(
                 Icons.arrow_back,
                 color: Color(0xFF00E050),
+                size: 32,
               ),
               onPressed: () {
                 final userProvider =

@@ -1,18 +1,10 @@
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
-import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:get/get.dart';
-
-import 'package:path/path.dart' as path;
-
-import 'package:http_parser/http_parser.dart';
-import 'package:http/http.dart' as Http;
 import 'package:provider/provider.dart';
 
 import '../utils/api_client.dart';
@@ -75,8 +67,8 @@ class FirebaseMessageRepository implements MessageUseCase {
         yield messagesWithUsers;
       }
     } catch (e) {
-      print("Error getting last messages with users: $e");
-      throw e;
+      debugPrint("Error getting last messages with users: $e");
+      rethrow;
     }
   }
 
@@ -100,8 +92,8 @@ class FirebaseMessageRepository implements MessageUseCase {
         "isPinned": isPinned,
       };
     } catch (e) {
-      print("Error getting chat info: $e");
-      throw e;
+      debugPrint("Error getting chat info: $e");
+      rethrow;
     }
   }
 
@@ -116,8 +108,8 @@ class FirebaseMessageRepository implements MessageUseCase {
 
       return chatSnapshot.exists && chatSnapshot.data()?['pinned'] == true;
     } catch (e) {
-      print("Error checking if chat is pinned: $e");
-      throw e;
+      debugPrint("Error checking if chat is pinned: $e");
+      rethrow;
     }
   }
 
@@ -202,8 +194,8 @@ class FirebaseMessageRepository implements MessageUseCase {
         }
       });
     } catch (e) {
-      print("Error deleting messages: $e");
-      throw e;
+      debugPrint("Error deleting messages: $e");
+      rethrow;
     }
   }
 
@@ -216,16 +208,13 @@ class FirebaseMessageRepository implements MessageUseCase {
           .doc(receiverId);
 
       if (mute) {
-        // Si el usuario quiere silenciar al otro usuario, se crea la colección "mutes"
         await muteRef.set({"us": receiverId});
       } else {
-        // Si el usuario quiere deshacer el silencio, se elimina la colección "mutes"
-        print("deshacer silencio");
         await muteRef.delete();
       }
     } catch (e) {
-      print("Error muting/unmuting friend: $e");
-      throw e;
+      debugPrint("Error muting/unmuting friend: $e");
+      rethrow;
     }
   }
 
@@ -240,7 +229,7 @@ class FirebaseMessageRepository implements MessageUseCase {
 
       return muteSnapshot.exists;
     } catch (e) {
-      print("Error checking mute status: $e");
+      debugPrint("Error checking mute status: $e");
       rethrow;
     }
   }
@@ -256,7 +245,7 @@ class FirebaseMessageRepository implements MessageUseCase {
 
       return muteSnapshot.exists;
     } catch (e) {
-      print("Error checking mute status: $e");
+      debugPrint("Error checking mute status: $e");
       rethrow;
     }
   }
@@ -270,8 +259,8 @@ class FirebaseMessageRepository implements MessageUseCase {
           .doc(receiverId);
       await chatRef.update({'pinned': pin});
     } catch (e) {
-      print("Error pinning/unpinning chat: $e");
-      throw e;
+      debugPrint("Error pinning/unpinning chat: $e");
+      rethrow;
     }
   }
 
@@ -301,7 +290,6 @@ class FirebaseMessageRepository implements MessageUseCase {
           .set({'last_msg': message.message, 'time_msg': DateTime.now()});
 
       final mute = await isMuted(message.senderId, message.receiverId);
-      print(mute);
       if (!mute) {
         const uri = "auth/notification-message";
         Map<String, dynamic> body = {
@@ -334,9 +322,8 @@ class FirebaseMessageRepository implements MessageUseCase {
           .doc(message.senderId)
           .set({"last_msg": message.message, 'time_msg': DateTime.now()});
     } catch (e) {
-      // Manejar errores
-      print("Error sending message: $e");
-      throw e;
+      debugPrint("Error sending message: $e");
+      rethrow;
     }
   }
 }

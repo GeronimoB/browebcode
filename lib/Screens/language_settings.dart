@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/language_localizations.dart';
 
 class LanguageSettingsPage extends StatelessWidget {
-  LanguageSettingsPage({super.key});
+  const LanguageSettingsPage({super.key});
 
   void changeLanguage(BuildContext context, String languageCode) async {
     LanguageLocalizations? localizations = LanguageLocalizations.of(context);
@@ -35,7 +35,11 @@ class LanguageSettingsPage extends StatelessWidget {
         ),
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFF05FF00)),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Color(0xFF05FF00),
+            size: 32,
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),

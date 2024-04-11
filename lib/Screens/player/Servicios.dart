@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
 
-int _selectedOptionIndex = -1; // Índice de la opción seleccionada
 bool _isSelected = false;
 
 class Plan {
@@ -105,7 +104,7 @@ class _PlanesPagoState extends State<Servicios> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     itemCount: planes.length,
                     itemBuilder: (BuildContext context, int index) {
                       return _buildCard(index);

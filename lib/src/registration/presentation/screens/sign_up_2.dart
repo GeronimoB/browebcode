@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bro_app_to/components/custom_dropdown.dart';
+import 'package:bro_app_to/components/i_field.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/first_video.dart';
-import 'package:bro_app_to/src/registration/presentation/screens/select_camp.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -23,26 +23,22 @@ class SignUpScreen2 extends StatefulWidget {
 class _SignUpScreen2State extends State<SignUpScreen2> {
   bool isLoading = false;
   bool _acceptedTerms = false;
-  late TextEditingController dniController;
-  late TextEditingController countryController;
-  late TextEditingController stateController;
-  late TextEditingController categoryController;
   late TextEditingController clubController;
   late TextEditingController achivementController;
-  late TextEditingController referralCodeCtlr;
-  late TextEditingController heightController;
+
   String dominantFoot = translations!['left_feet'];
   String selection = translations!['male'];
   String catSelection = '12';
+  String selectedCountry = 'Spain';
+  String selectedProvince = '';
+  String selectedHeight = '165cm';
+  String selectedCategory = '12';
 
   Future<bool> validateForm(BuildContext context) async {
-    if (dniController.text.isEmpty ||
-        countryController.text.isEmpty ||
-        stateController.text.isEmpty ||
-        categoryController.text.isEmpty ||
+    if (selectedCountry.isEmpty ||
+        selectedProvince.isEmpty ||
         clubController.text.isEmpty ||
-        achivementController.text.isEmpty ||
-        heightController.text.isEmpty) {
+        achivementController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             backgroundColor: Colors.redAccent,
@@ -50,66 +46,21 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
       );
       return false;
     }
-    if (referralCodeCtlr.text.isNotEmpty) {
-      try {
-        final response = await ApiClient().post(
-          'auth/referralCode',
-          {"code": referralCodeCtlr.text},
-        );
 
-        if (response.statusCode != 200) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                backgroundColor: Colors.redAccent,
-                content: Text(translations!['ref_code_no_exist'])),
-          );
-          referralCodeCtlr.text = "";
-          return false;
-        }
-        return true;
-      } on TimeoutException {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Text(translations!['error_try_again']),
-          ),
-        );
-        return false;
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Text(translations!['error_try_again']),
-          ),
-        );
-        return false;
-      }
-    }
     return true;
   }
 
   @override
   void initState() {
     super.initState();
-    dniController = TextEditingController();
-    countryController = TextEditingController();
     clubController = TextEditingController();
-    heightController = TextEditingController();
-    categoryController = TextEditingController();
-    stateController = TextEditingController();
     achivementController = TextEditingController();
-    referralCodeCtlr = TextEditingController();
   }
 
   @override
   void dispose() {
-    dniController.dispose();
-    countryController.dispose();
     clubController.dispose();
-    categoryController.dispose();
-    stateController.dispose();
     achivementController.dispose();
-    referralCodeCtlr.dispose();
     super.dispose();
   }
 
@@ -149,159 +100,156 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                 const SizedBox(
                   height: 20,
                 ),
-                TextField(
-                  controller: dniController,
-                  decoration: InputDecoration(
-                    labelText: translations!['dni_label'],
-                    labelStyle: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 12,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      translations!['country_label'],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 16,
+                      ),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFF00F056), width: 2),
+                    const SizedBox(width: 10),
+                    DropdownWidget<String>(
+                      value: selectedCountry,
+                      items: const [
+                        'Spain',
+                        'United States',
+                        'France',
+                        'Italy',
+                        'Germany'
+                      ],
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedCountry = newValue!;
+
+                          selectedProvince = '';
+                        });
+                      },
+                      itemBuilder: (String item) {
+                        return item;
+                      },
+                      width: 120,
                     ),
-                  ),
-                  style: const TextStyle(
-                      color: Colors.white, fontFamily: 'Montserrat'),
-                ),
-                TextField(
-                  controller: countryController,
-                  decoration: InputDecoration(
-                    labelText: translations!['country_label'],
-                    labelStyle: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 12,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFF00F056), width: 2),
-                    ),
-                  ),
-                  style: const TextStyle(
-                      color: Colors.white, fontFamily: 'Montserrat'),
-                ),
-                TextField(
-                  controller: stateController,
-                  decoration: InputDecoration(
-                    labelText: translations!['state_label'],
-                    labelStyle: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 12,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFF00F056), width: 2),
-                    ),
-                  ),
-                  style: const TextStyle(
-                      color: Colors.white, fontFamily: 'Montserrat'),
-                ),
-                TextField(
-                  controller: heightController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: translations!['height_label'],
-                    labelStyle: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 12,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFF00F056), width: 2),
-                    ),
-                  ),
-                  style: const TextStyle(
-                      color: Colors.white, fontFamily: 'Montserrat'),
-                ),
-                TextField(
-                  controller: categoryController,
-                  decoration: InputDecoration(
-                    labelText: translations!['category_label'],
-                    labelStyle: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 12,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFF00F056), width: 2),
-                    ),
-                  ),
-                  style: const TextStyle(
-                      color: Colors.white, fontFamily: 'Montserrat'),
-                ),
-                TextField(
-                  controller: clubController,
-                  decoration: InputDecoration(
-                    labelText: translations!['club_label'],
-                    labelStyle: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 12,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFF00F056), width: 2),
-                    ),
-                  ),
-                  style: const TextStyle(
-                      color: Colors.white, fontFamily: 'Montserrat'),
-                ),
-                TextField(
-                  controller: achivementController,
-                  decoration: InputDecoration(
-                    labelText: translations!['individual_achievements'],
-                    labelStyle: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 12,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFF00F056), width: 2),
-                    ),
-                  ),
-                  style: const TextStyle(
-                      color: Colors.white, fontFamily: 'Montserrat'),
+                  ],
                 ),
                 const SizedBox(height: 10),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      translations!['state_label'],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    DropdownWidget<String>(
+                      value: selectedProvince,
+                      items: provincesByCountry[selectedCountry]!.toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedProvince = newValue!;
+                        });
+                      },
+                      itemBuilder: (String item) {
+                        return item;
+                      },
+                      width: 120,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      translations!['height_label'],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    DropdownWidget<String>(
+                      value: selectedHeight,
+                      items: List.generate(
+                          211 - 150, (index) => '${index + 150} cm'),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedHeight = newValue!;
+                        });
+                      },
+                      itemBuilder: (String item) {
+                        return item;
+                      },
+                      width: 120,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      translations!['category_label'],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    DropdownWidget<String>(
+                      value: selectedCategory,
+                      items: const ['12', '13', '14', '15'],
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedCategory = newValue!;
+                        });
+                      },
+                      itemBuilder: (String item) {
+                        return item;
+                      },
+                      width: 120,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                iField(clubController, translations!['club_label']),
+                const SizedBox(height: 10),
+                iField(achivementController,
+                    translations!['individual_achievements']),
+                const SizedBox(height: 10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       translations!['dominant_feet'],
                       style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                         fontStyle: FontStyle.italic,
-                        fontSize: 12,
+                        fontSize: 16,
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -333,9 +281,9 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                       style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                         fontStyle: FontStyle.italic,
-                        fontSize: 12,
+                        fontSize: 16,
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -353,7 +301,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                       itemBuilder: (String item) {
                         return item;
                       },
-                      width: 120,
+                      width: 110,
                     ),
                     const SizedBox(width: 10),
                     DropdownWidget<String>(
@@ -370,27 +318,6 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                       width: 70,
                     ),
                   ],
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: referralCodeCtlr,
-                  decoration: InputDecoration(
-                    labelText: translations!['referral_code'],
-                    labelStyle: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w500,
-                      fontStyle: FontStyle.italic,
-                      fontSize: 12,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5),
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color(0xFF00F056), width: 2),
-                    ),
-                  ),
-                  style: const TextStyle(
-                      color: Colors.white, fontFamily: 'Montserrat'),
                 ),
                 const SizedBox(height: 10),
                 Row(
@@ -473,14 +400,12 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                         final playerProvider =
                             Provider.of<PlayerProvider>(context, listen: false);
                         playerProvider.updateTemporalPlayer(
-                          dni: dniController.text,
-                          pais: countryController.text,
-                          provincia: stateController.text,
-                          categoria: categoryController.text,
-                          club: categoryController.text,
+                          pais: selectedCountry,
+                          provincia: selectedProvince,
+                          categoria: selectedCategory,
+                          club: clubController.text,
                           logros: achivementController.text,
-                          codigoReferido: referralCodeCtlr.text,
-                          altura: heightController.text,
+                          altura: selectedHeight,
                           pieDominante: dominantFoot,
                           seleccion: selection,
                           categoriaSeleccion: catSelection,
@@ -524,7 +449,6 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                             }
                             final jsonDataCus = jsonDecode(responseStripe.body);
                             final customerId = jsonDataCus["customerId"];
-                            print("que me llega $customerId");
                             playerProvider.updateTemporalPlayer(
                                 customerStripeId: customerId);
 
@@ -583,8 +507,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
             Container(
               width: double.infinity,
               height: double.infinity,
-              color: Colors.black
-                  .withOpacity(0.5), // Color de fondo semitransparente
+              color: Colors.black.withOpacity(0.5),
               child: const Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
@@ -595,4 +518,342 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
       ),
     );
   }
+
+  Map<String, List<String>> provincesByCountry = {
+    'Spain': [
+      'A Coruña',
+      'Álava',
+      'Albacete',
+      'Alicante',
+      'Almería',
+      'Asturias',
+      'Ávila',
+      'Badajoz',
+      'Baleares',
+      'Barcelona',
+      'Burgos',
+      'Cáceres',
+      'Cádiz',
+      'Cantabria',
+      'Castellón',
+      'Ceuta',
+      'Ciudad Real',
+      'Córdoba',
+      'Cuenca',
+      'Girona',
+      'Granada',
+      'Guadalajara',
+      'Gipuzkoa',
+      'Huelva',
+      'Huesca',
+      'Jaén',
+      'La Rioja',
+      'Las Palmas',
+      'León',
+      'Lleida',
+      'Lugo',
+      'Madrid',
+      'Málaga',
+      'Melilla',
+      'Murcia',
+      'Navarra',
+      'Ourense',
+      'Palencia',
+      'Pontevedra',
+      'Salamanca',
+      'Segovia',
+      'Sevilla',
+      'Soria',
+      'Tarragona',
+      'Santa Cruz de Tenerife',
+      'Teruel',
+      'Toledo',
+      'Valencia',
+      'Valladolid',
+      'Vizcaya',
+      'Zamora',
+      'Zaragoza'
+    ],
+    'United States': [
+      'Alabama',
+      'Alaska',
+      'Arizona',
+      'Arkansas',
+      'California',
+      'Colorado',
+      'Connecticut',
+      'Delaware',
+      'District of Columbia',
+      'Florida',
+      'Georgia',
+      'Hawaii',
+      'Idaho',
+      'Illinois',
+      'Indiana',
+      'Iowa',
+      'Kansas',
+      'Kentucky',
+      'Louisiana',
+      'Maine',
+      'Maryland',
+      'Massachusetts',
+      'Michigan',
+      'Minnesota',
+      'Mississippi',
+      'Missouri',
+      'Montana',
+      'Nebraska',
+      'Nevada',
+      'New Hampshire',
+      'New Jersey',
+      'New Mexico',
+      'New York',
+      'North Carolina',
+      'North Dakota',
+      'Ohio',
+      'Oklahoma',
+      'Oregon',
+      'Pennsylvania',
+      'Rhode Island',
+      'South Carolina',
+      'South Dakota',
+      'Tennessee',
+      'Texas',
+      'Utah',
+      'Vermont',
+      'Virginia',
+      'Washington',
+      'West Virginia',
+      'Wisconsin',
+      'Wyoming'
+    ],
+    'France': [
+      'Ain',
+      'Aisne',
+      'Allier',
+      'Alpes-de-Haute-Provence',
+      'Hautes-Alpes',
+      'Alpes-Maritimes',
+      'Ardèche',
+      'Ardennes',
+      'Ariège',
+      'Aube',
+      'Aude',
+      'Aveyron',
+      'Bouches-du-Rhône',
+      'Calvados',
+      'Cantal',
+      'Charente',
+      'Charente-Maritime',
+      'Cher',
+      'Corrèze',
+      'Côte-d\'Or',
+      'Côtes-d\'Armor',
+      'Creuse',
+      'Dordogne',
+      'Doubs',
+      'Drôme',
+      'Eure',
+      'Eure-et-Loir',
+      'Finistère',
+      'Corse-du-Sud',
+      'Haute-Corse',
+      'Gard',
+      'Haute-Garonne',
+      'Gers',
+      'Gironde',
+      'Hérault',
+      'Ille-et-Vilaine',
+      'Indre',
+      'Indre-et-Loire',
+      'Isère',
+      'Jura',
+      'Landes',
+      'Loir-et-Cher',
+      'Loire',
+      'Haute-Loire',
+      'Loire-Atlantique',
+      'Loiret',
+      'Lot',
+      'Lot-et-Garonne',
+      'Lozère',
+      'Maine-et-Loire',
+      'Manche',
+      'Marne',
+      'Haute-Marne',
+      'Mayenne',
+      'Meurthe-et-Moselle',
+      'Meuse',
+      'Morbihan',
+      'Moselle',
+      'Nièvre',
+      'Nord',
+      'Oise',
+      'Orne',
+      'Pas-de-Calais',
+      'Puy-de-Dôme',
+      'Pyrénées-Atlantiques',
+      'Hautes-Pyrénées',
+      'Pyrénées-Orientales',
+      'Bas-Rhin',
+      'Haut-Rhin',
+      'Rhône',
+      'Haute-Saône',
+      'Saône-et-Loire',
+      'Sarthe',
+      'Savoie',
+      'Haute-Savoie',
+      'Paris',
+      'Seine-Maritime',
+      'Seine-et-Marne',
+      'Yvelines',
+      'Deux-Sèvres',
+      'Somme',
+      'Tarn',
+      'Tarn-et-Garonne',
+      'Var',
+      'Vaucluse',
+      'Vendée',
+      'Vienne',
+      'Haute-Vienne',
+      'Vosges',
+      'Yonne',
+      'Territoire de Belfort',
+      'Essonne',
+      'Hauts-de-Seine',
+      'Seine-Saint-Denis',
+      'Val-de-Marne',
+      'Val-d\'Oise'
+    ],
+    'Italy': [
+      'Agrigento',
+      'Alessandria',
+      'Ancona',
+      'Aosta',
+      'Arezzo',
+      'Ascoli Piceno',
+      'Asti',
+      'Avellino',
+      'Bari',
+      'Barletta-Andria-Trani',
+      'Belluno',
+      'Benevento',
+      'Bergamo',
+      'Biella',
+      'Bologna',
+      'Bolzano',
+      'Brescia',
+      'Brindisi',
+      'Cagliari',
+      'Caltanissetta',
+      'Campobasso',
+      'Carbonia-Iglesias',
+      'Caserta',
+      'Catania',
+      'Catanzaro',
+      'Chieti',
+      'Como',
+      'Cosenza',
+      'Cremona',
+      'Crotone',
+      'Cuneo',
+      'Enna',
+      'Fermo',
+      'Ferrara',
+      'Firenze',
+      'Foggia',
+      'Forlì-Cesena',
+      'Frosinone',
+      'Genova',
+      'Gorizia',
+      'Grosseto',
+      'Imperia',
+      'Isernia',
+      'La Spezia',
+      'L\'Aquila',
+      'Latina',
+      'Lecce',
+      'Lecco',
+      'Livorno',
+      'Lodi',
+      'Lucca',
+      'Macerata',
+      'Mantova',
+      'Massa-Carrara',
+      'Matera',
+      'Medio Campidano',
+      'Messina',
+      'Milano',
+      'Modena',
+      'Monza e della Brianza',
+      'Napoli',
+      'Novara',
+      'Nuoro',
+      'Ogliastra',
+      'Olbia-Tempio',
+      'Oristano',
+      'Padova',
+      'Palermo',
+      'Parma',
+      'Pavia',
+      'Perugia',
+      'Pesaro e Urbino',
+      'Pescara',
+      'Piacenza',
+      'Pisa',
+      'Pistoia',
+      'Pordenone',
+      'Potenza',
+      'Prato',
+      'Ragusa',
+      'Ravenna',
+      'Reggio Calabria',
+      'Reggio Emilia',
+      'Rieti',
+      'Rimini',
+      'Roma',
+      'Rovigo',
+      'Salerno',
+      'Sassari',
+      'Savona',
+      'Siena',
+      'Siracusa',
+      'Sondrio',
+      'Taranto',
+      'Teramo',
+      'Terni',
+      'Torino',
+      'Trapani',
+      'Trento',
+      'Treviso',
+      'Trieste',
+      'Udine',
+      'Varese',
+      'Venezia',
+      'Verbano-Cusio-Ossola',
+      'Vercelli',
+      'Verona',
+      'Vibo Valentia',
+      'Vicenza',
+      'Viterbo'
+    ],
+    'Germany': [
+      'Baden-Württemberg',
+      'Bavaria',
+      'Berlin',
+      'Brandenburg',
+      'Bremen',
+      'Hamburg',
+      'Hesse',
+      'Lower Saxony',
+      'Mecklenburg-Vorpommern',
+      'North Rhine-Westphalia',
+      'Rhineland-Palatinate',
+      'Saarland',
+      'Saxony',
+      'Saxony-Anhalt',
+      'Schleswig-Holstein',
+      'Thuringia'
+    ],
+  };
 }

@@ -46,7 +46,7 @@ class CuentaPageState extends State<CuentaPage> {
     if (pickedFile != null) {
       await _uploadImage(File(pickedFile.path));
     } else {
-      print('No image selected.');
+      debugPrint('No image selected.');
     }
   }
 
@@ -67,9 +67,9 @@ class CuentaPageState extends State<CuentaPage> {
       final image = jsonDecode(responseBody)["image"];
       playerProvider.updateLocalImage(image);
       userProvider.updateLocalImage(image);
-      print('Image uploaded successfully');
+      debugPrint('Image uploaded successfully');
     } else {
-      print('Failed to upload image. Error code: ${response.statusCode}');
+      debugPrint('Failed to upload image. Error code: ${response.statusCode}');
     }
   }
 
@@ -82,9 +82,9 @@ class CuentaPageState extends State<CuentaPage> {
     String formattedDate =
         birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
     String shortInfo =
-        'Provincia, pais: ${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
+        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
     String fullInfo =
-        'Provincia, pais: ${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate \nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: ${player.logrosIndividuales}';
+        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate \nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: ${player.logrosIndividuales}';
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -292,7 +292,7 @@ class CuentaPageState extends State<CuentaPage> {
                             });
                           },
                           style: TextButton.styleFrom(
-                            foregroundColor: Color(0xFF05FF00),
+                            foregroundColor: const Color(0xFF05FF00),
                           ),
                           child: Text(expanded ? 'Ver menos...' : 'Ver más...'),
                         ),

@@ -3,15 +3,12 @@ import 'dart:convert';
 import 'package:bro_app_to/Screens/player/full_screen_video_page.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
-import 'package:bro_app_to/providers/player_provider.dart';
-import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/video_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class PlayerProfileToAgent extends StatefulWidget {
   final PlayerFullModel player;
@@ -19,10 +16,10 @@ class PlayerProfileToAgent extends StatefulWidget {
   const PlayerProfileToAgent({super.key, required this.player});
 
   @override
-  _PlayerProfileToAgentState createState() => _PlayerProfileToAgentState();
+  PlayerProfileToAgentState createState() => PlayerProfileToAgentState();
 }
 
-class _PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
+class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
   double gridSpacing = 2.0;
   bool _isExpanded = false;
 
@@ -35,11 +32,11 @@ class _PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
         final videos = jsonData["videos"];
         return mapListToVideos(videos);
       } else {
-        print('Error al obtener los videos: ${videosResponse.statusCode}');
+        debugPrint('Error al obtener los videos: ${videosResponse.statusCode}');
         return [];
       }
     } catch (e) {
-      print('Error en la solicitud de videos: $e');
+      debugPrint('Error en la solicitud de videos: $e');
       return [];
     }
   }
@@ -53,9 +50,9 @@ class _PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
     String formattedDate =
         birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
     String shortInfo =
-        'Provincia, pais: ${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
+        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
     String fullInfo =
-        'Provincia, pais: ${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: r${player.logrosIndividuales}';
+        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: r${player.logrosIndividuales}';
 
     return Container(
       decoration: const BoxDecoration(

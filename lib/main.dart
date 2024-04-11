@@ -11,7 +11,7 @@ import 'package:bro_app_to/utils/router_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/Screens/Intro.dart';
+import 'package:bro_app_to/Screens/intro.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -127,10 +127,10 @@ class MySplashScreen extends StatefulWidget {
   const MySplashScreen({Key? key}) : super(key: key);
 
   @override
-  _MySplashScreenState createState() => _MySplashScreenState();
+  MySplashScreenState createState() => MySplashScreenState();
 }
 
-class _MySplashScreenState extends State<MySplashScreen> {
+class MySplashScreenState extends State<MySplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -139,13 +139,11 @@ class _MySplashScreenState extends State<MySplashScreen> {
 
   Future<void> init() async {
     await FirebaseApi().initNotifications(context);
-    Stream<RemoteMessage> _stream = FirebaseMessaging.onMessageOpenedApp;
-    _stream.listen((RemoteMessage event) async {
-      if (event.data != null) {
-        await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                const CustomBottomNavigationBarPlayer(initialIndex: 3)));
-      }
+    Stream<RemoteMessage> stream = FirebaseMessaging.onMessageOpenedApp;
+    stream.listen((RemoteMessage event) async {
+      await Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              const CustomBottomNavigationBarPlayer(initialIndex: 3)));
     });
     loadRememberMe();
   }
@@ -168,7 +166,7 @@ class _MySplashScreenState extends State<MySplashScreen> {
         Timer(
           const Duration(seconds: 2),
           () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => SignInPage()),
+            MaterialPageRoute(builder: (context) => const SignInPage()),
           ),
         );
       }

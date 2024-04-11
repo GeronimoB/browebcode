@@ -32,10 +32,10 @@ class ChatPage extends StatefulWidget {
   });
 
   @override
-  _ChatPageState createState() => _ChatPageState();
+  ChatPageState createState() => ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final FocusNode _messageFocusNode = FocusNode();
   final ScrollController _scrollController = ScrollController();
@@ -363,7 +363,7 @@ class _ChatPageState extends State<ChatPage> {
         var responseBody = await response.stream.bytesToString();
         imageUrl = jsonDecode(responseBody)["url"];
       } else {
-        print('Failed to upload image. Error code: ${response.statusCode}');
+        debugPrint('Failed to upload image. Error code: ${response.statusCode}');
       }
 
       final senderId = _buildSenderId();
@@ -451,7 +451,7 @@ class _ChatPageState extends State<ChatPage> {
         var responseBody = await response.stream.bytesToString();
         fileUrl = jsonDecode(responseBody)["url"];
       } else {
-        print('Failed to upload file. Error code: ${response.statusCode}');
+        debugPrint('Failed to upload file. Error code: ${response.statusCode}');
       }
 
       final senderId = _buildSenderId();
@@ -518,7 +518,7 @@ class _ChatPageState extends State<ChatPage> {
   void _showCustomMenu(BuildContext context) {
     _overlayEntry?.remove();
     _overlayEntry = _createOverlayEntry(context);
-    Overlay.of(context)?.insert(_overlayEntry!);
+    Overlay.of(context).insert(_overlayEntry!);
   }
 
   OverlayEntry _createOverlayEntry(BuildContext context) {

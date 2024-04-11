@@ -9,19 +9,19 @@ import 'package:provider/provider.dart';
 
 import '../components/custom_box_shadow.dart';
 import '../providers/player_provider.dart';
-import '../providers/user_provider.dart';
 import '../utils/api_client.dart';
 import '../utils/video_model.dart';
-import 'player/bottom_navigation_bar_player.dart';
 import 'player/config_profile_player.dart';
 import 'player/full_screen_video_page.dart';
 
 class PlayerProfile extends StatefulWidget {
+  const PlayerProfile({super.key});
+
   @override
-  _PlayerProfileState createState() => _PlayerProfileState();
+  PlayerProfileState createState() => PlayerProfileState();
 }
 
-class _PlayerProfileState extends State<PlayerProfile> {
+class PlayerProfileState extends State<PlayerProfile> {
   double gridSpacing = 2.0;
   bool _isExpanded = false;
 
@@ -36,12 +36,12 @@ class _PlayerProfileState extends State<PlayerProfile> {
         //playerProvider.setUserVideos(mapListToVideos(videos));
         return mapListToVideos(videos);
       } else {
-        print('Error al obtener los videos: ${videosResponse.statusCode}');
+        debugPrint('Error al obtener los videos: ${videosResponse.statusCode}');
         playerProvider.setUserVideos(mapListToVideos([]));
         return [];
       }
     } catch (e) {
-      print('Error en la solicitud de videos: $e');
+      debugPrint('Error en la solicitud de videos: $e');
       playerProvider.setUserVideos(mapListToVideos([]));
       return [];
     }
@@ -59,9 +59,9 @@ class _PlayerProfileState extends State<PlayerProfile> {
     String formattedDate =
         birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
     String shortInfo =
-        'Provincia, pais: ${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
+        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
     String fullInfo =
-        'Provincia, pais: ${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate \nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: ${player.logrosIndividuales}';
+        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate \nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: ${player.logrosIndividuales}';
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -88,7 +88,7 @@ class _PlayerProfileState extends State<PlayerProfile> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => ConfigProfilePlayer(),
+                        builder: (context) => const ConfigProfilePlayer(),
                       ),
                     );
                   },
@@ -263,8 +263,7 @@ class _PlayerProfileState extends State<PlayerProfile> {
                                     width: widthVideo,
                                     fit: BoxFit.cover,
                                   ),
-                                  if (video
-                                      .isFavorite) 
+                                  if (video.isFavorite)
                                     const Positioned(
                                       top: 8.0,
                                       right: 8.0,

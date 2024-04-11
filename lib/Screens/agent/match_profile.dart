@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/chat_page.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
@@ -72,7 +71,6 @@ class _MatchProfileState extends State<MatchProfile> {
     final double availableHeight =
         MediaQuery.of(context).size.height - appBarHeight;
     final width = MediaQuery.of(context).size.width;
-    print(width);
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -128,7 +126,7 @@ class _MatchProfileState extends State<MatchProfile> {
                   ? DateFormat('dd-MM-yyyy').format(birthDate)
                   : '';
               return SingleChildScrollView(
-                padding: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(0),
                 child: SizedBox(
                   height: availableHeight,
                   child: Column(
@@ -163,7 +161,7 @@ class _MatchProfileState extends State<MatchProfile> {
                         ),
                       ),
                       _buildDataRow(
-                          context, 'Fecha de nacimiento: ${formattedDate}'),
+                          context, 'Fecha de nacimiento: $formattedDate'),
                       _buildDataRow(context,
                           'Provincia: ${userData.provincia}, ${userData.pais}'),
                       _buildDataRow(context, 'Altura: ${userData.altura} cm'),
@@ -215,7 +213,7 @@ class _MatchProfileState extends State<MatchProfile> {
         throw Exception('Error al cargar la información del usuario');
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       throw Exception('Error al cargar la información del usuario');
     }
   }

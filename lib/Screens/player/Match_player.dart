@@ -19,10 +19,10 @@ class MatchePlayer extends StatefulWidget {
   const MatchePlayer({super.key});
 
   @override
-  _MatcheState createState() => _MatcheState();
+  MatcheState createState() => MatcheState();
 }
 
-class _MatcheState extends State<MatchePlayer> {
+class MatcheState extends State<MatchePlayer> {
   final List<bool> _isSelected = [];
   final List<bool> _isSelectedAux = [];
   final List<Agente> agentes = [];
@@ -36,7 +36,6 @@ class _MatcheState extends State<MatchePlayer> {
     });
     final List<Agente> playersAux = [];
     try {
-      print("id: ${currentUserId}");
       QuerySnapshot agentMatchesSnapshot = await FirebaseFirestore.instance
           .collection('Matches')
           .doc('jugador-$currentUserId')
@@ -73,7 +72,7 @@ class _MatcheState extends State<MatchePlayer> {
       setState(() {
         isLoading = false;
       });
-      print('Error al obtener los matches del agente: $error');
+      debugPrint('Error al obtener los matches del agente: $error');
     }
   }
 
@@ -208,7 +207,7 @@ class _MatcheState extends State<MatchePlayer> {
           ),
         ),
         child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -289,11 +288,11 @@ class _MatcheState extends State<MatchePlayer> {
                           buttonPrimary: false,
                           width: 145,
                           height: 38),
-                      CustomTextButton(
-                          text: 'Ver Perfil',
-                          buttonPrimary: true,
-                          width: 135,
-                          height: 32)
+                      // CustomTextButton(
+                      //     text: 'Ver Perfil',
+                      //     buttonPrimary: true,
+                      //     width: 135,
+                      //     height: 32)
                     ],
                   ),
                 ),

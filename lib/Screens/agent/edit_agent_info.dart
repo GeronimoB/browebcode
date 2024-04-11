@@ -16,11 +16,13 @@ import '../../utils/api_client.dart';
 import '../../utils/api_constants.dart';
 
 class EditarInfo extends StatefulWidget {
+  const EditarInfo({super.key});
+
   @override
-  _EditarInfoState createState() => _EditarInfoState();
+  EditarInfoState createState() => EditarInfoState();
 }
 
-class _EditarInfoState extends State<EditarInfo> {
+class EditarInfoState extends State<EditarInfo> {
   late TextEditingController _nombreController;
   late TextEditingController _apellidoController;
   late TextEditingController _correoController;
@@ -55,7 +57,7 @@ class _EditarInfoState extends State<EditarInfo> {
     if (pickedFile != null) {
       await _uploadImage(File(pickedFile.path));
     } else {
-      print('No image selected.');
+      debugPrint('No image selected.');
     }
   }
 
@@ -79,13 +81,12 @@ class _EditarInfoState extends State<EditarInfo> {
       agenteProvider.updateLocalImage(image);
       userProvider.updateLocalImage(image);
     } else {
-      print('Failed to upload image. Error code: ${response.statusCode}');
+      debugPrint('Failed to upload image. Error code: ${response.statusCode}');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("imagen: ${agente.imageUrl}");
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(

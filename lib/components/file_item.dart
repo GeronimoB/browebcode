@@ -89,7 +89,7 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('OK'),
+                    child: const Text('OK'),
                   ),
                 ],
               ),
@@ -118,7 +118,7 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
       },
     );
 
-    print(e.toString());
+    debugPrint(e.toString());
   }
 }
 

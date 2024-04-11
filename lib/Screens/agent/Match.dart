@@ -20,10 +20,10 @@ class Matche extends StatefulWidget {
   const Matche({super.key});
 
   @override
-  _MatcheState createState() => _MatcheState();
+  MatcheState createState() => MatcheState();
 }
 
-class _MatcheState extends State<Matche> {
+class MatcheState extends State<Matche> {
   final List<bool> _isSelected = [];
   final List<bool> _isSelectedAux = [];
   final List<PlayerFullModel> players = [];
@@ -37,7 +37,6 @@ class _MatcheState extends State<Matche> {
     });
     final List<PlayerFullModel> playersAux = [];
     try {
-      print("id: ${currentUserId}");
       QuerySnapshot agentMatchesSnapshot = await FirebaseFirestore.instance
           .collection('Matches')
           .doc('agente-$currentUserId')
@@ -74,7 +73,7 @@ class _MatcheState extends State<Matche> {
       setState(() {
         isLoading = false;
       });
-      print('Error al obtener los matches del agente: $error');
+      debugPrint('Error al obtener los matches del agente: $error');
     }
   }
 

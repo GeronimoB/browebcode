@@ -2,17 +2,13 @@ import 'package:bro_app_to/Screens/afiliados_player.dart';
 import 'package:bro_app_to/Screens/agent/edit_agent_info.dart';
 import 'package:bro_app_to/Screens/lista_afiliados.dart';
 import 'package:bro_app_to/Screens/notificaciones.dart';
-import 'package:bro_app_to/Screens/player/pedidos.dart';
 import 'package:bro_app_to/Screens/privacidad.dart';
 import 'package:bro_app_to/Screens/player/servicios.dart';
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
-import 'package:bro_app_to/providers/player_provider.dart';
-import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 import '../../providers/agent_provider.dart';
 import '../../providers/user_provider.dart';
@@ -30,7 +26,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.getCurrentUser();
-    print("este es el codigo, ${user.referralCode}");
+    debugPrint("este es el codigo, ${user.referralCode}");
     return WillPopScope(
       onWillPop: () async {
         Navigator.of(context).pushReplacement(
@@ -69,7 +65,11 @@ class _ConfigProfileState extends State<ConfigProfile> {
           ),
           backgroundColor: Colors.transparent,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF05FF00)),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFF05FF00),
+              size: 32,
+            ),
             onPressed: () => Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                   builder: (context) =>
@@ -103,8 +103,8 @@ class _ConfigProfileState extends State<ConfigProfile> {
                         const ConfigProfile()),
                     _buildListItem(
                         'SOPORTE', context, false, const ConfigProfile()),
-                    _buildListItem(
-                        'NOTIFICACIONES', context, true, Notificaciones()),
+                    _buildListItem('NOTIFICACIONES', context, true,
+                        const Notificaciones()),
                     _buildListItem(
                       'AFILIADOS',
                       context,

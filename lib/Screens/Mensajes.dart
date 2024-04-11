@@ -1,10 +1,8 @@
 import 'package:bro_app_to/Screens/chat_page.dart';
 import 'package:bro_app_to/components/chat_avatar.dart';
-import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/utils/chat_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../infrastructure/firebase_message_repository.dart';
@@ -181,26 +179,17 @@ class _ChatWidgetState extends State<ChatWidget>
             autoClose: false,
             flex: 1,
             onPressed: (contexto) {
-              print('this should close');
-
               final controller2 = Slidable.of(contexto);
 
-              if (controller2 == null) {
-                print('slidable controller is INDEED null');
-              } else {
-                print('slidable controller is NOT null');
-
-                controller2.dismiss(
-                  ResizeRequest(
-                    const Duration(milliseconds: 300),
-                    () {
-                      print('Dismiss from Button');
-                      _deleteMessage();
-                    },
-                  ),
-                  duration: const Duration(milliseconds: 300),
-                );
-              }
+              controller2!.dismiss(
+                ResizeRequest(
+                  const Duration(milliseconds: 300),
+                  () {
+                    _deleteMessage();
+                  },
+                ),
+                duration: const Duration(milliseconds: 300),
+              );
             },
             backgroundColor: Colors.transparent,
             foregroundColor: const Color(0xff05FF00),
@@ -328,7 +317,7 @@ class _ChatWidgetState extends State<ChatWidget>
           : "jugador_${friend.userId}";
       await FirebaseMessageRepository().deleteAllMessages(sender, receiver);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 }

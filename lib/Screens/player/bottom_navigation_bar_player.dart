@@ -2,18 +2,17 @@ import 'package:bro_app_to/Screens/mensajes.dart';
 import 'package:bro_app_to/Screens/player/match_player.dart';
 import 'package:bro_app_to/Screens/player/upload_video.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
-import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 final List<Widget> _pages = [
-  PlayerProfile(),
+  const PlayerProfile(),
   const MatchePlayer(),
   const UploadVideoWidget(),
   MensajesPage(),
-  PlayerProfile(),
+  const PlayerProfile(),
 ];
 
 class CustomBottomNavigationBarPlayer extends StatefulWidget {
@@ -134,7 +133,7 @@ class CustomBottomNavigationBarPlayerState
                                 ),
                               ),
                             )
-                          : SizedBox.shrink(),
+                          : const SizedBox.shrink(),
                     ],
                   ),
                 )

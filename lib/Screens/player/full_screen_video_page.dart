@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
-import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:bro_app_to/components/modal_decision.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/utils/video_model.dart';
@@ -12,7 +11,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-import '../../components/custom_text_button.dart';
 import '../../utils/api_client.dart';
 import 'bottom_navigation_bar_player.dart';
 import 'package:http/http.dart' as http;
@@ -31,10 +29,10 @@ class FullScreenVideoPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _FullScreenVideoPageState createState() => _FullScreenVideoPageState();
+  FullScreenVideoPageState createState() => FullScreenVideoPageState();
 }
 
-class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
+class FullScreenVideoPageState extends State<FullScreenVideoPage> {
   late VideoPlayerController _controller;
   bool _showPauseIcon = false;
   OverlayEntry? _overlayEntry;
@@ -82,7 +80,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
   void _showCustomMenu(BuildContext context) {
     _overlayEntry?.remove();
     _overlayEntry = _createOverlayEntry(context);
-    Overlay.of(context)?.insert(_overlayEntry!);
+    Overlay.of(context).insert(_overlayEntry!);
   }
 
   OverlayEntry _createOverlayEntry(BuildContext context) {
@@ -291,16 +289,16 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
   Future<void> _handleDownload(Video video) async {
     String? videoUrl = video.videoUrl;
     if (videoUrl == null || videoUrl.isEmpty) {
-      print('URL del video nula o vacía. No se puede iniciar la descarga.');
+      debugPrint('URL del video nula o vacía. No se puede iniciar la descarga.');
       return;
     }
     final status = await Permission.storage.status;
 
     if (!status.isGranted) {
-      print('Solicitando permiso de almacenamiento...');
+      debugPrint('Solicitando permiso de almacenamiento...');
       final result = await Permission.storage.request();
       if (!result.isGranted) {
-        print(
+        debugPrint(
             'Permiso de almacenamiento denegado. No se puede continuar con la descarga.');
         return;
       }
@@ -320,7 +318,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
       final videoExtension = path.extension(videoUrl);
       final response = await http.get(Uri.parse(videoUrl));
       final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
-      print("este seria el path: $downloadsDirectory");
+
       final apkFile = File(
           '${downloadsDirectory!.path}/video_${video.id}_${DateTime.now().millisecondsSinceEpoch}.$videoExtension');
 
@@ -402,7 +400,7 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
         },
       );
 
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 
@@ -449,7 +447,6 @@ class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
   void _handleDestacar(int index, Video video, bool dDestacar) async {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
     playerProvider.setVideoAndIndex(index, video);
-    print(index);
     if (dDestacar) {
       showDialog(
         context: context,

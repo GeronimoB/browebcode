@@ -1,4 +1,3 @@
-import 'package:bro_app_to/Screens/DetallesPlan.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
@@ -80,10 +79,10 @@ class PlanesPago extends StatefulWidget {
   const PlanesPago({super.key});
 
   @override
-  _PlanesPagoState createState() => _PlanesPagoState();
+  PlanesPagoState createState() => PlanesPagoState();
 }
 
-class _PlanesPagoState extends State<PlanesPago> {
+class PlanesPagoState extends State<PlanesPago> {
   int _selectedCardIndex = -1; // Índice de la tarjeta seleccionada
 
   @override
@@ -121,7 +120,7 @@ class _PlanesPagoState extends State<PlanesPago> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     itemCount: planes.length,
                     itemBuilder: (BuildContext context, int index) {
                       return _buildCard(index);
@@ -197,8 +196,7 @@ class _PlanesPagoState extends State<PlanesPago> {
         decoration: BoxDecoration(
             color: Colors.transparent,
             border: Border.all(
-              color: const Color(
-                  0xFF00F056), 
+              color: const Color(0xFF00F056),
               width: 1,
             ),
             borderRadius: BorderRadius.circular(20),
@@ -289,8 +287,7 @@ class _PlanesPagoState extends State<PlanesPago> {
                       fontStyle: FontStyle.italic),
                 ),
                 onTap: () => setState(() {
-                  plan.isExpanded =
-                      false; 
+                  plan.isExpanded = false;
                 }),
               ),
             ],

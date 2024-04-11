@@ -36,7 +36,7 @@ class RetirarMenu extends StatelessWidget {
             icon: const Icon(
               Icons.arrow_back,
               color: Color(0xFF00E050),
-              size: 36,
+              size: 32,
             ),
             onPressed: () => Navigator.pop(context),
           ),

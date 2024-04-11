@@ -6,7 +6,6 @@ import 'package:bro_app_to/components/custom_dropdown.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
-import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/select_camp.dart';
 import 'package:bro_app_to/utils/api_client.dart';
@@ -80,7 +79,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     if (pickedFile != null) {
       await _uploadImage(File(pickedFile.path));
     } else {
-      print('No image selected.');
+      debugPrint('No image selected.');
     }
   }
 
@@ -103,7 +102,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
       agenteProvider.updateLocalImage(image);
       userProvider.updateLocalImage(image);
     } else {
-      print('Failed to upload image. Error code: ${response.statusCode}');
+      debugPrint('Failed to upload image. Error code: ${response.statusCode}');
     }
   }
 
@@ -354,8 +353,6 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
       builder: (BuildContext context) {
         TextEditingController editingController =
             TextEditingController(text: controller.text);
-        String valueFoot = '';
-        if (foot ?? false) valueFoot = editingController.text;
         return Dialog(
             backgroundColor: Colors.transparent,
             child: ConstrainedBox(
@@ -400,9 +397,8 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                           color: Colors.white,
                         ),
                         decoration: const InputDecoration(
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 5),
-                          enabledBorder: const UnderlineInputBorder(
+                          contentPadding: EdgeInsets.symmetric(vertical: 5),
+                          enabledBorder: UnderlineInputBorder(
                             borderSide:
                                 BorderSide(color: Color(0xFF00E050), width: 2),
                           ),

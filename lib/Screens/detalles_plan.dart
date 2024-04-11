@@ -9,6 +9,7 @@ class PlanDetailsScreen extends StatelessWidget {
   final String price;
 
   const PlanDetailsScreen({
+    super.key,
     required this.goldPlan,
     required this.planItems,
     required this.price,
@@ -51,7 +52,7 @@ class PlanDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ...generatePlanItems(planItems),
             const Padding(
               padding: EdgeInsets.all(8.0),
@@ -121,8 +122,11 @@ class PlanDetailsScreen extends StatelessWidget {
           item,
           style: const TextStyle(fontFamily: 'Montserrat', color: Colors.white),
         ),
-        leading: const Icon(Icons.check,
-            color: Color(0xff00E050)), 
+        leading: const Icon(
+          Icons.check,
+          color: Color(0xff00E050),
+          size: 32,
+        ),
       );
     }).toList();
   }

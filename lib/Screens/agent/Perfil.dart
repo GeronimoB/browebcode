@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:bro_app_to/Screens/agent/user_profile_to_agent.dart';
-import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/providers/agent_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
@@ -14,16 +13,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'config_profile.dart';
-
 class PerfilPage extends StatefulWidget {
   const PerfilPage({super.key});
 
   @override
-  _PerfilPageState createState() => _PerfilPageState();
+  PerfilPageState createState() => PerfilPageState();
 }
 
-class _PerfilPageState extends State<PerfilPage> {
+class PerfilPageState extends State<PerfilPage> {
   late UserProvider provider;
   late UserModel user;
   final List<PlayerFullModel> players = [];
@@ -68,7 +65,7 @@ class _PerfilPageState extends State<PerfilPage> {
       setState(() {
         isLoading = false;
       });
-      print('Error al obtener los matches del agente: $error');
+      debugPrint('Error al obtener los matches del agente: $error');
     }
   }
 

@@ -123,7 +123,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                                 ),
                               ),
                             )
-                          : SizedBox.shrink(),
+                          : const SizedBox.shrink(),
                     ],
                   ),
                 )

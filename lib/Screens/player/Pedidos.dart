@@ -9,11 +9,13 @@ import 'package:provider/provider.dart';
 import '../../utils/api_client.dart';
 
 class Pedidos extends StatefulWidget {
+  const Pedidos({super.key});
+
   @override
-  _PedidosState createState() => _PedidosState();
+  PedidosState createState() => PedidosState();
 }
 
-class _PedidosState extends State<Pedidos> {
+class PedidosState extends State<Pedidos> {
   int _selectedPedido = -1;
 
   Future<List<PedidosModel>> fetchPedidos() async {
@@ -26,11 +28,11 @@ class _PedidosState extends State<Pedidos> {
         final orders = jsonData["orders"];
         return mapListToPedidos(orders).reversed.toList();
       } else {
-        print('Error al obtener los videos.');
+        debugPrint('Error al obtener los videos.');
         return [];
       }
     } catch (e) {
-      print('Error en la solicitud de videos: $e');
+      debugPrint('Error en la solicitud de videos: $e');
       return [];
     }
   }

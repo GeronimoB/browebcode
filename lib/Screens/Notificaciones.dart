@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/notification_model.dart';
@@ -61,7 +60,7 @@ class _NotificacionesState extends State<Notificaciones> {
           children: [
             Expanded(
               child: ListView.builder(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 itemCount: currentNotifications.length,
                 itemBuilder: (BuildContext context, int index) {
                   final noti = currentNotifications[index];

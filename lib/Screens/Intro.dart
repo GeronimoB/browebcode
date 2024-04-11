@@ -1,20 +1,20 @@
 import 'package:bro_app_to/components/custom_text_button.dart';
-import 'package:bro_app_to/injection_container.dart';
-import 'package:bro_app_to/src/registration/presentation/screens/Sing_up.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/select_camp.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/sign_up.dart';
 import 'package:flutter/material.dart';
-import 'package:bro_app_to/src/auth/presentation/screens/Sing_in.dart';
+import 'package:bro_app_to/src/auth/presentation/screens/sign_in.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:bro_app_to/Screens/player_profile.dart';
 
 import '../utils/current_state.dart';
 
 class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
+
   @override
-  _SignInPageState createState() => _SignInPageState();
+  SignInPageState createState() => SignInPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class SignInPageState extends State<SignInPage> {
   bool isPressedSignIn = false;
   bool isPressedCreateAccount = false;
 
@@ -24,16 +24,17 @@ class _SignInPageState extends State<SignInPage> {
       onWillPop: () async => false,
       child: Scaffold(
         body: Stack(
+          alignment: Alignment.center,
           children: [
             Container(
-              color: Color.fromARGB(255, 0, 0, 0),
+              color: const Color.fromARGB(255, 0, 0, 0),
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
             ),
             Positioned.fill(
               child: Image.asset(
                 'assets/images/Background_1.png',
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
             ),
             Positioned(
@@ -69,8 +70,7 @@ class _SignInPageState extends State<SignInPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    const SelectCamp(registrando: true)),
+                                builder: (context) => const SignUpScreen()),
                           );
                         },
                         text: translations!['create_account'],

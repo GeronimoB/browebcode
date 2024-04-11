@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:bro_app_to/Screens/afiliados_player.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';

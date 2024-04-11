@@ -1,11 +1,7 @@
 import 'package:bro_app_to/components/custom_box_shadow.dart';
-import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/agregar_tarjeta_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
-
-import '../providers/player_provider.dart';
 
 class MetodoDePagoScreen extends StatefulWidget {
   final double valueToPay;
@@ -23,7 +19,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
   Widget build(BuildContext context) {
     const double metodoPagoWidth = 325.0;
     const double metodoPagoHeight = 106.0;
-    final playerProvider = Provider.of<PlayerProvider>(context, listen: true);
+
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -132,55 +128,55 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
               ),
             ),
             const SizedBox(height: 26),
-            GestureDetector(
-              onTapDown: (_) {
-                setState(() {
-                  transferSelected = true;
-                  _mostrarMenuTransferencia();
-                });
-              },
-              onTapUp: (_) {
-                setState(() {
-                  transferSelected = false;
-                });
-              },
-              onTapCancel: () {
-                setState(() {
-                  transferSelected = false;
-                });
-              },
-              onTap: () async {},
-              child: Container(
-                width: metodoPagoWidth,
-                height: metodoPagoHeight,
-                decoration: BoxDecoration(
-                    color: transferSelected ? Colors.black : Colors.white,
-                    border:
-                        Border.all(color: const Color(0xff05FF00), width: 1.5),
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    boxShadow: transferSelected
-                        ? [
-                            const CustomBoxShadow(
-                              color: Color(0xff05FF00),
-                              blurRadius: 4,
-                            )
-                          ]
-                        : null),
-                child: Center(
-                  child: Text(
-                    "TRANSFERENCIA BANCARIA",
-                    style:  TextStyle(
-                        color: transferSelected
-                            ? Colors.white
-                            : const Color(0xff1D6937),
-                        fontFamily: 'Montserrat',
-                        fontSize: 24,
-                        fontWeight: FontWeight.w900),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ),
+            // GestureDetector(
+            //   onTapDown: (_) {
+            //     setState(() {
+            //       transferSelected = true;
+            //       _mostrarMenuTransferencia();
+            //     });
+            //   },
+            //   onTapUp: (_) {
+            //     setState(() {
+            //       transferSelected = false;
+            //     });
+            //   },
+            //   onTapCancel: () {
+            //     setState(() {
+            //       transferSelected = false;
+            //     });
+            //   },
+            //   onTap: () async {},
+            //   child: Container(
+            //     width: metodoPagoWidth,
+            //     height: metodoPagoHeight,
+            //     decoration: BoxDecoration(
+            //         color: transferSelected ? Colors.black : Colors.white,
+            //         border:
+            //             Border.all(color: const Color(0xff05FF00), width: 1.5),
+            //         borderRadius: const BorderRadius.all(Radius.circular(10)),
+            //         boxShadow: transferSelected
+            //             ? [
+            //                 const CustomBoxShadow(
+            //                   color: Color(0xff05FF00),
+            //                   blurRadius: 4,
+            //                 )
+            //               ]
+            //             : null),
+            //     child: Center(
+            //       child: Text(
+            //         "TRANSFERENCIA BANCARIA",
+            //         style:  TextStyle(
+            //             color: transferSelected
+            //                 ? Colors.white
+            //                 : const Color(0xff1D6937),
+            //             fontFamily: 'Montserrat',
+            //             fontSize: 24,
+            //             fontWeight: FontWeight.w900),
+            //         textAlign: TextAlign.center,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             const Spacer(),
             Align(
               alignment: Alignment.bottomCenter,
@@ -195,105 +191,6 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  void _mostrarMenuTransferencia() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ), // Esta línea le da bordes redondeados al Dialog
-          child: Container(
-            padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: const Color(0xFF3B3B3B),
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            child: const Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Text(
-                    'Gracias por tu compra',
-                    style: const TextStyle(
-                      color: Color(0xff05FF00), // Color de los títulos
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w800, // ExtraBold
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Titular XXXXXXXXX',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w600, // SemiBold
-                    fontSize: 13,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Banco XXXXXXXXX',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w600, // SemiBold
-                    fontSize: 13,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Cuenta XXXXXXXXXXXXXXXXXX',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w600, // SemiBold
-                    fontSize: 13,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5),
-                  child: Text(
-                    'Instrucciones',
-                    style: const TextStyle(
-                      color: Color(0xff05FF00), // Color de los títulos
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w800, // ExtraBold
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Montserrat',
-                    fontSize: 11,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Center(
-                  child: CustomTextButton(
-                      text: 'Subir Comprobante',
-                      buttonPrimary: true,
-                      width: 233,
-                      height: 30),
-                ),
-                SizedBox(height: 10),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }

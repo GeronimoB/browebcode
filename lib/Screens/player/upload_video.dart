@@ -85,7 +85,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
                             ? Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        CustomBottomNavigationBarPlayer()),
+                                        const CustomBottomNavigationBarPlayer()),
                               )
                             : Navigator.of(context).pop();
                       },
@@ -211,11 +211,11 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           backgroundColor: Color(0xFF05FF00),
           content: Text('Video subido exitosamente.')));
-      Future.delayed(Duration(seconds: 3));
+      Future.delayed(const Duration(seconds: 3));
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
             builder: (context) =>
-                CustomBottomNavigationBarPlayer(initialIndex: 4)),
+                const CustomBottomNavigationBarPlayer(initialIndex: 4)),
       );
     } else {
       Navigator.of(context).pop();

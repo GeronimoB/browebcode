@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
-import 'package:bro_app_to/src/auth/presentation/screens/Sing_in.dart';
-
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/notification_model.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -11,16 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../src/auth/presentation/screens/sign_in.dart';
+
 void handleMessage(RemoteMessage? message) async {
   if (message == null) return;
-  print("manejando el mensaje...");
-  print(message);
 }
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  print("Title: ${message.notification?.title}");
-  print("Body: ${message.notification?.body}");
-  print("Payload: ${message.data}");
+  debugPrint("Title: ${message.notification?.title}");
+  debugPrint("Body: ${message.notification?.body}");
+  debugPrint("Payload: ${message.data}");
   final title = message.notification?.title ?? '';
   final body = message.notification?.body ?? '';
   // Verifica si hay datos en el mensaje antes de almacenar la notificación
@@ -66,7 +64,6 @@ class FirebaseApi {
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      print("recibiendo mensaje...");
       final notification = message.notification;
       if (notification == null) return;
       handleMessage(message);
@@ -135,9 +132,7 @@ class FirebaseApi {
   Future<void> initNotifications(BuildContext context) async {
     await _firebaseMessaging.requestPermission();
     fcmToken = await _firebaseMessaging.getToken() ?? "";
-    print("Token: $fcmToken");
     initPushNotifications();
-    print(context);
     initLocalNotifications(context);
   }
 }

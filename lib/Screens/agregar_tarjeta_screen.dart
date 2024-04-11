@@ -589,7 +589,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       Navigator.pop(context);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-            builder: (context) => CustomBottomNavigationBarPlayer()),
+            builder: (context) => const CustomBottomNavigationBarPlayer()),
       );
     } else {
       Navigator.pop(context);
@@ -597,10 +597,10 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
           backgroundColor: Colors.redAccent,
           content: Text(
               'Hubo un error al cargar tu video, intentalo de nuevo desde tu perfil.')));
-      Future.delayed(Duration(seconds: 2));
+      Future.delayed(const Duration(seconds: 2));
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-            builder: (context) => CustomBottomNavigationBarPlayer()),
+            builder: (context) => const CustomBottomNavigationBarPlayer()),
       );
     }
   }

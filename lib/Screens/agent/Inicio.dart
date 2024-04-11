@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:bro_app_to/Screens/agent/match_profile.dart';
-import 'package:bro_app_to/providers/agent_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/initial_video_model.dart';
@@ -14,11 +13,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../components/slidedable_video.dart';
 
 class InicioPage extends StatefulWidget {
+  const InicioPage({super.key});
+
   @override
-  _InicioPageState createState() => _InicioPageState();
+  InicioPageState createState() => InicioPageState();
 }
 
-class _InicioPageState extends State<InicioPage> {
+class InicioPageState extends State<InicioPage> {
   double _xOffset = 0.0;
   double _rotation = 0.0;
   int _currentIndex = 0;
@@ -58,7 +59,6 @@ class _InicioPageState extends State<InicioPage> {
         _initializeNextVideoPlayer(_currentIndex + 1);
       }
     } catch (error) {
-      print(error);
       throw Exception('Error al obtener las URLs de los videos');
     }
   }

@@ -15,7 +15,6 @@ import 'dart:convert';
 import '../../../../Screens/player/bottom_navigation_bar_player.dart';
 import '../../../../utils/tarjeta_model.dart';
 import '../../domain/entitites/user_entity.dart';
-import 'package:http/http.dart' as http;
 
 class RemoteDataSourceImpl implements RemoteDataSource {
   final PlayerProvider playerProvider;
@@ -37,7 +36,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         {'UserName': user.username, 'Password': user.password, 'fcm': fcmToken},
       );
 
-      print(response.body);
+      debugPrint(response.body);
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
@@ -101,7 +100,6 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     dynamic response,
     bool comingFromAutoLogin,
   ) {
-    print("hay un error");
     if (comingFromAutoLogin) {
       Navigator.pushNamed(context, '/login');
     } else {
@@ -134,7 +132,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     if (comingFromAutoLogin) {
       Navigator.pushNamed(context, '/login');
     } else {
-      print(e);
+      debugPrint(e);
       playerProvider.setIsLoading(false);
 
       ScaffoldMessenger.of(context).showSnackBar(

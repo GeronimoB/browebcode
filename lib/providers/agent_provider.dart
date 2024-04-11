@@ -1,6 +1,5 @@
 import 'package:bro_app_to/utils/agente_model.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AgenteProvider extends ChangeNotifier {
   Agente _agente = Agente();
