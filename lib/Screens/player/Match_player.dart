@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bro_app_to/Screens/chat_page.dart';
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
@@ -104,17 +105,11 @@ class MatcheState extends State<MatchePlayer> {
       ),
       child: Scaffold(
         appBar: AppBar(
+          scrolledUnderElevation: 0,
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: const Text(
-            'Match',
-            style: const TextStyle(
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0),
-          ),
+          title: appBarTitle('MATCH'),
         ),
         backgroundColor: Colors.transparent,
         extendBody: true,

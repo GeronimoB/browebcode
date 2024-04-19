@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/api_client.dart';
@@ -42,7 +44,10 @@ class PedidosState extends State<Pedidos> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: Colors.transparent,
+        centerTitle: true,
+        title: appBarTitle('PEDIDOS'),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
@@ -67,17 +72,7 @@ class PedidosState extends State<Pedidos> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: MediaQuery.of(context).padding.top + 20),
-            const Text(
-              'PEDIDOS',
-              style: const TextStyle(
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
+            SizedBox(height: MediaQuery.of(context).padding.top + 50),
             FutureBuilder<List<PedidosModel>>(
                 future: fetchPedidos(),
                 builder: (context, snapshot) {
@@ -204,6 +199,8 @@ class PedidosState extends State<Pedidos> {
   }
 
   void showOrder(PedidosModel pedido) {
+    String fechaHoraFormateada =
+        DateFormat('yyyy-MM-dd HH:mm').format(pedido.datetime);
     showDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.7),
@@ -246,20 +243,20 @@ class PedidosState extends State<Pedidos> {
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                     fontStyle: FontStyle.italic,
-                    fontSize: 13,
+                    fontSize: 14,
                   ),
                 ),
                 const SizedBox(
                   height: 8,
                 ),
                 Text(
-                  "Fecha y hora de compra: ${pedido.datetime}",
+                  "Fecha y hora de compra: $fechaHoraFormateada",
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                     fontStyle: FontStyle.italic,
-                    fontSize: 13,
+                    fontSize: 14,
                   ),
                 ),
                 const SizedBox(
@@ -272,7 +269,7 @@ class PedidosState extends State<Pedidos> {
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                     fontStyle: FontStyle.italic,
-                    fontSize: 13,
+                    fontSize: 14,
                   ),
                 ),
                 const SizedBox(
@@ -285,7 +282,7 @@ class PedidosState extends State<Pedidos> {
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                     fontStyle: FontStyle.italic,
-                    fontSize: 13,
+                    fontSize: 14,
                   ),
                 ),
                 const SizedBox(

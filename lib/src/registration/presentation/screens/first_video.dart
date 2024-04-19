@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/Screens/planes_pago.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
@@ -200,11 +201,13 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
             ]),
       ),
       child: Scaffold(
-        backgroundColor:
-            Colors.transparent, // Hacer el fondo del Scaffold transparente
+        backgroundColor: Colors.transparent,
         extendBody: true,
         appBar: AppBar(
+          scrolledUnderElevation: 0,
           backgroundColor: Colors.transparent,
+          centerTitle: true,
+          title: appBarTitle(translations!['first_video']),
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
@@ -218,15 +221,7 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              translations!['first_video'],
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'montserrat',
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
+            const SizedBox.shrink(),
             _videoController?.value.isInitialized ?? false
                 ? Column(
                     children: [
@@ -264,12 +259,43 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                       //     height: 39)
                     ],
                   )
-                : GestureDetector(
-                    onTap: _pickVideo,
-                    child: Image.asset(
-                      'assets/images/CloudIcon.png',
-                      height: 120,
-                    )),
+                : Column(
+                    children: [
+                      GestureDetector(
+                        onTap: _pickVideo,
+                        child: SvgPicture.asset(
+                          'assets/icons/CloudIcon.svg',
+                          width: 210,
+                        ),
+                      ),
+                      Text(
+                        translations!['upload'],
+                        style: const TextStyle(
+                          color: Color(0xFF00E050),
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w900,
+                          fontSize: 15.0,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      SizedBox(
+                        width: 300,
+                        child: Text(
+                          translations!['show_your_habilities'],
+                          style: const TextStyle(
+                            color: Color(0xFF00E050),
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15.0,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(25),

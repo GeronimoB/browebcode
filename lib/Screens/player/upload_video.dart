@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -9,17 +12,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../providers/player_provider.dart';
 import '../../utils/api_client.dart';
 import '../../utils/api_constants.dart';
-
-// import 'package:video_thumbnail/video_thumbnail.dart';
+import '../../utils/current_state.dart';
 
 Map<String, int> videosForPlan = {
   "Basic": 2,
@@ -29,7 +29,7 @@ Map<String, int> videosForPlan = {
 };
 
 class UploadVideoWidget extends StatefulWidget {
-  const UploadVideoWidget({super.key});
+  const UploadVideoWidget({Key? key}) : super(key: key);
 
   @override
   State<UploadVideoWidget> createState() => _UploadVideoWidgetState();
@@ -37,10 +37,7 @@ class UploadVideoWidget extends StatefulWidget {
 
 class _UploadVideoWidgetState extends State<UploadVideoWidget> {
   VideoPlayerController? _videoController;
-  VideoPlayerController? _temporalVideoController;
   double _sliderValue = 0.0;
-  String? videoPathToUpload;
-  Uint8List? imagePathToUpload;
   late UserProvider userProvider;
 
   @override
@@ -51,55 +48,9 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
 
   @override
   void dispose() {
+    _videoController?.removeListener(() {});
     _videoController?.dispose();
-    _temporalVideoController?.dispose();
     super.dispose();
-  }
-
-  void showChargeDialog(String text, bool success) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(23)),
-              backgroundColor: const Color(0xFF3B3B3B),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    text,
-                    style: TextStyle(
-                        color: success ? const Color(0xff00E050) : Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontWeight: success ? FontWeight.w400 : FontWeight.bold,
-                        fontSize: success ? 20 : 16),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 15),
-                  CustomTextButton(
-                      onTap: () {
-                        success
-                            ? Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CustomBottomNavigationBarPlayer()),
-                              )
-                            : Navigator.of(context).pop();
-                      },
-                      text: "Listo",
-                      buttonPrimary: true,
-                      width: 174,
-                      height: 30),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
   }
 
   Future<void> _pickVideo() async {
@@ -111,62 +62,83 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     if (result != null) {
       PlatformFile file = result.files.first;
       String videoPath = file.path!;
-      videoPathToUpload = videoPath;
-      _temporalVideoController?.dispose();
-      _temporalVideoController = VideoPlayerController.file(File(videoPath));
 
-      await _temporalVideoController?.initialize();
-
-      // Verificar duración del video
-      Duration duration = _temporalVideoController!.value.duration;
-      if (duration.inSeconds > 120) {
-        // Video dura más de 2 minutos
-        showChargeDialog("El video no puede durar más de 2 minutos", false);
+      if (!await _validateVideo(videoPath)) {
         return;
       }
 
-      if (_temporalVideoController!.value.size.height < 720 ||
-          _temporalVideoController!.value.size.width < 720) {
-        // Video tiene una resolución menor a 720p
-        showChargeDialog("La resolución minima es de 720p", false);
-        return;
-      }
-      if (_temporalVideoController!.value.aspectRatio > 1) {
-        // Video es horizontal
-        showChargeDialog("Solo se pueden subir videos verticales", false);
+      Uint8List? thumbnail = await _generateThumbnail(videoPath);
+      if (thumbnail == null) {
         return;
       }
 
-      // Capturar un frame del video para usarlo como placeholder
-      final uint8list = await VideoThumbnail.thumbnailData(
-        video: videoPath,
-        imageFormat: ImageFormat.PNG,
-        maxHeight: 200,
-        quality: 30,
-      );
-      imagePathToUpload = uint8list;
+      _videoController = await _initializeVideoController(videoPath);
+      if (_videoController == null) {
+        return;
+      }
 
-      _temporalVideoController?.dispose();
-      _videoController?.dispose();
-      _videoController = VideoPlayerController.file(File(videoPath));
-
-      await _videoController?.initialize();
-
-      await _videoController?.play();
-
-      _videoController?.setLooping(true);
-
-      _videoController?.addListener(() {
-        setState(() {
-          _sliderValue = _videoController!.value.position.inSeconds.toDouble();
-        });
-      });
       final playerProvider =
           Provider.of<PlayerProvider>(context, listen: false);
       _showUploadDialog();
       await uploadVideoAndImage(
-          videoPath, uint8list, playerProvider.getPlayer()!.userId);
+          videoPath, thumbnail, playerProvider.getPlayer()!.userId);
     }
+  }
+
+  Future<bool> _validateVideo(String videoPath) async {
+    VideoPlayerController temporalVideoController =
+        VideoPlayerController.file(File(videoPath));
+    await temporalVideoController.initialize();
+
+    Duration duration = temporalVideoController.value.duration;
+    if (duration.inSeconds > 120) {
+      _showChargeDialog("El video no puede durar más de 2 minutos", false);
+      temporalVideoController.dispose();
+      return false;
+    }
+
+    if (temporalVideoController.value.size.height < 720 ||
+        temporalVideoController.value.size.width < 720) {
+      _showChargeDialog("La resolución mínima es de 720p", false);
+      temporalVideoController.dispose();
+      return false;
+    }
+    if (temporalVideoController.value.aspectRatio > 1) {
+      _showChargeDialog("Solo se pueden subir videos verticales", false);
+      temporalVideoController.dispose();
+      return false;
+    }
+
+    temporalVideoController.dispose();
+    return true;
+  }
+
+  Future<Uint8List?> _generateThumbnail(String videoPath) async {
+    final uint8list = await VideoThumbnail.thumbnailData(
+      video: videoPath,
+      imageFormat: ImageFormat.PNG,
+      maxHeight: 200,
+      quality: 30,
+    );
+
+    return uint8list;
+  }
+
+  Future<VideoPlayerController?> _initializeVideoController(
+      String videoPath) async {
+    VideoPlayerController videoController =
+        VideoPlayerController.file(File(videoPath));
+    await videoController.initialize();
+    await videoController.play();
+    videoController.setLooping(true);
+
+    videoController.addListener(() {
+      setState(() {
+        _sliderValue = videoController.value.position.inSeconds.toDouble();
+      });
+    });
+
+    return videoController;
   }
 
   void _showSubscriptionRe() {
@@ -186,15 +158,13 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     );
     request.fields["userId"] = userId ?? '';
     if (videoPath != null) {
-      // Adjuntar el archivo de video al cuerpo de la solicitud
       request.files.add(await http.MultipartFile.fromPath(
-        'video', // Nombre del campo en el servidor para el video
+        'video',
         videoPath,
       ));
     }
 
     if (uint8list != null) {
-      // Adjuntar los bytes de la imagen al cuerpo de la solicitud
       request.files.add(http.MultipartFile.fromBytes(
         'imagen',
         uint8list,
@@ -202,11 +172,8 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
         contentType: MediaType('image', 'png'),
       ));
     }
-
-    // Enviar la solicitud al servidor y esperar la respuesta
     var response = await request.send();
 
-    // Verificar el estado de la respuesta
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           backgroundColor: Color(0xFF05FF00),
@@ -226,6 +193,81 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     }
   }
 
+  void _showChargeDialog(String text, bool success) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
+          backgroundColor: const Color(0xFF3B3B3B),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                text,
+                style: TextStyle(
+                    color: success ? const Color(0xff00E050) : Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontWeight: success ? FontWeight.w400 : FontWeight.bold,
+                    fontSize: success ? 20 : 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 15),
+              CustomTextButton(
+                  onTap: () {
+                    success
+                        ? Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const CustomBottomNavigationBarPlayer()),
+                          )
+                        : Navigator.of(context).pop();
+                  },
+                  text: "Listo",
+                  buttonPrimary: true,
+                  width: 174,
+                  height: 30),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showUploadDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
+          contentPadding: const EdgeInsets.all(25),
+          backgroundColor: const Color(0xFF3B3B3B),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Estamos subiendo tu vídeo, esto puede tardar unos segundos…",
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 25),
+              LinearProgressIndicator(
+                color: Color(0xff00E050),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -241,6 +283,14 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          scrolledUnderElevation: 0,
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: appBarTitle('SUBIR VIDEO'),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+        ),
         extendBody: true,
         body: SafeArea(
           child: Column(
@@ -248,15 +298,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                'Subir video',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'montserrat',
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
+              const SizedBox.shrink(),
               _videoController?.value.isInitialized ?? false
                   ? Column(
                       children: [
@@ -266,7 +308,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
                           child: VideoPlayer(_videoController!),
                         ),
                         Slider(
-                          activeColor: Color(0xff3EAE64),
+                          activeColor: const Color(0xff3EAE64),
                           inactiveColor: const Color(0xff00F056),
                           value: _sliderValue,
                           min: 0.0,
@@ -280,126 +322,89 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
                             });
                           },
                         ),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        //   children: [
-                        //     IconButton(
-                        //       icon: const Icon(Icons.shuffle),
-                        //       color: const Color(0xff00F056),
-                        //       iconSize: 30,
-                        //       onPressed: () {
-                        //         // Retroceder 30 segundos
-                        //       },
-                        //     ),
-                        //     IconButton(
-                        //       icon: const Icon(Icons.fast_rewind),
-                        //       color: const Color(0xff00F056),
-                        //       iconSize: 30,
-                        //       onPressed: () {
-                        //         // Retroceder 30 segundos
-                        //         _videoController!.seekTo(Duration(
-                        //             seconds: _videoController!
-                        //                     .value.position.inSeconds -
-                        //                 10));
-                        //       },
-                        //     ),
-                        //     IconButton(
-                        //       color: const Color(0xff00F056),
-                        //       iconSize: 60,
-                        //       icon: _videoController!.value.isPlaying
-                        //           ? const Icon(Icons.pause_circle_filled)
-                        //           : const Icon(Icons.play_circle_fill),
-                        //       onPressed: () {
-                        //         setState(() {
-                        //           if (_videoController!.value.isPlaying) {
-                        //             _videoController!.pause();
-                        //           } else {
-                        //             _videoController!.play();
-                        //           }
-                        //         });
-                        //       },
-                        //     ),
-                        //     IconButton(
-                        //       icon: const Icon(Icons.fast_forward),
-                        //       color: const Color(0xff00F056),
-                        //       iconSize: 30,
-                        //       onPressed: () {
-                        //         // Avanzar 30 segundos
-                        //         _videoController!.seekTo(Duration(
-                        //             seconds: _videoController!
-                        //                     .value.position.inSeconds +
-                        //                 10));
-                        //       },
-                        //     ),
-                        //     IconButton(
-                        //       color: const Color(0xff00F056),
-                        //       iconSize: 30,
-                        //       icon: const Icon(Icons.star),
-                        //       onPressed: () {
-                        //         // Implementa la lógica para agregar a favoritos
-                        //       },
-                        //     ),
-                        //   ],
-                        // ),
-                        // CustomTextButton(
-                        //     onTap: () {
-                        //       showChargeDialog(
-                        //           "El video se subio exitosamente!", true);
-                        //     },
-                        //     text: 'Subir',
-                        //     buttonPrimary: true,
-                        //     width: 100,
-                        //     height: 39)
                       ],
                     )
-                  : GestureDetector(
-                      onTap: userProvider.getCurrentUser().status
-                          ? () async {
-                              final videosCount = await ApiClient().get(
-                                  'auth/videos_count/${userProvider.getCurrentUser().userId}');
-                              try {
-                                if (videosCount.statusCode == 200) {
-                                  final jsonData = jsonDecode(videosCount.body);
-                                  final total = jsonData["userVideosCount"];
+                  : Column(
+                      children: [
+                        GestureDetector(
+                          onTap: userProvider.getCurrentUser().status
+                              ? () async {
+                                  final videosCount = await ApiClient().get(
+                                      'auth/videos_count/${userProvider.getCurrentUser().userId}');
+                                  try {
+                                    if (videosCount.statusCode == 200) {
+                                      final jsonData =
+                                          jsonDecode(videosCount.body);
+                                      final total = jsonData["userVideosCount"];
 
-                                  if (total <
-                                      videosForPlan[userProvider
-                                          .getCurrentUser()
-                                          .subscription]) {
-                                    _pickVideo();
-                                  } else {
+                                      if (total <
+                                          videosForPlan[userProvider
+                                              .getCurrentUser()
+                                              .subscription]) {
+                                        _pickVideo();
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            backgroundColor: Colors.redAccent,
+                                            content: Text(
+                                              'Superaste el limite de videos de tu plan, si deseas subir un nuevo video, borra un video de tu perfil.',
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                         backgroundColor: Colors.redAccent,
                                         content: Text(
-                                          'Superaste el limite de videos de tu plan, si deseas subir un nuevo video, borra un video de tu perfil.',
+                                          'Ocurrio un error intentalo de nuevo.',
                                         ),
                                       ),
                                     );
                                   }
                                 }
-                              } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    backgroundColor: Colors.redAccent,
-                                    content: Text(
-                                      'Ocurrio un error intentalo de nuevo.',
-                                    ),
-                                  ),
-                                );
-                              }
-                            }
-                          : _showSubscriptionRe,
-                      child: Image.asset(
-                        'assets/images/CloudIcon.png',
-                        height: 120,
-                      )),
+                              : _showSubscriptionRe,
+                          child: SvgPicture.asset(
+                            'assets/icons/CloudIcon.svg',
+                            width: 210,
+                          ),
+                        ),
+                        Text(
+                          translations!['upload'],
+                          style: const TextStyle(
+                            color: Color(0xFF00E050),
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15.0,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        SizedBox(
+                          width: 300,
+                          child: Text(
+                            translations!['show_your_habilities'],
+                            style: const TextStyle(
+                              color: Color(0xFF00E050),
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w900,
+                              fontSize: 15.0,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
               Center(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 25),
                   child: SvgPicture.asset(
-                    width: 104,
                     'assets/icons/Logo.svg',
+                    width: 104,
                   ),
                 ),
               ),
@@ -407,43 +412,6 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
           ),
         ),
       ),
-    );
-  }
-
-  void _showUploadDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(23)),
-              contentPadding: const EdgeInsets.all(25),
-              backgroundColor: const Color(0xFF3B3B3B),
-              content: const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Estamos subiendo tu vídeo, esto puede tardar unos segundos…",
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 25),
-                  LinearProgressIndicator(
-                    color: Color(0xff00E050),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
     );
   }
 }

@@ -30,7 +30,18 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
       if (videosResponse.statusCode == 200) {
         final jsonData = jsonDecode(videosResponse.body);
         final videos = jsonData["videos"];
-        return mapListToVideos(videos);
+        final List<Video> sortedVideos = mapListToVideos(videos);
+
+        sortedVideos.sort((a, b) {
+          if (a.isFavorite && !b.isFavorite) {
+            return -1;
+          } else if (!a.isFavorite && b.isFavorite) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+        return sortedVideos;
       } else {
         debugPrint('Error al obtener los videos: ${videosResponse.statusCode}');
         return [];
@@ -52,8 +63,7 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
     String shortInfo =
         '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
     String fullInfo =
-        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: r${player.logrosIndividuales}';
-
+        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\n Altura: ${player.altura}\n Categoría: ${player.categoria}\n Posición: ${player.position} \n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Pie Dominante: ${player.pieDominante} \nEscuela deportiva: ${player.club} \n Logros: ${player.logrosIndividuales}';
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -65,6 +75,7 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          scrolledUnderElevation: 0,
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
@@ -88,14 +99,14 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
                     return Image.asset(
                       'assets/images/fot.png',
                       fit: BoxFit.fill,
-                      width: 80,
-                      height: 80,
+                      width: 95,
+                      height: 95,
                     );
                   },
                   imageUrl: player.userImage ?? '',
                   fit: BoxFit.fill,
-                  width: 80,
-                  height: 80,
+                  width: 95,
+                  height: 95,
                 ),
               ),
             if (player.userImage!.isEmpty)

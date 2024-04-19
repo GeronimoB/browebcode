@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -32,20 +33,11 @@ class _NotificacionesState extends State<Notificaciones> {
         extendBody: true,
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          scrolledUnderElevation: 0,
           centerTitle: true,
-          title: const Text(
-            'NOTIFICACIONES',
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.bold,
-              fontSize: 24.0,
-              decoration: TextDecoration.none,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: Colors.transparent, // AppBar transparente
-          elevation: 0, // Quitar sombra
+          title: appBarTitle('NOTIFICACIONES'),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,

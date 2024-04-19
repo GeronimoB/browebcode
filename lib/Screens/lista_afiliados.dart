@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bro_app_to/Screens/retiro.dart';
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/components/referido_item.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
@@ -71,20 +72,11 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
           backgroundColor: Colors.transparent,
           extendBody: true,
           appBar: AppBar(
+            scrolledUnderElevation: 0,
             backgroundColor: Colors.transparent,
             centerTitle: true,
             elevation: 0,
-            title: const Text(
-              'AFILIADOS',
-              style: const TextStyle(
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-                decoration: TextDecoration.none,
-              ),
-              textAlign: TextAlign.center,
-            ),
+            title: appBarTitle('AFILIADOS'),
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back,
@@ -174,12 +166,12 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
               ),
               const SizedBox(height: 24.0),
               const Text(
-                'Personas Referidas',
+                'PERSONAS REFERIDAS',
                 style: const TextStyle(
                   color: Color(0xFF05FF00),
                   fontFamily: 'Montserrat',
                   fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
+                  fontSize: 18.0,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -218,16 +210,19 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                     if (afiliados.isEmpty) {
                       return const Expanded(
                         child: Center(
-                          child: Text(
-                            'Aun no tienes afiliados, comparte tu codigo con tus amigos para poder ganar comisiones.',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FontStyle.italic,
-                              fontSize: 18.0,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 35.0),
+                            child: Text(
+                              'Aun no tienes afiliados, comparte tu codigo con tus amigos para poder ganar comisiones.',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w500,
+                                fontStyle: FontStyle.italic,
+                                fontSize: 14.0,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
                           ),
                         ),
                       );

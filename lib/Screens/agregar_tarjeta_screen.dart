@@ -12,6 +12,7 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
+import '../components/app_bar_title.dart';
 import '../providers/player_provider.dart';
 import '../utils/api_client.dart';
 import 'package:http/http.dart' as http;
@@ -63,15 +64,9 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         children: [
           Scaffold(
             appBar: AppBar(
+              scrolledUnderElevation: 0,
               centerTitle: true,
-              title: const Text(
-                'MÉTODO DE PAGO',
-                style: const TextStyle(
-                  fontFamily: 'Montserrat',
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              title: appBarTitle('MÉTODO DE PAGO'),
               backgroundColor: Colors.transparent,
               elevation: 0,
               leading: IconButton(
@@ -460,7 +455,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         "customerId": player.customerStripeId,
         "paymentMethodId": playerProvider.selectedCard!.cardId,
         "paymentMethod":
-            "${playerProvider.selectedCard!.displayBrand} *${playerProvider.selectedCard!.last4Numbers}",
+            "${playerProvider.selectedCard!.displayBrand!.toUpperCase()} *${playerProvider.selectedCard!.last4Numbers}",
         "plan": playerProvider.getActualPlan()!.nombre,
         "userId": player.userId,
         "amount": playerProvider.getActualPlan()!.precio,
@@ -490,7 +485,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       uploadVideoAndImage(video, image, userId);
     } else {
       userProvider.updatePlan(playerProvider.getActualPlan()!.nombre);
-      _showSuccessSnackBar('Felicitaciones, haz actualizado tu suscripcion.');
+      _showSuccessSnackBar('¡Felicidades, haz actualizado tu suscripcion!');
       await Future.delayed(const Duration(seconds: 2));
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -509,7 +504,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         "customerId": player.customerStripeId,
         "paymentMethodId": playerProvider.selectedCard!.cardId,
         "paymentMethod":
-            "${playerProvider.selectedCard!.displayBrand} *${playerProvider.selectedCard!.last4Numbers}",
+            "${playerProvider.selectedCard!.displayBrand!.toUpperCase()} *${playerProvider.selectedCard!.last4Numbers}",
         "plan": "Destacar video",
         "userId": player.userId,
         "amount": "0.99",

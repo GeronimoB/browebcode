@@ -326,4 +326,136 @@ class FirebaseMessageRepository implements MessageUseCase {
       rethrow;
     }
   }
+
+  Future<void> sendImage(String senderId, String receiverId, String imageUrl,
+      String username) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(senderId)
+          .collection('messages')
+          .doc(receiverId)
+          .collection('chats')
+          .add({
+        "senderId": senderId,
+        "receiverId": receiverId,
+        "url": imageUrl,
+        "type": "image",
+        "date": DateTime.now(),
+        "sent": true,
+        "read": false
+      }).then((value) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(senderId)
+            .collection('messages')
+            .doc(receiverId)
+            .set({'last_msg': "[image]", 'time_msg': DateTime.now()});
+      });
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(receiverId)
+          .collection('messages')
+          .doc(senderId)
+          .collection("chats")
+          .add({
+        "senderId": senderId,
+        "receiverId": receiverId,
+        "url": imageUrl,
+        "type": "image",
+        "date": DateTime.now(),
+        "sent": false,
+        "read": false
+      }).then((value) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(receiverId)
+            .collection('messages')
+            .doc(senderId)
+            .set({"last_msg": "[image]", 'time_msg': DateTime.now()});
+      });
+
+      final mute = await isMuted(senderId, receiverId);
+      if (!mute) {
+        const uri = "auth/notification-message";
+        Map<String, dynamic> body = {
+          "title": username,
+          "body": "Te ha enviado una imagen.",
+          "friendID": receiverId,
+        };
+        ApiClient().post(uri, body);
+      }
+    } catch (e) {
+      debugPrint("Error sending message: $e");
+      rethrow;
+    }
+  }
+
+  Future<void> sendFile(String senderId, String receiverId, String fileUrl,
+      String fileName, String username) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(senderId)
+          .collection('messages')
+          .doc(receiverId)
+          .collection('chats')
+          .add({
+        "senderId": senderId,
+        "receiverId": receiverId,
+        "url": fileUrl,
+        "type": "file",
+        "name": fileName,
+        "date": DateTime.now(),
+        "sent": true,
+        "read": false
+      }).then((value) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(senderId)
+            .collection('messages')
+            .doc(receiverId)
+            .set({'last_msg': "[file]", 'time_msg': DateTime.now()});
+      });
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(receiverId)
+          .collection('messages')
+          .doc(senderId)
+          .collection("chats")
+          .add({
+        "senderId": senderId,
+        "receiverId": receiverId,
+        "url": fileUrl,
+        "type": "file",
+        "name": fileName,
+        "date": DateTime.now(),
+        "sent": false,
+        "read": false
+      }).then((value) {
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(receiverId)
+            .collection('messages')
+            .doc(senderId)
+            .set({"last_msg": "[file]", 'time_msg': DateTime.now()});
+      });
+
+      final mute = await isMuted(senderId, receiverId);
+      if (!mute) {
+        const uri = "auth/notification-message";
+        Map<String, dynamic> body = {
+          "title": username,
+          "body": "Te ha enviado una imagen.",
+          "friendID": receiverId,
+        };
+        ApiClient().post(uri, body);
+      }
+    } catch (e) {
+      debugPrint("Error sending message: $e");
+      rethrow;
+    }
+  }
 }

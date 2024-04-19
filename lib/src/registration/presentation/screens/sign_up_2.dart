@@ -28,11 +28,11 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
 
   String dominantFoot = translations!['left_feet'];
   String selection = translations!['male'];
-  String catSelection = '12';
+  String catSelection = 'U15';
   String selectedCountry = 'Spain';
   String selectedProvince = '';
-  String selectedHeight = '165cm';
-  String selectedCategory = '12';
+  String selectedHeight = '165 cm';
+  String selectedCategory = 'PreBenjamín';
 
   Future<bool> validateForm(BuildContext context) async {
     if (selectedCountry.isEmpty ||
@@ -44,6 +44,10 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
             backgroundColor: Colors.redAccent,
             content: Text(translations!['complete_all_fields'])),
       );
+      setState(() {
+        isLoading = false;
+      });
+
       return false;
     }
 
@@ -87,7 +91,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  translations!['sign_up'],
+                  translations!['sign_up2'],
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 20,
@@ -117,13 +121,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                     const SizedBox(width: 10),
                     DropdownWidget<String>(
                       value: selectedCountry,
-                      items: const [
-                        'Spain',
-                        'United States',
-                        'France',
-                        'Italy',
-                        'Germany'
-                      ],
+                      items: countries,
                       onChanged: (String? newValue) {
                         setState(() {
                           selectedCountry = newValue!;
@@ -187,8 +185,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                     const SizedBox(width: 10),
                     DropdownWidget<String>(
                       value: selectedHeight,
-                      items: List.generate(
-                          211 - 150, (index) => '${index + 150} cm'),
+                      items: alturas,
                       onChanged: (String? newValue) {
                         setState(() {
                           selectedHeight = newValue!;
@@ -219,7 +216,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                     const SizedBox(width: 10),
                     DropdownWidget<String>(
                       value: selectedCategory,
-                      items: const ['12', '13', '14', '15'],
+                      items: categorias,
                       onChanged: (String? newValue) {
                         setState(() {
                           selectedCategory = newValue!;
@@ -255,11 +252,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                     const SizedBox(width: 10),
                     DropdownWidget<String>(
                       value: dominantFoot,
-                      items: [
-                        translations!['left_feet'].toString(),
-                        translations!['right_feet'].toString(),
-                        translations!['both_feet'].toString(),
-                      ].toList(),
+                      items: piesDominantes,
                       onChanged: (String? newValue) {
                         setState(() {
                           dominantFoot = newValue ?? translations!['left_feet'];
@@ -289,13 +282,11 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                     const SizedBox(width: 10),
                     DropdownWidget<String>(
                       value: selection,
-                      items: [
-                        translations!['male'].toString(),
-                        translations!['female'].toString(),
-                      ].toList(),
+                      items: selecciones,
                       onChanged: (String? newValue) {
                         setState(() {
                           selection = newValue ?? translations!['male'];
+                          catSelection = 'U17';
                         });
                       },
                       itemBuilder: (String item) {
@@ -306,10 +297,10 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                     const SizedBox(width: 10),
                     DropdownWidget<String>(
                       value: catSelection,
-                      items: ['12', '13', '14', '15', '16'].toList(),
+                      items: nationalCategories[selection],
                       onChanged: (String? newValue) {
                         setState(() {
-                          catSelection = newValue ?? '12';
+                          catSelection = newValue ?? 'U17';
                         });
                       },
                       itemBuilder: (String item) {
@@ -364,12 +355,40 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                                   decoration: TextDecoration.underline,
                                 ),
                               ),
+                              TextSpan(
+                                text: translations!['terms3'],
+                                style: const TextStyle(),
+                              ),
+                              TextSpan(
+                                text: translations!['terms4'],
+                                style: const TextStyle(
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                              TextSpan(
+                                text: translations!['terms5'],
+                                style: const TextStyle(),
+                              ),
                             ],
                           ),
                         ),
                       ),
                     ),
                   ],
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Text(
+                    translations!['FAQ_label'],
+                    style: const TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.white,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 55),
                 CustomTextButton(
@@ -488,6 +507,17 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                             isLoading = false;
                           });
                           return;
+                        } catch (e) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.redAccent,
+                              content: Text(translations!['error_try_again']),
+                            ),
+                          );
+                          return;
                         }
                       }
                     },
@@ -495,7 +525,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                     buttonPrimary: true,
                     width: 116,
                     height: 39),
-                const SizedBox(height: 85),
+                const SizedBox(height: 35),
                 SvgPicture.asset(
                   width: 104,
                   'assets/icons/Logo.svg',
@@ -518,342 +548,4 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
       ),
     );
   }
-
-  Map<String, List<String>> provincesByCountry = {
-    'Spain': [
-      'A Coruña',
-      'Álava',
-      'Albacete',
-      'Alicante',
-      'Almería',
-      'Asturias',
-      'Ávila',
-      'Badajoz',
-      'Baleares',
-      'Barcelona',
-      'Burgos',
-      'Cáceres',
-      'Cádiz',
-      'Cantabria',
-      'Castellón',
-      'Ceuta',
-      'Ciudad Real',
-      'Córdoba',
-      'Cuenca',
-      'Girona',
-      'Granada',
-      'Guadalajara',
-      'Gipuzkoa',
-      'Huelva',
-      'Huesca',
-      'Jaén',
-      'La Rioja',
-      'Las Palmas',
-      'León',
-      'Lleida',
-      'Lugo',
-      'Madrid',
-      'Málaga',
-      'Melilla',
-      'Murcia',
-      'Navarra',
-      'Ourense',
-      'Palencia',
-      'Pontevedra',
-      'Salamanca',
-      'Segovia',
-      'Sevilla',
-      'Soria',
-      'Tarragona',
-      'Santa Cruz de Tenerife',
-      'Teruel',
-      'Toledo',
-      'Valencia',
-      'Valladolid',
-      'Vizcaya',
-      'Zamora',
-      'Zaragoza'
-    ],
-    'United States': [
-      'Alabama',
-      'Alaska',
-      'Arizona',
-      'Arkansas',
-      'California',
-      'Colorado',
-      'Connecticut',
-      'Delaware',
-      'District of Columbia',
-      'Florida',
-      'Georgia',
-      'Hawaii',
-      'Idaho',
-      'Illinois',
-      'Indiana',
-      'Iowa',
-      'Kansas',
-      'Kentucky',
-      'Louisiana',
-      'Maine',
-      'Maryland',
-      'Massachusetts',
-      'Michigan',
-      'Minnesota',
-      'Mississippi',
-      'Missouri',
-      'Montana',
-      'Nebraska',
-      'Nevada',
-      'New Hampshire',
-      'New Jersey',
-      'New Mexico',
-      'New York',
-      'North Carolina',
-      'North Dakota',
-      'Ohio',
-      'Oklahoma',
-      'Oregon',
-      'Pennsylvania',
-      'Rhode Island',
-      'South Carolina',
-      'South Dakota',
-      'Tennessee',
-      'Texas',
-      'Utah',
-      'Vermont',
-      'Virginia',
-      'Washington',
-      'West Virginia',
-      'Wisconsin',
-      'Wyoming'
-    ],
-    'France': [
-      'Ain',
-      'Aisne',
-      'Allier',
-      'Alpes-de-Haute-Provence',
-      'Hautes-Alpes',
-      'Alpes-Maritimes',
-      'Ardèche',
-      'Ardennes',
-      'Ariège',
-      'Aube',
-      'Aude',
-      'Aveyron',
-      'Bouches-du-Rhône',
-      'Calvados',
-      'Cantal',
-      'Charente',
-      'Charente-Maritime',
-      'Cher',
-      'Corrèze',
-      'Côte-d\'Or',
-      'Côtes-d\'Armor',
-      'Creuse',
-      'Dordogne',
-      'Doubs',
-      'Drôme',
-      'Eure',
-      'Eure-et-Loir',
-      'Finistère',
-      'Corse-du-Sud',
-      'Haute-Corse',
-      'Gard',
-      'Haute-Garonne',
-      'Gers',
-      'Gironde',
-      'Hérault',
-      'Ille-et-Vilaine',
-      'Indre',
-      'Indre-et-Loire',
-      'Isère',
-      'Jura',
-      'Landes',
-      'Loir-et-Cher',
-      'Loire',
-      'Haute-Loire',
-      'Loire-Atlantique',
-      'Loiret',
-      'Lot',
-      'Lot-et-Garonne',
-      'Lozère',
-      'Maine-et-Loire',
-      'Manche',
-      'Marne',
-      'Haute-Marne',
-      'Mayenne',
-      'Meurthe-et-Moselle',
-      'Meuse',
-      'Morbihan',
-      'Moselle',
-      'Nièvre',
-      'Nord',
-      'Oise',
-      'Orne',
-      'Pas-de-Calais',
-      'Puy-de-Dôme',
-      'Pyrénées-Atlantiques',
-      'Hautes-Pyrénées',
-      'Pyrénées-Orientales',
-      'Bas-Rhin',
-      'Haut-Rhin',
-      'Rhône',
-      'Haute-Saône',
-      'Saône-et-Loire',
-      'Sarthe',
-      'Savoie',
-      'Haute-Savoie',
-      'Paris',
-      'Seine-Maritime',
-      'Seine-et-Marne',
-      'Yvelines',
-      'Deux-Sèvres',
-      'Somme',
-      'Tarn',
-      'Tarn-et-Garonne',
-      'Var',
-      'Vaucluse',
-      'Vendée',
-      'Vienne',
-      'Haute-Vienne',
-      'Vosges',
-      'Yonne',
-      'Territoire de Belfort',
-      'Essonne',
-      'Hauts-de-Seine',
-      'Seine-Saint-Denis',
-      'Val-de-Marne',
-      'Val-d\'Oise'
-    ],
-    'Italy': [
-      'Agrigento',
-      'Alessandria',
-      'Ancona',
-      'Aosta',
-      'Arezzo',
-      'Ascoli Piceno',
-      'Asti',
-      'Avellino',
-      'Bari',
-      'Barletta-Andria-Trani',
-      'Belluno',
-      'Benevento',
-      'Bergamo',
-      'Biella',
-      'Bologna',
-      'Bolzano',
-      'Brescia',
-      'Brindisi',
-      'Cagliari',
-      'Caltanissetta',
-      'Campobasso',
-      'Carbonia-Iglesias',
-      'Caserta',
-      'Catania',
-      'Catanzaro',
-      'Chieti',
-      'Como',
-      'Cosenza',
-      'Cremona',
-      'Crotone',
-      'Cuneo',
-      'Enna',
-      'Fermo',
-      'Ferrara',
-      'Firenze',
-      'Foggia',
-      'Forlì-Cesena',
-      'Frosinone',
-      'Genova',
-      'Gorizia',
-      'Grosseto',
-      'Imperia',
-      'Isernia',
-      'La Spezia',
-      'L\'Aquila',
-      'Latina',
-      'Lecce',
-      'Lecco',
-      'Livorno',
-      'Lodi',
-      'Lucca',
-      'Macerata',
-      'Mantova',
-      'Massa-Carrara',
-      'Matera',
-      'Medio Campidano',
-      'Messina',
-      'Milano',
-      'Modena',
-      'Monza e della Brianza',
-      'Napoli',
-      'Novara',
-      'Nuoro',
-      'Ogliastra',
-      'Olbia-Tempio',
-      'Oristano',
-      'Padova',
-      'Palermo',
-      'Parma',
-      'Pavia',
-      'Perugia',
-      'Pesaro e Urbino',
-      'Pescara',
-      'Piacenza',
-      'Pisa',
-      'Pistoia',
-      'Pordenone',
-      'Potenza',
-      'Prato',
-      'Ragusa',
-      'Ravenna',
-      'Reggio Calabria',
-      'Reggio Emilia',
-      'Rieti',
-      'Rimini',
-      'Roma',
-      'Rovigo',
-      'Salerno',
-      'Sassari',
-      'Savona',
-      'Siena',
-      'Siracusa',
-      'Sondrio',
-      'Taranto',
-      'Teramo',
-      'Terni',
-      'Torino',
-      'Trapani',
-      'Trento',
-      'Treviso',
-      'Trieste',
-      'Udine',
-      'Varese',
-      'Venezia',
-      'Verbano-Cusio-Ossola',
-      'Vercelli',
-      'Verona',
-      'Vibo Valentia',
-      'Vicenza',
-      'Viterbo'
-    ],
-    'Germany': [
-      'Baden-Württemberg',
-      'Bavaria',
-      'Berlin',
-      'Brandenburg',
-      'Bremen',
-      'Hamburg',
-      'Hesse',
-      'Lower Saxony',
-      'Mecklenburg-Vorpommern',
-      'North Rhine-Westphalia',
-      'Rhineland-Palatinate',
-      'Saarland',
-      'Saxony',
-      'Saxony-Anhalt',
-      'Schleswig-Holstein',
-      'Thuringia'
-    ],
-  };
 }

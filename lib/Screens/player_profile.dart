@@ -33,16 +33,27 @@ class PlayerProfileState extends State<PlayerProfile> {
       if (videosResponse.statusCode == 200) {
         final jsonData = jsonDecode(videosResponse.body);
         final videos = jsonData["videos"];
+        final List<Video> sortedVideos = mapListToVideos(videos);
+
         //playerProvider.setUserVideos(mapListToVideos(videos));
-        return mapListToVideos(videos);
+        sortedVideos.sort((a, b) {
+          if (a.isFavorite && !b.isFavorite) {
+            return -1;
+          } else if (!a.isFavorite && b.isFavorite) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+        return sortedVideos;
       } else {
         debugPrint('Error al obtener los videos: ${videosResponse.statusCode}');
-        playerProvider.setUserVideos(mapListToVideos([]));
+        //playerProvider.setUserVideos(mapListToVideos([]));
         return [];
       }
     } catch (e) {
       debugPrint('Error en la solicitud de videos: $e');
-      playerProvider.setUserVideos(mapListToVideos([]));
+      //playerProvider.setUserVideos(mapListToVideos([]));
       return [];
     }
   }
@@ -61,7 +72,7 @@ class PlayerProfileState extends State<PlayerProfile> {
     String shortInfo =
         '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
     String fullInfo =
-        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate \nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: ${player.logrosIndividuales}';
+        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\n Altura: ${player.altura}\n Categoría: ${player.categoria}\n Posición: ${player.position} \n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Pie Dominante: ${player.pieDominante} \nEscuela deportiva: ${player.club} \n Logros: ${player.logrosIndividuales}';
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -104,22 +115,22 @@ class PlayerProfileState extends State<PlayerProfile> {
                     return Image.asset(
                       'assets/images/fot.png',
                       fit: BoxFit.fill,
-                      width: 80,
-                      height: 80,
+                      width: 95,
+                      height: 95,
                     );
                   },
                   imageUrl: user.imageUrl,
                   fit: BoxFit.fill,
-                  width: 80,
-                  height: 80,
+                  width: 95,
+                  height: 95,
                 ),
               ),
             if (user.imageUrl == '')
               ClipOval(
                 child: Image.asset(
                   'assets/images/fot.png',
-                  width: 80,
-                  height: 80,
+                  width: 95,
+                  height: 95,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -202,7 +213,7 @@ class PlayerProfileState extends State<PlayerProfile> {
                                 color: Colors.white,
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
-                                fontSize: 22.0),
+                                fontSize: 20.0),
                           ),
                         ),
                       );

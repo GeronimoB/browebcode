@@ -22,7 +22,7 @@ class AgenteProvider extends ChangeNotifier {
           _agente.copyWith(birthDate: DateTime.tryParse(value)),
       'lastname': (String value) => _agente.copyWith(apellido: value),
       'provincia': (String value) => _agente.copyWith(provincia: value),
-      'c': (String value) => _agente.copyWith(pais: value),
+      'pais': (String value) => _agente.copyWith(pais: value),
       'username': (String value) => _agente.copyWith(usuario: value),
     };
 

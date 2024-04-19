@@ -71,7 +71,7 @@ class Agente {
     map['UserName'] = usuario;
     map['Pais'] = pais;
     map['Provincia'] = provincia;
-    map['Birthday'] = provincia.toString();
+    map['Birthday'] = birthDate.toString();
     map['image_url'] = imageUrl;
 
     return map;

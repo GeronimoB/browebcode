@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_dropdown.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/components/i_field.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
@@ -16,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 import '../../utils/api_constants.dart';
+import '../../utils/current_state.dart';
 
 class EditarInfoPlayer extends StatefulWidget {
   const EditarInfoPlayer({super.key});
@@ -125,16 +128,9 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
         ),
         child: Scaffold(
           appBar: AppBar(
+            scrolledUnderElevation: 0,
             centerTitle: true,
-            title: const Text(
-              'EDITAR INFORMACIÓN',
-              style: const TextStyle(
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-              ),
-            ),
+            title: appBarTitle('EDITAR INFORMACIÓN'),
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
@@ -213,57 +209,77 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                     controller: _nombreController,
                     camp: 'name'),
                 _buildTextField(
-                    label: 'APELLIDO',
+                    label: 'APELLIDOS',
                     controller: _apellidoController,
                     camp: 'lastname'),
                 _buildTextField(
                     label: 'CORREO',
                     controller: _correoController,
                     camp: 'email'),
+                // _buildTextField(
+                //     label: 'DOCUMENTO DE IDENTIDAD',
+                //     controller: _dniController,
+                //     camp: 'dni'),
                 _buildTextField(
-                    label: 'DNI', controller: _dniController, camp: 'dni'),
+                    label: 'PAÍS',
+                    controller: _paisController,
+                    camp: 'pais',
+                    select: true,
+                    items: countries),
                 _buildTextField(
-                    label: 'PAÍS', controller: _paisController, camp: 'pais'),
-                _buildTextField(
-                    label: 'PROVINCIA',
-                    controller: _provinciaController,
-                    camp: 'provincia'),
+                  label: 'PROVINCIA',
+                  controller: _provinciaController,
+                  camp: 'provincia',
+                  select: true,
+                  items: provincesByCountry[_paisController.text],
+                ),
                 _buildTextField(
                     label: 'POSICIÓN',
                     controller: _posicionController,
                     camp: 'position',
                     goToSelCamp: true),
                 _buildTextField(
-                    label: 'CLUB', controller: _clubController, camp: 'club'),
+                    label: 'ENTIDAD DEPORTIVA',
+                    controller: _clubController,
+                    camp: 'club'),
                 _buildTextField(
                     label: 'CATEGORÍA',
                     controller: _categoriaController,
-                    camp: 'categoria'),
+                    camp: 'categoria',
+                    select: true,
+                    items: categorias),
                 _buildTextField(
                     label: 'LOGROS',
                     controller: _logrosIndividualesController,
                     camp: 'logros'),
                 _buildTextField(
-                    label: 'ALTURA',
-                    controller: _alturaController,
-                    camp: 'altura',
-                    isHeight: true),
+                  label: 'ALTURA',
+                  controller: _alturaController,
+                  camp: 'altura',
+                  select: true,
+                  items: alturas,
+                ),
                 _buildTextField(
-                    label: 'PIE DOMINANTE',
-                    controller: _pieDominanteController,
-                    camp: 'piedominante',
-                    foot: true,
-                    update: () {}),
+                  label: 'PIE DOMINANTE',
+                  controller: _pieDominanteController,
+                  camp: 'piedominante',
+                  select: true,
+                  items: piesDominantes,
+                ),
                 _buildTextField(
-                    label: 'SELECCION',
-                    controller: _seleccionNacionalController,
-                    camp: 'seleccion',
-                    seleccion: true),
+                  label: 'SELECCION',
+                  controller: _seleccionNacionalController,
+                  camp: 'seleccion',
+                  select: true,
+                  items: selecciones,
+                ),
                 _buildTextField(
-                    label: 'CATEGORIA SELECCION',
-                    controller: _categoriaSeleccionController,
-                    camp: 'categoriaseleccion',
-                    categoriaSel: true),
+                  label: 'CATEGORIA SELECCION',
+                  controller: _categoriaSeleccionController,
+                  camp: 'categoriaseleccion',
+                  select: true,
+                  items: nationalCategories[_seleccionNacionalController.text],
+                ),
               ],
             ),
           ),
@@ -272,16 +288,14 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     );
   }
 
-  Widget _buildTextField(
-      {required String label,
-      required TextEditingController controller,
-      required String camp,
-      bool? isHeight,
-      bool? goToSelCamp,
-      bool? foot,
-      bool? seleccion,
-      bool? categoriaSel,
-      Function? update}) {
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    required String camp,
+    bool? goToSelCamp,
+    bool select = false,
+    List<String> items = const [],
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       child: Row(
@@ -302,7 +316,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
           Expanded(
             flex: 3,
             child: Text(
-              '${controller.text} ${isHeight ?? false ? "cm" : ""}',
+              controller.text,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
@@ -326,11 +340,8 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                   label,
                   controller,
                   camp,
-                  foot: foot,
-                  isHeight: isHeight,
-                  seleccion: seleccion,
-                  categoriaSel: categoriaSel,
-                  update: update,
+                  select: select,
+                  items: items,
                 );
               }
             },
@@ -340,25 +351,28 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     );
   }
 
-  void _editarCampo(BuildContext context, String label,
-      TextEditingController controller, String camp,
-      {bool? foot,
-      bool? isHeight,
-      bool? seleccion,
-      bool? categoriaSel,
-      Function? update}) {
+  void _editarCampo(
+    BuildContext context,
+    String label,
+    TextEditingController controller,
+    String camp, {
+    bool select = false,
+    List<String> items = const [],
+  }) {
     showDialog(
       context: context,
       barrierColor: Colors.black.withOpacity(0.2),
       builder: (BuildContext context) {
         TextEditingController editingController =
             TextEditingController(text: controller.text);
+
         return Dialog(
             backgroundColor: Colors.transparent,
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 400),
               child: Container(
                 padding: const EdgeInsets.all(15),
+                height: 170,
                 decoration: BoxDecoration(
                   color: const Color(0xff3B3B3B),
                   borderRadius: BorderRadius.circular(15),
@@ -371,8 +385,9 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                   ],
                 ),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
                       label,
@@ -380,80 +395,25 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                         fontFamily: 'Montserrat',
                         color: Color(0xff00E050),
                         fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                        fontSize: 18,
                       ),
                     ),
-                    if (!(foot ?? true) &&
-                        !(seleccion ?? true) &&
-                        !(categoriaSel ?? true))
-                      TextField(
-                        controller: editingController,
-                        keyboardType: isHeight ?? false
-                            ? TextInputType.number
-                            : TextInputType.text,
-                        maxLength: isHeight ?? false ? 4 : null,
-                        style: const TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: Colors.white,
-                        ),
-                        decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(vertical: 5),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color(0xFF00E050), width: 2),
-                          ),
-                        ),
-                        cursorColor: Colors.white,
-                      ),
-                    if (foot ?? false)
+                    if (!select) iField(editingController, ''),
+                    if (select)
                       StatefulBuilder(
                         builder: (context, StateSetter setState) {
                           return DropdownWidget<String>(
                             value: editingController.text,
-                            items: ['Zurdo', 'Diestro', 'Ambidiestro'].toList(),
+                            items: items,
                             onChanged: (String? newValue) {
                               setState(() {
-                                editingController.text = newValue ?? 'Zurdo';
+                                editingController.text = newValue!;
                               });
                             },
                             itemBuilder: (String item) {
                               return item;
                             },
-                            width: 120,
-                          );
-                        },
-                      ),
-                    if (seleccion ?? false)
-                      StatefulBuilder(builder: (context, StateSetter setState) {
-                        return DropdownWidget<String>(
-                          value: editingController.text,
-                          items: ['Masculina', 'Femenino'].toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              editingController.text = newValue ?? 'Masculina';
-                            });
-                          },
-                          itemBuilder: (String item) {
-                            return item;
-                          },
-                          width: 150,
-                        );
-                      }),
-                    if (categoriaSel ?? false)
-                      StatefulBuilder(
-                        builder: (context, StateSetter setState) {
-                          return DropdownWidget<String>(
-                            value: editingController.text,
-                            items: ['12', '13', '14', '15', '16'].toList(),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                editingController.text = newValue ?? '12';
-                              });
-                            },
-                            itemBuilder: (String item) {
-                              return item;
-                            },
-                            width: 70,
+                            width: 300,
                           );
                         },
                       ),
@@ -472,12 +432,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                           onTap: () async {
                             if (mounted) {
                               setState(() {
-                                if (camp.toLowerCase() == 'altura') {
-                                  controller.text =
-                                      '${editingController.text} cm';
-                                } else {
-                                  controller.text = editingController.text;
-                                }
+                                controller.text = editingController.text;
                               });
                             }
                             provider.updatePlayer(

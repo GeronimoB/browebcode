@@ -67,7 +67,10 @@ class _MatchProfileState extends State<MatchProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final double appBarHeight = AppBar().preferredSize.height * 2.2;
+    final double appBarHeight = AppBar(
+          scrolledUnderElevation: 0,
+        ).preferredSize.height *
+        2.2;
     final double availableHeight =
         MediaQuery.of(context).size.height - appBarHeight;
     final width = MediaQuery.of(context).size.width;
@@ -85,6 +88,7 @@ class _MatchProfileState extends State<MatchProfile> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          scrolledUnderElevation: 0,
           centerTitle: true,
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -164,7 +168,7 @@ class _MatchProfileState extends State<MatchProfile> {
                           context, 'Fecha de nacimiento: $formattedDate'),
                       _buildDataRow(context,
                           'Provincia: ${userData.provincia}, ${userData.pais}'),
-                      _buildDataRow(context, 'Altura: ${userData.altura} cm'),
+                      _buildDataRow(context, 'Altura: ${userData.altura}'),
                       _buildDataRow(
                           context, 'Pie Dominante: ${userData.pieDominante}'),
                       _buildDataRow(context, 'Posicion: ${userData.position}'),

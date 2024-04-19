@@ -42,10 +42,12 @@ class ChatPageState extends State<ChatPage> {
   bool isMute = false;
   bool isPinned = false;
   OverlayEntry? _overlayEntry;
+  late UserProvider userProvider;
 
   @override
   void initState() {
     super.initState();
+    userProvider = Provider.of<UserProvider>(context, listen: false);
     init();
   }
 
@@ -61,7 +63,6 @@ class ChatPageState extends State<ChatPage> {
   }
 
   String _buildSenderId() {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
     final user = userProvider.getCurrentUser();
     return user.isAgent ? "agente_${user.userId}" : "jugador_${user.userId}";
   }
@@ -83,15 +84,32 @@ class ChatPageState extends State<ChatPage> {
       );
       _messageController.clear();
       _messageFocusNode.unfocus();
+      final user = userProvider.getCurrentUser();
 
-      final friend = widget.friend;
-      final friendName = '${friend.name} ${friend.lastName}';
+      final friendName = '${user.name} ${user.lastName}';
       try {
         await FirebaseMessageRepository().sendMessage(message, friendName);
         _scrollController.jumpTo(0);
       } catch (e) {
         print(e);
       }
+    }
+  }
+
+  void _sendImage(String imageUrl) async {
+    final user = userProvider.getCurrentUser();
+
+    final friendName = '${user.name} ${user.lastName}';
+    try {
+      await FirebaseMessageRepository().sendImage(
+        _buildSenderId(),
+        _buildReceiverId(),
+        imageUrl,
+        friendName,
+      );
+      _scrollController.jumpTo(0);
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -138,6 +156,7 @@ class ChatPageState extends State<ChatPage> {
           backgroundColor: Colors.transparent,
           extendBody: true,
           appBar: AppBar(
+            scrolledUnderElevation: 0,
             toolbarHeight: 100,
             backgroundColor: Colors.transparent,
             title: Row(
@@ -167,7 +186,7 @@ class ChatPageState extends State<ChatPage> {
                   style: const TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
-                    fontSize: 14,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -362,63 +381,11 @@ class ChatPageState extends State<ChatPage> {
       if (response.statusCode == 200) {
         var responseBody = await response.stream.bytesToString();
         imageUrl = jsonDecode(responseBody)["url"];
+        _sendImage(imageUrl);
       } else {
-        debugPrint('Failed to upload image. Error code: ${response.statusCode}');
+        debugPrint(
+            'Failed to upload image. Error code: ${response.statusCode}');
       }
-
-      final senderId = _buildSenderId();
-      final receiverId = _buildReceiverId();
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(senderId)
-          .collection('messages')
-          .doc(receiverId)
-          .collection('chats')
-          .add({
-        "senderId": senderId,
-        "receiverId": receiverId,
-        "url": imageUrl,
-        "type": "image",
-        "height": image.height.toDouble(),
-        "size": bytes.length,
-        "width": image.width.toDouble(),
-        "date": DateTime.now(),
-        "sent": true,
-        "read": false
-      }).then((value) {
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(senderId)
-            .collection('messages')
-            .doc(receiverId)
-            .set({'last_msg': "[image]", 'time_msg': DateTime.now()});
-      });
-
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(receiverId)
-          .collection('messages')
-          .doc(senderId)
-          .collection("chats")
-          .add({
-        "senderId": senderId,
-        "receiverId": receiverId,
-        "url": imageUrl,
-        "height": image.height.toDouble(),
-        "size": bytes.length,
-        "width": image.width.toDouble(),
-        "type": "image",
-        "date": DateTime.now(),
-        "sent": false,
-        "read": false
-      }).then((value) {
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(receiverId)
-            .collection('messages')
-            .doc(senderId)
-            .set({"last_msg": "[image]", 'time_msg': DateTime.now()});
-      });
     }
   }
 
@@ -450,62 +417,24 @@ class ChatPageState extends State<ChatPage> {
       if (response.statusCode == 200) {
         var responseBody = await response.stream.bytesToString();
         fileUrl = jsonDecode(responseBody)["url"];
+        final user = userProvider.getCurrentUser();
+
+        final friendName = '${user.name} ${user.lastName}';
+        try {
+          await FirebaseMessageRepository().sendFile(
+            _buildSenderId(),
+            _buildReceiverId(),
+            fileUrl,
+            fileName,
+            friendName,
+          );
+          _scrollController.jumpTo(0);
+        } catch (e) {
+          print(e);
+        }
       } else {
         debugPrint('Failed to upload file. Error code: ${response.statusCode}');
       }
-
-      final senderId = _buildSenderId();
-      final receiverId = _buildReceiverId();
-
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(senderId)
-          .collection('messages')
-          .doc(receiverId)
-          .collection('chats')
-          .add({
-        "senderId": senderId,
-        "receiverId": receiverId,
-        "url": fileUrl,
-        "type": "file",
-        "name": fileName,
-        "size": bytes.length,
-        "date": DateTime.now(),
-        "sent": true,
-        "read": false
-      }).then((value) {
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(senderId)
-            .collection('messages')
-            .doc(receiverId)
-            .set({'last_msg': "[file]", 'time_msg': DateTime.now()});
-      });
-
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(receiverId)
-          .collection('messages')
-          .doc(senderId)
-          .collection("chats")
-          .add({
-        "senderId": senderId,
-        "receiverId": receiverId,
-        "url": fileUrl,
-        "type": "file",
-        "name": fileName,
-        "size": bytes.length,
-        "date": DateTime.now(),
-        "sent": false,
-        "read": false
-      }).then((value) {
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(receiverId)
-            .collection('messages')
-            .doc(senderId)
-            .set({"last_msg": "[file]", 'time_msg': DateTime.now()});
-      });
     }
   }
 
@@ -566,14 +495,15 @@ class ChatPageState extends State<ChatPage> {
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   children: <Widget>[
-                    ListTile(
-                      title: const Text('Ver Perfil',
-                          style: const TextStyle(color: Colors.white)),
-                      onTap: () {
-                        _overlayEntry?.remove();
-                        _overlayEntry = null;
-                      },
-                    ),
+                    if (userProvider.getCurrentUser().isAgent)
+                      ListTile(
+                        title: const Text('Ver Perfil',
+                            style: const TextStyle(color: Colors.white)),
+                        onTap: () {
+                          _overlayEntry?.remove();
+                          _overlayEntry = null;
+                        },
+                      ),
                     ListTile(
                       title: Text(
                           isPinned ? 'Dejar de anclar' : 'Anclar arriba',

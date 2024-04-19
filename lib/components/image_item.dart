@@ -32,7 +32,11 @@ Widget imageItem(String imageUrl, DateTime datetime, bool sent, bool read) {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(Sizes.radius),
-            child: Image.network(imageUrl),
+            child: Image.network(
+              imageUrl,
+              width: 150,
+              height: 150,
+            ),
           ),
           SizedBox(height: Sizes.padding / 4),
           Row(

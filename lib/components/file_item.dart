@@ -67,7 +67,7 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Felicitaciones!',
+                    '¡Felicidades!',
                     style: const TextStyle(
                         color: Color(0xff00E050),
                         fontFamily: 'Montserrat',

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bro_app_to/Screens/afiliados_player.dart';
 import 'package:bro_app_to/Screens/language_settings.dart';
 import 'package:bro_app_to/Screens/lista_afiliados.dart';
@@ -7,13 +9,17 @@ import 'package:bro_app_to/Screens/player/edit_player_info.dart';
 import 'package:bro_app_to/Screens/player/pedidos.dart';
 import 'package:bro_app_to/Screens/privacidad.dart';
 import 'package:bro_app_to/Screens/player/servicios.dart';
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../utils/api_client.dart';
 import 'bottom_navigation_bar_player.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,6 +34,7 @@ class ConfigProfilePlayer extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         centerTitle: true,
         title: Column(
           children: [
@@ -41,15 +48,7 @@ class ConfigProfilePlayer extends StatelessWidget {
                 fontSize: 12,
               ),
             ),
-            const Text(
-              'CONFIGURACIÓN',
-              style: const TextStyle(
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-              ),
-            ),
+            appBarTitle('CONFIGURACIÓN'),
           ],
         ),
         backgroundColor: Colors.transparent,
@@ -85,7 +84,15 @@ class ConfigProfilePlayer extends StatelessWidget {
                   _buildListItem('CUENTA', context, true, const CuentaPage()),
                   _buildListItem('EDITAR INFORMACION', context, true,
                       const EditarInfoPlayer()),
-                  _buildListItem('PRIVACIDAD', context, true, Privacidad()),
+                  _buildListItem(
+                    translations!['change_pss'],
+                    context,
+                    true,
+                    Privacidad(),
+                    callback: () {
+                      showPassDialog(context);
+                    },
+                  ),
                   const SizedBox(height: 15),
                   _buildListItem('CENTRO DE AYUDA (FAQ)', context, false,
                       const ConfigProfilePlayer()),
@@ -101,7 +108,7 @@ class ConfigProfilePlayer extends StatelessWidget {
                         ? const ListaReferidosScreen()
                         : const AfiliadosPlayer(),
                   ),
-                  _buildListItem('PEDIDOS', context, true, Pedidos()),
+                  _buildListItem('PEDIDOS', context, true, const Pedidos()),
                   _buildListItem('SERVICIOS', context, true, const Servicios()),
                   _buildListItem(
                     'IDIOMA',
@@ -263,7 +270,7 @@ class ConfigProfilePlayer extends StatelessWidget {
                     children: [
                       CustomTextButton(
                         onTap: () => Navigator.of(context).pop(),
-                        text: 'SI',
+                        text: 'NO',
                         buttonPrimary: false,
                         width: 90,
                         height: 35,
@@ -277,7 +284,7 @@ class ConfigProfilePlayer extends StatelessWidget {
                               Provider.of<UserProvider>(context, listen: false);
                           final userId = userProvider.getCurrentUser().userId;
                           final url = Uri.parse(
-                              '${ApiConstants.baseUrl}/player/$userId'); // Reemplaza con la URL de tu endpoint DELETE
+                              '${ApiConstants.baseUrl}/player/$userId');
                           try {
                             final response = await http.delete(url);
                             if (response.statusCode == 200) {
@@ -294,7 +301,7 @@ class ConfigProfilePlayer extends StatelessWidget {
                                 'Error al realizar la solicitud DELETE: $error');
                           }
                         },
-                        text: 'NO',
+                        text: 'SÍ',
                         buttonPrimary: true,
                         width: 90,
                         height: 35,
@@ -303,6 +310,243 @@ class ConfigProfilePlayer extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showPassDialog(BuildContext context) {
+    TextEditingController oldPasswordCtlr = TextEditingController();
+    TextEditingController newPasswordCtlr = TextEditingController();
+    TextEditingController confirmPasswordCtlr = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+    final formKey2 = GlobalKey<FormState>();
+    final formKey3 = GlobalKey<FormState>();
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.7),
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(35),
+            decoration: BoxDecoration(
+              color: const Color(0xff3B3B3B),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 10,
+                  offset: const Offset(5, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  translations!['change_pss'],
+                  style: const TextStyle(
+                    fontFamily: 'Montserrat',
+                    color: Color(0xff00E050),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Form(
+                  autovalidateMode: AutovalidateMode.always,
+                  key: formKey,
+                  child: TextFormField(
+                    controller: oldPasswordCtlr,
+                    decoration: InputDecoration(
+                      labelText: translations!['old_pss'],
+                      labelStyle: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 16,
+                      ),
+                      errorStyle: const TextStyle(
+                        color: Color.fromARGB(255, 255, 106, 106),
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 11,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Color(0xFF00E050), width: 2),
+                      ),
+                    ),
+                    style: const TextStyle(
+                        color: Colors.white, fontFamily: 'Montserrat'),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return translations!['please_enter_pss'];
+                      }
+
+                      return null;
+                    },
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Form(
+                  autovalidateMode: AutovalidateMode.always,
+                  key: formKey2,
+                  child: TextFormField(
+                    controller: newPasswordCtlr,
+                    decoration: InputDecoration(
+                      labelText: translations!['new_pss'],
+                      labelStyle: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 16,
+                      ),
+                      errorStyle: const TextStyle(
+                        color: Color.fromARGB(255, 255, 106, 106),
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 11,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Color(0xFF00E050), width: 2),
+                      ),
+                    ),
+                    style: const TextStyle(
+                        color: Colors.white, fontFamily: 'Montserrat'),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return translations!['enter_password'];
+                      }
+                      if (value.length < 8) {
+                        return translations!['pssw_8_characters'];
+                      }
+                      if (!value.contains(RegExp(r'[A-Z]'))) {
+                        return translations!['pssw_mayus_letter'];
+                      }
+                      if (!value.contains(RegExp(r'[a-z]'))) {
+                        return translations!['pssw_minus_letter'];
+                      }
+                      if (!value.contains(RegExp(r'[0-9]'))) {
+                        return translations!['pssw_number'];
+                      }
+
+                      if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                        return translations!['pssw_special'];
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Form(
+                  autovalidateMode: AutovalidateMode.always,
+                  key: formKey3,
+                  child: TextFormField(
+                    controller: confirmPasswordCtlr,
+                    decoration: InputDecoration(
+                      labelText: translations!['new_pss_confirmation'],
+                      labelStyle: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 16,
+                      ),
+                      errorStyle: const TextStyle(
+                        color: Color.fromARGB(255, 255, 106, 106),
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 11,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 5),
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Color(0xFF00E050), width: 2),
+                      ),
+                    ),
+                    style: const TextStyle(
+                        color: Colors.white, fontFamily: 'Montserrat'),
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return translations!['enter_password'];
+                      }
+                      if (value != newPasswordCtlr.text) {
+                        return translations!['pss_dont_match'];
+                      }
+
+                      return null;
+                    },
+                  ),
+                ),
+                const SizedBox(height: 35),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomTextButton(
+                      onTap: () => Navigator.of(context).pop(),
+                      text: translations!['Cancelar'],
+                      buttonPrimary: false,
+                      width: 90,
+                      height: 27,
+                    ),
+                    CustomTextButton(
+                      onTap: () async {
+                        final userProvider =
+                            Provider.of<UserProvider>(context, listen: false);
+                        final id =
+                            userProvider.getCurrentUser().userId.toString();
+                        final response =
+                            await ApiClient().post('auth/change-pssw', {
+                          "UserId": id,
+                          "OldPassword": oldPasswordCtlr.text,
+                          "NewPassword": newPasswordCtlr.text
+                        });
+                        if (response.statusCode == 200) {
+                          final prefs = await SharedPreferences.getInstance();
+                          prefs.setString('username', "");
+                          prefs.setString('password', "");
+                          Navigator.of(context).pop();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                backgroundColor: const Color(0xFF05FF00),
+                                content:
+                                    Text(translations!['update_pss_scss'])),
+                          );
+                        } else {
+                          final jsonData = json.decode(response.body);
+                          final errorMessage = jsonData["error"];
+                          Navigator.of(context).pop();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                backgroundColor: Colors.redAccent,
+                                content: Text(errorMessage)),
+                          );
+                        }
+                      },
+                      text: translations!['save'],
+                      buttonPrimary: true,
+                      width: 90,
+                      height: 27,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         );

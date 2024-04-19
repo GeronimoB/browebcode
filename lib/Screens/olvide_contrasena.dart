@@ -1,4 +1,5 @@
 import 'package:bro_app_to/Screens/intro.dart';
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,6 +19,9 @@ class OlvideContrasenaPage extends StatelessWidget {
       ),
       child: Scaffold(
         appBar: AppBar(
+          scrolledUnderElevation: 0,
+          centerTitle: true,
+          title: appBarTitle('RECUPERACIÓN DE CUENTA'),
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
@@ -33,16 +37,6 @@ class OlvideContrasenaPage extends StatelessWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            const Text(
-              'Recuperación de Cuenta',
-              style: const TextStyle(
-                fontFamily: 'Montserrat',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.center,
-            ),
             const SizedBox(height: 25),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),

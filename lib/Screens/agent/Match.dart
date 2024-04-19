@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bro_app_to/Screens/agent/user_profile_to_agent.dart';
 import 'package:bro_app_to/Screens/chat_page.dart';
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
@@ -105,17 +106,11 @@ class MatcheState extends State<Matche> {
       ),
       child: Scaffold(
         appBar: AppBar(
+          scrolledUnderElevation: 0,
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: Text(
-            'Match',
-            style: const TextStyle(
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0),
-          ),
+          title: appBarTitle('MATCH'),
         ),
         backgroundColor: Colors.transparent,
         extendBody: true,
@@ -180,7 +175,7 @@ class MatcheState extends State<Matche> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.fastOutSlowIn,
-        height: _isSelected[index] ? 290 : 109,
+        height: _isSelected[index] ? 240 : 109,
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         width: MediaQuery.of(context).size.width * 0.95,
         decoration: BoxDecoration(
@@ -251,9 +246,9 @@ class MatcheState extends State<Matche> {
                           ),
                         ),
                         Text(
-                          '$formattedDate - Sub ${player.categoria}',
+                          '$formattedDate - ${player.categoria}',
                           style: TextStyle(
-                              fontSize: 14.0,
+                            fontSize: 14.0,
                               color: Colors.white.withOpacity(0.7),
                               fontStyle: FontStyle.italic),
                         ),
@@ -269,63 +264,63 @@ class MatcheState extends State<Matche> {
                   ),
                 ],
               ),
-              AnimatedOpacity(
-                duration: const Duration(milliseconds: 400),
-                opacity: _isSelected[index] ? 1.0 : 0.0,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      width: 107,
-                      height: 107,
-                    ),
-                    const SizedBox(width: 30),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 10),
-                          Text(
-                            '${player.club}',
-                            style: const TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 5.0),
-                          Text(
-                            player.logrosIndividuales ?? '',
-                            style: const TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 5.0),
-                          Text(
-                            'Selección Nacional ${player.seleccionNacional} ${player.categoriaSeleccion}',
-                            style: const TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // AnimatedOpacity(
+              //   duration: const Duration(milliseconds: 400),
+              //   opacity: _isSelected[index] ? 1.0 : 0.0,
+              //   child: Row(
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       const SizedBox(
+              //         width: 107,
+              //         height: 107,
+              //       ),
+              //       const SizedBox(width: 30),
+              //       Expanded(
+              //         child: Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           mainAxisAlignment: MainAxisAlignment.start,
+              //           children: [
+              //             const SizedBox(height: 10),
+              //             Text(
+              //               '${player.club}',
+              //               style: const TextStyle(
+              //                 fontFamily: 'Montserrat',
+              //                 fontSize: 13,
+              //                 fontWeight: FontWeight.w500,
+              //                 fontStyle: FontStyle.italic,
+              //                 color: Colors.white,
+              //               ),
+              //             ),
+              //             const SizedBox(height: 5.0),
+              //             Text(
+              //               player.logrosIndividuales ?? '',
+              //               style: const TextStyle(
+              //                 fontFamily: 'Montserrat',
+              //                 fontSize: 13,
+              //                 fontWeight: FontWeight.w500,
+              //                 fontStyle: FontStyle.italic,
+              //                 color: Colors.white,
+              //               ),
+              //             ),
+              //             const SizedBox(height: 5.0),
+              //             Text(
+              //               'Selección Nacional ${player.seleccionNacional} ${player.categoriaSeleccion}',
+              //               style: const TextStyle(
+              //                 fontFamily: 'Montserrat',
+              //                 fontSize: 13,
+              //                 fontWeight: FontWeight.w500,
+              //                 fontStyle: FontStyle.italic,
+              //                 color: Colors.white,
+              //               ),
+              //             ),
+              //             const SizedBox(height: 20),
+              //           ],
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               AnimatedOpacity(
                 duration: const Duration(milliseconds: 400),
                 opacity: _isSelected[index] ? 1.0 : 0.0,

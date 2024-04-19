@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +12,6 @@ import '../../../../utils/api_client.dart';
 import '../../../../utils/current_state.dart';
 import '../../../../utils/language_localizations.dart';
 import 'select_camp.dart';
-import 'sign_up_2.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -267,7 +265,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.w500,
                           fontStyle: FontStyle.italic,
-                          fontSize: 12,
+                          fontSize: 16,
                         ),
                         errorStyle: const TextStyle(
                           color: Color.fromARGB(255, 255, 106, 106),

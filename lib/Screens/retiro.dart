@@ -1,5 +1,6 @@
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
+import 'package:bro_app_to/components/app_bar_title.dart';
 
 class RetirarMenu extends StatelessWidget {
   const RetirarMenu({super.key});
@@ -18,20 +19,11 @@ class RetirarMenu extends StatelessWidget {
         backgroundColor: Colors.transparent,
         extendBody: true,
         appBar: AppBar(
+          scrolledUnderElevation: 0,
           centerTitle: true,
-          title: const Text(
-            'RETIRO',
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.bold,
-              fontSize: 36.0,
-              decoration: TextDecoration.none,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          backgroundColor: Colors.transparent, // AppBar transparente
-          elevation: 0, // Quitar sombra
+          title: appBarTitle('RETIRO'),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
@@ -43,6 +35,9 @@ class RetirarMenu extends StatelessWidget {
         ),
         body: Column(
           children: [
+            const SizedBox(
+              height: 30,
+            ),
             const Text(
               'Total:',
               style: const TextStyle(
@@ -104,7 +99,7 @@ class RetirarMenu extends StatelessWidget {
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: const TextStyle(
-              color: Colors.white, fontFamily: 'Montserrat', fontSize: 12),
+              color: Colors.white, fontFamily: 'Montserrat', fontSize: 16),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.only(bottom: 8.0),
           enabledBorder: const UnderlineInputBorder(

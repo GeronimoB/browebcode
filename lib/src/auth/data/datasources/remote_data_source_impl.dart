@@ -132,7 +132,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     if (comingFromAutoLogin) {
       Navigator.pushNamed(context, '/login');
     } else {
-      debugPrint(e);
+      print(e);
       playerProvider.setIsLoading(false);
 
       ScaffoldMessenger.of(context).showSnackBar(

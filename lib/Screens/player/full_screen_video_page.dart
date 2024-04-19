@@ -143,7 +143,7 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                       title: Text(
                           widget.video.isFavorite
                               ? 'Dejar de destacar'
-                              : 'Destacar',
+                              : 'Destacar con IA',
                           style: const TextStyle(
                               color: Colors.white,
                               fontFamily: 'Montserrat',
@@ -349,7 +349,7 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
-                      'Felicitaciones!',
+                      '¡Felicidades!',
                       style: const TextStyle(
                           color: Color(0xff00E050),
                           fontFamily: 'Montserrat',

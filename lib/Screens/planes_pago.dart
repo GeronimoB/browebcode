@@ -1,3 +1,4 @@
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:flutter/material.dart';
@@ -87,87 +88,79 @@ class PlanesPagoState extends State<PlanesPago> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Stack(
-        children: [
-          Container(
-            color: const Color.fromARGB(255, 0, 0, 0),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-          ),
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/backgroundplanes.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 50), // Espacio en la parte superior
-                const Text(
-                  'Planes',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                    fontFamily: 'Montserrat',
-                  ),
-                  textAlign: TextAlign.center,
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/backgroundplanes.png'),
+          fit: BoxFit.cover,
+        ),
+        color: Color.fromARGB(255, 0, 0, 0),
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          scrolledUnderElevation: 0,
+          centerTitle: true,
+          title: appBarTitle('PLANES'),
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+        ),
+        backgroundColor: Colors.transparent,
+        extendBody: true,
+        body: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 50),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(10),
+                  itemCount: planes.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildCard(index);
+                  },
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(10),
-                    itemCount: planes.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _buildCard(index);
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(22.0),
-                  child: CustomTextButton(
-                    onTap: () {
-                      final playerProvider =
-                          Provider.of<PlayerProvider>(context, listen: false);
-                      final precio = playerProvider
-                          .getActualPlan()!
-                          .precio
-                          .replaceAll(',', '.');
-                      final precioDouble = double.parse(precio);
+              ),
+              Padding(
+                padding: const EdgeInsets.all(22.0),
+                child: CustomTextButton(
+                  onTap: () {
+                    final playerProvider =
+                        Provider.of<PlayerProvider>(context, listen: false);
+                    final precio = playerProvider
+                        .getActualPlan()!
+                        .precio
+                        .replaceAll(',', '.');
+                    final precioDouble = double.parse(precio);
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MetodoDePagoScreen(
-                                  valueToPay: precioDouble,
-                                )),
-                      );
-                    },
-                    text: 'Siguiente',
-                    buttonPrimary: true,
-                    width: 116,
-                    height: 39,
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MetodoDePagoScreen(
+                                valueToPay: precioDouble,
+                              )),
+                    );
+                  },
+                  text: 'Siguiente',
+                  buttonPrimary: true,
+                  width: 116,
+                  height: 39,
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: SvgPicture.asset(
+                    'assets/icons/Logo.svg',
+                    width: 104,
                   ),
                 ),
-
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0),
-                    child: SvgPicture.asset(
-                      'assets/icons/Logo.svg',
-                      width: 104,
-                    ),
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

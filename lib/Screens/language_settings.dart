@@ -1,3 +1,4 @@
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,16 +24,9 @@ class LanguageSettingsPage extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         centerTitle: true,
-        title: const Text(
-          'IDIOMA',
-          style: const TextStyle(
-            color: Colors.white,
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ),
-        ),
+        title: appBarTitle('IDIOMA'),
         backgroundColor: Colors.transparent,
         leading: IconButton(
           icon: const Icon(

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
 
+import '../../components/app_bar_title.dart';
+
 bool _isSelected = false;
 
 class Plan {
@@ -71,121 +73,119 @@ class _PlanesPagoState extends State<Servicios> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Stack(
-        children: [
-          Container(
-            color: const Color.fromARGB(255, 0, 0, 0),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-          ),
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/backgroundplanes.png',
-              fit: BoxFit.cover,
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/backgroundplanes.png'),
+          fit: BoxFit.cover,
+        ),
+        color: Color.fromARGB(255, 0, 0, 0),
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          scrolledUnderElevation: 0,
+          centerTitle: true,
+          title: appBarTitle('SERVICIOS'),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFF00E050),
+              size: 32,
             ),
+            onPressed: () => Navigator.pop(context),
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 50), // Espacio en la parte superior
-                const Text(
-                  'Servicios',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                    fontFamily: 'Montserrat',
-                  ),
-                  textAlign: TextAlign.center,
+          backgroundColor: Colors.transparent,
+        ),
+        extendBody: true,
+        backgroundColor: Colors.transparent,
+        body: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(10),
+                  itemCount: planes.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildCard(index);
+                  },
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(10),
-                    itemCount: planes.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _buildCard(index);
-                    },
-                  ),
-                ),
-
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Seleccione una opción de pago:',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Seleccione una opción de pago:',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Checkbox(
-                          value: _isSelected,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              _isSelected = value!;
-                            });
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Checkbox(
+                        value: _isSelected,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _isSelected = value!;
+                          });
+                        },
+                        fillColor: MaterialStateProperty.resolveWith<Color?>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.selected)) {
+                              return const Color(0xff00E050);
+                            }
+                            return Colors.white;
                           },
-                          fillColor: MaterialStateProperty.resolveWith<Color?>(
-                            (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.selected)) {
-                                return const Color(0xff00E050);
-                              }
-                              return Colors.white;
-                            },
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(5), // Bordes redondeados
-                          ),
                         ),
-                        const Text(
-                          'Full Plan: Todos los servicios 149,99€/Mes',
-                          style: const TextStyle(color: Colors.white),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(5), // Bordes redondeados
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(22.0),
-                  child: CustomTextButton(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MetodoDePagoScreen(
-                                    valueToPay: 50.99,
-                                  )),
-                        );
-                      },
-                      text: 'Siguiente',
-                      buttonPrimary: true,
-                      width: 116,
-                      height: 39),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 20.0),
-                    child: SvgPicture.asset(
-                      'assets/icons/Logo.svg',
-                      width: 104,
-                    ),
+                      ),
+                      const Text(
+                        'Full Plan: Todos los servicios 149,99€/Mes',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
                   ),
-                )
-              ],
-            ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(22.0),
+                child: CustomTextButton(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MetodoDePagoScreen(
+                                  valueToPay: 50.99,
+                                )),
+                      );
+                    },
+                    text: 'Siguiente',
+                    buttonPrimary: true,
+                    width: 116,
+                    height: 39),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: SvgPicture.asset(
+                    'assets/icons/Logo.svg',
+                    width: 104,
+                  ),
+                ),
+              )
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

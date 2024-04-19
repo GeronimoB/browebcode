@@ -1,3 +1,4 @@
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/agregar_tarjeta_screen.dart';
@@ -31,15 +32,9 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
+          scrolledUnderElevation: 0,
           backgroundColor: Colors.transparent,
-          title: const Text(
-            'MÉTODO DE PAGO',
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          title: appBarTitle('MÉTODO DE PAGO'),
           centerTitle: true,
           elevation: 0,
           leading: IconButton(

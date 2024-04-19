@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
+import '../components/app_bar_title.dart';
 import '../infrastructure/firebase_message_repository.dart';
 import '../providers/user_provider.dart';
 
@@ -18,110 +19,119 @@ class MensajesPage extends StatelessWidget {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final user = userProvider.getCurrentUser();
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Container(
-          color: Colors.transparent,
-          padding: const EdgeInsets.fromLTRB(0, 70, 0, 0),
-          child: const Center(
-            child: Text(
-              'MENSAJE',
-              style: const TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  height: 1),
-            ),
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromARGB(255, 44, 44, 44),
+            Color.fromARGB(255, 0, 0, 0),
+          ],
         ),
-        StreamBuilder<List<ChatPreview>>(
-          stream: messageRepository.streamLastMessagesWithUsers(
-              user.userId, user.isAgent, context),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Expanded(
-                child: Center(
-                  child: CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
-                  ),
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Expanded(
-                child: Center(
-                  child: Text('Error: ${snapshot.error}'),
-                ),
-              );
-            } else {
-              final messagesWithUsers = snapshot.data ?? [];
-
-              if (messagesWithUsers.isEmpty) {
-                return const Expanded(
-                  child: Center(
-                    child: Text(
-                      "¡Aún no tienes mensajes!",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22.0,
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          scrolledUnderElevation: 0,
+          backgroundColor: Colors.transparent,
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: appBarTitle('MENSAJE'),
+        ),
+        backgroundColor: Colors.transparent,
+        extendBody: true,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            StreamBuilder<List<ChatPreview>>(
+              stream: messageRepository.streamLastMessagesWithUsers(
+                  user.userId, user.isAgent, context),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Expanded(
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
                       ),
                     ),
-                  ),
-                );
-              }
-              return Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  itemCount: messagesWithUsers.length,
-                  itemBuilder: (context, index) {
-                    final chat = messagesWithUsers[index];
+                  );
+                } else if (snapshot.hasError) {
+                  return Expanded(
+                    child: Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    ),
+                  );
+                } else {
+                  final messagesWithUsers = snapshot.data ?? [];
 
-                    return GestureDetector(
-                      onTap: () async {
-                        final userParsedId = user.isAgent
-                            ? "agente_${user.userId}"
-                            : "jugador_${user.userId}";
-                        final friendParsedId = chat.friendUser.isAgent
-                            ? "agente_${chat.friendUser.userId}"
-                            : "jugador_${chat.friendUser.userId}";
-                        await FirebaseMessageRepository().markAllMessagesAsRead(
-                          userParsedId,
-                          friendParsedId,
-                        );
+                  if (messagesWithUsers.isEmpty) {
+                    return const Expanded(
+                      child: Center(
+                        child: Text(
+                          "¡Aún no tienes mensajes!",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22.0,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      itemCount: messagesWithUsers.length,
+                      itemBuilder: (context, index) {
+                        final chat = messagesWithUsers[index];
 
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                            builder: (context) => ChatPage(
-                              friend: chat.friendUser,
+                        return GestureDetector(
+                          onTap: () async {
+                            final userParsedId = user.isAgent
+                                ? "agente_${user.userId}"
+                                : "jugador_${user.userId}";
+                            final friendParsedId = chat.friendUser.isAgent
+                                ? "agente_${chat.friendUser.userId}"
+                                : "jugador_${chat.friendUser.userId}";
+                            await FirebaseMessageRepository()
+                                .markAllMessagesAsRead(
+                              userParsedId,
+                              friendParsedId,
+                            );
+
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => ChatPage(
+                                  friend: chat.friendUser,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 0,
+                            ),
+                            child: ChatWidget(
+                              key: ValueKey(index),
+                              chat: chat,
+                              onDelete: () {},
+                              first: index == 0,
                             ),
                           ),
                         );
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 0,
-                        ),
-                        child: ChatWidget(
-                          key: ValueKey(index),
-                          chat: chat,
-                          onDelete: () {},
-                          first: index == 0,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            }
-          },
-        )
-      ],
+                    ),
+                  );
+                }
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 }

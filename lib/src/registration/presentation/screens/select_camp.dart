@@ -98,6 +98,22 @@ class SelectCampState extends State<SelectCamp> {
                 height: 394,
               ),
             ),
+            Positioned(
+              top: screenSize.height * 0.25,
+              left: 0,
+              right: 0,
+              child: Text(
+                translations!['choose_position'],
+                style: const TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  height: 1,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
             playerPic(
               translations!['goalKeeper'],
               "1",

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/Screens/planes_pago.dart';
@@ -17,6 +18,9 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:http/http.dart' as http;
+
+import '../../components/i_field.dart';
+import '../../utils/api_client.dart';
 
 class CuentaPage extends StatefulWidget {
   const CuentaPage({super.key});
@@ -84,7 +88,7 @@ class CuentaPageState extends State<CuentaPage> {
     String shortInfo =
         '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
     String fullInfo =
-        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate \nEscuela deportiva: ${player.club}\n Altura: ${player.altura} cm\n Pie Dominante: ${player.pieDominante}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Posición: ${player.position}\n Categoria: ${player.categoria}\n Logros: ${player.logrosIndividuales}';
+        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\n Altura: ${player.altura}\n Categoría: ${player.categoria}\n Posición: ${player.position} \n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Pie Dominante: ${player.pieDominante} \nEscuela deportiva: ${player.club} \n Logros: ${player.logrosIndividuales}';
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -98,17 +102,11 @@ class CuentaPageState extends State<CuentaPage> {
       ),
       child: Scaffold(
         appBar: AppBar(
+          scrolledUnderElevation: 0,
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: const Text(
-            'CUENTA',
-            style: const TextStyle(
-                color: Colors.white,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0),
-          ),
+          title: appBarTitle('CUENTA'),
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,
@@ -123,6 +121,9 @@ class CuentaPageState extends State<CuentaPage> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(
+              height: 20,
+            ),
             GestureDetector(
               onTap: _openGallery,
               child: Stack(
@@ -275,15 +276,13 @@ class CuentaPageState extends State<CuentaPage> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          expanded
-                              ? plan.descripcionLarga
-                              : plan.descripcion, // Descripción del plan
+                          expanded ? plan.descripcionLarga : plan.descripcion,
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.grey,
                           ),
                           maxLines: expanded ? 100 : 2,
-                          overflow: TextOverflow.ellipsis, // Manejo de overflow
+                          overflow: TextOverflow.ellipsis,
                         ),
                         TextButton(
                           onPressed: () {
@@ -296,10 +295,10 @@ class CuentaPageState extends State<CuentaPage> {
                           ),
                           child: Text(expanded ? 'Ver menos...' : 'Ver más...'),
                         ),
-                        if (!isActualPlan)
-                          Center(
-                            child: CustomTextButton(
-                              onTap: () {
+                        Center(
+                          child: CustomTextButton(
+                            onTap: () {
+                              if (!isActualPlan) {
                                 final precio = plan.precio.replaceAll(',', '.');
                                 final precioDouble = double.parse(precio);
                                 playerProvider.isSubscriptionPayment = true;
@@ -312,13 +311,17 @@ class CuentaPageState extends State<CuentaPage> {
                                             valueToPay: precioDouble,
                                           )),
                                 );
-                              },
-                              text: 'Subscribirse',
-                              buttonPrimary: true,
-                              width: 116,
-                              height: 42,
-                            ),
+                              } else {
+                                confirmationCancelDialog(
+                                    context, playerProvider);
+                              }
+                            },
+                            text: isActualPlan ? 'Cancelar' : 'Subscribirse',
+                            buttonPrimary: true,
+                            width: 116,
+                            height: 42,
                           ),
+                        ),
                       ],
                     ),
                   ),
@@ -340,6 +343,91 @@ class CuentaPageState extends State<CuentaPage> {
           ],
         ),
       ),
+    );
+  }
+
+  void confirmationCancelDialog(BuildContext context, PlayerProvider provider) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.2),
+      builder: (BuildContext context) {
+        TextEditingController ctlr = TextEditingController();
+        return Dialog(
+            backgroundColor: Colors.transparent,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                height: 300,
+                decoration: BoxDecoration(
+                  color: const Color(0xff3B3B3B),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: 10,
+                      offset: const Offset(5, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(height: 5),
+                    Text(
+                      '¿Estás seguro de que quieres cancelar tu suscripción?',
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Color(0xff00E050),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                    Text(
+                      'Ingrese el motivo de la cancelación',
+                      style: const TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          height: 1),
+                    ),
+                    iField(ctlr, ''),
+                    const SizedBox(height: 40),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CustomTextButton(
+                          onTap: () => Navigator.of(context).pop(),
+                          text: 'Cancelar',
+                          buttonPrimary: false,
+                          width: 90,
+                          height: 27,
+                        ),
+                        CustomTextButton(
+                          onTap: () async {
+                            final id = provider.getPlayer()!.userId;
+
+                            await ApiClient().post('auth/cancel-subscription',
+                                {"userId": id, "reason": ctlr.text});
+                            Navigator.of(context).pop();
+                          },
+                          text: 'Continuar',
+                          buttonPrimary: true,
+                          width: 90,
+                          height: 27,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ));
+      },
     );
   }
 }

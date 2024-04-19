@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/agent_provider.dart';
@@ -97,16 +98,9 @@ class EditarInfoState extends State<EditarInfo> {
       ),
       child: Scaffold(
         appBar: AppBar(
+          scrolledUnderElevation: 0,
           centerTitle: true,
-          title: const Text(
-            'EDITAR INFORMACIÓN',
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.bold,
-              fontSize: 24.0,
-            ),
-          ),
+          title: appBarTitle('EDITAR INFORMACIÓN'),
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
