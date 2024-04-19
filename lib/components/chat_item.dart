@@ -21,8 +21,11 @@ Widget chatItem(
           color: sent
               ? const Color.fromARGB(51, 4, 255, 0)
               : const Color.fromARGB(51, 255, 255, 255),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(20),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(Sizes.radius),
+            bottomRight: Radius.circular(Sizes.radius),
+            topRight: Radius.circular(sent ? 0 : Sizes.radius),
+            topLeft: Radius.circular(sent ? Sizes.radius : 0),
           ),
           border: Border.all(
             color: sent

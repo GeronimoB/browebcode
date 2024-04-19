@@ -11,9 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PlayerProfileToAgent extends StatefulWidget {
-  final PlayerFullModel player;
+  final String userId;
 
-  const PlayerProfileToAgent({super.key, required this.player});
+  const PlayerProfileToAgent({super.key, required this.userId});
 
   @override
   PlayerProfileToAgentState createState() => PlayerProfileToAgentState();
@@ -22,9 +22,35 @@ class PlayerProfileToAgent extends StatefulWidget {
 class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
   double gridSpacing = 2.0;
   bool _isExpanded = false;
+  late PlayerFullModel player;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPlayerInfo();
+  }
+
+  void fetchPlayerInfo() async {
+    final userId = widget.userId;
+    try {
+      final playerResponse = await ApiClient().get('auth/player/$userId');
+      if (playerResponse.statusCode == 200) {
+        final jsonData = jsonDecode(playerResponse.body);
+        final playerjson = jsonData["player"];
+
+        setState(() {
+          player = PlayerFullModel.fromJson(playerjson);
+        });
+      } else {
+        debugPrint('Error al obtener los videos: ${playerResponse.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Error en la solicitud de videos: $e');
+    }
+  }
 
   Future<List<Video>> fetchVideos() async {
-    final userId = widget.player.userId;
+    final userId = widget.userId;
     try {
       final videosResponse = await ApiClient().get('auth/videos/$userId');
       if (videosResponse.statusCode == 200) {
@@ -54,7 +80,6 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
 
   @override
   Widget build(BuildContext context) {
-    final player = widget.player;
     final widthVideo = MediaQuery.of(context).size.width / 3;
     DateTime? birthDate = player.birthDate;
 
@@ -63,7 +88,8 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
     String shortInfo =
         '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
     String fullInfo =
-        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\n Altura: ${player.altura}\n Categoría: ${player.categoria}\n Posición: ${player.position} \n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Pie Dominante: ${player.pieDominante} \nEscuela deportiva: ${player.club} \n Logros: ${player.logrosIndividuales}';
+        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\n Categoría: ${player.categoria}\n Posición: ${player.position}\nEntidad deportiva: ${player.club}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Pie Dominante: ${player.pieDominante} \n Logros: ${player.logrosIndividuales}  \n Altura: ${player.altura}';
+    
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -192,7 +218,7 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
                       return const Expanded(
                         child: Center(
                           child: Text(
-                            "¡Aun no hay videos!",
+                            "¡Aún no hay videos!",
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Montserrat',

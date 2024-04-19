@@ -23,6 +23,8 @@ import '../src/auth/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
+import 'agent/user_profile_to_agent.dart';
+
 class ChatPage extends StatefulWidget {
   final UserModel friend;
 
@@ -186,7 +188,7 @@ class ChatPageState extends State<ChatPage> {
                   style: const TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
-                    fontSize: 17,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -269,6 +271,7 @@ class ChatPageState extends State<ChatPage> {
                               } else if (snapshot.data.docs[index]['type'] ==
                                   "image") {
                                 return imageItem(
+                                  context,
                                   snapshot.data.docs[index]['url'],
                                   dateTime,
                                   snapshot.data.docs[index]['sent'],
@@ -476,8 +479,7 @@ class ChatPageState extends State<ChatPage> {
             child: Material(
               borderRadius: BorderRadius.circular(15),
               elevation: 5.0,
-              shadowColor: Colors.black.withOpacity(
-                  0.4), // Ajusta la opacidad de la sombra según sea necesario
+              shadowColor: Colors.black.withOpacity(0.4),
               color: const Color(0xFF3B3B3B),
               child: Container(
                 decoration: BoxDecoration(
@@ -502,6 +504,13 @@ class ChatPageState extends State<ChatPage> {
                         onTap: () {
                           _overlayEntry?.remove();
                           _overlayEntry = null;
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PlayerProfileToAgent(
+                                  userId: widget.friend.userId,
+                                ),
+                              ));
                         },
                       ),
                     ListTile(
@@ -515,14 +524,6 @@ class ChatPageState extends State<ChatPage> {
                         _overlayEntry = null;
                       },
                     ),
-                    // ListTile(
-                    //   title: const Text('Buscar',
-                    //       style: const TextStyle(color: Colors.white)),
-                    //   onTap: () {
-                    //     _overlayEntry?.remove();
-                    //     _overlayEntry = null;
-                    //   },
-                    // ),
                     ListTile(
                       title: Text(
                           isMute

@@ -8,6 +8,8 @@ Map<String, dynamic> nationalCategories = {
   translations!['female']: ['U17', 'U20']
 };
 List<String> alturas = List.generate(211 - 150, (index) => '${index + 150} cm');
+List<String> anos =
+    List.generate(125, (index) => '${index + 1900}').reversed.toList();
 List<String> selecciones = [
   "Masculina",
   "Femenina",
@@ -27,13 +29,11 @@ List<String> countries = [
 List<String> categorias = [
   'PreBenjamín',
   'Benjamín',
-  'Alevín',
   'Infantil',
-  'Juvenil',
   'Cadete',
-  'Sub-21',
-  'Absoluto',
-  'Veterano'
+  'Juvenil',
+  'Sub-23',
+  'Senior',
 ];
 List<String> posiciones = [
   "Portero",

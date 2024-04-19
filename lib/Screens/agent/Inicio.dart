@@ -5,6 +5,7 @@ import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/initial_video_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -39,6 +40,7 @@ class InicioPageState extends State<InicioPage> {
   late TextEditingController catSelection;
   late TextEditingController position;
   late TextEditingController category;
+  late TextEditingController date;
   bool isLoading = false;
 
   @override
@@ -54,6 +56,7 @@ class InicioPageState extends State<InicioPage> {
     selection = TextEditingController();
     position = TextEditingController();
     category = TextEditingController();
+    date = TextEditingController();
     _fetchVideoUrls();
   }
 
@@ -70,7 +73,8 @@ class InicioPageState extends State<InicioPage> {
         "categoria_seleccion": catSelection.text,
         "seleccion_nacional": selection.text,
         "posicion_jugador": position.text,
-        "categoria": category.text
+        "categoria": category.text,
+        "fecha": date.text
       });
       final response = await ApiClient().post(
           'auth/random-videos', {"userId": currentUserId, "filters": filters});
@@ -105,18 +109,10 @@ class InicioPageState extends State<InicioPage> {
   }
 
   void _onHorizontalDragEnd(DragEndDetails details) async {
-    final userId = _videosRandom[_currentIndex].userId;
     if (_xOffset > 100) {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => MatchProfile(userId: userId)),
-      );
+      matchFunction();
     } else if (_xOffset < -100) {
-      //_writeRejectionData(userId, currentUserId);
-      currentController!.dispose();
-      currentController = nextController;
-      _currentIndex = (_currentIndex + 1) % _videosRandom.length;
-      _initializeNextVideoPlayer((_currentIndex + 1) % _videosRandom.length);
-      currentController!.play();
+      rejectFunction();
     }
     setState(() {
       _xOffset = 0;
@@ -156,6 +152,7 @@ class InicioPageState extends State<InicioPage> {
     foot.dispose();
     position.dispose();
     category.dispose();
+    date.dispose();
     super.dispose();
   }
 
@@ -174,72 +171,123 @@ class InicioPageState extends State<InicioPage> {
     Overlay.of(context).insert(_overlayEntry!);
   }
 
+  void matchFunction() {
+    final userId = _videosRandom[_currentIndex].userId;
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => MatchProfile(userId: userId)),
+    );
+  }
+
+  void rejectFunction() {
+    //_writeRejectionData(userId, currentUserId);
+    currentController!.dispose();
+    currentController = nextController;
+    _currentIndex = (_currentIndex + 1) % _videosRandom.length;
+    _initializeNextVideoPlayer((_currentIndex + 1) % _videosRandom.length);
+    currentController!.play();
+  }
+
   @override
   Widget build(BuildContext context) {
     double scale = 1;
     double height = MediaQuery.of(context).size.height;
 
-    return SizedBox(
-      height: height * 0.9,
-      child: GestureDetector(
-        onHorizontalDragUpdate: _onHorizontalDragUpdate,
-        onHorizontalDragEnd: _onHorizontalDragEnd,
-        child: Stack(
-          children: <Widget>[
-            isLoading
-                ? loadingWidget()
-                : _videosRandom.isEmpty
-                    ? emptyWidget()
-                    : Positioned.fill(
-                        child: Transform.scale(
-                          scale: scale,
-                          child: Transform.rotate(
-                            angle: _rotation,
-                            child: Transform.translate(
-                              offset: Offset(_xOffset, 0),
-                              child: SlidableVideo(
-                                controller: currentController!,
+    return Column(
+      children: [
+        SizedBox(
+          height: height * 0.85,
+          child: GestureDetector(
+            onHorizontalDragUpdate: _onHorizontalDragUpdate,
+            onHorizontalDragEnd: _onHorizontalDragEnd,
+            child: Stack(
+              children: <Widget>[
+                isLoading
+                    ? loadingWidget()
+                    : _videosRandom.isEmpty
+                        ? emptyWidget()
+                        : Positioned.fill(
+                            child: Transform.scale(
+                              scale: scale,
+                              child: Transform.rotate(
+                                angle: _rotation,
+                                child: Transform.translate(
+                                  offset: Offset(_xOffset, 0),
+                                  child: SlidableVideo(
+                                    controller: currentController!,
+                                    username: _videosRandom[_currentIndex].user,
+                                    description: _videosRandom[_currentIndex]
+                                        .description,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-            Positioned(
-              top: MediaQuery.of(context).padding.top,
-              right: 15,
-              child: GestureDetector(
-                onTap: () => _showCustomMenu(context),
-                child: SvgPicture.asset(
-                  'assets/icons/filter.svg',
-                  width: 32,
-                  height: 32,
-                  color: const Color(0xFF00E050),
+                Positioned(
+                  top: MediaQuery.of(context).padding.top + 10,
+                  right: 15,
+                  child: GestureDetector(
+                    onTap: () => _showCustomMenu(context),
+                    child: SvgPicture.asset(
+                      'assets/icons/filter.svg',
+                      width: 45,
+                      height: 45,
+                      fit: BoxFit.cover,
+                      color: const Color(0xFF00E050),
+                    ),
+                  ),
                 ),
-              ),
+                if (_xOffset > 0)
+                  Positioned(
+                    top: MediaQuery.of(context).size.height / 2 - 50,
+                    right: 0,
+                    child: SvgPicture.asset(
+                      'assets/icons/Matchicon.svg',
+                      width: 200,
+                      height: 200,
+                    ),
+                  ),
+                if (_xOffset < 0)
+                  Positioned(
+                    top: MediaQuery.of(context).size.height / 2 - 50,
+                    left: 5,
+                    child: SvgPicture.asset(
+                      'assets/icons/No Match.svg',
+                      width: 200,
+                      height: 200,
+                    ),
+                  ),
+              ],
             ),
-            if (_xOffset > 0)
-              Positioned(
-                top: MediaQuery.of(context).size.height / 2 - 50,
-                right: 0,
-                child: SvgPicture.asset(
-                  'assets/icons/Matchicon.svg',
-                  width: 200,
-                  height: 200,
-                ),
-              ),
-            if (_xOffset < 0)
-              Positioned(
-                top: MediaQuery.of(context).size.height / 2 - 50,
-                left: 5,
-                child: SvgPicture.asset(
-                  'assets/icons/No Match.svg',
-                  width: 200,
-                  height: 200,
-                ),
-              ),
-          ],
+          ),
         ),
-      ),
+        SizedBox(
+          height: height * 0.09,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () => rejectFunction(),
+                child: const Icon(
+                  Icons.close_rounded,
+                  size: 80,
+                  color: Color(0xFF00E050),
+                ),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              GestureDetector(
+                onTap: () => matchFunction(),
+                child: const Icon(
+                  Icons.favorite,
+                  size: 65,
+                  color: Color(0xFF00E050),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -341,9 +389,9 @@ class InicioPageState extends State<InicioPage> {
             ),
           ),
           Positioned(
-            left: offset.dx + size.width - 285,
-            top: offset.dy + 95,
-            width: 280,
+            left: offset.dx + size.width - 305,
+            top: offset.dy + 105,
+            width: 300,
             child: Material(
               borderRadius: BorderRadius.circular(15),
               elevation: 5.0,
@@ -375,17 +423,22 @@ class InicioPageState extends State<InicioPage> {
                           _overlayEntry?.remove();
                           _overlayEntry = null;
                         }),
-                        child: const Text(
-                          'Limpiar',
-                          style: TextStyle(
+                        child: Text(
+                          translations!['clean'],
+                          style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'Montserrat',
                             fontWeight: FontWeight.bold,
                             fontStyle: FontStyle.italic,
-                            fontSize: 16,
+                            fontSize: 18,
                           ),
                         ),
                       ),
+                    ),
+                    filterTile(
+                      translations!['age_label'],
+                      date,
+                      anos,
                     ),
                     filterTile(
                       translations!['country_label'],
@@ -450,6 +503,7 @@ class InicioPageState extends State<InicioPage> {
       foot.text = '';
       position.text = '';
       category.text = '';
+      date.text = '';
     });
   }
 
@@ -466,7 +520,7 @@ class InicioPageState extends State<InicioPage> {
             fontFamily: 'Montserrat',
             fontWeight: FontWeight.bold,
             fontStyle: FontStyle.italic,
-            fontSize: 16,
+            fontSize: 18,
           ),
         ),
         const SizedBox(width: 10),
@@ -482,7 +536,7 @@ class InicioPageState extends State<InicioPage> {
           itemBuilder: (String item) {
             return item;
           },
-          width: 120,
+          width: 125,
         ),
       ],
     );

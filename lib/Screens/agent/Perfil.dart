@@ -249,7 +249,7 @@ class PerfilPageState extends State<PerfilPage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => PlayerProfileToAgent(
-                        player: player,
+                        userId: player.userId!,
                       ),
                     ),
                   ),

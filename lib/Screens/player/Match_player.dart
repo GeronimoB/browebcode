@@ -135,7 +135,7 @@ class MatcheState extends State<MatchePlayer> {
                   )
                 : const Center(
                     child: Text(
-                      "¡Aun no tienes match!",
+                      "¡Aún no tienes match!",
                       style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat',
@@ -172,7 +172,7 @@ class MatcheState extends State<MatchePlayer> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.fastOutSlowIn,
-        height: _isSelected[index] ? 220 : 109,
+        height: _isSelected[index] ? 185 : 109,
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         width: MediaQuery.of(context).size.width * 0.95,
         decoration: BoxDecoration(
@@ -265,31 +265,21 @@ class MatcheState extends State<MatchePlayer> {
                 duration: const Duration(milliseconds: 400),
                 opacity: _isSelected[index] ? 1.0 : 0.0,
                 child: Padding(
-                  padding: const EdgeInsets.all(35.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CustomTextButton(
-                          onTap: () {
-                            final friend = UserModel.fromAgent(agente);
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChatPage(
-                                          friend: friend,
-                                        )));
-                          },
-                          text: '¡Vamos al Chat!',
-                          buttonPrimary: false,
-                          width: 145,
-                          height: 38),
-                      // CustomTextButton(
-                      //     text: 'Ver Perfil',
-                      //     buttonPrimary: true,
-                      //     width: 135,
-                      //     height: 32)
-                    ],
-                  ),
+                  padding: const EdgeInsets.all(15.0),
+                  child: CustomTextButton(
+                      onTap: () {
+                        final friend = UserModel.fromAgent(agente);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatPage(
+                                      friend: friend,
+                                    )));
+                      },
+                      text: '¡Vamos al Chat!',
+                      buttonPrimary: false,
+                      width: 145,
+                      height: 38),
                 ),
               ),
             ],

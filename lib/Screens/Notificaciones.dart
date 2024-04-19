@@ -143,7 +143,7 @@ class _NotificacionesState extends State<Notificaciones> {
         ),
         child: RichText(
           text: TextSpan(
-            text: '${noti.title}: ',
+            text: '${noti.title} ',
             children: [
               TextSpan(
                 text: noti.content,

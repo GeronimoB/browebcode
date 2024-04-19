@@ -213,7 +213,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 35.0),
                             child: Text(
-                              'Aun no tienes afiliados, comparte tu codigo con tus amigos para poder ganar comisiones.',
+                              'Aún no tienes afiliados, comparte tu codigo con tus amigos para poder ganar comisiones.',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Montserrat',

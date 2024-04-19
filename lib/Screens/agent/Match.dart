@@ -136,7 +136,7 @@ class MatcheState extends State<Matche> {
                   )
                 : Center(
                     child: Text(
-                      "¡Aun no tienes match!",
+                      "¡Aún no tienes match!",
                       style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat',
@@ -175,7 +175,7 @@ class MatcheState extends State<Matche> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.fastOutSlowIn,
-        height: _isSelected[index] ? 240 : 109,
+        height: _isSelected[index] ? 190 : 109,
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         width: MediaQuery.of(context).size.width * 0.95,
         decoration: BoxDecoration(
@@ -248,7 +248,7 @@ class MatcheState extends State<Matche> {
                         Text(
                           '$formattedDate - ${player.categoria}',
                           style: TextStyle(
-                            fontSize: 14.0,
+                              fontSize: 14.0,
                               color: Colors.white.withOpacity(0.7),
                               fontStyle: FontStyle.italic),
                         ),
@@ -348,7 +348,7 @@ class MatcheState extends State<Matche> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => PlayerProfileToAgent(
-                                    player: player,
+                                    userId: player.userId!,
                                   ),
                                 ),
                               ),

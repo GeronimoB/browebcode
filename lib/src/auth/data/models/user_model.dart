@@ -81,7 +81,8 @@ class UserModel extends UserEntity {
       DateTime? birthDate,
       String? referralCode,
       String? imageUrl,
-      String? subscription}) {
+      String? subscription,
+      bool? status}) {
     return UserModel(
       userId: userId,
       username: usuario ?? username,
@@ -92,7 +93,7 @@ class UserModel extends UserEntity {
       imageUrl: imageUrl ?? this.imageUrl,
       isAgent: isAgent,
       subscription: subscription ?? this.subscription,
-      status: status,
+      status: status ?? this.status,
     );
   }
 }

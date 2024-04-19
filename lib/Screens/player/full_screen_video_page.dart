@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
 import 'package:bro_app_to/components/modal_decision.dart';
+import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/video_model.dart';
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
+import '../../components/custom_text_button.dart';
 import '../../utils/api_client.dart';
 import 'bottom_navigation_bar_player.dart';
 import 'package:http/http.dart' as http;
@@ -128,11 +131,13 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                   shrinkWrap: true,
                   children: <Widget>[
                     ListTile(
-                      title: const Text('Borrar',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat',
-                              fontStyle: FontStyle.italic)),
+                      title: Text(
+                        translations!['delete_label'],
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic),
+                      ),
                       onTap: () {
                         _overlayEntry?.remove();
                         _overlayEntry = null;
@@ -142,8 +147,8 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                     ListTile(
                       title: Text(
                           widget.video.isFavorite
-                              ? 'Dejar de destacar'
-                              : 'Destacar con IA',
+                              ? translations!['stop_favorite']
+                              : translations!['add_favorite'],
                           style: const TextStyle(
                               color: Colors.white,
                               fontFamily: 'Montserrat',
@@ -156,15 +161,31 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                       },
                     ),
                     ListTile(
-                      title: const Text('Guardar',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat',
-                              fontStyle: FontStyle.italic)),
+                      title: Text(
+                        translations!['save'],
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic),
+                      ),
                       onTap: () {
                         _overlayEntry?.remove();
                         _overlayEntry = null;
                         _handleDownload(widget.video);
+                      },
+                    ),
+                    ListTile(
+                      title: Text(
+                        translations!['description_video'],
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic),
+                      ),
+                      onTap: () {
+                        _overlayEntry?.remove();
+                        _overlayEntry = null;
+                        _showDescriptionDialog(widget.video);
                       },
                     ),
                   ],
@@ -289,17 +310,14 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
   Future<void> _handleDownload(Video video) async {
     String? videoUrl = video.videoUrl;
     if (videoUrl == null || videoUrl.isEmpty) {
-      debugPrint('URL del video nula o vacía. No se puede iniciar la descarga.');
       return;
     }
     final status = await Permission.storage.status;
 
     if (!status.isGranted) {
-      debugPrint('Solicitando permiso de almacenamiento...');
       final result = await Permission.storage.request();
       if (!result.isGranted) {
-        debugPrint(
-            'Permiso de almacenamiento denegado. No se puede continuar con la descarga.');
+        showErrorSnackBar(context, translations!['download_grant_denied']);
         return;
       }
     }
@@ -348,8 +366,8 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text(
-                      '¡Felicidades!',
+                    Text(
+                      translations!['congrats'],
                       style: const TextStyle(
                           color: Color(0xff00E050),
                           fontFamily: 'Montserrat',
@@ -360,7 +378,7 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                       height: 20,
                     ),
                     Text(
-                      'El video se ha guardado en la carpeta de descargas.',
+                      translations!['video_save'],
                       style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat',
@@ -371,7 +389,7 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text('OK'),
+                      child: translations!['ok'],
                     ),
                   ],
                 ),
@@ -385,15 +403,14 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: const Text(
-                'Ha habido un error en la descarga, intente nuevamente.'),
+            title: Text(translations!['error_label']),
+            content: Text(translations!['download_error']),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: Text(translations!['ok']),
               ),
             ],
           );
@@ -410,11 +427,13 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
       barrierColor: Colors.black.withOpacity(0.6),
       builder: (BuildContext context) {
         return ModalDecition(
-          text: "¿Estas seguro de borrar este video?",
+          text: translations!['delete_video_confirmation'],
           confirmCallback: () async {
             final response = await ApiClient()
                 .post('auth/delete-video', {"videoId": videoId.toString()});
+
             await Future.delayed(const Duration(seconds: 1));
+
             if (response.statusCode == 200) {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
@@ -422,12 +441,8 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                         const CustomBottomNavigationBarPlayer(initialIndex: 4)),
               );
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    backgroundColor: Colors.redAccent,
-                    content: Text(
-                        'Hubo un error al borrar el video intentelo de nuevo.')),
-              );
+              showErrorSnackBar(context, translations!['delete_video_err']);
+
               await Future.delayed(const Duration(seconds: 2));
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
@@ -444,6 +459,99 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
     );
   }
 
+  void _showDescriptionDialog(Video video) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.2),
+      builder: (BuildContext context) {
+        TextEditingController editingController =
+            TextEditingController(text: video.description);
+        return Dialog(
+            backgroundColor: Colors.transparent,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: const Color(0xff3B3B3B),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: 10,
+                      offset: const Offset(5, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      translations!["description_title"],
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Color(0xff00E050),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                    TextField(
+                      controller: editingController,
+                      maxLength: 120,
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Colors.white,
+                      ),
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(vertical: 5),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color(0xFF00E050), width: 2),
+                        ),
+                      ),
+                      cursorColor: Colors.white,
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CustomTextButton(
+                          onTap: () => Navigator.of(context).pop(),
+                          text: 'Cancelar',
+                          buttonPrimary: false,
+                          width: 90,
+                          height: 27,
+                        ),
+                        CustomTextButton(
+                          onTap: () async {
+                            await ApiClient().post('auth/update-video', {
+                              'videoId': video.id.toString(),
+                              'description': editingController.text
+                            });
+
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const CustomBottomNavigationBarPlayer(
+                                          initialIndex: 4)),
+                            );
+                          },
+                          text: 'Guardar',
+                          buttonPrimary: true,
+                          width: 90,
+                          height: 27,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ));
+      },
+    );
+  }
+
   void _handleDestacar(int index, Video video, bool dDestacar) async {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
     playerProvider.setVideoAndIndex(index, video);
@@ -453,8 +561,7 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
         barrierColor: Colors.black.withOpacity(0.6),
         builder: (BuildContext context) {
           return ModalDecition(
-            text:
-                "¿Esta seguro de dejar de destacar este video? Si desea volverlo a destacar en un futuro, deberá volver a pagar.",
+            text: translations!['cancel_favorite_video'],
             confirmCallback: () async {
               await ApiClient().post('auth/update-video', {
                 'videoId': video.id.toString(),

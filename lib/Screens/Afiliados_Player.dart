@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/utils/api_client.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../components/app_bar_title.dart';
+import '../components/snackbar.dart';
 import '../providers/user_provider.dart';
 import 'lista_afiliados.dart';
 
@@ -63,12 +65,8 @@ class AfiliadosPlayer extends StatelessWidget {
                         builder: (context) => const ListaReferidosScreen()),
                   );
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        backgroundColor: Colors.redAccent,
-                        content: Text(
-                            'Hubo un error al generar tu codigo de referido, intentalo de  nuevo.')),
-                  );
+                  showErrorSnackBar(
+                      context, translations!['error_create_referral']);
                 }
               },
               text: 'Generar código',

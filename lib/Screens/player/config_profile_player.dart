@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:bro_app_to/Screens/afiliados_player.dart';
-import 'package:bro_app_to/Screens/language_settings.dart';
 import 'package:bro_app_to/Screens/lista_afiliados.dart';
 import 'package:bro_app_to/Screens/player/cuenta_player.dart';
 import 'package:bro_app_to/Screens/notificaciones.dart';
@@ -20,6 +19,7 @@ import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/api_client.dart';
+import '../../utils/language_localizations.dart';
 import 'bottom_navigation_bar_player.dart';
 import 'package:http/http.dart' as http;
 
@@ -114,7 +114,10 @@ class ConfigProfilePlayer extends StatelessWidget {
                     'IDIOMA',
                     context,
                     true,
-                    const LanguageSettingsPage(),
+                    const Servicios(),
+                    callback: () {
+                      languageDialog(context);
+                    },
                   ),
                   const SizedBox(height: 15),
                   _buildListItem(
@@ -141,6 +144,73 @@ class ConfigProfilePlayer extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void changeLanguage(BuildContext context, String languageCode) async {
+    LanguageLocalizations? localizations = LanguageLocalizations.of(context);
+    if (localizations != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('language', languageCode);
+      localizations.changeLanguage(languageCode);
+    }
+  }
+
+  void languageDialog(BuildContext context) {
+    String currentLanguage =
+        LanguageLocalizations.of(context)?.currentLanguage ?? 'es';
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+            backgroundColor: Colors.transparent,
+            child: Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xff3B3B3B),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.4),
+                    blurRadius: 10,
+                    offset: const Offset(5, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  languageTile(
+                      context, 'en', 'English', currentLanguage == 'en'),
+                  languageTile(
+                      context, 'es', 'Español', currentLanguage == 'es'),
+                  languageTile(
+                      context, 'de', 'Aleman', currentLanguage == 'de'),
+                  languageTile(
+                      context, 'it', 'Italiano', currentLanguage == 'it'),
+                  languageTile(
+                      context, 'fr', 'Frances', currentLanguage == 'fr'),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                    child: CustomTextButton(
+                      text: 'Cerrar',
+                      buttonPrimary: true,
+                      width: 120,
+                      height: 35,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ));
+      },
     );
   }
 
@@ -284,7 +354,7 @@ class ConfigProfilePlayer extends StatelessWidget {
                               Provider.of<UserProvider>(context, listen: false);
                           final userId = userProvider.getCurrentUser().userId;
                           final url = Uri.parse(
-                              '${ApiConstants.baseUrl}/player/$userId');
+                              '${ApiConstants.baseUrl}/auth/player/$userId');
                           try {
                             final response = await http.delete(url);
                             if (response.statusCode == 200) {
@@ -579,6 +649,36 @@ class ConfigProfilePlayer extends StatelessWidget {
           );
         }
       },
+    );
+  }
+
+  Widget languageTile(
+      BuildContext context, String languageCode, String language, bool select) {
+    return InkWell(
+      onTap: () {
+        changeLanguage(context, languageCode);
+        Navigator.pop(context);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: select ? const Color(0xFF00F056) : Colors.transparent,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: const EdgeInsets.all(12.0),
+        width: double.infinity,
+        child: Text(
+          language,
+          style: const TextStyle(
+            color: Colors.white,
+            fontFamily: 'Montserrat',
+            fontWeight: FontWeight.w700,
+            fontSize: 16,
+          ),
+        ),
+      ),
     );
   }
 }

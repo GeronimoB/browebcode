@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 
 class SlidableVideo extends StatefulWidget {
   final VideoPlayerController controller;
-  const SlidableVideo({Key? key, required this.controller}) : super(key: key);
+  final String username;
+  final String description;
+  const SlidableVideo(
+      {Key? key,
+      required this.controller,
+      required this.username,
+      required this.description})
+      : super(key: key);
 
   @override
   State<SlidableVideo> createState() => _SlidableVideoState();
@@ -11,19 +19,6 @@ class SlidableVideo extends StatefulWidget {
 
 class _SlidableVideoState extends State<SlidableVideo> {
   bool _showPauseIcon = false;
-
-  // @override
-  // void didUpdateWidget(covariant SlidableVideo oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   if (widget.videoUrl != oldWidget.videoUrl) {
-  //     _controller.dispose();
-  //     _initializeVideoPlayer();
-  //   }
-  //   if (widget.nextVideoUrl != oldWidget.nextVideoUrl) {
-  //     _nextController?.dispose(); // Dispose del controlador anterior si existe
-  //     _initializeNextVideoPlayer(); // Inicializar el controlador del próximo video si hay una URL proporcionada
-  //   }
-  // }
 
   void _showPauseIconForAMoment() {
     setState(() {
@@ -60,6 +55,41 @@ class _SlidableVideoState extends State<SlidableVideo> {
                         AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
                   ),
                 ),
+          Positioned(
+            left: 10,
+            bottom: 45,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.username,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
+                    height: 1,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  widget.description,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                    height: 1,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
           VideoProgressIndicator(
             widget.controller,
             allowScrubbing: true,

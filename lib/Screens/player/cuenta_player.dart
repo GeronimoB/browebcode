@@ -88,7 +88,10 @@ class CuentaPageState extends State<CuentaPage> {
     String shortInfo =
         '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
     String fullInfo =
-        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\n Altura: ${player.altura}\n Categoría: ${player.categoria}\n Posición: ${player.position} \n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Pie Dominante: ${player.pieDominante} \nEscuela deportiva: ${player.club} \n Logros: ${player.logrosIndividuales}';
+        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\n Categoría: ${player.categoria}\n Posición: ${player.position}\nEntidad deportiva: ${player.club}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Pie Dominante: ${player.pieDominante} \n Logros: ${player.logrosIndividuales}  \n Altura: ${player.altura}';
+
+    double width = MediaQuery.of(context).size.width;
+    print(width);
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -216,117 +219,124 @@ class CuentaPageState extends State<CuentaPage> {
               ),
             ),
             const SizedBox(height: 35),
-            CarouselSlider(
-              options: CarouselOptions(
-                height: 310.0,
-                enlargeCenterPage: true,
-                autoPlay: false,
-                autoPlayCurve: Curves.fastOutSlowIn,
-                enableInfiniteScroll: true,
-                autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                viewportFraction: 0.8,
-              ),
-              items: planes.map((plan) {
-                final isActualPlan =
-                    userProvider.getCurrentUser().subscription == plan.nombre;
-                return Container(
-                  width: 360,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    border: Border.all(color: const Color(0xFF05FF00)),
-                    boxShadow: isActualPlan
-                        ? [
-                            const CustomBoxShadow(
-                                color: Color(0xFF05FF00), blurRadius: 10)
-                          ]
-                        : null,
-                    borderRadius: BorderRadius.circular(40),
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            SvgPicture.asset('assets/icons/Logo.svg',
-                                width: 80),
-                            Text(
-                              plan.nombre,
-                              style: const TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF05FF00),
-                                  height: 1),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        const Text(
-                          'Que incluye:',
-                          style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          expanded ? plan.descripcionLarga : plan.descripcion,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                          maxLines: expanded ? 100 : 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              expanded = !expanded;
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                            foregroundColor: const Color(0xFF05FF00),
-                          ),
-                          child: Text(expanded ? 'Ver menos...' : 'Ver más...'),
-                        ),
-                        Center(
-                          child: CustomTextButton(
-                            onTap: () {
-                              if (!isActualPlan) {
-                                final precio = plan.precio.replaceAll(',', '.');
-                                final precioDouble = double.parse(precio);
-                                playerProvider.isSubscriptionPayment = true;
-                                playerProvider.isNewSubscriptionPayment = false;
-                                playerProvider.selectPlan(plan);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MetodoDePagoScreen(
-                                            valueToPay: precioDouble,
-                                          )),
-                                );
-                              } else {
-                                confirmationCancelDialog(
-                                    context, playerProvider);
-                              }
-                            },
-                            text: isActualPlan ? 'Cancelar' : 'Subscribirse',
-                            buttonPrimary: true,
-                            width: 116,
-                            height: 42,
-                          ),
-                        ),
-                      ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: CarouselSlider(
+                options: CarouselOptions(
+                  height: 310.0,
+                  enlargeCenterPage: true,
+                  autoPlay: false,
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  enableInfiniteScroll: true,
+                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                  viewportFraction: width > 550 ? 0.5 : 0.8,
+                ),
+                items: planes.map((plan) {
+                  final isActualPlan =
+                      userProvider.getCurrentUser().subscription == plan.nombre;
+                  return Container(
+                    width: 360,
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      border: Border.all(color: const Color(0xFF05FF00)),
+                      boxShadow: isActualPlan
+                          ? [
+                              const CustomBoxShadow(
+                                  color: Color(0xFF05FF00), blurRadius: 10)
+                            ]
+                          : null,
+                      borderRadius: BorderRadius.circular(40),
                     ),
-                  ),
-                );
-              }).toList(),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              SvgPicture.asset('assets/icons/Logo.svg',
+                                  width: 80),
+                              Text(
+                                plan.nombre,
+                                style: const TextStyle(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF05FF00),
+                                    height: 1),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          const Text(
+                            'Que incluye:',
+                            style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            expanded ? plan.descripcionLarga : plan.descripcion,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                            maxLines: expanded ? 100 : 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                expanded = !expanded;
+                              });
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: const Color(0xFF05FF00),
+                            ),
+                            child:
+                                Text(expanded ? 'Ver menos...' : 'Ver más...'),
+                          ),
+                          Center(
+                            child: CustomTextButton(
+                              onTap: () {
+                                if (!isActualPlan) {
+                                  final precio =
+                                      plan.precio.replaceAll(',', '.');
+                                  final precioDouble = double.parse(precio);
+                                  playerProvider.isSubscriptionPayment = true;
+                                  playerProvider.isNewSubscriptionPayment =
+                                      false;
+                                  playerProvider.selectPlan(plan);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            MetodoDePagoScreen(
+                                              valueToPay: precioDouble,
+                                            )),
+                                  );
+                                } else {
+                                  confirmationCancelDialog(
+                                      context, playerProvider);
+                                }
+                              },
+                              text: isActualPlan ? 'Cancelar' : 'Subscribirse',
+                              buttonPrimary: true,
+                              width: 116,
+                              height: 42,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
             Expanded(
               child: Align(

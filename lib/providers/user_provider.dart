@@ -25,8 +25,8 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updatePlan(String plan) {
-    _currentUser = _currentUser.copyWith(subscription: plan);
+  void updatePlan(String plan, {bool status = false}) {
+    _currentUser = _currentUser.copyWith(subscription: plan, status: status);
     notifyListeners();
   }
 

@@ -1,11 +1,18 @@
+import 'dart:convert';
+
 import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../components/app_bar_title.dart';
+import '../../components/snackbar.dart';
+import '../../providers/user_provider.dart';
+import '../../utils/api_client.dart';
 
 bool _isSelected = false;
 
@@ -28,7 +35,7 @@ class Plan {
 List<Plan> planes = [
   Plan(
     nombre: 'Coaching Deportivo',
-    precio: '49.99€/Mes',
+    precio: 'consultar',
     descripcion:
         'Desde Nuestra Plataforma, somo conscientes de la gran importancia que tiene la fortaleza mental de un deportista de alto nivel.',
     descripcionLarga:
@@ -36,7 +43,7 @@ List<Plan> planes = [
   ),
   Plan(
     nombre: 'Asesoramiento Deportivo',
-    precio: '49.99€/Mes',
+    precio: 'consultar',
     descripcion:
         'Ante cualquier duda que le pueda surgir a nuestros usuarios para la toma de una determinada decisión deportiva',
     descripcionLarga:
@@ -44,7 +51,7 @@ List<Plan> planes = [
   ),
   Plan(
     nombre: 'Representación Deportiva',
-    precio: '49.99€/Mes',
+    precio: 'consultar',
     descripcion:
         'Dentro del apartado de Representación Deportiva, se informará al usuario que contamos con los mecanismo oportunos ',
     descripcionLarga:
@@ -52,7 +59,7 @@ List<Plan> planes = [
   ),
   Plan(
     nombre: 'Asesoramiento Legal',
-    precio: '49.99€/Mes',
+    precio: 'consultar',
     descripcion:
         'La tranquilidad y la paz deportiva es indispensable para obtener un rendimiento de éxito. ',
     descripcionLarga:
@@ -69,7 +76,7 @@ class Servicios extends StatefulWidget {
 }
 
 class _PlanesPagoState extends State<Servicios> {
-  int _selectedCardIndex = -1; // Índice de la tarjeta seleccionada
+  int _selectedCardIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -113,62 +120,37 @@ class _PlanesPagoState extends State<Servicios> {
                   },
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Seleccione una opción de pago:',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Checkbox(
-                        value: _isSelected,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _isSelected = value!;
-                          });
-                        },
-                        fillColor: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.selected)) {
-                              return const Color(0xff00E050);
-                            }
-                            return Colors.white;
-                          },
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(5), // Bordes redondeados
-                        ),
-                      ),
-                      const Text(
-                        'Full Plan: Todos los servicios 149,99€/Mes',
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
               Padding(
                 padding: const EdgeInsets.all(22.0),
                 child: CustomTextButton(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const MetodoDePagoScreen(
-                                  valueToPay: 50.99,
-                                )),
-                      );
+                    onTap: () async {
+                      try {
+                        if (_selectedCardIndex == -1) {
+                          showErrorSnackBar(
+                              context, translations!['please_select_service']);
+                          return;
+                        }
+                        final userProvider =
+                            Provider.of<UserProvider>(context, listen: false);
+                        final response =
+                            await ApiClient().post('auth/service-consult', {
+                          "userId":
+                              userProvider.getCurrentUser().userId.toString(),
+                          "service": planes[_selectedCardIndex].nombre,
+                        });
+                        if (response.statusCode == 200) {
+                          showSucessSnackBar(
+                              context, translations!['scss_ask_service']);
+                        } else {
+                          showErrorSnackBar(
+                              context, translations!['err_ask_service']);
+                        }
+                      } catch (e) {
+                        showErrorSnackBar(
+                            context, translations!['err_ask_service']);
+                      }
                     },
-                    text: 'Siguiente',
+                    text: translations!['ask'],
                     buttonPrimary: true,
                     width: 116,
                     height: 39),
@@ -247,7 +229,7 @@ class _PlanesPagoState extends State<Servicios> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      'Total: ${plan.precio}',
+                      'Precio: ${plan.precio}',
                       style: const TextStyle(
                         color: Color(0xFF00F056),
                         fontWeight: FontWeight.bold,

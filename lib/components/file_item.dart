@@ -177,7 +177,6 @@ String getFileDisplayName(String fileUrl) {
 
 Widget fileItem(String fileUrl, DateTime datetime, bool sent, bool read,
     BuildContext context) {
-
   String fileType = getFileType(fileUrl);
   return Container(
     width: Sizes.width,
@@ -212,7 +211,7 @@ Widget fileItem(String fileUrl, DateTime datetime, bool sent, bool read,
           SizedBox(height: Sizes.padding / 4),
           Text(
             getFileDisplayName(fileUrl),
-            style:  TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: Sizes.font14,
             ),
@@ -223,7 +222,7 @@ Widget fileItem(String fileUrl, DateTime datetime, bool sent, bool read,
             children: [
               Text(
                 datetime.toIso8601String().substring(11, 16),
-                style:  TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: Sizes.font14,
                 ),

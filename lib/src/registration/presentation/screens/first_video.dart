@@ -111,7 +111,6 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
         return;
       }
 
-      // Capturar un frame del video para usarlo como placeholder
       final uint8list = await VideoThumbnail.thumbnailData(
         video: videoPath,
         imageFormat: ImageFormat.PNG,
@@ -156,25 +155,24 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
       Uri.parse('${ApiConstants.baseUrl}/auth/uploadFiles'),
     );
     if (videoPath != null) {
-      // Adjuntar el archivo de video al cuerpo de la solicitud
+    
       request.files.add(await http.MultipartFile.fromPath(
-        'video', // Nombre del campo en el servidor para el video
+        'video', 
         videoPath,
       ));
     }
 
     if (uint8list != null) {
-      // Adjuntar los bytes de la imagen al cuerpo de la solicitud
+
       request.files.add(http.MultipartFile.fromBytes(
-        'imagen', // Nombre del campo en el servidor para la imagen
+        'imagen', 
         uint8list,
-        filename: 'imagen.png', // Nombre de archivo (puede ser cualquier cosa)
+        filename: 'imagen.png', 
         contentType:
-            MediaType('image', 'png'), // Tipo de contenido de la imagen
+            MediaType('image', 'png'), 
       ));
     }
 
-    // Enviar la solicitud al servidor y esperar la respuesta
     await request.send();
   }
 
@@ -245,18 +243,6 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                           });
                         },
                       ),
-                      // CustomTextButton(
-                      //     onTap: () {
-                      //       Navigator.pushReplacement(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: (context) => const PlanesPago()),
-                      //       );
-                      //     },
-                      //     text: 'Subir',
-                      //     buttonPrimary: true,
-                      //     width: 100,
-                      //     height: 39)
                     ],
                   )
                 : Column(

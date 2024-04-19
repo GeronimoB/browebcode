@@ -71,8 +71,8 @@ class PlayerProfileState extends State<PlayerProfile> {
         birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
     String shortInfo =
         '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
-    String fullInfo =
-        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\n Altura: ${player.altura}\n Categoría: ${player.categoria}\n Posición: ${player.position} \n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Pie Dominante: ${player.pieDominante} \nEscuela deportiva: ${player.club} \n Logros: ${player.logrosIndividuales}';
+   String fullInfo =
+        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\n Categoría: ${player.categoria}\n Posición: ${player.position}\nEntidad deportiva: ${player.club}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Pie Dominante: ${player.pieDominante} \n Logros: ${player.logrosIndividuales}  \n Altura: ${player.altura}';
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -208,7 +208,7 @@ class PlayerProfileState extends State<PlayerProfile> {
                       return const Expanded(
                         child: Center(
                           child: Text(
-                            "¡Aun no tienes videos, sube uno!",
+                            "¡Aún no tienes videos, sube uno! ",
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Montserrat',

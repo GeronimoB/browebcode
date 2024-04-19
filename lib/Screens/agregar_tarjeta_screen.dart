@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -66,7 +68,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
             appBar: AppBar(
               scrolledUnderElevation: 0,
               centerTitle: true,
-              title: appBarTitle('MÉTODO DE PAGO'),
+              title: appBarTitle(translations!["payment_method"]),
               backgroundColor: Colors.transparent,
               elevation: 0,
               leading: IconButton(
@@ -87,10 +89,10 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(
+                  SizedBox(
                     width: double.maxFinite,
                     child: Text(
-                      'Disponibles',
+                      translations!["available_cards"],
                       style: const TextStyle(
                           color: Color(0xFF00E050),
                           fontSize: 18,
@@ -123,10 +125,10 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                     ),
                   ),
                   const SizedBox(height: 16.0),
-                  const SizedBox(
+                  SizedBox(
                     width: double.maxFinite,
                     child: Text(
-                      'Agregar Tarjeta',
+                      translations!["add_card_title"],
                       style: const TextStyle(
                           color: Color(0xFF00E050),
                           fontSize: 18,
@@ -161,7 +163,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                               _handleAddCard();
                             }
                           : () => FocusScope.of(context).unfocus(),
-                      text: 'Añadir Tarjeta',
+                      text: translations!["add_card_btn"],
                       buttonPrimary: false,
                       width: 233,
                       height: 32),
@@ -170,7 +172,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                       onTap: () {
                         _handlePressPay();
                       },
-                      text: 'Pagar',
+                      text: translations!["pay_btn"],
                       buttonPrimary: true,
                       width: 233,
                       height: 30),
@@ -189,12 +191,10 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
             Container(
               width: double.infinity,
               height: double.infinity,
-              color: Colors.black
-                  .withOpacity(0.5), // Color de fondo semitransparente
+              color: Colors.black.withOpacity(0.5),
               child: const Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Color(0xFF05FF00)), // Color del loader
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
                 ),
               ),
             ),
@@ -215,11 +215,11 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                   borderRadius: BorderRadius.circular(23)),
               contentPadding: const EdgeInsets.all(25),
               backgroundColor: const Color(0xFF3B3B3B),
-              content: const Column(
+              content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Estamos subiendo tu vídeo, esto puede tardar unos segundos…",
+                    translations!["upload_video_loading"],
                     style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
@@ -227,8 +227,8 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                         fontSize: 20),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 25),
-                  LinearProgressIndicator(
+                  const SizedBox(height: 25),
+                  const LinearProgressIndicator(
                     color: Color(0xff00E050),
                   ),
                 ],
@@ -287,7 +287,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  '************${tarjeta.last4Numbers}',
+                  '*${tarjeta.last4Numbers}',
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: Colors.white,
@@ -317,13 +317,9 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                 );
 
                 if (asociatePaymentMethod.statusCode != 200) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      backgroundColor: Colors.redAccent,
-                      content: Text(
-                          'Error al eliminar la tarjeta, intentelo de nuevo.'),
-                    ),
-                  );
+                  showErrorSnackBar(
+                      context, translations!["error_deleting_card"]);
+
                   setState(() {
                     _isLoading = false;
                   });
@@ -334,12 +330,8 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                 });
                 final savedCards =
                     jsonDecode(asociatePaymentMethod.body)["paymentMethods"];
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      backgroundColor: Color(0xFF05FF00),
-                      content:
-                          Text('La tarjeta se ha eliminado exitosamente.')),
-                );
+                showSucessSnackBar(
+                    context, translations!["scss_deleting_card"]);
                 playerProvider.setCards(mapListToTarjetas(savedCards));
               },
             ),
@@ -358,7 +350,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       setState(() {
         _isLoading = true;
       });
-      // 1. Gather customer billing information (ex. email)
+
       final playerProvider =
           Provider.of<PlayerProvider>(context, listen: false);
       final player =
@@ -367,7 +359,6 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         email: player.email,
       );
 
-      // 2. Create payment method
       final paymentMethod = await Stripe.instance.createPaymentMethod(
           params: PaymentMethodParams.card(
         paymentMethodData: PaymentMethodData(
@@ -386,12 +377,8 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       );
 
       if (asociatePaymentMethod.statusCode != 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Text('Error al guardar la tarjeta, intentelo de nuevo.'),
-          ),
-        );
+        showErrorSnackBar(context, translations!["error_saving_card"]);
+
         setState(() {
           _isLoading = false;
         });
@@ -400,18 +387,15 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
 
       final savedCards =
           jsonDecode(asociatePaymentMethod.body)["paymentMethods"];
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            backgroundColor: Color(0xFF05FF00),
-            content: Text('La tarjeta se ha agregado exitosamente.')),
-      );
+      showSucessSnackBar(context, translations!["scss_saving_card"]);
+
       playerProvider.setCards(mapListToTarjetas(savedCards));
       setState(() {
         _isLoading = false;
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.redAccent, content: Text('Error: $e')));
+      showErrorSnackBar(context, 'Error: $e');
+
       setState(() {
         _isLoading = false;
       });
@@ -426,7 +410,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         playerProvider.getPlayer() ?? playerProvider.getTemporalUser();
 
     if (playerProvider.selectedCard == null) {
-      _showErrorSnackBar('Selecciona la tarjeta con la cual deseas pagar.');
+      showErrorSnackBar(context, translations!["select_payment_card"]);
       return;
     }
 
@@ -439,7 +423,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
         await _handleFavoriteVideoPayment(player, playerProvider);
       }
     } catch (e) {
-      _showErrorSnackBar('Error: $e');
+      showErrorSnackBar(context, 'Error: $e');
       _setLoadingState(false);
       rethrow;
     }
@@ -464,7 +448,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
     );
 
     if (subscriptionIntent.statusCode != 200) {
-      _showErrorSnackBar('Error al pagar, inténtelo de nuevo.');
+      showErrorSnackBar(context, translations!['error_paying']);
       _setLoadingState(false);
       return;
     }
@@ -472,7 +456,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
     _setLoadingState(false);
 
     if (playerProvider.isNewSubscriptionPayment) {
-      _showSuccessSnackBar('Su pago se ha procesado exitosamente.');
+      showSucessSnackBar(context, translations!['scss_paying']);
       await Future.delayed(const Duration(seconds: 1));
 
       userProvider.setCurrentUser(UserModel.fromPlayer(player,
@@ -484,8 +468,10 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       final userId = player.userId;
       uploadVideoAndImage(video, image, userId);
     } else {
-      userProvider.updatePlan(playerProvider.getActualPlan()!.nombre);
-      _showSuccessSnackBar('¡Felicidades, haz actualizado tu suscripcion!');
+      userProvider.updatePlan(playerProvider.getActualPlan()!.nombre,
+          status: true);
+      showSucessSnackBar(context, translations!['scss_update_sub']);
+
       await Future.delayed(const Duration(seconds: 2));
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -514,7 +500,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
     );
 
     if (destacarVideo.statusCode != 200) {
-      _showErrorSnackBar('Error al pagar, inténtelo de nuevo.');
+      showErrorSnackBar(context, translations!['error_paying']);
       _setLoadingState(false);
       return;
     }
@@ -534,24 +520,6 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
     });
   }
 
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.redAccent,
-        content: Text(message),
-      ),
-    );
-  }
-
-  void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: const Color(0xFF05FF00),
-        content: Text(message),
-      ),
-    );
-  }
-
   Future<void> uploadVideoAndImage(
       String? videoPath, Uint8List? uint8list, String? userId) async {
     var request = http.MultipartRequest(
@@ -567,7 +535,6 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
     }
 
     if (uint8list != null) {
-      // Adjuntar los bytes de la imagen al cuerpo de la solicitud
       request.files.add(http.MultipartFile.fromBytes(
         'imagen',
         uint8list,
@@ -576,7 +543,6 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       ));
     }
 
-    // Enviar la solicitud al servidor y esperar la respuesta
     var response = await request.send();
 
     // Verificar el estado de la respuesta
@@ -588,10 +554,8 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       );
     } else {
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(
-              'Hubo un error al cargar tu video, intentalo de nuevo desde tu perfil.')));
+      showErrorSnackBar(context, translations!['err_upload_first_video']);
+
       Future.delayed(const Duration(seconds: 2));
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(

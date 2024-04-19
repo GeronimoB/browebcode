@@ -2,7 +2,49 @@ import 'package:flutter/material.dart';
 
 import '../common/sizes.dart';
 
-Widget imageItem(String imageUrl, DateTime datetime, bool sent, bool read) {
+class ImageFullScreen extends StatelessWidget {
+  final String imageUrl;
+
+  const ImageFullScreen({super.key, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromARGB(255, 44, 44, 44),
+            Color.fromARGB(255, 0, 0, 0),
+          ],
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.close,
+              color: Color(0xFF00E050),
+              size: 32,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        body: Center(
+          child: Image.network(imageUrl),
+        ),
+      ),
+    );
+  }
+}
+
+Widget imageItem(BuildContext context, String imageUrl, DateTime datetime,
+    bool sent, bool read) {
   return Container(
     width: Sizes.width,
     padding: EdgeInsets.symmetric(horizontal: Sizes.padding),
@@ -30,12 +72,22 @@ Widget imageItem(String imageUrl, DateTime datetime, bool sent, bool read) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(Sizes.radius),
-            child: Image.network(
-              imageUrl,
-              width: 150,
-              height: 150,
+          Center(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ImageFullScreen(imageUrl: imageUrl),
+                ));
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(Sizes.radius),
+                child: Image.network(
+                  imageUrl,
+                  width: 150,
+                  height: 150,
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
           SizedBox(height: Sizes.padding / 4),

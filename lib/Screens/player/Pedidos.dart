@@ -98,7 +98,7 @@ class PedidosState extends State<Pedidos> {
                       return const Expanded(
                         child: Center(
                           child: Text(
-                            "¡Aun no tienes pedidos!",
+                            "¡Aún no tienes pedidos!",
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Montserrat',
