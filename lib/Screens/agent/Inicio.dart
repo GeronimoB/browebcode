@@ -133,6 +133,7 @@ class InicioPageState extends State<InicioPage> {
   void _initializeNextVideoPlayer(int index) {
     if (_videosRandom.isNotEmpty) {
       Uri nextUrl = Uri.parse(_videosRandom[index].url);
+      print(nextUrl);
       nextController = VideoPlayerController.networkUrl(nextUrl)
         ..initialize().then((_) {
           nextController!.setLooping(true);
@@ -184,7 +185,9 @@ class InicioPageState extends State<InicioPage> {
     currentController = nextController;
     _currentIndex = (_currentIndex + 1) % _videosRandom.length;
     _initializeNextVideoPlayer((_currentIndex + 1) % _videosRandom.length);
+    print("cindex $_currentIndex");
     currentController!.play();
+    setState(() {});
   }
 
   @override

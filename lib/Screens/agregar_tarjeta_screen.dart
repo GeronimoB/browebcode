@@ -85,7 +85,6 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
             body: Container(
               height: MediaQuery.of(context).size.height - 100,
               padding: const EdgeInsets.all(26.0),
-              width: 450,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

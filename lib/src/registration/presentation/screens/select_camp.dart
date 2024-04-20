@@ -21,30 +21,148 @@ class SelectCamp extends StatefulWidget {
 }
 
 class SelectCampState extends State<SelectCamp> {
-  late List<Player> players;
   bool isLoading = false;
+
+  bool isPhone = true;
+  List<Player> players = [
+    Player(position: translations!['goalKeeper'], number: "1", posiciones: {
+      "phone": {
+        "top": 0.64,
+        "left": 0.43,
+      },
+      "tablet": {
+        "top": 0.67,
+        "left": 0.46,
+      },
+    }),
+    Player(position: translations!['LD'], number: "2", posiciones: {
+      "phone": {
+        "top": 0.62,
+        "left": 0.85,
+      },
+      "tablet": {
+        "top": 0.62,
+        "left": 0.89,
+      },
+    }),
+    Player(position: translations!['LI'], number: "3", posiciones: {
+      "phone": {
+        "top": 0.62,
+        "left": 0.01,
+      },
+      "tablet": {
+        "top": 0.62,
+        "left": 0.01,
+      },
+    }),
+    Player(position: translations!['DFD'], number: "4", posiciones: {
+      "phone": {
+        "top": 0.6,
+        "left": 0.6,
+      },
+      "tablet": {
+        "top": 0.63,
+        "left": 0.63,
+      },
+    }),
+    Player(position: translations!['DFI'], number: "5", posiciones: {
+      "phone": {
+        "top": 0.60,
+        "left": 0.26,
+      },
+      "tablet": {
+        "top": 0.63,
+        "left": 0.27,
+      },
+    }),
+    Player(position: translations!['MCD'], number: "6", posiciones: {
+      "phone": {
+        "top": 0.55,
+        "left": 0.17,
+      },
+      "tablet": {
+        "top": 0.55,
+        "left": 0.20,
+      },
+    }),
+    Player(position: translations!['MDD'], number: "7", posiciones: {
+      "phone": {
+        "top": 0.48,
+        "left": 0.73,
+      },
+      "tablet": {
+        "top": 0.50,
+        "left": 0.70,
+      },
+    }),
+    Player(position: translations!['MDI'], number: "8", posiciones: {
+      "phone": {
+        "top": 0.55,
+        "left": 0.67,
+      },
+      "tablet": {
+        "top": 0.55,
+        "left": 0.67,
+      },
+    }),
+    Player(position: translations!['DC'], number: "9", posiciones: {
+      "phone": {
+        "top": 0.51,
+        "left": 0.475,
+      },
+      "tablet": {
+        "top": 0.50,
+        "left": 0.475,
+      },
+    }),
+    Player(position: translations!['MCO'], number: "10", posiciones: {
+      "phone": {
+        "top": 0.53,
+        "left": 0.4,
+      },
+      "tablet": {
+        "top": 0.54,
+        "left": 0.42,
+      },
+    }),
+    Player(position: translations!['EXT'], number: "11", posiciones: {
+      "phone": {
+        "top": 0.48,
+        "left": 0.24,
+      },
+      "tablet": {
+        "top": 0.50,
+        "left": 0.24,
+      },
+    }),
+  ];
 
   @override
   void initState() {
     super.initState();
-    players = [
-      Player(position: translations!['goalKeeper'], number: "1"),
-      Player(position: translations!['LD'], number: "2"),
-      Player(position: translations!['LI'], number: "3"),
-      Player(position: translations!['DFD'], number: "4"),
-      Player(position: translations!['DFI'], number: "5"),
-      Player(position: translations!['MCD'], number: "6"),
-      Player(position: translations!['MDD'], number: "7"),
-      Player(position: translations!['MDI'], number: "8"),
-      Player(position: translations!['DC'], number: "9"),
-      Player(position: translations!['MCO'], number: "10"),
-      Player(position: translations!['EXT'], number: "11"),
-    ];
   }
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
+    if (screenSize.width > 500) {
+      setState(() {
+        isPhone = false;
+      });
+    }
+
+    List<Widget> playerWidgets = List.generate(
+      players.length,
+      (int index) {
+        return playerPic(
+          players[index],
+          screenSize.height *
+              players[index].posiciones![isPhone ? "phone" : "tablet"]["top"],
+          screenSize.width *
+              players[index].posiciones![isPhone ? "phone" : "tablet"]["left"],
+        );
+      },
+    ).toList();
 
     return WillPopScope(
       onWillPop: () async {
@@ -75,8 +193,8 @@ class SelectCampState extends State<SelectCamp> {
               child: Image.asset(
                 'assets/images/Campo.png',
                 width: screenSize.width,
-                height: screenSize.height * 0.6,
-                fit: BoxFit.fitWidth,
+                height: screenSize.height * 0.7,
+                fit: BoxFit.fill,
               ),
             ),
             Positioned(
@@ -99,7 +217,7 @@ class SelectCampState extends State<SelectCamp> {
               ),
             ),
             Positioned(
-              top: screenSize.height * 0.25,
+              top: screenSize.height * 0.38,
               left: 0,
               right: 0,
               child: Text(
@@ -114,74 +232,9 @@ class SelectCampState extends State<SelectCamp> {
                 textAlign: TextAlign.center,
               ),
             ),
-            playerPic(
-              translations!['goalKeeper'],
-              "1",
-              screenSize.height * 0.55,
-              screenSize.width * 0.43,
-            ),
-            playerPic(
-              translations!['LD'],
-              "2",
-              screenSize.height * 0.52,
-              screenSize.width * 0.85,
-            ),
-            playerPic(
-              translations!['LI'],
-              "3",
-              screenSize.height * 0.52,
-              screenSize.width * 0.01,
-            ),
-            playerPic(
-              translations!['DFD'],
-              "4",
-              screenSize.height * 0.5,
-              screenSize.width * 0.6,
-            ),
-            playerPic(
-              translations!['DFI'],
-              "5",
-              screenSize.height * 0.5,
-              screenSize.width * 0.26,
-            ),
-            playerPic(
-              translations!['MCD'],
-              "6",
-              screenSize.height * 0.45,
-              screenSize.width * 0.17,
-            ),
-            playerPic(
-              translations!['MDD'],
-              "7",
-              screenSize.height * 0.41,
-              screenSize.width * 0.73,
-            ),
-            playerPic(
-              translations!['MDI'],
-              "8",
-              screenSize.height * 0.45,
-              screenSize.width * 0.67,
-            ),
-            playerPic(
-              translations!['DC'],
-              "9",
-              screenSize.height * 0.40,
-              screenSize.width * 0.475,
-            ),
-            playerPic(
-              translations!['MCO'],
-              "10",
-              screenSize.height * 0.44,
-              screenSize.width * 0.4,
-            ),
-            playerPic(
-              translations!['EXT'],
-              "11",
-              screenSize.height * 0.41,
-              screenSize.width * 0.1,
-            ),
+            ...playerWidgets,
             Positioned(
-              top: screenSize.height * 0.7,
+              top: screenSize.height * 0.82,
               left: 0,
               right: 0,
               child: Padding(
@@ -247,8 +300,8 @@ class SelectCampState extends State<SelectCamp> {
                         },
                         text: translations!['next'],
                         buttonPrimary: true,
-                        width: 116,
-                        height: 39),
+                        width: 150,
+                        height: 45),
                     const SizedBox(height: 10),
                   ],
                 ),
@@ -374,14 +427,16 @@ class SelectCampState extends State<SelectCamp> {
     );
   }
 
-  Widget playerPic(String position, String number, double top, double left) {
-    Player player = players.firstWhere(
-      (element) => element.position == position,
-      orElse: () => Player(position: position, number: number),
-    );
+  Widget playerPic(Player player, double top, double left) {
+    // Player player = players.firstWhere(
+    //   (element) => element.position == position,
+    //   orElse: () => Player(position: position, number: number),
+    // );
 
     double initialTop = -100.0;
-
+    // print(top);
+    // print(left);
+    // print(player.isSelected);
     return TweenAnimationBuilder<double>(
       tween: Tween<double>(begin: initialTop, end: top),
       duration: const Duration(seconds: 2),
@@ -391,7 +446,7 @@ class SelectCampState extends State<SelectCamp> {
           left: left,
           child: GestureDetector(
             onTap: () {
-              _showPositionDialog(position, () {
+              _showPositionDialog(player.position, () {
                 setState(() {});
               });
               handlePlayerSelection(player);
@@ -412,7 +467,7 @@ class SelectCampState extends State<SelectCamp> {
                   ),
                   child: Center(
                     child: Text(
-                      number,
+                      player.number,
                       style: const TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,
@@ -424,7 +479,10 @@ class SelectCampState extends State<SelectCamp> {
                     ),
                   ),
                 ),
-                Image.asset('assets/images/football-player 1.png'),
+                Image.asset(
+                  'assets/images/football-player 1.png',
+                  height: 80,
+                ),
               ],
             ),
           ),
@@ -434,11 +492,13 @@ class SelectCampState extends State<SelectCamp> {
   }
 
   void handlePlayerSelection(Player selectedPlayer) {
+    print(selectedPlayer.position);
     setState(() {
       for (var player in players) {
         if (player.position != selectedPlayer.position) {
           player.isSelected = false;
         } else {
+          print("si entro aca");
           player.isSelected = true;
         }
       }
@@ -451,12 +511,14 @@ class Player {
   final String number;
   bool isSelected;
   final bool? isPositionConfirmed;
+  Map<String, dynamic>? posiciones;
 
   Player({
     required this.position,
     required this.number,
     this.isSelected = false,
     this.isPositionConfirmed,
+    this.posiciones,
   });
 
   Player copyWith({
@@ -464,12 +526,14 @@ class Player {
     String? number,
     bool? isSelected,
     bool? isPositionConfirmed,
+    Map<String, dynamic>? posiciones,
   }) {
     return Player(
       position: position ?? this.position,
       number: number ?? this.number,
       isSelected: isSelected ?? this.isSelected,
       isPositionConfirmed: isPositionConfirmed ?? this.isPositionConfirmed,
+      posiciones: posiciones ?? this.posiciones,
     );
   }
 }

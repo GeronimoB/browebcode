@@ -570,7 +570,7 @@ class ConfigProfilePlayer extends StatelessWidget {
                   children: [
                     CustomTextButton(
                       onTap: () => Navigator.of(context).pop(),
-                      text: translations!['Cancelar'],
+                      text: translations!['cancel'],
                       buttonPrimary: false,
                       width: 90,
                       height: 27,

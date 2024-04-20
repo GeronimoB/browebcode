@@ -100,6 +100,19 @@ class _SlidableVideoState extends State<SlidableVideo> {
             ),
           ),
           AnimatedOpacity(
+            opacity: _showPauseIcon ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 300),
+            child: Center(
+              child: Icon(
+                Icons.pause_circle_filled,
+                color: widget.controller.value.isPlaying
+                    ? const Color.fromARGB(142, 255, 255, 255)
+                    : Colors.white,
+                size: 64,
+              ),
+            ),
+          ),
+          AnimatedOpacity(
             opacity: _showPauseIcon || !widget.controller.value.isPlaying
                 ? 1.0
                 : 0.0,

@@ -14,7 +14,7 @@ class InitialVideoModel {
       url: json['video_url'],
       userId: json['user_id'],
       user: '${json['name']} ${json['lastname']}',
-      description: json['description'],
+      description: json['description'] ?? '',
     );
   }
 }

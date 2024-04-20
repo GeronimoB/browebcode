@@ -20,11 +20,11 @@ List<String> piesDominantes = [
   "Ambidiestro",
 ];
 List<String> countries = [
-  'Spain',
+  'España',
   'United States',
   'France',
-  'Italy',
-  'Germany'
+  'Italia',
+  'Deutschland'
 ];
 List<String> categorias = [
   'PreBenjamín',
@@ -49,7 +49,7 @@ List<String> posiciones = [
   "Extremo Izquierdo",
 ];
 Map<String, dynamic> provincesByCountry = {
-  'Spain': [
+  'España': [
     'A Coruña',
     'Álava',
     'Albacete',
@@ -254,7 +254,7 @@ Map<String, dynamic> provincesByCountry = {
     'Val-de-Marne',
     'Val-d\'Oise'
   ],
-  'Italy': [
+  'Italia': [
     'Agrigento',
     'Alessandria',
     'Ancona',
@@ -366,7 +366,7 @@ Map<String, dynamic> provincesByCountry = {
     'Vicenza',
     'Viterbo'
   ],
-  'Germany': [
+  'Deutschland': [
     'Baden-Württemberg',
     'Bavaria',
     'Berlin',
