@@ -130,6 +130,10 @@ class ChatPageState extends State<ChatPage> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     Sizes.initSizes(width, height);
+    String fullName = '${widget.friend.name} ${widget.friend.lastName}';
+    String trimmedName =
+        fullName.length > 15 ? fullName.substring(0, 15) + '...' : fullName;
+
     return WillPopScope(
       onWillPop: () async {
         final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -183,14 +187,28 @@ class ChatPageState extends State<ChatPage> {
                   ),
                 ),
                 const SizedBox(width: 20),
-                Text(
-                  "${widget.friend.name} ${widget.friend.lastName}",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Montserrat',
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      trimmedName,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Montserrat',
+                        color: Colors.white,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    if (widget.friend.verificado)
+                      const Icon(
+                        Icons.verified,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                  ],
                 ),
                 const Spacer(),
                 IconButton(

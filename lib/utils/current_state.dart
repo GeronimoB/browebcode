@@ -366,7 +366,7 @@ Map<String, dynamic> provincesByCountry = {
     'Vicenza',
     'Viterbo'
   ],
-  'Deutschland': [
+  'Deutschland': [  
     'Baden-Württemberg',
     'Bavaria',
     'Berlin',

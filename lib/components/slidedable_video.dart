@@ -6,12 +6,14 @@ class SlidableVideo extends StatefulWidget {
   final VideoPlayerController controller;
   final String username;
   final String description;
-  const SlidableVideo(
-      {Key? key,
-      required this.controller,
-      required this.username,
-      required this.description})
-      : super(key: key);
+  final bool verificado;
+  const SlidableVideo({
+    Key? key,
+    required this.controller,
+    required this.username,
+    required this.description,
+    required this.verificado,
+  }) : super(key: key);
 
   @override
   State<SlidableVideo> createState() => _SlidableVideoState();
@@ -62,15 +64,28 @@ class _SlidableVideoState extends State<SlidableVideo> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.username,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24.0,
-                    height: 1,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      widget.username,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24.0,
+                        height: 1,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    if (widget.verificado)
+                      const Icon(
+                        Icons.verified,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                  ],
                 ),
                 const SizedBox(
                   height: 10,

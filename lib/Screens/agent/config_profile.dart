@@ -311,7 +311,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                     obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return translations!['please_enter_pss'];
+                        return translations!['enter_password'];
                       }
 
                       return null;
@@ -542,6 +542,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
       },
     );
   }
+
   Widget languageTile(
       BuildContext context, String languageCode, String language, bool select) {
     return InkWell(

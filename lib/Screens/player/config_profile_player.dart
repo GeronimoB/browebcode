@@ -6,6 +6,7 @@ import 'package:bro_app_to/Screens/player/cuenta_player.dart';
 import 'package:bro_app_to/Screens/notificaciones.dart';
 import 'package:bro_app_to/Screens/player/edit_player_info.dart';
 import 'package:bro_app_to/Screens/player/pedidos.dart';
+import 'package:bro_app_to/Screens/player/verification.dart';
 import 'package:bro_app_to/Screens/privacidad.dart';
 import 'package:bro_app_to/Screens/player/servicios.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
@@ -92,6 +93,12 @@ class ConfigProfilePlayer extends StatelessWidget {
                     callback: () {
                       showPassDialog(context);
                     },
+                  ),
+                  _buildListItem(
+                    translations!['verification_profile'],
+                    context,
+                    true,
+                    const VerificationScreen(),
                   ),
                   const SizedBox(height: 15),
                   _buildListItem('CENTRO DE AYUDA (FAQ)', context, false,
@@ -682,3 +689,4 @@ class ConfigProfilePlayer extends StatelessWidget {
     );
   }
 }
+  

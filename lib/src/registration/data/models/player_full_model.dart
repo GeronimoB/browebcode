@@ -29,6 +29,7 @@ class PlayerFullModel extends PlayerFullEntity {
     final DateTime? dateCreated,
     final DateTime? dateUpdated,
     final String? userImage,
+    final bool verificado = false,
   }) : super(
           customerStripeId: customerStripeId,
           userId: userId,
@@ -54,35 +55,36 @@ class PlayerFullModel extends PlayerFullEntity {
           dateCreated: dateCreated,
           dateUpdated: dateUpdated,
           userImage: userImage,
+          verificado: verificado,
         );
 
   @override
-  PlayerFullModel copyWith({
-    String? customerStripeId,
-    String? userId,
-    String? uid,
-    String? name,
-    String? lastName,
-    String? email,
-    String? referralCode,
-    String? password,
-    bool? isAgent,
-    DateTime? birthDate,
-    String? dni,
-    String? position,
-    String? pais,
-    String? provincia,
-    String? altura,
-    String? categoria,
-    String? club,
-    String? logrosIndividuales,
-    String? pieDominante,
-    String? seleccionNacional,
-    String? categoriaSeleccion,
-    DateTime? dateCreated,
-    DateTime? dateUpdated,
-    String? userImage,
-  }) {
+  PlayerFullModel copyWith(
+      {String? customerStripeId,
+      String? userId,
+      String? uid,
+      String? name,
+      String? lastName,
+      String? email,
+      String? referralCode,
+      String? password,
+      bool? isAgent,
+      DateTime? birthDate,
+      String? dni,
+      String? position,
+      String? pais,
+      String? provincia,
+      String? altura,
+      String? categoria,
+      String? club,
+      String? logrosIndividuales,
+      String? pieDominante,
+      String? seleccionNacional,
+      String? categoriaSeleccion,
+      DateTime? dateCreated,
+      DateTime? dateUpdated,
+      String? userImage,
+      bool? verificado}) {
     return PlayerFullModel(
       customerStripeId: customerStripeId ?? this.customerStripeId,
       userId: userId ?? this.userId,
@@ -108,6 +110,7 @@ class PlayerFullModel extends PlayerFullEntity {
       dateCreated: dateCreated ?? this.dateCreated,
       dateUpdated: dateUpdated ?? this.dateUpdated,
       userImage: userImage ?? this.userImage,
+      verificado: verificado ?? this.verificado,
     );
   }
 
@@ -117,6 +120,7 @@ class PlayerFullModel extends PlayerFullEntity {
       // Convertir la cadena a un objeto DateTime
       birthDate = DateTime.parse(json['birthday']);
     }
+    print(json['verificado']);
     return PlayerFullModel(
       customerStripeId: json['stripe_customer_id'],
       uid: json['id'].toString(),
@@ -143,6 +147,7 @@ class PlayerFullModel extends PlayerFullEntity {
       dateUpdated:
           json['dateCreated'] != null ? json['dateUpdated'].toDate() : null,
       userImage: json['image_url'] ?? '',
+      verificado: json['verificado'] ?? false,
     );
   }
 

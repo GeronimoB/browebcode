@@ -183,14 +183,28 @@ class CuentaPageState extends State<CuentaPage> {
               ),
             ),
             const SizedBox(height: 20),
-            Text(
-              '${player.name} ${player.lastName}',
-              style: const TextStyle(
-                color: Color(0xFF05FF00),
-                fontFamily: 'Montserrat',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '${player.name} ${player.lastName}',
+                  style: const TextStyle(
+                    color: Color(0xFF05FF00),
+                    fontFamily: 'Montserrat',
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                if (player.verificado)
+                  const Icon(
+                    Icons.verified,
+                    color: Color(0xFF00E050),
+                    size: 24,
+                  ),
+              ],
             ),
             const SizedBox(height: 5),
             Text(

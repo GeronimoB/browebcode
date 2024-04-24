@@ -22,7 +22,7 @@ class PlayerProfileToAgent extends StatefulWidget {
 class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
   double gridSpacing = 2.0;
   bool _isExpanded = false;
-  late PlayerFullModel player;
+  PlayerFullModel? player;
 
   @override
   void initState() {
@@ -81,15 +81,16 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
   @override
   Widget build(BuildContext context) {
     final widthVideo = MediaQuery.of(context).size.width / 3;
-    DateTime? birthDate = player.birthDate;
+
+    DateTime? birthDate = player?.birthDate;
 
     String formattedDate =
         birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
     String shortInfo =
-        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
+        '${player?.provincia}, ${player?.pais}\n Fecha de nacimiento: $formattedDate';
     String fullInfo =
-        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\n Categoría: ${player.categoria}\n Posición: ${player.position}\nEntidad deportiva: ${player.club}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Pie Dominante: ${player.pieDominante} \n Logros: ${player.logrosIndividuales}  \n Altura: ${player.altura}';
-    
+        '${player?.provincia}, ${player?.pais}\n Fecha de nacimiento: $formattedDate\n Categoría: ${player?.categoria}\n Posición: ${player?.position}\nEntidad deportiva: ${player?.club}\n Selección: ${player?.seleccionNacional} ${player?.categoriaSeleccion}\n Pie Dominante: ${player?.pieDominante} \n Logros: ${player?.logrosIndividuales}  \n Altura: ${player?.altura}';
+
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -117,7 +118,7 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            if (player.userImage!.isNotEmpty)
+            if (player?.userImage!.isNotEmpty ?? false)
               ClipOval(
                 child: CachedNetworkImage(
                   placeholder: (context, url) => AvatarPlaceholder(80),
@@ -129,13 +130,13 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
                       height: 95,
                     );
                   },
-                  imageUrl: player.userImage ?? '',
+                  imageUrl: player?.userImage ?? '',
                   fit: BoxFit.fill,
                   width: 95,
                   height: 95,
                 ),
               ),
-            if (player.userImage!.isEmpty)
+            if (player?.userImage!.isEmpty ?? true)
               ClipOval(
                 child: Image.asset(
                   'assets/images/fot.png',
@@ -145,15 +146,29 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
                 ),
               ),
             const SizedBox(height: 15.0),
-            Text(
-              '${player.name} ${player.lastName}',
-              style: const TextStyle(
-                color: Color(0xFF00E050),
-                fontSize: 22.0,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '${player?.name} ${player?.lastName}',
+                  style: const TextStyle(
+                    color: Color(0xFF00E050),
+                    fontSize: 22.0,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                if (player!.verificado)
+                  const Icon(
+                    Icons.verified,
+                    color: Color(0xFF00E050),
+                    size: 24,
+                  ),
+              ],
             ),
             Text(
               _isExpanded ? fullInfo : shortInfo,

@@ -143,7 +143,7 @@ class _MatchProfileState extends State<MatchProfile> {
                               AvatarPlaceholder(width / 2),
                           errorWidget: (context, error, stackTrace) {
                             return Image.asset(
-                              'assets/images/jugador1.png',
+                              'assets/images/fot.png',
                               fit: BoxFit.fill,
                               width: width / 2,
                               height: width / 2,
@@ -155,14 +155,28 @@ class _MatchProfileState extends State<MatchProfile> {
                           height: width / 2,
                         ),
                       ),
-                      Text(
-                        '${userData.name} ${userData.lastName}',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Montserrat',
-                          color: Colors.white,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${userData.name} ${userData.lastName}',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Montserrat',
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          if (userData.verificado)
+                            const Icon(
+                              Icons.verified,
+                              color: Color(0xFF00E050),
+                              size: 24,
+                            ),
+                        ],
                       ),
                       _buildDataRow(
                           context, 'Fecha de nacimiento: $formattedDate'),

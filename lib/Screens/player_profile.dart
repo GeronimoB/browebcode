@@ -66,12 +66,12 @@ class PlayerProfileState extends State<PlayerProfile> {
     final userProvider = Provider.of<UserProvider>(context, listen: true);
     final user = userProvider.getCurrentUser();
     DateTime? birthDate = player.birthDate;
-
+    print("esta verificado: ${player.verificado}");
     String formattedDate =
         birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
     String shortInfo =
         '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
-   String fullInfo =
+    String fullInfo =
         '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\n Categoría: ${player.categoria}\n Posición: ${player.position}\nEntidad deportiva: ${player.club}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Pie Dominante: ${player.pieDominante} \n Logros: ${player.logrosIndividuales}  \n Altura: ${player.altura}';
     return Container(
       decoration: const BoxDecoration(
@@ -135,15 +135,29 @@ class PlayerProfileState extends State<PlayerProfile> {
                 ),
               ),
             const SizedBox(height: 15.0),
-            Text(
-              '${player.name} ${player.lastName}',
-              style: const TextStyle(
-                color: Color(0xFF00E050),
-                fontSize: 22.0,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '${player.name} ${player.lastName}',
+                  style: const TextStyle(
+                    color: Color(0xFF00E050),
+                    fontSize: 22.0,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                if (player.verificado)
+                  const Icon(
+                    Icons.verified,
+                    color: Color(0xFF00E050),
+                    size: 24,
+                  ),
+              ],
             ),
             Text(
               _isExpanded ? fullInfo : shortInfo,

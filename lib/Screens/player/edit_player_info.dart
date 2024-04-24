@@ -76,6 +76,25 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     _clubController = TextEditingController(text: player.club);
   }
 
+  @override
+  void dispose() {
+    _nombreController.dispose();
+    _apellidoController.dispose();
+    _correoController.dispose();
+    _paisController.dispose();
+    _provinciaController.dispose();
+    _posicionController.dispose();
+    _categoriaController.dispose();
+    _logrosIndividualesController.dispose();
+    _alturaController.dispose();
+    _pieDominanteController.dispose();
+    _seleccionNacionalController.dispose();
+    _categoriaSeleccionController.dispose();
+    _dniController.dispose();
+    _clubController.dispose();
+    super.dispose();
+  }
+
   Future<void> _openGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
@@ -123,7 +142,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF212121), Color(0xFF121212)],
+            colors: [Color(0xFF444444), Color(0xFF000000)],
           ),
         ),
         child: Scaffold(
@@ -279,6 +298,9 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                   camp: 'categoriaseleccion',
                   select: true,
                   items: nationalCategories[_seleccionNacionalController.text],
+                ),
+                const SizedBox(
+                  height: 15,
                 ),
               ],
             ),

@@ -15,6 +15,7 @@ class UserModel extends UserEntity {
     String imageUrl = '',
     String subscription = '',
     bool status = false,
+    bool verificado = false,
   }) : super(
           username: username,
           password: password,
@@ -26,6 +27,7 @@ class UserModel extends UserEntity {
           imageUrl: imageUrl,
           subscription: subscription,
           status: status,
+          verificado: verificado,
         );
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class UserModel extends UserEntity {
       imageUrl: json['image_url'] ?? '',
       status: json['status'] == 1 ? true : false,
       subscription: json['suscription'] ?? '',
+      verificado: json['verificado'] ?? '',
     );
   }
 

@@ -178,6 +178,11 @@ class _ChatWidgetState extends State<ChatWidget>
 
   @override
   Widget build(BuildContext context) {
+    String fullName =
+        '${widget.chat.friendUser.name} ${widget.chat.friendUser.lastName}';
+    String trimmedName =
+        fullName.length > 18 ? fullName.substring(0, 18) + '...' : fullName;
+
     return Slidable(
       key: widget.key!,
       controller: controller,
@@ -242,15 +247,28 @@ class _ChatWidgetState extends State<ChatWidget>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      '${widget.chat.friendUser.name} ${widget.chat.friendUser.lastName}',
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w900,
-                        fontFamily: 'Montserrat',
-                        color: Colors.white,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+                    Row(
+                      children: [
+                        Text(
+                          trimmedName,
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: 'Montserrat',
+                            color: Colors.white,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        if (widget.chat.friendUser.verificado)
+                          const Icon(
+                            Icons.verified,
+                            color: Colors.white,
+                            size: 16,
+                          ),
+                      ],
                     ),
                     Text(
                       widget.chat.message,

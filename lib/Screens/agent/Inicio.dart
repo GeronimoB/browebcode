@@ -220,6 +220,8 @@ class InicioPageState extends State<InicioPage> {
                                     username: _videosRandom[_currentIndex].user,
                                     description: _videosRandom[_currentIndex]
                                         .description,
+                                    verificado: _videosRandom[_currentIndex]
+                                        .verificado,
                                   ),
                                 ),
                               ),

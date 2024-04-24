@@ -237,13 +237,26 @@ class MatcheState extends State<Matche> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Text(
-                          '${player.name} ${player.lastName}',
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              '${player.name} ${player.lastName}',
+                              style: const TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            if (player.verificado)
+                              const Icon(
+                                Icons.verified,
+                                color: Color(0xFF00E050),
+                                size: 24,
+                              ),
+                          ],
                         ),
                         Text(
                           '$formattedDate - ${player.categoria}',
