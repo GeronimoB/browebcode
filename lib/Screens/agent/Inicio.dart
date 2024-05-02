@@ -198,11 +198,12 @@ class InicioPageState extends State<InicioPage> {
     return Column(
       children: [
         SizedBox(
-          height: height * 0.85,
+          height: height * 0.92,
           child: GestureDetector(
             onHorizontalDragUpdate: _onHorizontalDragUpdate,
             onHorizontalDragEnd: _onHorizontalDragEnd,
             child: Stack(
+              alignment: Alignment.bottomCenter,
               children: <Widget>[
                 isLoading
                     ? loadingWidget()
@@ -216,17 +217,100 @@ class InicioPageState extends State<InicioPage> {
                                 child: Transform.translate(
                                   offset: Offset(_xOffset, 0),
                                   child: SlidableVideo(
-                                    controller: currentController!,
-                                    username: _videosRandom[_currentIndex].user,
-                                    description: _videosRandom[_currentIndex]
-                                        .description,
-                                    verificado: _videosRandom[_currentIndex]
-                                        .verificado,
-                                  ),
+                                      controller: currentController!),
                                 ),
                               ),
                             ),
                           ),
+                if (_videosRandom.isNotEmpty)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: MediaQuery.of(context).size.width - 10,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                _videosRandom[_currentIndex].user,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24.0,
+                                  height: 1,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              if (!_videosRandom[_currentIndex].verificado)
+                                const Icon(
+                                  Icons.verified,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                            ],
+                          ),
+                          if (_videosRandom[_currentIndex]
+                              .description
+                              .isNotEmpty) ...[
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              _videosRandom[_currentIndex].description,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 20,
+                                height: 1,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                  onTap: () => rejectFunction(),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/circle-x.svg',
+                                    height: 45,
+                                    width: 45,
+                                    color: const Color(0xFF00E050),
+                                    fit: BoxFit.cover,
+                                  )),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              GestureDetector(
+                                onTap: () => matchFunction(),
+                                child: SvgPicture.asset(
+                                  'assets/icons/heart.svg',
+                                  height: 45,
+                                  width: 45,
+                                  color: const Color(0xFF00E050),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 Positioned(
                   top: MediaQuery.of(context).padding.top + 10,
                   right: 15,
@@ -234,8 +318,8 @@ class InicioPageState extends State<InicioPage> {
                     onTap: () => _showCustomMenu(context),
                     child: SvgPicture.asset(
                       'assets/icons/filter.svg',
-                      width: 45,
-                      height: 45,
+                      width: 36,
+                      height: 36,
                       fit: BoxFit.cover,
                       color: const Color(0xFF00E050),
                     ),
@@ -263,33 +347,6 @@ class InicioPageState extends State<InicioPage> {
                   ),
               ],
             ),
-          ),
-        ),
-        SizedBox(
-          height: height * 0.09,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () => rejectFunction(),
-                child: const Icon(
-                  Icons.close_rounded,
-                  size: 80,
-                  color: Color(0xFF00E050),
-                ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              GestureDetector(
-                onTap: () => matchFunction(),
-                child: const Icon(
-                  Icons.favorite,
-                  size: 65,
-                  color: Color(0xFF00E050),
-                ),
-              ),
-            ],
           ),
         ),
       ],
@@ -455,7 +512,7 @@ class InicioPageState extends State<InicioPage> {
                       selectedState,
                       provincesByCountry[selectedCountry.text != ''
                           ? selectedCountry.text
-                          : 'Spain'],
+                          : 'España'],
                     ),
                     filterTile(
                       translations!['dominant_feet'],

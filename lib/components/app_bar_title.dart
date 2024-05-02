@@ -11,5 +11,6 @@ Widget appBarTitle(String text) {
       decoration: TextDecoration.none,
     ),
     textAlign: TextAlign.center,
+    maxLines: 2,
   );
 }

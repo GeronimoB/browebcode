@@ -9,7 +9,7 @@ Map<String, dynamic> nationalCategories = {
 };
 List<String> alturas = List.generate(211 - 150, (index) => '${index + 150} cm');
 List<String> anos =
-    List.generate(125, (index) => '${index + 1900}').reversed.toList();
+    List.generate(31, (index) => '${index + 1990}').reversed.toList();
 List<String> selecciones = [
   "Masculina",
   "Femenina",
@@ -366,7 +366,7 @@ Map<String, dynamic> provincesByCountry = {
     'Vicenza',
     'Viterbo'
   ],
-  'Deutschland': [  
+  'Deutschland': [
     'Baden-Württemberg',
     'Bavaria',
     'Berlin',

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class DropdownWidget<T> extends StatefulWidget {
@@ -12,6 +10,7 @@ class DropdownWidget<T> extends StatefulWidget {
     this.header,
     this.unselectedItemColor,
     this.width = 80,
+    this.offsetX = -65,
   }) : super(key: key);
   final List<T> items;
   final String? header;
@@ -19,6 +18,7 @@ class DropdownWidget<T> extends StatefulWidget {
   final String Function(T item) itemBuilder;
   final T value;
   final double width;
+  final double offsetX;
   final Color? unselectedItemColor;
 
   @override
@@ -37,11 +37,11 @@ class _DropdownWidgetState<T> extends State<DropdownWidget<T>>
     super.initState();
   }
 
-  void _changeExpansionStatus() {
+  void _changeExpansionStatus(BuildContext context, double offsetX) {
     if (_expanded) {
       removeOverlay();
     } else {
-      insertOverlay(context);
+      insertOverlay(context, offsetX);
     }
 
     setState(() {
@@ -61,7 +61,7 @@ class _DropdownWidgetState<T> extends State<DropdownWidget<T>>
 
   final layerLink = LayerLink();
 
-  void insertOverlay(BuildContext context) {
+  void insertOverlay(BuildContext context, double offsetX) {
     overlay = OverlayEntry(
       maintainState: true,
       builder: (context) => Positioned(
@@ -69,9 +69,9 @@ class _DropdownWidgetState<T> extends State<DropdownWidget<T>>
         left: key.currentContext!.position.dx,
         child: CompositedTransformFollower(
           showWhenUnlinked: false,
-          offset: const Offset(
-            0,
-            42,
+          offset: Offset(
+            offsetX,
+            40,
           ),
           link: layerLink,
           child: _OverlayDropdown<T>(
@@ -80,7 +80,7 @@ class _DropdownWidgetState<T> extends State<DropdownWidget<T>>
             values: widget.items,
             color: widget.unselectedItemColor,
             onSelectedItem: (val) {
-              _changeExpansionStatus();
+              _changeExpansionStatus(context, offsetX);
               widget.onChanged.call(val);
             },
             textBuilder: widget.itemBuilder,
@@ -113,7 +113,9 @@ class _DropdownWidgetState<T> extends State<DropdownWidget<T>>
         CompositedTransformTarget(
           link: layerLink,
           child: GestureDetector(
-            onTap: _changeExpansionStatus,
+            onTap: () {
+              _changeExpansionStatus(context, widget.offsetX);
+            },
             child: Container(
               key: key,
               height: 42,
@@ -175,7 +177,7 @@ class _OverlayDropdown<T> extends StatelessWidget {
     return Material(
       color: color ?? Colors.transparent,
       child: Container(
-        width: width,
+        width: 180,
         height: null,
         constraints: const BoxConstraints(maxHeight: 180),
         decoration: BoxDecoration(

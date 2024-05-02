@@ -64,7 +64,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             padding: const EdgeInsets.all(8),
             color: Colors.black,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children:
                   List.generate(_pages.length, (index) => _buildNavItem(index)),
             ),
@@ -84,63 +84,66 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
     ];
     final labels = ['Inicio', 'Match', 'Mensajes', 'Perfil'];
 
-    return InkWell(
-      onTap: () => _onItemTapped(index),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          index == 2
-              ? Consumer<UserProvider>(
-                  builder: (context, provider, _) => Stack(
-                    children: <Widget>[
-                      SvgPicture.asset(
-                        'assets/icons/${_selectedIndex == index ? selectedIconNames[index] : iconNames[index]}',
-                        height: 32,
-                        width: 32,
-                      ),
-                      provider.unreadTotalMessages != 0
-                          ? Positioned(
-                              top: 0,
-                              right: 0,
-                              child: Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                constraints: const BoxConstraints(
-                                  minWidth: 16,
-                                  minHeight: 16,
-                                ),
-                                child: Text(
-                                  provider.unreadTotalMessages.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: Color(0xff00E050),
-                                    fontWeight: FontWeight.bold,
+    return SizedBox(
+      width: 80,
+      child: InkWell(
+        onTap: () => _onItemTapped(index),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            index == 2
+                ? Consumer<UserProvider>(
+                    builder: (context, provider, _) => Stack(
+                      children: <Widget>[
+                        SvgPicture.asset(
+                          'assets/icons/${_selectedIndex == index ? selectedIconNames[index] : iconNames[index]}',
+                          height: 32,
+                          width: 32,
+                        ),
+                        provider.unreadTotalMessages != 0
+                            ? Positioned(
+                                top: 0,
+                                right: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  textAlign: TextAlign.center,
+                                  constraints: const BoxConstraints(
+                                    minWidth: 16,
+                                    minHeight: 16,
+                                  ),
+                                  child: Text(
+                                    provider.unreadTotalMessages.toString(),
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Color(0xff00E050),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                    ],
+                              )
+                            : const SizedBox.shrink(),
+                      ],
+                    ),
+                  )
+                : SvgPicture.asset(
+                    'assets/icons/${_selectedIndex == index ? selectedIconNames[index] : iconNames[index]}',
+                    height: 32,
+                    width: 32,
                   ),
-                )
-              : SvgPicture.asset(
-                  'assets/icons/${_selectedIndex == index ? selectedIconNames[index] : iconNames[index]}',
-                  height: 32,
-                  width: 32,
-                ),
-          Text(
-            labels[index],
-            style: TextStyle(
-              color: _selectedIndex == index
-                  ? Colors.white
-                  : Colors.white.withOpacity(0.8),
+            Text(
+              labels[index],
+              style: TextStyle(
+                color: _selectedIndex == index
+                    ? Colors.white
+                    : Colors.white.withOpacity(0.8),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -498,7 +498,7 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                     ),
                     TextField(
                       controller: editingController,
-                      maxLength: 120,
+                      maxLength: 35,
                       style: const TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,

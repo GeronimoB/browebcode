@@ -5,9 +5,10 @@ class Afiliado {
   Afiliado({required this.email, required this.comision});
 
   factory Afiliado.fromJson(Map<String, dynamic> json) {
+    print(json['amount']);
     return Afiliado(
       email: json['email'] ?? '',
-      comision: json['comision'] ?? 0,
+      comision: json['amount'].toDouble() ?? 0,
     );
   }
 }

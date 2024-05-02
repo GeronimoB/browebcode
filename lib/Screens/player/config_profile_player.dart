@@ -94,12 +94,13 @@ class ConfigProfilePlayer extends StatelessWidget {
                       showPassDialog(context);
                     },
                   ),
-                  _buildListItem(
-                    translations!['verification_profile'],
-                    context,
-                    true,
-                    const VerificationScreen(),
-                  ),
+                  if (!user.verificado)
+                    _buildListItem(
+                      translations!['verification_profile'],
+                      context,
+                      true,
+                      const VerificationScreen(),
+                    ),
                   const SizedBox(height: 15),
                   _buildListItem('CENTRO DE AYUDA (FAQ)', context, false,
                       const ConfigProfilePlayer()),
@@ -200,6 +201,8 @@ class ConfigProfilePlayer extends StatelessWidget {
                       context, 'it', 'Italiano', currentLanguage == 'it'),
                   languageTile(
                       context, 'fr', 'Frances', currentLanguage == 'fr'),
+                  languageTile(
+                      context, 'pt', 'Português', currentLanguage == 'pt'),
                   const SizedBox(
                     height: 10,
                   ),
@@ -689,4 +692,3 @@ class ConfigProfilePlayer extends StatelessWidget {
     );
   }
 }
-  

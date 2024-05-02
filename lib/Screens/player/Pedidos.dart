@@ -1,10 +1,14 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
+import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
+import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -288,8 +292,11 @@ class PedidosState extends State<Pedidos> {
                 const SizedBox(
                   height: 35,
                 ),
-                const Center(
+                Center(
                   child: CustomTextButton(
+                      onTap: () {
+                        _handleDownload(pedido.url);
+                      },
                       text: "Descargar Factura",
                       buttonPrimary: true,
                       width: 164,
@@ -302,6 +309,121 @@ class PedidosState extends State<Pedidos> {
       },
     );
   }
+
+  Future<void> _handleDownload(String fileUrl) async {
+    if (fileUrl.isEmpty) {
+      return;
+    }
+
+    final status = await Permission.storage.status;
+
+    if (!status.isGranted) {
+      final result = await Permission.storage.request();
+      if (!result.isGranted) {
+        return;
+      }
+    }
+
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+            ),
+          );
+        },
+      );
+
+      final fileExtension = path.extension(fileUrl);
+      final response = await http.get(Uri.parse(fileUrl));
+      final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
+      final file = File(
+          '${downloadsDirectory!.path}/factura_${DateTime.now().millisecondsSinceEpoch}$fileExtension');
+
+      await file.writeAsBytes(response.bodyBytes);
+
+      Navigator.of(context).pop();
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Dialog(
+              backgroundColor: Colors.transparent,
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: const Color(0xff3B3B3B),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: 10,
+                      offset: const Offset(5, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '¡Felicidades!',
+                      style: const TextStyle(
+                          color: Color(0xff00E050),
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'La factura se ha guardado en la carpeta de descargas.',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              ));
+        },
+      );
+    } catch (e) {
+      Navigator.of(context).pop();
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: const Text(
+                'Ha habido un error en la descarga, intente nuevamente.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+
+      debugPrint(e.toString());
+    }
+  }
 }
 
 class PedidosModel {
@@ -310,6 +432,7 @@ class PedidosModel {
   DateTime datetime;
   String paymentMethod;
   String orderId;
+  String url;
 
   PedidosModel({
     required this.description,
@@ -317,6 +440,7 @@ class PedidosModel {
     required this.datetime,
     required this.paymentMethod,
     required this.orderId,
+    required this.url,
   });
 
   factory PedidosModel.fromJson(Map<String, dynamic> json) {
@@ -330,6 +454,7 @@ class PedidosModel {
       datetime: parsedDatetime,
       paymentMethod: json['payment_method'],
       orderId: formattedOrderId,
+      url: json['url'] ?? '',
     );
   }
 }

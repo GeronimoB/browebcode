@@ -1,6 +1,6 @@
 {
-  "sign_in": "Iniciar Sesión",
-  "create_account": "Crear Cuenta",
+  "sign_in": "Sign in",
+  "create_account": "Create account",
   "identify": "Identifícate",
   "user_or_email": "Usuario",
   "password": "Contraseña",
@@ -39,7 +39,7 @@
   "state_label": "Provincia",
   "height_label": "Altura",
   "category_label": "Categoría en la que juega",
-  "club_label": "Entidad deportiva en el/la que juega",
+  "club_label": "Entidad deportiva",
   "position_label": "Posición",
   "category_label_short": "Categoría",
   "individual_achievements": "Logros individuales",
@@ -121,5 +121,6 @@
   "description_video": "Descripción",
   "description_title": "DESCRIPCIÓN",
   "clean": "Limpiar",
-  "age_label": "Edad"
+  "age_label": "Edad",
+  "verification_profile": "VERIFICAR PERFIL"
 }

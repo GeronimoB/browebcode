@@ -522,6 +522,8 @@ class _ConfigProfileState extends State<ConfigProfile> {
                       context, 'it', 'Italiano', currentLanguage == 'it'),
                   languageTile(
                       context, 'fr', 'Frances', currentLanguage == 'fr'),
+                  languageTile(
+                      context, 'pt', 'Português', currentLanguage == 'pt'),
                   const SizedBox(
                     height: 10,
                   ),

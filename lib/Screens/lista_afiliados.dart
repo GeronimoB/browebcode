@@ -10,6 +10,7 @@ import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/referido_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class ListaReferidosScreen extends StatefulWidget {
@@ -32,20 +33,20 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
     super.initState();
   }
 
-  Future<List<Afiliado>>? fetchReferrals() async {
+  Future<Map<String, dynamic>>? fetchReferrals() async {
     try {
-      final referrals = await ApiClient()
-          .post('auth/afiliados', {"referralCode": user.referralCode});
+      final referrals =
+          await ApiClient().post('auth/afiliados', {"userId": user.userId});
       if (referrals.statusCode == 200) {
         final afiliados = jsonDecode(referrals.body)["players"];
-        return mapListToAfiliados(afiliados);
-        //provider.setAfiliados(mapListToAfiliados(afiliados));
+        final total = jsonDecode(referrals.body)["total"].toDouble();
+        return {'afiliados': mapListToAfiliados(afiliados), 'total': total};
       } else {
-        return [];
+        return {'afiliados': [], 'total': 0.0};
       }
     } catch (error) {
       print('Error al obtener los referidos: $error');
-      return [];
+      return {'afiliados': [], 'total': 0.0};
     }
   }
 
@@ -60,7 +61,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
         return false;
       },
       child: Container(
-        height: double.maxFinite,
+        height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -176,7 +177,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 15.0),
-              FutureBuilder<List<Afiliado>>(
+              FutureBuilder(
                 future: fetchReferrals(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -205,7 +206,9 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                       ),
                     );
                   } else {
-                    final afiliados = snapshot.data ?? [];
+                    final List<Afiliado> afiliados =
+                        snapshot.data?['afiliados'];
+                    final double total = snapshot.data?['total'] ?? 0.0;
 
                     if (afiliados.isEmpty) {
                       return const Expanded(
@@ -227,51 +230,49 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                         ),
                       );
                     }
-                    return Container(
-                      color: Colors.transparent,
-                      height: 165,
-                      width: 400,
-                      child: RefreshIndicator(
-                        onRefresh: () async {
-                          setState(() {});
-                        },
-                        child: ListView.builder(
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: 165,
+                          width: 400,
+                          child: ListView.builder(
                             itemCount: afiliados.length,
-                            physics: const AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
                               final afiliado = afiliados[index];
 
                               return ReferidoItem(
                                 email: afiliado.email,
-                                ganancia: '00,00€',
+                                ganancia: '${afiliado.comision} €',
                               );
-                            }),
-                      ),
+                            },
+                          ),
+                        ),
+                        RichText(
+                          text: TextSpan(
+                            text: 'TOTAL:',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontSize: 15.0,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: '\n $total €',
+                                style: const TextStyle(
+                                  color: Color(0xFF05FF00),
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 40.0,
+                                ),
+                              )
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     );
                   }
                 },
-              ),
-              RichText(
-                text: const TextSpan(
-                  text: 'TOTAL:',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Montserrat',
-                    fontSize: 15.0,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: '\n00,00€',
-                      style: const TextStyle(
-                        color: Color(0xFF05FF00),
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 40.0,
-                      ),
-                    )
-                  ],
-                ),
-                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32.0),
               Container(

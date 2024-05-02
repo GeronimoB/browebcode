@@ -36,8 +36,6 @@ class UploadVideoWidget extends StatefulWidget {
 }
 
 class _UploadVideoWidgetState extends State<UploadVideoWidget> {
-  VideoPlayerController? _videoController;
-  double _sliderValue = 0.0;
   late UserProvider userProvider;
 
   @override
@@ -48,8 +46,6 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
 
   @override
   void dispose() {
-    _videoController?.removeListener(() {});
-    _videoController?.dispose();
     super.dispose();
   }
 
@@ -69,11 +65,6 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
 
       Uint8List? thumbnail = await _generateThumbnail(videoPath);
       if (thumbnail == null) {
-        return;
-      }
-
-      _videoController = await _initializeVideoController(videoPath);
-      if (_videoController == null) {
         return;
       }
 
@@ -124,22 +115,22 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     return uint8list;
   }
 
-  Future<VideoPlayerController?> _initializeVideoController(
-      String videoPath) async {
-    VideoPlayerController videoController =
-        VideoPlayerController.file(File(videoPath));
-    await videoController.initialize();
-    await videoController.play();
-    videoController.setLooping(true);
+  // Future<VideoPlayerController?> _initializeVideoController(
+  //     String videoPath) async {
+  //   VideoPlayerController videoController =
+  //       VideoPlayerController.file(File(videoPath));
+  //   await videoController.initialize();
+  //   await videoController.play();
+  //   videoController.setLooping(true);
 
-    videoController.addListener(() {
-      setState(() {
-        _sliderValue = videoController.value.position.inSeconds.toDouble();
-      });
-    });
+  //   videoController.addListener(() {
+  //     setState(() {
+  //       _sliderValue = videoController.value.position.inSeconds.toDouble();
+  //     });
+  //   });
 
-    return videoController;
-  }
+  //   return videoController;
+  // }
 
   void _showSubscriptionRe() {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -299,106 +290,79 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox.shrink(),
-              _videoController?.value.isInitialized ?? false
-                  ? Column(
-                      children: [
-                        SizedBox(
-                          width: double.maxFinite,
-                          height: 500,
-                          child: VideoPlayer(_videoController!),
-                        ),
-                        Slider(
-                          activeColor: const Color(0xff3EAE64),
-                          inactiveColor: const Color(0xff00F056),
-                          value: _sliderValue,
-                          min: 0.0,
-                          max: _videoController!.value.duration.inSeconds
-                              .toDouble(),
-                          onChanged: (value) {
-                            setState(() {
-                              _sliderValue = value;
-                              _videoController!
-                                  .seekTo(Duration(seconds: value.toInt()));
-                            });
-                          },
-                        ),
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        GestureDetector(
-                          onTap: userProvider.getCurrentUser().status
-                              ? () async {
-                                  final videosCount = await ApiClient().get(
-                                      'auth/videos_count/${userProvider.getCurrentUser().userId}');
-                                  try {
-                                    if (videosCount.statusCode == 200) {
-                                      final jsonData =
-                                          jsonDecode(videosCount.body);
-                                      final total = jsonData["userVideosCount"];
+              Column(
+                children: [
+                  GestureDetector(
+                    onTap: userProvider.getCurrentUser().status
+                        ? () async {
+                            final videosCount = await ApiClient().get(
+                                'auth/videos_count/${userProvider.getCurrentUser().userId}');
+                            try {
+                              if (videosCount.statusCode == 200) {
+                                final jsonData = jsonDecode(videosCount.body);
+                                final total = jsonData["userVideosCount"];
 
-                                      if (total <
-                                          videosForPlan[userProvider
-                                              .getCurrentUser()
-                                              .subscription]) {
-                                        _pickVideo();
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          const SnackBar(
-                                            backgroundColor: Colors.redAccent,
-                                            content: Text(
-                                              'Superaste el limite de videos de tu plan, si deseas subir un nuevo video, borra un video de tu perfil.',
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    }
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        backgroundColor: Colors.redAccent,
-                                        content: Text(
-                                          'Ocurrio un error intentalo de nuevo.',
-                                        ),
+                                if (total <
+                                    videosForPlan[userProvider
+                                        .getCurrentUser()
+                                        .subscription]) {
+                                  _pickVideo();
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      backgroundColor: Colors.redAccent,
+                                      content: Text(
+                                        'Superaste el limite de videos de tu plan, si deseas subir un nuevo video, borra un video de tu perfil.',
                                       ),
-                                    );
-                                  }
+                                    ),
+                                  );
                                 }
-                              : _showSubscriptionRe,
-                          child: SvgPicture.asset(
-                            'assets/icons/CloudIcon.svg',
-                            width: 210,
-                          ),
-                        ),
-                        Text(
-                          translations!['upload'],
-                          style: const TextStyle(
-                            color: Color(0xFF00E050),
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w900,
-                            fontSize: 15.0,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        SizedBox(
-                          width: 300,
-                          child: Text(
-                            translations!['show_your_habilities'],
-                            style: const TextStyle(
-                              color: Color(0xFF00E050),
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w900,
-                              fontSize: 15.0,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
+                              }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  backgroundColor: Colors.redAccent,
+                                  content: Text(
+                                    'Ocurrio un error intentalo de nuevo.',
+                                  ),
+                                ),
+                              );
+                            }
+                          }
+                        : _showSubscriptionRe,
+                    child: SvgPicture.asset(
+                      'assets/icons/CloudIcon.svg',
+                      width: 210,
                     ),
+                  ),
+                  Text(
+                    translations!['upload'],
+                    style: const TextStyle(
+                      color: Color(0xFF00E050),
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w900,
+                      fontSize: 15.0,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  SizedBox(
+                    width: 300,
+                    child: Text(
+                      translations!['show_your_habilities'],
+                      style: const TextStyle(
+                        color: Color(0xFF00E050),
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15.0,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
               Center(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 25),

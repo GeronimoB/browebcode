@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 
 class SlidableVideo extends StatefulWidget {
   final VideoPlayerController controller;
-  final String username;
-  final String description;
-  final bool verificado;
+
   const SlidableVideo({
     Key? key,
     required this.controller,
-    required this.username,
-    required this.description,
-    required this.verificado,
   }) : super(key: key);
 
   @override
@@ -57,54 +51,6 @@ class _SlidableVideoState extends State<SlidableVideo> {
                         AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
                   ),
                 ),
-          Positioned(
-            left: 10,
-            bottom: 45,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      widget.username,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24.0,
-                        height: 1,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    if (widget.verificado)
-                      const Icon(
-                        Icons.verified,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  widget.description,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w500,
-                    fontSize: 20,
-                    height: 1,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
           VideoProgressIndicator(
             widget.controller,
             allowScrubbing: true,

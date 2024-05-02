@@ -425,6 +425,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                       StatefulBuilder(
                         builder: (context, StateSetter setState) {
                           return DropdownWidget<String>(
+                            offsetX: -5,
                             value: editingController.text,
                             items: items,
                             onChanged: (String? newValue) {
