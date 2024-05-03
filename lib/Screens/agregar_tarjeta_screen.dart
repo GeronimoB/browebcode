@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
+import 'package:bro_app_to/Screens/player/verification.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/components/snackbar.dart';
@@ -465,7 +466,8 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       final video = playerProvider.videoPathToUpload;
       final image = playerProvider.imagePathToUpload;
       final userId = player.userId;
-      uploadVideoAndImage(video, image, userId);
+      uploadVideoAndImage(
+          video, image, userId, playerProvider.getActualPlan()?.nombre);
     } else {
       userProvider.updatePlan(playerProvider.getActualPlan()!.nombre,
           status: true);
@@ -519,8 +521,8 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
     });
   }
 
-  Future<void> uploadVideoAndImage(
-      String? videoPath, Uint8List? uint8list, String? userId) async {
+  Future<void> uploadVideoAndImage(String? videoPath, Uint8List? uint8list,
+      String? userId, String? plan) async {
     var request = http.MultipartRequest(
       'POST',
       Uri.parse('${ApiConstants.baseUrl}/auth/uploadFiles'),
@@ -549,16 +551,24 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       Navigator.pop(context);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-            builder: (context) => const CustomBottomNavigationBarPlayer()),
+            builder: (context) => plan == "Unlimited"
+                ? const VerificationScreen(
+                    newUser: true,
+                  )
+                : const CustomBottomNavigationBarPlayer()),
       );
     } else {
       Navigator.pop(context);
       showErrorSnackBar(context, translations!['err_upload_first_video']);
 
-      Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-            builder: (context) => const CustomBottomNavigationBarPlayer()),
+            builder: (context) => plan == "Unlimited"
+                ? const VerificationScreen(
+                    newUser: true,
+                  )
+                : const CustomBottomNavigationBarPlayer()),
       );
     }
   }

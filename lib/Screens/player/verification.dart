@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:bro_app_to/components/app_bar_title.dart';
 
@@ -8,17 +7,16 @@ import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
-import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/api_constants.dart';
-import '../../utils/current_state.dart';
+import 'bottom_navigation_bar_player.dart';
 
 class VerificationScreen extends StatefulWidget {
-  const VerificationScreen({super.key});
+  final bool newUser;
+  const VerificationScreen({required this.newUser, super.key});
 
   @override
   VerificationScreenState createState() => VerificationScreenState();
@@ -69,8 +67,11 @@ class VerificationScreenState extends State<VerificationScreen> {
       setState(() {
         isLoading = true;
       });
+
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final usuario = userProvider.getCurrentUser();
+      String userId = usuario.userId.toString();
+
       const url = '${ApiConstants.baseUrl}/auth/upload-verification-files';
       var request = http.MultipartRequest('POST', Uri.parse(url));
 
@@ -83,19 +84,26 @@ class VerificationScreenState extends State<VerificationScreen> {
           return;
         }
       }
-      request.fields["userId"] = usuario.userId.toString();
-      request.fields["isAgent"] = "false";
+      request.fields["userId"] = userId;
       var response = await request.send();
 
       if (response.statusCode == 200) {
-        var responseBody = await response.stream.bytesToString();
-        final msg = jsonDecode(responseBody)["mssg"];
+        String msg = widget.newUser
+            ? "Archivos subidos correctamente, un administrador los revisara pronto."
+            : "Archivos subidos correctamente, un administrador los revisara pronto, una vez se aprueben se te generara un suscripción de € 9.99 mensual.";
         setState(() {
           isLoading = false;
         });
         showSucessSnackBar(context, msg);
         await Future.delayed(const Duration(seconds: 3));
-        Navigator.of(context).pushReplacementNamed('/config-player');
+        if (widget.newUser) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+                builder: (context) => const CustomBottomNavigationBarPlayer()),
+          );
+        } else {
+          Navigator.of(context).pushReplacementNamed('/config-player');
+        }
       } else {
         setState(() {
           isLoading = false;
@@ -152,12 +160,35 @@ class VerificationScreenState extends State<VerificationScreen> {
                   _buildTextField(label: 'DNI TRASERO', camp: 'dni_trasero'),
                   _buildTextField(label: 'SELFIE', camp: 'selfie'),
                   const SizedBox(height: 35),
-                  CustomTextButton(
-                    text: 'Subir',
-                    buttonPrimary: true,
-                    width: 150,
-                    height: 45,
-                    onTap: _uploadFiles,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomTextButton(
+                        text: 'Subir',
+                        buttonPrimary: true,
+                        width: 150,
+                        height: 45,
+                        onTap: _uploadFiles,
+                      ),
+                      if (widget.newUser) ...[
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        CustomTextButton(
+                          text: 'Omitir',
+                          buttonPrimary: false,
+                          width: 150,
+                          height: 45,
+                          onTap: () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const CustomBottomNavigationBarPlayer()),
+                            );
+                          },
+                        ),
+                      ]
+                    ],
                   ),
                   Expanded(
                     child: Align(

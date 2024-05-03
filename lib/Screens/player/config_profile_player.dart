@@ -99,7 +99,9 @@ class ConfigProfilePlayer extends StatelessWidget {
                       translations!['verification_profile'],
                       context,
                       true,
-                      const VerificationScreen(),
+                      const VerificationScreen(
+                        newUser: false,
+                      ),
                     ),
                   const SizedBox(height: 15),
                   _buildListItem('CENTRO DE AYUDA (FAQ)', context, false,
