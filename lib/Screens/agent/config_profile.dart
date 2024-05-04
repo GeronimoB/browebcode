@@ -15,6 +15,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../components/verificaciones_afiliados.dart';
 import '../../providers/agent_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../utils/api_client.dart';
@@ -117,9 +118,18 @@ class _ConfigProfileState extends State<ConfigProfile> {
                       'AFILIADOS',
                       context,
                       true,
-                      user.referralCode != ""
-                          ? const ListaReferidosScreen()
-                          : const AfiliadosPlayer(),
+                      const AfiliadosPlayer(),
+                      callback: () {
+                        user.verificadoReferral
+                            ? Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        user.referralCode != ""
+                                            ? const ListaReferidosScreen()
+                                            : const AfiliadosPlayer()),
+                              )
+                            : showVerificationReferral(context);
+                      },
                     ),
                     _buildListItem(
                       'IDIOMA',

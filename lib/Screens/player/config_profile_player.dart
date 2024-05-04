@@ -20,6 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../components/verificaciones_afiliados.dart';
 import '../../utils/api_client.dart';
 import '../../utils/language_localizations.dart';
 import 'bottom_navigation_bar_player.dart';
@@ -115,9 +116,17 @@ class ConfigProfilePlayer extends StatelessWidget {
                     'AFILIADOS',
                     context,
                     true,
-                    user.referralCode != ""
-                        ? const ListaReferidosScreen()
-                        : const AfiliadosPlayer(),
+                    const AfiliadosPlayer(),
+                    callback: () {
+                      user.verificadoReferral
+                          ? Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => user.referralCode != ""
+                                      ? const ListaReferidosScreen()
+                                      : const AfiliadosPlayer()),
+                            )
+                          : showVerificationReferral(context);
+                    },
                   ),
                   _buildListItem('PEDIDOS', context, true, const Pedidos()),
                   _buildListItem('SERVICIOS', context, true, const Servicios()),

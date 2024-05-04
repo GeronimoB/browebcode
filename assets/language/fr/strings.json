@@ -122,5 +122,15 @@
   "description_title": "DESCRIPCIÓN",
   "clean": "Limpiar",
   "age_label": "Edad",
-  "verification_profile": "VERIFICAR PERFIL"
+  "verification_profile": "VERIFICAR PERFIL",
+  "company_or_autum": "¿Erés autónomo o eres empresa?",
+  "yes": "SÍ",
+  "not": "NO",
+  "upload_doc": "Sube tu documento 036 si eres autónomo o el documento donde aparezca el CIF si eres empresa",
+  "upload_dni": "Sube tu DNI si eres autónomo o el DNI del representante de la empresa.",
+  "please_upload_all_files": "Por favor, Sube todos los archivos",
+  "scss_upload_referals_files": "Archivos subidos correctamente, un administrador los revisara pronto y aprobara su perfil para que pueda convertirse en un afiliado.",
+  "send": "Enviar",
+  "widthdrawal_request": "Su retiro se ha solicitado, revisaremos sus datos y un asesor se contactará con usted.",
+  "please_upload_pdf": "La factura debe estar en formato PDF."
 }

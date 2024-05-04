@@ -259,8 +259,6 @@ class VerificationScreenState extends State<VerificationScreen> {
             icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF00E050)),
             onPressed: () {
               _openGallery(camp);
-
-              //obtener el
             },
           ),
         ],

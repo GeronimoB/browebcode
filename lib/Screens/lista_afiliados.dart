@@ -199,8 +199,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                       ),
                     );
                   } else {
-                    final List<Afiliado> afiliados =
-                        snapshot.data?['afiliados'];
+                    final List<dynamic> afiliados = snapshot.data?['afiliados'];
                     final double total = snapshot.data?['total'] ?? 0.0;
 
                     if (afiliados.isEmpty) {
@@ -262,27 +261,30 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                           ),
                           textAlign: TextAlign.center,
                         ),
+                        const SizedBox(height: 32.0),
+                        CustomTextButton(
+                          onTap: () {
+                            if (total > 0) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        RetirarMenu(total: total)),
+                              );
+                            } else {
+                              showErrorSnackBar(context,
+                                  "No tienes dinero para retirar, continua refieriendo amigos.");
+                            }
+                          },
+                          text: 'Retirar',
+                          buttonPrimary: true,
+                          width: 100,
+                          height: 40,
+                        ),
                       ],
                     );
                   }
                 },
-              ),
-              const SizedBox(height: 32.0),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 90.0),
-                child: CustomTextButton(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const RetirarMenu()),
-                    );
-                  },
-                  text: 'Retirar',
-                  buttonPrimary: true,
-                  width: 100,
-                  height: 40,
-                ),
               ),
               const SizedBox(height: 32.0),
               Align(

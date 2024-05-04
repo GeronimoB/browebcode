@@ -33,7 +33,7 @@ void showSucessSnackBar(BuildContext context, String text) {
         ),
         textAlign: TextAlign.start,
       ),
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 8),
     ),
   );
 }

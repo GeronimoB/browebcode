@@ -15,7 +15,7 @@ class ApiClient {
             Uri.parse('$baseUrl/$endpoint'),
             body: body,
           )
-          .timeout(const Duration(seconds: 10));
+          .timeout(const Duration(seconds: 15));
       return response;
     } on TimeoutException catch (e) {
       throw Exception('Timeout en la solicitud HTTP: $e');
