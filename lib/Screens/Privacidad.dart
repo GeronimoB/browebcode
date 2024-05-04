@@ -5,6 +5,7 @@ import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_client.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,7 +35,7 @@ class Privacidad extends StatelessWidget {
         appBar: AppBar(
           scrolledUnderElevation: 0,
           centerTitle: true,
-          title: appBarTitle('PRIVACIDAD'),
+          title: appBarTitle(translations!["PRIVACY"]),
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
@@ -323,7 +324,7 @@ class Privacidad extends StatelessWidget {
                           prefs.setString('password', "");
                           Navigator.of(context).pop();
                           showSucessSnackBar(context,
-                              "Su contraseña se ha actualizado con exito.");
+                              translations!["PasswordUpdateSuccessMessage"]);
                         } else {
                           final jsonData = json.decode(response.body);
                           final errorMessage = jsonData["error"];

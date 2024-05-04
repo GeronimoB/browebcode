@@ -1,6 +1,7 @@
 import 'package:bro_app_to/Screens/intro.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -21,7 +22,7 @@ class OlvideContrasenaPage extends StatelessWidget {
         appBar: AppBar(
           scrolledUnderElevation: 0,
           centerTitle: true,
-          title: appBarTitle('RECUPERACIÓN DE CUENTA'),
+          title: appBarTitle(translations!["ACCOUNT_RECOVERY"]),
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,

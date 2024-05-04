@@ -1,5 +1,6 @@
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/agregar_tarjeta_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -34,7 +35,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
         appBar: AppBar(
           scrolledUnderElevation: 0,
           backgroundColor: Colors.transparent,
-          title: appBarTitle('MÉTODO DE PAGO'),
+          title: appBarTitle(translations!["payment_method"]),
           centerTitle: true,
           elevation: 0,
           leading: IconButton(

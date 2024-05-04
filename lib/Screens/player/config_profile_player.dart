@@ -50,7 +50,7 @@ class ConfigProfilePlayer extends StatelessWidget {
                 fontSize: 12,
               ),
             ),
-            appBarTitle('CONFIGURACIÓN'),
+            appBarTitle(translations!["SETTING"]),
           ],
         ),
         backgroundColor: Colors.transparent,

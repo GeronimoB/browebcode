@@ -60,7 +60,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                   fontSize: 12,
                 ),
               ),
-              appBarTitle('CONFIGURACIÓN'),
+              appBarTitle(translations!["SETTING"]),
             ],
           ),
           backgroundColor: Colors.transparent,

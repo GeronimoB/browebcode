@@ -35,7 +35,7 @@ class _NotificacionesState extends State<Notificaciones> {
         appBar: AppBar(
           scrolledUnderElevation: 0,
           centerTitle: true,
-          title: appBarTitle('NOTIFICACIONES'),
+          title: appBarTitle(translations!["NOTIFICATIONS"]),
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(

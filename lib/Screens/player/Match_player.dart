@@ -6,6 +6,7 @@ import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/utils/agente_model.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +110,7 @@ class MatcheState extends State<MatchePlayer> {
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: appBarTitle('MATCH'),
+          title: appBarTitle(translations!["MATCH"]),
         ),
         backgroundColor: Colors.transparent,
         extendBody: true,

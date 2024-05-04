@@ -1,6 +1,7 @@
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
@@ -100,7 +101,7 @@ class PlanesPagoState extends State<PlanesPago> {
         appBar: AppBar(
           scrolledUnderElevation: 0,
           centerTitle: true,
-          title: appBarTitle('PLANES'),
+          title: appBarTitle(translations!["PLANS"]),
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
         ),

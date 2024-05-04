@@ -7,6 +7,7 @@ import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +81,7 @@ class VerificationScreenState extends State<VerificationScreen> {
         if (filePath != null) {
           request.files.add(await http.MultipartFile.fromPath(camp, filePath));
         } else {
-          showErrorSnackBar(context, "Por favor, Sube todos los archivos");
+          showErrorSnackBar(context, translations!["UploadAllFilesMessage"]);
           return;
         }
       }
@@ -108,13 +109,13 @@ class VerificationScreenState extends State<VerificationScreen> {
         setState(() {
           isLoading = false;
         });
-        showErrorSnackBar(context, "Ha ocurrido un error, intentelo de nuevo.");
+        showErrorSnackBar(context, translations!["ErrorRetryMessage"]);
       }
     } catch (e) {
       setState(() {
         isLoading = false;
       });
-      showErrorSnackBar(context, "Ha ocurrido un error, intentelo de nuevo.");
+      showErrorSnackBar(context, translations!["ErrorRetryMessage"]);
     }
   }
 
@@ -139,7 +140,7 @@ class VerificationScreenState extends State<VerificationScreen> {
               appBar: AppBar(
                 scrolledUnderElevation: 0,
                 centerTitle: true,
-                title: appBarTitle('VERIFICACIÓN'),
+                title: appBarTitle(translations!["Verification"]),
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 leading: IconButton(
@@ -156,9 +157,9 @@ class VerificationScreenState extends State<VerificationScreen> {
               body: Column(
                 children: <Widget>[
                   const SizedBox(height: 20),
-                  _buildTextField(label: 'DNI FRONTAL', camp: 'dni_frontal'),
-                  _buildTextField(label: 'DNI TRASERO', camp: 'dni_trasero'),
-                  _buildTextField(label: 'SELFIE', camp: 'selfie'),
+                  _buildTextField(label: translations!["Front_ID"], camp: 'dni_frontal'),
+                  _buildTextField(label: translations!["Back ID"], camp: 'dni_trasero'),
+                  _buildTextField(label: translations!["Selfie"], camp: 'selfie'),
                   const SizedBox(height: 35),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -1,4 +1,5 @@
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
 
@@ -21,7 +22,7 @@ class RetirarMenu extends StatelessWidget {
         appBar: AppBar(
           scrolledUnderElevation: 0,
           centerTitle: true,
-          title: appBarTitle('RETIRO'),
+          title: appBarTitle(translations!["withdrawal"]),
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
@@ -58,11 +59,11 @@ class RetirarMenu extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12.0),
-            _buildTextField('Banco'),
+            _buildTextField(translations!["Bank"]),
             const SizedBox(height: 8.0),
-            _buildTextField('Nombre del titular'),
+            _buildTextField(translations!["Account_holder_name"]),
             const SizedBox(height: 8.0),
-            _buildTextField('Número de cuenta'),
+            _buildTextField(translations!["Account_number"]),
             const SizedBox(height: 32.0),
             const SizedBox(height: 40.0),
             Container(

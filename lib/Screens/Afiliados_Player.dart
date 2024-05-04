@@ -29,7 +29,7 @@ class AfiliadosPlayer extends StatelessWidget {
         appBar: AppBar(
           scrolledUnderElevation: 0,
           centerTitle: true,
-          title: appBarTitle('AFILIADOS'),
+          title: appBarTitle(translations!["affiliates"]),
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(

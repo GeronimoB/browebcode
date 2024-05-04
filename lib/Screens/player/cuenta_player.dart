@@ -8,6 +8,7 @@ import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/Screens/planes_pago.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -109,7 +110,7 @@ class CuentaPageState extends State<CuentaPage> {
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: appBarTitle('CUENTA'),
+          title: appBarTitle(translations!["ACCOUNT"]),
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,

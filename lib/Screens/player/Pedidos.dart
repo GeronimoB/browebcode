@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
@@ -51,7 +52,7 @@ class PedidosState extends State<Pedidos> {
         scrolledUnderElevation: 0,
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        title: appBarTitle('PEDIDOS'),
+        title: appBarTitle(translations!["ORDERS"]),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(

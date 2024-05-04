@@ -7,6 +7,7 @@ import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/agent_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/agente_model.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -100,7 +101,7 @@ class EditarInfoState extends State<EditarInfo> {
         appBar: AppBar(
           scrolledUnderElevation: 0,
           centerTitle: true,
-          title: appBarTitle('EDITAR INFORMACIÓN'),
+          title: appBarTitle(translations!["EDIT_INFORMATION"]),
           backgroundColor: Colors.transparent,
           elevation: 0,
           leading: IconButton(
@@ -174,23 +175,23 @@ class EditarInfoState extends State<EditarInfo> {
               ),
               const SizedBox(height: 20),
               _buildTextField(
-                  label: 'NOMBRE', controller: _nombreController, camp: 'name'),
+                  label: translations!["Name"], controller: _nombreController, camp: 'name'),
               _buildTextField(
-                  label: 'APELLIDO',
+                  label: translations!["Last_name"],
                   controller: _apellidoController,
                   camp: 'lastname'),
               _buildTextField(
-                  label: 'CORREO',
+                  label:  translations!["Email"],
                   controller: _correoController,
                   camp: 'email'),
               _buildTextField(
-                  label: 'USUARIO',
+                  label: translations!["username"],
                   controller: _usuarioController,
                   camp: 'username'),
               _buildTextField(
-                  label: 'PAÍS', controller: _paisController, camp: 'pais'),
+                  label: translations!["Country"], controller: _paisController, camp: 'pais'),
               _buildTextField(
-                  label: 'PROVINCIA',
+                  label: translations!["Province"],
                   controller: _provinciaController,
                   camp: 'provincia'),
             ],

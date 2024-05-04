@@ -149,7 +149,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
           appBar: AppBar(
             scrolledUnderElevation: 0,
             centerTitle: true,
-            title: appBarTitle('EDITAR INFORMACIÓN'),
+            title: appBarTitle(translations!["EDIT_INFORMATION"]),
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
@@ -224,15 +224,15 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                 ),
                 const SizedBox(height: 20),
                 _buildTextField(
-                    label: 'NOMBRE',
+                    label: translations!["Name"],
                     controller: _nombreController,
                     camp: 'name'),
                 _buildTextField(
-                    label: 'APELLIDOS',
+                    label: translations!["Last_name"],
                     controller: _apellidoController,
                     camp: 'lastname'),
                 _buildTextField(
-                    label: 'CORREO',
+                    label: translations!["Email"],
                     controller: _correoController,
                     camp: 'email'),
                 // _buildTextField(
@@ -240,60 +240,60 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                 //     controller: _dniController,
                 //     camp: 'dni'),
                 _buildTextField(
-                    label: 'PAÍS',
+                    label: translations!["Country"],
                     controller: _paisController,
                     camp: 'pais',
                     select: true,
                     items: countries),
                 _buildTextField(
-                  label: 'PROVINCIA',
+                  label: translations!["Province"],
                   controller: _provinciaController,
                   camp: 'provincia',
                   select: true,
                   items: provincesByCountry[_paisController.text],
                 ),
                 _buildTextField(
-                    label: 'POSICIÓN',
+                    label:  translations!["position_label"],
                     controller: _posicionController,
                     camp: 'position',
                     goToSelCamp: true),
                 _buildTextField(
-                    label: 'ENTIDAD DEPORTIVA',
+                    label: translations!["club_label"],
                     controller: _clubController,
                     camp: 'club'),
                 _buildTextField(
-                    label: 'CATEGORÍA',
+                    label: translations!["category_label_short"],
                     controller: _categoriaController,
                     camp: 'categoria',
                     select: true,
                     items: categorias),
                 _buildTextField(
-                    label: 'LOGROS',
+                    label: translations!["Achievements"],
                     controller: _logrosIndividualesController,
                     camp: 'logros'),
                 _buildTextField(
-                  label: 'ALTURA',
+                  label: translations!["height_label2"],
                   controller: _alturaController,
                   camp: 'altura',
                   select: true,
                   items: alturas,
                 ),
                 _buildTextField(
-                  label: 'PIE DOMINANTE',
+                  label: translations!["Dominate_foot"],
                   controller: _pieDominanteController,
                   camp: 'piedominante',
                   select: true,
                   items: piesDominantes,
                 ),
                 _buildTextField(
-                  label: 'SELECCION',
+                  label: translations!["Selection"],
                   controller: _seleccionNacionalController,
                   camp: 'seleccion',
                   select: true,
                   items: selecciones,
                 ),
                 _buildTextField(
-                  label: 'CATEGORIA SELECCION',
+                  label: translations!["Selection_category"],
                   controller: _categoriaSeleccionController,
                   camp: 'categoriaseleccion',
                   select: true,
