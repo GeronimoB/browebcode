@@ -1,4 +1,5 @@
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
+import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/agent_provider.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
@@ -105,22 +106,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     } else {
       final jsonData = json.decode(response.body);
       final errorMessage = jsonData["error"];
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(
-            errorMessage,
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.w500,
-              fontStyle: FontStyle.italic,
-              fontSize: 12,
-            ),
-          ),
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      showErrorSnackBar(context, errorMessage);
     }
   }
 
@@ -134,23 +120,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     } else {
       print(e);
       playerProvider.setIsLoading(false);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(
-            "Ha ocurrido un error intentelo de nuevo",
-            style: const TextStyle(
-              color: Colors.white,
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.w500,
-              fontStyle: FontStyle.italic,
-              fontSize: 12,
-            ),
-          ),
-          duration: Duration(seconds: 3),
-        ),
-      );
+      showErrorSnackBar(context, "Ha ocurrido un error intentelo de nuevo");
     }
   }
 }

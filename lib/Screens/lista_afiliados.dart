@@ -4,6 +4,7 @@ import 'package:bro_app_to/Screens/retiro.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/components/referido_item.dart';
+import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
@@ -103,11 +104,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                 onTap: () {
                   Clipboard.setData(ClipboardData(
                       text: 'https://bró.com/ref?=${user.referralCode}'));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        backgroundColor: Color(0xFF05FF00),
-                        content: Text('Link de afiliado copiado.')),
-                  );
+                  showSucessSnackBar(context, 'Link de afiliado copiado.');
                 },
                 child: Text(
                   'https://bró.com/ref?=${user.referralCode}',
@@ -123,11 +120,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
               GestureDetector(
                 onTap: () {
                   Clipboard.setData(ClipboardData(text: user.referralCode));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        backgroundColor: Color(0xFF05FF00),
-                        content: Text('Codigo de afiliado copiado.')),
-                  );
+                  showSucessSnackBar(context, 'Codigo de afiliado copiado.');
                 },
                 child: Container(
                   margin: const EdgeInsets.all(25),

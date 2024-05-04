@@ -14,6 +14,7 @@ void showErrorSnackBar(BuildContext context, String text) {
         ),
         textAlign: TextAlign.start,
       ),
+      duration: const Duration(seconds: 3),
     ),
   );
 }
@@ -32,6 +33,7 @@ void showSucessSnackBar(BuildContext context, String text) {
         ),
         textAlign: TextAlign.start,
       ),
+      duration: const Duration(seconds: 3),
     ),
   );
 }

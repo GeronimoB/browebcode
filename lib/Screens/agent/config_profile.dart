@@ -9,6 +9,7 @@ import 'package:bro_app_to/Screens/player/servicios.dart';
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/components/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -444,21 +445,13 @@ class _ConfigProfileState extends State<ConfigProfile> {
                           prefs.setString('username', "");
                           prefs.setString('password', "");
                           Navigator.of(context).pop();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                backgroundColor: const Color(0xFF05FF00),
-                                content:
-                                    Text(translations!['update_pss_scss'])),
-                          );
+                          showSucessSnackBar(
+                              context, translations!['update_pss_scss']);
                         } else {
                           final jsonData = json.decode(response.body);
                           final errorMessage = jsonData["error"];
                           Navigator.of(context).pop();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                backgroundColor: Colors.redAccent,
-                                content: Text(errorMessage)),
-                          );
+                          showErrorSnackBar(context, errorMessage);
                         }
                       },
                       text: translations!['save'],

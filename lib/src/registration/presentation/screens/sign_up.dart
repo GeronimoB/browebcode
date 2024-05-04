@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bro_app_to/components/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -40,28 +41,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
         fecha == DateTime.now() ||
         password.isEmpty ||
         name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Text(translations!['complete_all_fields'])),
-      );
+      showErrorSnackBar(context, translations!['complete_all_fields']);
+
       return false;
     }
 
     if (email.isEmpty || !email.contains('@')) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Text(translations!['valid_email'])),
-      );
+      showErrorSnackBar(context, translations!['valid_email']);
+
       return false;
     }
     if (!_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Text(translations!['valid_pssw'])),
-      );
+      showErrorSnackBar(context, translations!['valid_pssw']);
       return false;
     }
 
@@ -70,28 +61,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
           await ApiClient().post('auth/verify-email', {"email": email});
 
       if (response.statusCode != 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              backgroundColor: Colors.redAccent,
-              content: Text(translations!['email_in_use'])),
-        );
+        showErrorSnackBar(context, translations!['email_in_use']);
         return false;
       }
     } on TimeoutException {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(translations!['error_try_again']),
-        ),
-      );
+      showErrorSnackBar(context, translations!['error_try_again']);
       return false;
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(translations!['error_try_again']),
-        ),
-      );
+      showErrorSnackBar(context, translations!['error_try_again']);
       return false;
     }
     if (referralCodeCtlr.text.isNotEmpty) {
@@ -102,30 +79,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
 
         if (response.statusCode != 200) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                backgroundColor: Colors.redAccent,
-                content: Text(translations!['ref_code_no_exist'])),
-          );
+          showErrorSnackBar(context, translations!['ref_code_no_exist']);
           referralCodeCtlr.text = "";
           return false;
         }
         return true;
       } on TimeoutException {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Text(translations!['error_try_again']),
-          ),
-        );
+        showErrorSnackBar(context, translations!['error_try_again']);
         return false;
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Text(translations!['error_try_again']),
-          ),
-        );
+        showErrorSnackBar(context, translations!['error_try_again']);
         return false;
       }
     }

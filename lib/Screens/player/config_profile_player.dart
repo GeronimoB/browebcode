@@ -11,6 +11,7 @@ import 'package:bro_app_to/Screens/privacidad.dart';
 import 'package:bro_app_to/Screens/player/servicios.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:bro_app_to/utils/current_state.dart';
@@ -604,21 +605,13 @@ class ConfigProfilePlayer extends StatelessWidget {
                           prefs.setString('username', "");
                           prefs.setString('password', "");
                           Navigator.of(context).pop();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                backgroundColor: const Color(0xFF05FF00),
-                                content:
-                                    Text(translations!['update_pss_scss'])),
-                          );
+                          showSucessSnackBar(
+                              context, translations!['update_pss_scss']);
                         } else {
                           final jsonData = json.decode(response.body);
                           final errorMessage = jsonData["error"];
                           Navigator.of(context).pop();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                backgroundColor: Colors.redAccent,
-                                content: Text(errorMessage)),
-                          );
+                          showErrorSnackBar(context, errorMessage);
                         }
                       },
                       text: translations!['save'],

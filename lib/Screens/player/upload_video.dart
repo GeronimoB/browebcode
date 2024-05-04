@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -133,12 +134,8 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
   // }
 
   void _showSubscriptionRe() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(
-              'No tienes una suscripcion activa, ve a tu cuenta para poder subir videos e interactuar con los agentes.')),
-    );
+    showErrorSnackBar(context,
+        'No tienes una suscripcion activa, ve a tu cuenta para poder subir videos e interactuar con los agentes.');
   }
 
   Future<void> uploadVideoAndImage(
@@ -166,9 +163,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     var response = await request.send();
 
     if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          backgroundColor: Color(0xFF05FF00),
-          content: Text('Video subido exitosamente.')));
+      showSucessSnackBar(context, 'Video subido exitosamente.');
       Future.delayed(const Duration(seconds: 3));
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -177,10 +172,8 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
       );
     } else {
       Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.redAccent,
-          content:
-              Text('Hubo un error al cargar el video, intentalo de nuevo.')));
+      showErrorSnackBar(
+          context, 'Hubo un error al cargar el video, intentalo de nuevo.');
     }
   }
 
@@ -308,25 +301,13 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
                                         .subscription]) {
                                   _pickVideo();
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      backgroundColor: Colors.redAccent,
-                                      content: Text(
-                                        'Superaste el limite de videos de tu plan, si deseas subir un nuevo video, borra un video de tu perfil.',
-                                      ),
-                                    ),
-                                  );
+                                  showErrorSnackBar(context,
+                                      'Superaste el limite de videos de tu plan, si deseas subir un nuevo video, borra un video de tu perfil.');
                                 }
                               }
                             } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  backgroundColor: Colors.redAccent,
-                                  content: Text(
-                                    'Ocurrio un error intentalo de nuevo.',
-                                  ),
-                                ),
-                              );
+                              showErrorSnackBar(context,
+                                  'Ocurrio un error intentalo de nuevo.');
                             }
                           }
                         : _showSubscriptionRe,

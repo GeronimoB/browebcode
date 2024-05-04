@@ -1,4 +1,5 @@
 import 'package:bro_app_to/Screens/player/edit_player_info.dart';
+import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/sign_up.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/sign_up_2.dart';
@@ -253,12 +254,9 @@ class SelectCampState extends State<SelectCamp> {
                               listen: false);
 
                           if (!players.any((player) => player.isSelected)) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                backgroundColor: Colors.redAccent,
-                                content: Text(translations!['select_position']),
-                              ),
-                            );
+                            showErrorSnackBar(
+                                context, translations!['select_position']);
+
                             setState(() {
                               isLoading = false;
                             });

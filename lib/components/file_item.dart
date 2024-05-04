@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
@@ -67,7 +68,7 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '¡Felicidades!',
+                    translations!["congrats"],
                     style: const TextStyle(
                         color: Color(0xff00E050),
                         fontFamily: 'Montserrat',

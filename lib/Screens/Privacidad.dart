@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
@@ -321,21 +322,13 @@ class Privacidad extends StatelessWidget {
                           prefs.setString('username', "");
                           prefs.setString('password', "");
                           Navigator.of(context).pop();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                backgroundColor: Color(0xFF05FF00),
-                                content: Text(
-                                    "Su contraseña se ha actualizado con exito.")),
-                          );
+                          showSucessSnackBar(context,
+                              "Su contraseña se ha actualizado con exito.");
                         } else {
                           final jsonData = json.decode(response.body);
                           final errorMessage = jsonData["error"];
                           Navigator.of(context).pop();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                backgroundColor: Colors.redAccent,
-                                content: Text(errorMessage)),
-                          );
+                          showErrorSnackBar(context, errorMessage);
                         }
                       },
                       text: 'Guardar',

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:bro_app_to/components/custom_dropdown.dart';
 import 'package:bro_app_to/components/i_field.dart';
+import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/first_video.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
@@ -39,11 +40,8 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
         selectedProvince.isEmpty ||
         clubController.text.isEmpty ||
         achivementController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            backgroundColor: Colors.redAccent,
-            content: Text(translations!['complete_all_fields'])),
-      );
+      showErrorSnackBar(context, translations!['complete_all_fields']);
+
       setState(() {
         isLoading = false;
       });
@@ -407,14 +405,9 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                           context,
                         );
                         if (!_acceptedTerms) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              backgroundColor: Colors.redAccent,
-                              content: Text(
-                                translations!['accept_terms'],
-                              ),
-                            ),
-                          );
+                          showErrorSnackBar(
+                              context, translations!['accept_terms']);
+
                           setState(() {
                             isLoading = false;
                           });
@@ -463,13 +456,9 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                                 },
                               );
                               if (responseStripe.statusCode != 200) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    backgroundColor: Colors.redAccent,
-                                    content: Text(
-                                        translations!['error_create_account']),
-                                  ),
-                                );
+                                showErrorSnackBar(context,
+                                    translations!['error_create_account']);
+
                                 return;
                               }
                               final jsonDataCus =
@@ -477,14 +466,9 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                               final customerId = jsonDataCus["customerId"];
                               playerProvider.updateTemporalPlayer(
                                   customerStripeId: customerId);
+                              showSucessSnackBar(context,
+                                  translations!['scss_create_account']);
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  backgroundColor: const Color(0xFF05FF00),
-                                  content: Text(
-                                      translations!['scss_create_account']),
-                                ),
-                              );
                               await Future.delayed(const Duration(seconds: 2));
                               Navigator.push(
                                 context,
@@ -497,19 +481,12 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                                 isLoading = false;
                               });
                               final jsonData = json.decode(response.body);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    backgroundColor: Colors.redAccent,
-                                    content: Text(jsonData["error"])),
-                              );
+                              showErrorSnackBar(context, jsonData["error"]);
                             }
                           } on TimeoutException {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                backgroundColor: Colors.redAccent,
-                                content: Text(translations!['error_try_again']),
-                              ),
-                            );
+                            showErrorSnackBar(
+                                context, translations!['error_try_again']);
+
                             setState(() {
                               isLoading = false;
                             });
@@ -518,12 +495,9 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                             setState(() {
                               isLoading = false;
                             });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                backgroundColor: Colors.redAccent,
-                                content: Text(translations!['error_try_again']),
-                              ),
-                            );
+                            showErrorSnackBar(
+                                context, translations!['error_try_again']);
+
                             return;
                           }
                         }
