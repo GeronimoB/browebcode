@@ -120,7 +120,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     } else {
       print(e);
       playerProvider.setIsLoading(false);
-      showErrorSnackBar(context, "Ha ocurrido un error intentelo de nuevo");
+      showErrorSnackBar(context, translations!["ErrorRetryMessage"]);
     }
   }
 }

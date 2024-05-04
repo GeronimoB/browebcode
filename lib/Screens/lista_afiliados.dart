@@ -8,6 +8,7 @@ import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/referido_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -78,7 +79,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
             backgroundColor: Colors.transparent,
             centerTitle: true,
             elevation: 0,
-            title: appBarTitle('AFILIADOS'),
+            title: appBarTitle(translations!["affiliates"]),
             leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back,
@@ -104,7 +105,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                 onTap: () {
                   Clipboard.setData(ClipboardData(
                       text: 'https://bró.com/ref?=${user.referralCode}'));
-                  showSucessSnackBar(context, 'Link de afiliado copiado.');
+                  showSucessSnackBar(context, translations!["AffiliateLinkCopiedMessage"]);
                 },
                 child: Text(
                   'https://bró.com/ref?=${user.referralCode}',
@@ -120,7 +121,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
               GestureDetector(
                 onTap: () {
                   Clipboard.setData(ClipboardData(text: user.referralCode));
-                  showSucessSnackBar(context, 'Codigo de afiliado copiado.');
+                  showSucessSnackBar(context, translations!["AffiliateCodeCopiedMessage"]);
                 },
                 child: Container(
                   margin: const EdgeInsets.all(25),

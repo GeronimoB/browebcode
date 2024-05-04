@@ -135,7 +135,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
 
   void _showSubscriptionRe() {
     showErrorSnackBar(context,
-        'No tienes una suscripcion activa, ve a tu cuenta para poder subir videos e interactuar con los agentes.');
+        translations!["InactiveSubscriptionMessage"]);
   }
 
   Future<void> uploadVideoAndImage(
@@ -163,7 +163,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     var response = await request.send();
 
     if (response.statusCode == 200) {
-      showSucessSnackBar(context, 'Video subido exitosamente.');
+      showSucessSnackBar(context, translations!["VideoUploadSuccessMessage"]);
       Future.delayed(const Duration(seconds: 3));
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
@@ -173,7 +173,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     } else {
       Navigator.of(context).pop();
       showErrorSnackBar(
-          context, 'Hubo un error al cargar el video, intentalo de nuevo.');
+          context, translations!["VideoLoadError"]);
     }
   }
 
@@ -271,7 +271,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
           scrolledUnderElevation: 0,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: appBarTitle('SUBIR VIDEO'),
+          title: appBarTitle(translations!["UPLOAD_A_VIDEO"]),
           elevation: 0,
           backgroundColor: Colors.transparent,
         ),
@@ -302,12 +302,12 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
                                   _pickVideo();
                                 } else {
                                   showErrorSnackBar(context,
-                                      'Superaste el limite de videos de tu plan, si deseas subir un nuevo video, borra un video de tu perfil.');
+                                      translations!["VideoLimitExceededMessage"]);
                                 }
                               }
                             } catch (e) {
                               showErrorSnackBar(context,
-                                  'Ocurrio un error intentalo de nuevo.');
+                                  translations!["ErrorOccurredMessage"]);
                             }
                           }
                         : _showSubscriptionRe,

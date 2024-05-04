@@ -92,7 +92,7 @@ class _PlanesPagoState extends State<Servicios> {
         appBar: AppBar(
           scrolledUnderElevation: 0,
           centerTitle: true,
-          title: appBarTitle('SERVICIOS'),
+          title: appBarTitle(translations!["SERVICES"]),
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back,

@@ -1,6 +1,7 @@
 import 'package:bro_app_to/Screens/chat_page.dart';
 import 'package:bro_app_to/components/chat_avatar.dart';
 import 'package:bro_app_to/utils/chat_preview.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class MensajesPage extends StatelessWidget {
           backgroundColor: Colors.transparent,
           automaticallyImplyLeading: false,
           centerTitle: true,
-          title: appBarTitle('MENSAJE'),
+          title: appBarTitle(translations!["MESSAGE"]),
         ),
         backgroundColor: Colors.transparent,
         extendBody: true,
