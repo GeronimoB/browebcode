@@ -274,7 +274,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                               );
                             } else {
                               showErrorSnackBar(context,
-                                  "No tienes dinero para retirar, continua refieriendo amigos.");
+                                  translations!["NoFundsToWithdrawMessage"]);
                             }
                           },
                           text: 'Retirar',

@@ -160,7 +160,7 @@ class VerificationReferralState extends State<VerificationReferral> {
                   ),
                   const SizedBox(height: 10),
                   _buildTextField(
-                      label: 'DOCUMENTO 036 o CIF', camp: 'documento'),
+                      label: translations!["036orCIFDocument"], camp: 'documento'),
                   const SizedBox(height: 10),
                   SizedBox(
                     width: double.maxFinite,
@@ -176,8 +176,8 @@ class VerificationReferralState extends State<VerificationReferral> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  _buildTextField(label: 'DNI FRONTAL', camp: 'dni_frontal'),
-                  _buildTextField(label: 'DNI TRASERO', camp: 'dni_trasero'),
+                  _buildTextField(label: translations!["Front_ID"], camp: 'dni_frontal'),
+                  _buildTextField(label: translations!["Back_ID"], camp: 'dni_trasero'),
                   const SizedBox(height: 35),
                   Center(
                     child: CustomTextButton(

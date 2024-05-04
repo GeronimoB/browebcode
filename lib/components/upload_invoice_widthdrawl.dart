@@ -126,7 +126,7 @@ class UploadInvoiceState extends State<UploadInvoice> {
             ),
             const SizedBox(height: 15),
             _buildTextField(
-              label: 'Factura en PDF',
+              label: translations!["PDFInvoice"],
             ),
             const SizedBox(height: 35),
             Row(

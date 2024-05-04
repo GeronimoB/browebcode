@@ -70,7 +70,7 @@ class _RetirarMenuState extends State<RetirarMenu> {
           appBar: AppBar(
             scrolledUnderElevation: 0,
             centerTitle: true,
-            title: appBarTitle('RETIRO'),
+            title: appBarTitle(translations!["withdrawal"]),
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
