@@ -174,5 +174,8 @@
   "scss_upload_referals_files": "Archivos subidos correctamente, un administrador los revisara pronto y aprobara su perfil para que pueda convertirse en un afiliado.",
   "send": "Enviar",
   "widthdrawal_request": "Su retiro se ha solicitado, revisaremos sus datos y un asesor se contactará con usted.",
-  "please_upload_pdf": "La factura debe estar en formato PDF."
+  "please_upload_pdf": "La factura debe estar en formato PDF.",
+  "PDFInvoice": "Factura en PDF",
+  "036orCIFDocument": "DOCUMENTO 036 o CIF",
+  "NoFundsToWithdrawMessage": "No tienes dinero para retirar, continua refieriendo amigos."
 }
