@@ -48,6 +48,7 @@ class PlayerFullEntity extends Equatable {
   final String? userImage;
 
   final bool verificado;
+  final bool emailVerified;
 
   const PlayerFullEntity({
     this.customerStripeId,
@@ -75,6 +76,7 @@ class PlayerFullEntity extends Equatable {
     this.userImage,
     this.password,
     this.verificado = false,
+    this.emailVerified = false,
   });
 
   PlayerFullEntity copyWith({
@@ -103,6 +105,7 @@ class PlayerFullEntity extends Equatable {
     String? userImage,
     String? password,
     bool? verificado,
+    bool? emailVerified,
   }) {
     return PlayerFullEntity(
       customerStripeId: customerStripeId ?? this.customerStripeId,
@@ -130,6 +133,7 @@ class PlayerFullEntity extends Equatable {
       dateUpdated: dateUpdated ?? this.dateUpdated,
       userImage: userImage ?? this.userImage,
       verificado: verificado ?? this.verificado,
+      emailVerified: emailVerified ?? this.emailVerified,
     );
   }
 
@@ -159,6 +163,7 @@ class PlayerFullEntity extends Equatable {
         dateCreated,
         dateUpdated,
         userImage,
-        verificado
+        verificado,
+        emailVerified
       ];
 }

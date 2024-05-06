@@ -440,6 +440,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
 
                               playerProvider.updateTemporalPlayer(
                                 userId: userId.toString(),
+                                dateCreated: DateTime.now(),
                               );
 
                               final name =
