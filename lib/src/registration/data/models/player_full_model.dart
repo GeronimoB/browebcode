@@ -30,6 +30,7 @@ class PlayerFullModel extends PlayerFullEntity {
     final DateTime? dateUpdated,
     final String? userImage,
     final bool verificado = false,
+    final bool emailVerified = false,
   }) : super(
           customerStripeId: customerStripeId,
           userId: userId,
@@ -56,35 +57,38 @@ class PlayerFullModel extends PlayerFullEntity {
           dateUpdated: dateUpdated,
           userImage: userImage,
           verificado: verificado,
+          emailVerified: emailVerified,
         );
 
   @override
-  PlayerFullModel copyWith(
-      {String? customerStripeId,
-      String? userId,
-      String? uid,
-      String? name,
-      String? lastName,
-      String? email,
-      String? referralCode,
-      String? password,
-      bool? isAgent,
-      DateTime? birthDate,
-      String? dni,
-      String? position,
-      String? pais,
-      String? provincia,
-      String? altura,
-      String? categoria,
-      String? club,
-      String? logrosIndividuales,
-      String? pieDominante,
-      String? seleccionNacional,
-      String? categoriaSeleccion,
-      DateTime? dateCreated,
-      DateTime? dateUpdated,
-      String? userImage,
-      bool? verificado}) {
+  PlayerFullModel copyWith({
+    String? customerStripeId,
+    String? userId,
+    String? uid,
+    String? name,
+    String? lastName,
+    String? email,
+    String? referralCode,
+    String? password,
+    bool? isAgent,
+    DateTime? birthDate,
+    String? dni,
+    String? position,
+    String? pais,
+    String? provincia,
+    String? altura,
+    String? categoria,
+    String? club,
+    String? logrosIndividuales,
+    String? pieDominante,
+    String? seleccionNacional,
+    String? categoriaSeleccion,
+    DateTime? dateCreated,
+    DateTime? dateUpdated,
+    String? userImage,
+    bool? verificado,
+    bool? emailVerified,
+  }) {
     return PlayerFullModel(
       customerStripeId: customerStripeId ?? this.customerStripeId,
       userId: userId ?? this.userId,
@@ -111,6 +115,7 @@ class PlayerFullModel extends PlayerFullEntity {
       dateUpdated: dateUpdated ?? this.dateUpdated,
       userImage: userImage ?? this.userImage,
       verificado: verificado ?? this.verificado,
+      emailVerified: emailVerified ?? this.emailVerified,
     );
   }
 
@@ -148,6 +153,7 @@ class PlayerFullModel extends PlayerFullEntity {
           json['dateCreated'] != null ? json['dateUpdated'].toDate() : null,
       userImage: json['image_url'] ?? '',
       verificado: json['verificado'] ?? false,
+      emailVerified: json['email_confirmed'] ?? false,
     );
   }
 

@@ -49,7 +49,7 @@ class MatcheState extends State<MatchePlayer> {
         if (data != null) {
           String agentId = data['agentId'] as String;
           agentId = agentId.split('-')[1];
-          final response = await ApiClient().get('auth/agent/$agentId');
+          final response = await ApiClient().get('auth/panel/agent/$agentId');
 
           if (response.statusCode == 200) {
             final jsonData = jsonDecode(response.body);

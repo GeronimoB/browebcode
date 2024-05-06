@@ -56,7 +56,7 @@ class UploadInvoiceState extends State<UploadInvoice> {
   @override
   Widget build(BuildContext context) {
     iva = widget.total * 0.21;
-    subtotal = widget.total * 0.79;
+    subtotal = widget.total + iva;
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
@@ -171,7 +171,7 @@ class UploadInvoiceState extends State<UploadInvoice> {
                       request.fields["banco"] = widget.banco;
                       request.fields["titular"] = widget.titular;
                       request.fields["cuenta"] = widget.cuenta;
-                      request.fields["cantidad"] = widget.total.toString();
+                      request.fields["cantidad"] = subtotal.toString();
                       var response = await request.send();
 
                       if (response.statusCode == 200) {
