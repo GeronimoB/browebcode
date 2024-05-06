@@ -484,7 +484,10 @@ class _ConfigProfileState extends State<ConfigProfile> {
     if (localizations != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('language', languageCode);
-      localizations.changeLanguage(languageCode);
+      await localizations.changeLanguage(languageCode);
+      setState(() {
+        translations = LanguageLocalizations.of(context)!.getJsonTranslate();
+      });
     }
   }
 

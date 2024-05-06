@@ -455,7 +455,7 @@ class PedidosModel {
       datetime: parsedDatetime,
       paymentMethod: json['payment_method'],
       orderId: formattedOrderId,
-      url: json['url'] ?? '',
+      url: json['factura'] ?? '',
     );
   }
 }

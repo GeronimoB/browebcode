@@ -157,9 +157,12 @@ class VerificationScreenState extends State<VerificationScreen> {
               body: Column(
                 children: <Widget>[
                   const SizedBox(height: 20),
-                  _buildTextField(label: translations!["Front_ID"], camp: 'dni_frontal'),
-                  _buildTextField(label: translations!["Back ID"], camp: 'dni_trasero'),
-                  _buildTextField(label: translations!["Selfie"], camp: 'selfie'),
+                  _buildTextField(
+                      label: translations!["Front_ID"], camp: 'dni_frontal'),
+                  _buildTextField(
+                      label: translations!["Back_ID"], camp: 'dni_trasero'),
+                  _buildTextField(
+                      label: translations!["Selfie"], camp: 'selfie'),
                   const SizedBox(height: 35),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

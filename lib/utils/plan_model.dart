@@ -4,7 +4,7 @@ class Plan {
   String precio;
   String descripcion;
   String descripcionLarga;
-  List<String> cualidades; 
+  List<Map<String, dynamic>> cualidades;
   bool isExpanded;
 
   Plan({
@@ -14,6 +14,6 @@ class Plan {
     required this.descripcion,
     required this.descripcionLarga,
     this.isExpanded = false,
-    required this.cualidades, 
+    required this.cualidades,
   });
 }

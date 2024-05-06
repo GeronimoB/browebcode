@@ -3,6 +3,7 @@ import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class OlvideContrasenaPage extends StatelessWidget {
@@ -22,16 +23,38 @@ class OlvideContrasenaPage extends StatelessWidget {
         appBar: AppBar(
           scrolledUnderElevation: 0,
           centerTitle: true,
-          title: appBarTitle(translations!["ACCOUNT_RECOVERY"]),
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Color(0xFF00E050),
-              size: 32,
-            ),
-            onPressed: () => Navigator.pop(context),
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InkWell(
+                child: const Icon(
+                  Icons.arrow_back,
+                  color: Color(0xFF00E050),
+                  size: 32,
+                ),
+                onTap: () => Navigator.pop(context),
+              ),
+              Flexible(
+                child: Text(
+                  translations!["ACCOUNT_RECOVERY"],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
+                    decoration: TextDecoration.none,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
           backgroundColor: Colors.transparent,
+          toolbarHeight: 70,
         ),
         extendBody: true,
         backgroundColor: Colors.transparent,

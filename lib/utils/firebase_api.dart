@@ -130,9 +130,13 @@ class FirebaseApi {
   }
 
   Future<void> initNotifications(BuildContext context) async {
-    await _firebaseMessaging.requestPermission();
-    fcmToken = await _firebaseMessaging.getToken() ?? "";
-    initPushNotifications();
-    initLocalNotifications(context);
+    try {
+      await _firebaseMessaging.requestPermission();
+      fcmToken = await _firebaseMessaging.getToken() ?? "";
+      initPushNotifications();
+      initLocalNotifications(context);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }

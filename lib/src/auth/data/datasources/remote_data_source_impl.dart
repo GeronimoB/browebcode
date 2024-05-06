@@ -102,7 +102,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     bool comingFromAutoLogin,
   ) {
     if (comingFromAutoLogin) {
-      Navigator.pushNamed(context, '/login');
+      Navigator.pushNamed(context, '/intro');
     } else {
       final jsonData = json.decode(response.body);
       final errorMessage = jsonData["error"];

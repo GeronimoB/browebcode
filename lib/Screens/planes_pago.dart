@@ -21,11 +21,18 @@ List<Plan> planes = [
     descripcionLarga:
         'Suscripcion Basic: PVP 19,99€. Tiempo de vigencia un mes. Posibilita subir 2 videos (3 videos) de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD. Sube nuevo video una vez tengas el cupo de 2 cubierto, para ello deberás eliminar uno de la plataforma para que sea efectiva la subida, y seguir manteniendo tus 2 videos (3 videos) activos. Destaca tu video: PVP 2,99€ por video (Recomendación 0,99€ por video).',
     cualidades: [
-      "Subida de 5 videos",
-      "Duración máxima de 2 minutos por video",
-      "Calidad recomendada de 1080 Full HD",
-      "Posibilidad de subir un nuevo video al cubrir el cupo eliminando uno previo",
-      "Mantenimiento de 5 videos activos",
+      {"text": "Sube hasta 2 vídeos", "included": true},
+      {"text": "Videos de hasta 2 minutos", "included": true},
+      {
+        "text": "Visualizacíon: ",
+        "included": true,
+        "isVisualizacion": true,
+        "visualizacion": "Baja",
+        "color": 0xfff23325
+      },
+      {"text": "Verificación de perfil opcional", "included": false},
+      {"text": "Destacado de vídeos opcional", "included": false},
+      {"text": "Tiempo de vigencia de 1 mes", "included": true},
     ],
   ),
   Plan(
@@ -37,11 +44,18 @@ List<Plan> planes = [
     descripcionLarga:
         'Sube nuevo video una vez tengas el cupo de 5 cubierto, para ello deberás eliminar uno de la plataforma para que sea efectiva la subida y seguir manteniendo tus 5 videos activos..',
     cualidades: [
-      "Subida de 5 videos",
-      "Duración máxima de 2 minutos por video",
-      "Calidad recomendada de 1080 Full HD",
-      "Posibilidad de subir un nuevo video al cubrir el cupo eliminando uno previo",
-      "Mantenimiento de 5 videos activos."
+      {"text": "Sube hasta 5 vídeos", "included": true},
+      {"text": "Videos de hasta 2 minutos", "included": true},
+      {
+        "text": "Visualizacíon: ",
+        "included": true,
+        "isVisualizacion": true,
+        "visualizacion": "Media",
+        "color": 0xfff2c925
+      },
+      {"text": "Verificación de perfil opcional", "included": false},
+      {"text": "Destacado de vídeos opcional", "included": false},
+      {"text": "Tiempo de vigencia de 3 meses", "included": true},
     ],
   ),
   Plan(
@@ -53,11 +67,18 @@ List<Plan> planes = [
     descripcionLarga:
         'Sube nuevo video una vez tengas el cupo de 10 cubiertos, para ellos deberás eliminar uno de la plataforma para que sea efectiva la subida y seguir  manteniendo tus 10 videos activos',
     cualidades: [
-      "Subida de 10 videos",
-      "Duración máxima de 2 minutos por video",
-      "Calidad recomendada de 1080 Full HD",
-      "Posibilidad de subir un nuevo video al cubrir el cupo eliminando uno previo",
-      "Mantenimiento de 10 videos activos."
+      {"text": "Sube hasta 10 vídeos", "included": true},
+      {"text": "Videos de hasta 2 minutos", "included": true},
+      {
+        "text": "Visualizacíon: ",
+        "included": true,
+        "isVisualizacion": true,
+        "visualizacion": "Alta",
+        "color": 0xffd1eb6c
+      },
+      {"text": "Verificación de perfil opcional", "included": false},
+      {"text": "Destacado de vídeos opcional", "included": false},
+      {"text": "Tiempo de vigencia de 6 meses", "included": true},
     ],
   ),
   Plan(
@@ -69,10 +90,18 @@ List<Plan> planes = [
     descripcionLarga:
         'Dicha suscripción tiene una duración de 12 meses, y posibilita subir videos ilimitados con un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD',
     cualidades: [
-      "Suscripción de 12 meses",
-      "Subida ilimitada de videos",
-      "Duración máxima de 2 minutos por video",
-      "Calidad recomendada de 1080 Full HD."
+      {"text": "Sube hasta 25 vídeos", "included": true},
+      {"text": "Videos de hasta 2 minutos", "included": true},
+      {
+        "text": "Visualizacíon: ",
+        "included": true,
+        "isVisualizacion": true,
+        "visualizacion": "Máxima",
+        "color": 0xff05FF00
+      },
+      {"text": "Verificación de perfil opcional", "included": true},
+      {"text": "Destacado de vídeos opcional(1)", "included": true},
+      {"text": "Tiempo de vigencia de 12 meses", "included": true},
     ],
   ),
 ];
@@ -203,7 +232,7 @@ class PlanesPagoState extends State<PlanesPago> {
                   ]
                 : null),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
               children: [
@@ -232,23 +261,19 @@ class PlanesPagoState extends State<PlanesPago> {
             ),
             const SizedBox(height: 5),
             const Text(
-              'Que Incluye:',
+              'Qué incluye:',
               style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13),
+                fontSize: 14,
+                fontFamily: 'Montserrat',
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             if (!plan.isExpanded) ...[
-              Text(
-                plan.descripcion,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 11,
-                    fontStyle: FontStyle.italic),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
+              ...plan.cualidades
+                  .map((cualidad) => cualidades(cualidad))
+                  .toList()
+                  .take(2),
               InkWell(
                 child: const Text(
                   'Ver más...',
@@ -263,14 +288,9 @@ class PlanesPagoState extends State<PlanesPago> {
                 }),
               ),
             ] else ...[
-              Text(
-                plan.descripcionLarga,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 11,
-                    fontStyle: FontStyle.italic),
-              ),
+              ...plan.cualidades
+                  .map((cualidad) => cualidades(cualidad))
+                  .toList(),
               InkWell(
                 child: const Text(
                   'Ver menos...',
@@ -288,6 +308,59 @@ class PlanesPagoState extends State<PlanesPago> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget cualidades(Map<String, dynamic> cualidad) {
+    bool included = cualidad["included"];
+    String text = cualidad["text"];
+    String visualizacion = cualidad["visualizacion"] ?? '';
+    int color = cualidad["color"] ?? 0;
+    bool isVisualizacion = cualidad["isVisualizacion"] ?? false;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Icon(
+          included ? Icons.check : Icons.cancel,
+          size: 24,
+          color: included
+              ? const Color(0xFF05FF00)
+              : const Color.fromARGB(255, 242, 51, 37),
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Center(
+          child: Container(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.6),
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 14,
+                fontFamily: 'Montserrat',
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.left,
+              maxLines: 1,
+            ),
+          ),
+        ),
+        if (isVisualizacion)
+          Text(
+            visualizacion,
+            style: TextStyle(
+              fontSize: 14,
+              fontFamily: 'Montserrat',
+              color: Color(color),
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.left,
+          ),
+      ],
     );
   }
 }

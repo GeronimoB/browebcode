@@ -6,6 +6,7 @@ import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/Screens/planes_pago.dart';
+import 'package:bro_app_to/components/planes_cuenta_widget.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:bro_app_to/utils/current_state.dart';
@@ -122,123 +123,122 @@ class CuentaPageState extends State<CuentaPage> {
         ),
         backgroundColor: Colors.transparent,
         extendBody: true,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            GestureDetector(
-              onTap: _openGallery,
-              child: Stack(
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              GestureDetector(
+                onTap: _openGallery,
+                child: Stack(
+                  children: [
+                    ClipOval(
+                      child: player.userImage != ''
+                          ? ColorFiltered(
+                              colorFilter: ColorFilter.mode(
+                                Colors.grey.withOpacity(0.5),
+                                BlendMode.dstATop,
+                              ),
+                              child: CachedNetworkImage(
+                                placeholder: (context, url) =>
+                                    AvatarPlaceholder(150),
+                                errorWidget: (context, error, stackTrace) {
+                                  return Image.asset(
+                                    'assets/images/fot.png',
+                                    fit: BoxFit.fill,
+                                    width: 150,
+                                    height: 150,
+                                  );
+                                },
+                                imageUrl: player.userImage ?? '',
+                                fit: BoxFit.fill,
+                                width: 150,
+                                height: 150,
+                              ),
+                            )
+                          : ColorFiltered(
+                              colorFilter: ColorFilter.mode(
+                                Colors.grey.withOpacity(0.5),
+                                BlendMode.dstATop,
+                              ),
+                              child: Image.asset(
+                                'assets/images/fot.png',
+                                width: 150,
+                                height: 150,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                    ),
+                    const Positioned(
+                      bottom: 0,
+                      top: 0,
+                      right: 0,
+                      left: 0,
+                      child: Icon(
+                        Icons.camera_alt,
+                        color: Colors.white,
+                        size: 42,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ClipOval(
-                    child: player.userImage != ''
-                        ? ColorFiltered(
-                            colorFilter: ColorFilter.mode(
-                              Colors.grey.withOpacity(0.5),
-                              BlendMode.dstATop,
-                            ),
-                            child: CachedNetworkImage(
-                              placeholder: (context, url) =>
-                                  AvatarPlaceholder(150),
-                              errorWidget: (context, error, stackTrace) {
-                                return Image.asset(
-                                  'assets/images/fot.png',
-                                  fit: BoxFit.fill,
-                                  width: 150,
-                                  height: 150,
-                                );
-                              },
-                              imageUrl: player.userImage ?? '',
-                              fit: BoxFit.fill,
-                              width: 150,
-                              height: 150,
-                            ),
-                          )
-                        : ColorFiltered(
-                            colorFilter: ColorFilter.mode(
-                              Colors.grey.withOpacity(0.5),
-                              BlendMode.dstATop,
-                            ),
-                            child: Image.asset(
-                              'assets/images/fot.png',
-                              width: 150,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                  ),
-                  const Positioned(
-                    bottom: 0,
-                    top: 0,
-                    right: 0,
-                    left: 0,
-                    child: Icon(
-                      Icons.camera_alt,
-                      color: Colors.white,
-                      size: 42,
+                  Text(
+                    '${player.name} ${player.lastName}',
+                    style: const TextStyle(
+                      color: Color(0xFF05FF00),
+                      fontFamily: 'Montserrat',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  if (player.verificado)
+                    const Icon(
+                      Icons.verified,
+                      color: Color(0xFF00E050),
+                      size: 24,
+                    ),
                 ],
               ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '${player.name} ${player.lastName}',
+              const SizedBox(height: 5),
+              Text(
+                _isExpanded ? fullInfo : shortInfo,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Montserrat',
+                  fontStyle: FontStyle.italic,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _isExpanded = !_isExpanded;
+                  });
+                },
+                child: Text(
+                  _isExpanded ? 'Ver menos' : 'Ver más',
                   style: const TextStyle(
                     color: Color(0xFF05FF00),
-                    fontFamily: 'Montserrat',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
                   ),
                 ),
-                const SizedBox(
-                  width: 5,
-                ),
-                if (player.verificado)
-                  const Icon(
-                    Icons.verified,
-                    color: Color(0xFF00E050),
-                    size: 24,
-                  ),
-              ],
-            ),
-            const SizedBox(height: 5),
-            Text(
-              _isExpanded ? fullInfo : shortInfo,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Montserrat',
-                fontStyle: FontStyle.italic,
               ),
-              textAlign: TextAlign.center,
-            ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isExpanded = !_isExpanded;
-                });
-              },
-              child: Text(
-                _isExpanded ? 'Ver menos' : 'Ver más',
-                style: const TextStyle(
-                  color: Color(0xFF05FF00),
-                  fontSize: 16.0,
-                ),
-              ),
-            ),
-            const SizedBox(height: 35),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: CarouselSlider(
+              const SizedBox(height: 35),
+              CarouselSlider(
                 options: CarouselOptions(
-                  height: 310.0,
+                  height: 400.0,
                   enlargeCenterPage: true,
                   autoPlay: false,
                   autoPlayCurve: Curves.fastOutSlowIn,
@@ -249,112 +249,14 @@ class CuentaPageState extends State<CuentaPage> {
                 items: planes.map((plan) {
                   final isActualPlan =
                       userProvider.getCurrentUser().subscription == plan.nombre;
-                  return Container(
-                    width: 360,
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
-                    padding: const EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      border: Border.all(color: const Color(0xFF05FF00)),
-                      boxShadow: isActualPlan
-                          ? [
-                              const CustomBoxShadow(
-                                  color: Color(0xFF05FF00), blurRadius: 10)
-                            ]
-                          : null,
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              SvgPicture.asset('assets/icons/Logo.svg',
-                                  width: 80),
-                              Text(
-                                plan.nombre,
-                                style: const TextStyle(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF05FF00),
-                                    height: 1),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          const Text(
-                            'Que incluye:',
-                            style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            expanded ? plan.descripcionLarga : plan.descripcion,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
-                            maxLines: expanded ? 100 : 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              setState(() {
-                                expanded = !expanded;
-                              });
-                            },
-                            style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xFF05FF00),
-                            ),
-                            child:
-                                Text(expanded ? 'Ver menos...' : 'Ver más...'),
-                          ),
-                          Center(
-                            child: CustomTextButton(
-                              onTap: () {
-                                if (!isActualPlan) {
-                                  final precio =
-                                      plan.precio.replaceAll(',', '.');
-                                  final precioDouble = double.parse(precio);
-                                  playerProvider.isSubscriptionPayment = true;
-                                  playerProvider.isNewSubscriptionPayment =
-                                      false;
-                                  playerProvider.selectPlan(plan);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            MetodoDePagoScreen(
-                                              valueToPay: precioDouble,
-                                            )),
-                                  );
-                                } else {
-                                  confirmationCancelDialog(
-                                      context, playerProvider);
-                                }
-                              },
-                              text: isActualPlan ? 'Cancelar' : 'Subscribirse',
-                              buttonPrimary: true,
-                              width: 116,
-                              height: 42,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  return PlanesCuentaWidget(
+                    plan: plan,
+                    isActualPlan: isActualPlan,
+                    cancelModal: confirmationCancelDialog,
                   );
                 }).toList(),
               ),
-            ),
-            Expanded(
-              child: Align(
+              Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 20.0),
@@ -364,8 +266,8 @@ class CuentaPageState extends State<CuentaPage> {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

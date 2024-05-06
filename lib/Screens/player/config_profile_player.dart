@@ -26,9 +26,14 @@ import '../../utils/language_localizations.dart';
 import 'bottom_navigation_bar_player.dart';
 import 'package:http/http.dart' as http;
 
-class ConfigProfilePlayer extends StatelessWidget {
+class ConfigProfilePlayer extends StatefulWidget {
   const ConfigProfilePlayer({super.key});
 
+  @override
+  State<ConfigProfilePlayer> createState() => _ConfigProfilePlayerState();
+}
+
+class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
@@ -172,7 +177,10 @@ class ConfigProfilePlayer extends StatelessWidget {
     if (localizations != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('language', languageCode);
-      localizations.changeLanguage(languageCode);
+      await localizations.changeLanguage(languageCode);
+      setState(() {
+        translations = LanguageLocalizations.of(context)!.getJsonTranslate();
+      });
     }
   }
 
