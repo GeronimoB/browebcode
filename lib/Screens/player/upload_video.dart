@@ -38,11 +38,12 @@ class UploadVideoWidget extends StatefulWidget {
 
 class _UploadVideoWidgetState extends State<UploadVideoWidget> {
   late UserProvider userProvider;
-
+  late PlayerProvider playerProvider;
   @override
   void initState() {
     super.initState();
     userProvider = Provider.of<UserProvider>(context, listen: false);
+    playerProvider = Provider.of<PlayerProvider>(context, listen: false);
   }
 
   @override
@@ -69,8 +70,6 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
         return;
       }
 
-      final playerProvider =
-          Provider.of<PlayerProvider>(context, listen: false);
       _showUploadDialog();
       await uploadVideoAndImage(
           videoPath, thumbnail, playerProvider.getPlayer()!.userId);
@@ -134,8 +133,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
   // }
 
   void _showSubscriptionRe() {
-    showErrorSnackBar(context,
-        translations!["InactiveSubscriptionMessage"]);
+    showErrorSnackBar(context, translations!["InactiveSubscriptionMessage"]);
   }
 
   Future<void> uploadVideoAndImage(
@@ -172,8 +170,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
       );
     } else {
       Navigator.of(context).pop();
-      showErrorSnackBar(
-          context, translations!["VideoLoadError"]);
+      showErrorSnackBar(context, translations!["VideoLoadError"]);
     }
   }
 
@@ -254,6 +251,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final player = playerProvider.getPlayer();
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -286,7 +284,9 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
               Column(
                 children: [
                   GestureDetector(
-                    onTap: userProvider.getCurrentUser().status
+                    onTap: (userProvider.getCurrentUser().status &&
+                            (player?.registroCompleto ?? false) &&
+                            (player?.emailVerified ?? false))
                         ? () async {
                             final videosCount = await ApiClient().get(
                                 'auth/videos_count/${userProvider.getCurrentUser().userId}');
@@ -301,8 +301,10 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
                                         .subscription]) {
                                   _pickVideo();
                                 } else {
-                                  showErrorSnackBar(context,
-                                      translations!["VideoLimitExceededMessage"]);
+                                  showErrorSnackBar(
+                                      context,
+                                      translations![
+                                          "VideoLimitExceededMessage"]);
                                 }
                               }
                             } catch (e) {

@@ -273,8 +273,10 @@ class SelectCampState extends State<SelectCamp> {
                               position: selectedPlayer.position,
                             );
 
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const SignUpScreen2()));
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SignUpScreen2()));
                           } else {
                             playerProvider.updatePlayer(
                               fieldName: "position",

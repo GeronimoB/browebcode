@@ -15,6 +15,7 @@ class PlayerFullModel extends PlayerFullEntity {
     final bool? isAgent,
     final DateTime? birthDate,
     final String? dni,
+    final String? direccion,
     final String? password,
     final String? pais,
     final String? provincia,
@@ -31,6 +32,7 @@ class PlayerFullModel extends PlayerFullEntity {
     final String? userImage,
     final bool verificado = false,
     final bool emailVerified = false,
+    final bool registroCompleto = false,
   }) : super(
           customerStripeId: customerStripeId,
           userId: userId,
@@ -43,6 +45,7 @@ class PlayerFullModel extends PlayerFullEntity {
           isAgent: isAgent,
           birthDate: birthDate,
           dni: dni,
+          direccion: direccion,
           position: position,
           pais: pais,
           provincia: provincia,
@@ -58,6 +61,7 @@ class PlayerFullModel extends PlayerFullEntity {
           userImage: userImage,
           verificado: verificado,
           emailVerified: emailVerified,
+          registroCompleto: registroCompleto,
         );
 
   @override
@@ -73,6 +77,7 @@ class PlayerFullModel extends PlayerFullEntity {
     bool? isAgent,
     DateTime? birthDate,
     String? dni,
+    String? direccion,
     String? position,
     String? pais,
     String? provincia,
@@ -88,6 +93,7 @@ class PlayerFullModel extends PlayerFullEntity {
     String? userImage,
     bool? verificado,
     bool? emailVerified,
+    bool? registroCompleto,
   }) {
     return PlayerFullModel(
       customerStripeId: customerStripeId ?? this.customerStripeId,
@@ -102,6 +108,7 @@ class PlayerFullModel extends PlayerFullEntity {
       isAgent: isAgent ?? this.isAgent,
       birthDate: birthDate ?? this.birthDate,
       dni: dni ?? this.dni,
+      direccion: direccion ?? this.direccion,
       pais: pais ?? this.pais,
       provincia: provincia ?? this.provincia,
       altura: altura ?? this.altura,
@@ -116,16 +123,16 @@ class PlayerFullModel extends PlayerFullEntity {
       userImage: userImage ?? this.userImage,
       verificado: verificado ?? this.verificado,
       emailVerified: emailVerified ?? this.emailVerified,
+      registroCompleto: registroCompleto ?? this.registroCompleto,
     );
   }
 
   factory PlayerFullModel.fromJson(Map<String, dynamic> json) {
     DateTime? birthDate;
     if (json['birthday'] != null) {
-      // Convertir la cadena a un objeto DateTime
       birthDate = DateTime.parse(json['birthday']);
     }
-    print(json['verificado']);
+
     return PlayerFullModel(
       customerStripeId: json['stripe_customer_id'],
       uid: json['id'].toString(),
@@ -137,6 +144,7 @@ class PlayerFullModel extends PlayerFullEntity {
       isAgent: json['isAgent'] ?? false,
       birthDate: birthDate,
       dni: json['DNI'] ?? '',
+      direccion: json['direccion'] ?? '',
       pais: json['pais'] ?? '',
       provincia: json['provincia'] ?? '',
       altura: json['altura'] ?? '',
@@ -147,13 +155,16 @@ class PlayerFullModel extends PlayerFullEntity {
       pieDominante: json['pie_dominante'] ?? '',
       seleccionNacional: json['seleccion_nacional'] ?? '',
       categoriaSeleccion: json['categoria_seleccion'] ?? '',
-      dateCreated:
-          json['dateCreated'] != null ? json['dateCreated'].toDate() : null,
-      dateUpdated:
-          json['dateCreated'] != null ? json['dateUpdated'].toDate() : null,
+      dateCreated: json['created_at'] != null
+          ? DateTime.parse(json['created_at'])
+          : null,
+      dateUpdated: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'])
+          : null,
       userImage: json['image_url'] ?? '',
       verificado: json['verificado'] ?? false,
       emailVerified: json['email_confirmed'] ?? false,
+      registroCompleto: json['registroCompleto'] ?? false,
     );
   }
 
@@ -168,6 +179,7 @@ class PlayerFullModel extends PlayerFullEntity {
     if (password != null) map['Password'] = password;
     if (birthDate != null) map['Birthday'] = birthDate.toString();
     if (dni != null) map['DNI'] = dni;
+    if (direccion != null) map['Direccion'] = direccion;
     if (pais != null) map['Pais'] = pais;
     if (position != null) map['PosicionJugador'] = position;
     if (provincia != null) map['Provincia'] = provincia;

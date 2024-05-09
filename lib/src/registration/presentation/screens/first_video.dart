@@ -155,21 +155,18 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
       Uri.parse('${ApiConstants.baseUrl}/auth/uploadFiles'),
     );
     if (videoPath != null) {
-    
       request.files.add(await http.MultipartFile.fromPath(
-        'video', 
+        'video',
         videoPath,
       ));
     }
 
     if (uint8list != null) {
-
       request.files.add(http.MultipartFile.fromBytes(
-        'imagen', 
+        'imagen',
         uint8list,
-        filename: 'imagen.png', 
-        contentType:
-            MediaType('image', 'png'), 
+        filename: 'imagen.png',
+        contentType: MediaType('image', 'png'),
       ));
     }
 
@@ -178,99 +175,79 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 44, 44, 44),
-              Color.fromARGB(255, 33, 33, 33),
-              Color.fromARGB(255, 22, 22, 22),
-              Color.fromARGB(255, 22, 22, 22),
-              Color.fromARGB(255, 18, 18, 18),
-            ],
-            stops: [
-              0.0,
-              0.5,
-              0.8,
-              0.9,
-              1.0
-            ]),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        extendBody: true,
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          backgroundColor: Colors.transparent,
-          centerTitle: true,
-          title: appBarTitle(translations!['first_video']),
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Color(0xFF00E050),
-              size: 32,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 44, 44, 44),
+                Color.fromARGB(255, 33, 33, 33),
+                Color.fromARGB(255, 22, 22, 22),
+                Color.fromARGB(255, 22, 22, 22),
+                Color.fromARGB(255, 18, 18, 18),
+              ],
+              stops: [
+                0.0,
+                0.5,
+                0.8,
+                0.9,
+                1.0
+              ]),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox.shrink(),
-            _videoController?.value.isInitialized ?? false
-                ? Column(
-                    children: [
-                      SizedBox(
-                        width: double.maxFinite,
-                        height: 500,
-                        child: VideoPlayer(_videoController!),
-                      ),
-                      Slider(
-                        activeColor: const Color(0xff3EAE64),
-                        inactiveColor: const Color(0xff00F056),
-                        value: _sliderValue,
-                        min: 0.0,
-                        max: _videoController!.value.duration.inSeconds
-                            .toDouble(),
-                        onChanged: (value) {
-                          setState(() {
-                            _sliderValue = value;
-                            _videoController!
-                                .seekTo(Duration(seconds: value.toInt()));
-                          });
-                        },
-                      ),
-                    ],
-                  )
-                : Column(
-                    children: [
-                      GestureDetector(
-                        onTap: _pickVideo,
-                        child: SvgPicture.asset(
-                          'assets/icons/CloudIcon.svg',
-                          width: 210,
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          extendBody: true,
+          appBar: AppBar(
+            scrolledUnderElevation: 0,
+            backgroundColor: Colors.transparent,
+            centerTitle: true,
+            title: appBarTitle(translations!['first_video']),
+            automaticallyImplyLeading: false,
+          ),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox.shrink(),
+              _videoController?.value.isInitialized ?? false
+                  ? Column(
+                      children: [
+                        SizedBox(
+                          width: double.maxFinite,
+                          height: 500,
+                          child: VideoPlayer(_videoController!),
                         ),
-                      ),
-                      Text(
-                        translations!['upload'],
-                        style: const TextStyle(
-                          color: Color(0xFF00E050),
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w900,
-                          fontSize: 15.0,
+                        Slider(
+                          activeColor: const Color(0xff3EAE64),
+                          inactiveColor: const Color(0xff00F056),
+                          value: _sliderValue,
+                          min: 0.0,
+                          max: _videoController!.value.duration.inSeconds
+                              .toDouble(),
+                          onChanged: (value) {
+                            setState(() {
+                              _sliderValue = value;
+                              _videoController!
+                                  .seekTo(Duration(seconds: value.toInt()));
+                            });
+                          },
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      SizedBox(
-                        width: 300,
-                        child: Text(
-                          translations!['show_your_habilities'],
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        GestureDetector(
+                          onTap: _pickVideo,
+                          child: SvgPicture.asset(
+                            'assets/icons/CloudIcon.svg',
+                            width: 210,
+                          ),
+                        ),
+                        Text(
+                          translations!['upload'],
                           style: const TextStyle(
                             color: Color(0xFF00E050),
                             fontFamily: 'Montserrat',
@@ -279,19 +256,35 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                      ),
-                    ],
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        SizedBox(
+                          width: 300,
+                          child: Text(
+                            translations!['show_your_habilities'],
+                            style: const TextStyle(
+                              color: Color(0xFF00E050),
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w900,
+                              fontSize: 15.0,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: SvgPicture.asset(
+                    width: 104,
+                    'assets/icons/Logo.svg',
                   ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(25),
-                child: SvgPicture.asset(
-                  width: 104,
-                  'assets/icons/Logo.svg',
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

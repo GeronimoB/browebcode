@@ -23,7 +23,7 @@ class SignUpScreen2 extends StatefulWidget {
 
 class _SignUpScreen2State extends State<SignUpScreen2> {
   bool isLoading = false;
-  bool _acceptedTerms = false;
+
   late TextEditingController clubController;
   late TextEditingController achivementController;
 
@@ -313,86 +313,6 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: <Widget>[
-                      Checkbox(
-                        value: _acceptedTerms,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _acceptedTerms = value!;
-                          });
-                        },
-                        fillColor: MaterialStateProperty.resolveWith<Color?>(
-                          (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.selected)) {
-                              return const Color(0xff00E050);
-                            }
-                            return Colors.white;
-                          },
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _acceptedTerms = !_acceptedTerms;
-                            });
-                          },
-                          child: RichText(
-                            text: TextSpan(
-                              text: translations!['terms'],
-                              style: const TextStyle(
-                                fontFamily: 'Montserrat',
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12,
-                              ),
-                              children: [
-                                TextSpan(
-                                  text: translations!['terms2'],
-                                  style: const TextStyle(
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: translations!['terms3'],
-                                  style: const TextStyle(),
-                                ),
-                                TextSpan(
-                                  text: translations!['terms4'],
-                                  style: const TextStyle(
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: translations!['terms5'],
-                                  style: const TextStyle(),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      translations!['FAQ_label'],
-                      style: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                        decoration: TextDecoration.underline,
-                        decorationColor: Colors.white,
-                      ),
-                    ),
-                  ),
                   const SizedBox(height: 55),
                   CustomTextButton(
                       onTap: () async {
@@ -404,15 +324,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                         bool isValid = await validateForm(
                           context,
                         );
-                        if (!_acceptedTerms) {
-                          showErrorSnackBar(
-                              context, translations!['accept_terms']);
 
-                          setState(() {
-                            isLoading = false;
-                          });
-                          return;
-                        }
                         if (isValid) {
                           final playerProvider = Provider.of<PlayerProvider>(
                               context,
@@ -430,59 +342,34 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                           );
                           try {
                             final response = await ApiClient().post(
-                              'auth/player',
+                              'auth/complete-player',
                               playerProvider.getTemporalUser().toMap(),
                             );
 
+                            if (response.statusCode != 200) {
+                              setState(() {
+                                isLoading = false;
+                              });
+                              showErrorSnackBar(context,
+                                  translations!['error_create_account']);
+                              return;
+                            }
+
                             if (response.statusCode == 200) {
-                              final jsonData = jsonDecode(response.body);
-                              final userId = jsonData["userInfo"]["userId"];
-
                               playerProvider.updateTemporalPlayer(
-                                userId: userId.toString(),
-                                dateCreated: DateTime.now(),
+                                registroCompleto: true,
                               );
 
-                              final name =
-                                  "${playerProvider.getTemporalUser().name} ${playerProvider.getTemporalUser().lastName}";
-                              final email =
-                                  playerProvider.getTemporalUser().email;
-
-                              final responseStripe = await ApiClient().post(
-                                'security_filter/v1/api/payment/customer',
-                                {
-                                  "userId": userId.toString(),
-                                  "CompleteName": name,
-                                  "Email": email
-                                },
-                              );
-                              if (responseStripe.statusCode != 200) {
-                                showErrorSnackBar(context,
-                                    translations!['error_create_account']);
-
-                                return;
-                              }
-                              final jsonDataCus =
-                                  jsonDecode(responseStripe.body);
-                              final customerId = jsonDataCus["customerId"];
-                              playerProvider.updateTemporalPlayer(
-                                  customerStripeId: customerId);
                               showSucessSnackBar(context,
                                   translations!['scss_create_account']);
 
                               await Future.delayed(const Duration(seconds: 2));
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         const FirstVideoWidget()),
                               );
-                            } else {
-                              setState(() {
-                                isLoading = false;
-                              });
-                              final jsonData = json.decode(response.body);
-                              showErrorSnackBar(context, jsonData["error"]);
                             }
                           } on TimeoutException {
                             showErrorSnackBar(

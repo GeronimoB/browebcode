@@ -48,11 +48,14 @@ class PlayerProvider extends ChangeNotifier {
     String? categoriaSeleccion,
     String? position,
     String? dni,
+    String? direccion,
+    bool? registroCompleto,
   }) {
     _temporalUser = _temporalUser.copyWith(
       customerStripeId: customerStripeId,
       userId: userId,
       dni: dni,
+      direccion: direccion,
       name: name,
       email: email,
       birthDate: birthDate,
@@ -70,6 +73,7 @@ class PlayerProvider extends ChangeNotifier {
       seleccionNacional: seleccion,
       categoriaSeleccion: categoriaSeleccion,
       dateCreated: dateCreated,
+      registroCompleto: registroCompleto,
     );
     notifyListeners();
   }
@@ -95,6 +99,7 @@ class PlayerProvider extends ChangeNotifier {
           _player.copyWith(categoriaSeleccion: value),
       'position': (String value) => _player.copyWith(position: value),
       'dni': (String value) => _player.copyWith(dni: value),
+      'direccion': (String value) => _player.copyWith(direccion: value),
     };
 
     final Function? copyWithMethod = fieldMap[fieldName.toLowerCase()];

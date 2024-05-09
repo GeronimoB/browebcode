@@ -37,7 +37,6 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
       if (playerResponse.statusCode == 200) {
         final jsonData = jsonDecode(playerResponse.body);
         final playerjson = jsonData["player"];
-
         setState(() {
           player = PlayerFullModel.fromJson(playerjson);
         });
@@ -45,7 +44,7 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
         debugPrint('Error al obtener los videos: ${playerResponse.statusCode}');
       }
     } catch (e) {
-      debugPrint('Error en la solicitud de videos: $e');
+      debugPrint('Error al obtener el usuario: $e');
     }
   }
 
@@ -162,7 +161,7 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
                 const SizedBox(
                   width: 5,
                 ),
-                if (player!.verificado)
+                if (player?.verificado ?? false)
                   const Icon(
                     Icons.verified,
                     color: Color(0xFF00E050),

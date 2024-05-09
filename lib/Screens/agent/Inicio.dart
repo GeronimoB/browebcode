@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:bro_app_to/Screens/agent/match_profile.dart';
+import 'package:bro_app_to/components/i_field.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/initial_video_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -13,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../components/custom_dropdown.dart';
 import '../../components/slidedable_video.dart';
+import '../../components/user_filter_result.dart';
 import '../../utils/current_state.dart';
 
 class InicioPage extends StatefulWidget {
@@ -26,12 +27,16 @@ class InicioPageState extends State<InicioPage> {
   double _xOffset = 0.0;
   double _rotation = 0.0;
   int _currentIndex = 0;
+  bool showTextField = false;
   final List<InitialVideoModel> _videosRandom = [];
+  final List<UserFilter> usuarios = [];
+  List<UserFilter> usuariosFiltrados = [];
   late VideoPlayerController? currentController;
   late VideoPlayerController? nextController;
   late UserProvider userProvider;
   String currentUserId = '';
   OverlayEntry? _overlayEntry;
+  bool showContainerResult = false;
   late TextEditingController selectedCountry;
   late TextEditingController selectedState;
   late TextEditingController selectedHeight;
@@ -41,6 +46,7 @@ class InicioPageState extends State<InicioPage> {
   late TextEditingController position;
   late TextEditingController category;
   late TextEditingController date;
+  late TextEditingController player;
   bool isLoading = false;
 
   @override
@@ -57,6 +63,7 @@ class InicioPageState extends State<InicioPage> {
     position = TextEditingController();
     category = TextEditingController();
     date = TextEditingController();
+    player = TextEditingController();
     _fetchVideoUrls();
   }
 
@@ -84,6 +91,8 @@ class InicioPageState extends State<InicioPage> {
       setState(() {
         _videosRandom.clear();
         _videosRandom.addAll(videosMapeados);
+        usuarios.clear();
+        usuarios.addAll(listFilterUserFromVideos(videosMapeados));
       });
 
       if (videosMapeados.isNotEmpty) {
@@ -99,6 +108,18 @@ class InicioPageState extends State<InicioPage> {
       });
       throw Exception('Error al obtener las URLs de los videos ${error}');
     }
+  }
+
+  void filterUsers(String name) {
+    print("nombre a filtrar: $name");
+    usuariosFiltrados.clear();
+    final users = usuarios
+        .where((user) => user.user.toLowerCase().contains(name.toLowerCase()))
+        .toList();
+    setState(() {
+      usuariosFiltrados.addAll(users);
+    });
+    print("len ${usuariosFiltrados.length}");
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
@@ -154,6 +175,7 @@ class InicioPageState extends State<InicioPage> {
     position.dispose();
     category.dispose();
     date.dispose();
+    player.dispose();
     super.dispose();
   }
 
@@ -195,161 +217,235 @@ class InicioPageState extends State<InicioPage> {
     double scale = 1;
     double height = MediaQuery.of(context).size.height;
 
-    return Column(
-      children: [
-        SizedBox(
-          height: height * 0.92,
-          child: GestureDetector(
-            onHorizontalDragUpdate: _onHorizontalDragUpdate,
-            onHorizontalDragEnd: _onHorizontalDragEnd,
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: <Widget>[
-                isLoading
-                    ? loadingWidget()
-                    : _videosRandom.isEmpty
-                        ? emptyWidget()
-                        : Positioned.fill(
-                            child: Transform.scale(
-                              scale: scale,
-                              child: Transform.rotate(
-                                angle: _rotation,
-                                child: Transform.translate(
-                                  offset: Offset(_xOffset, 0),
-                                  child: SlidableVideo(
-                                      controller: currentController!),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(
+            height: height * 0.92,
+            child: GestureDetector(
+              onHorizontalDragUpdate: _onHorizontalDragUpdate,
+              onHorizontalDragEnd: _onHorizontalDragEnd,
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: <Widget>[
+                  isLoading
+                      ? loadingWidget()
+                      : _videosRandom.isEmpty
+                          ? emptyWidget()
+                          : Positioned.fill(
+                              child: Transform.scale(
+                                scale: scale,
+                                child: Transform.rotate(
+                                  angle: _rotation,
+                                  child: Transform.translate(
+                                    offset: Offset(_xOffset, 0),
+                                    child: SlidableVideo(
+                                        controller: currentController!),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                if (_videosRandom.isNotEmpty)
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 10,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      width: MediaQuery.of(context).size.width - 10,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
+                  if (_videosRandom.isNotEmpty)
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 10,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        width: MediaQuery.of(context).size.width - 10,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  _videosRandom[_currentIndex].user,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24.0,
+                                    height: 1,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                if (!_videosRandom[_currentIndex].verificado)
+                                  const Icon(
+                                    Icons.verified,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
+                              ],
+                            ),
+                            if (_videosRandom[_currentIndex]
+                                .description
+                                .isNotEmpty) ...[
+                              const SizedBox(
+                                height: 5,
+                              ),
                               Text(
-                                _videosRandom[_currentIndex].user,
+                                _videosRandom[_currentIndex].description,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Montserrat',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
                                   height: 1,
                                 ),
+                                maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              if (!_videosRandom[_currentIndex].verificado)
-                                const Icon(
-                                  Icons.verified,
-                                  color: Colors.white,
-                                  size: 24,
-                                ),
                             ],
-                          ),
-                          if (_videosRandom[_currentIndex]
-                              .description
-                              .isNotEmpty) ...[
                             const SizedBox(
                               height: 5,
                             ),
-                            Text(
-                              _videosRandom[_currentIndex].description,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 20,
-                                height: 1,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                  onTap: () => rejectFunction(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                    onTap: () => rejectFunction(),
+                                    child: SvgPicture.asset(
+                                      'assets/icons/circle-x.svg',
+                                      height: 45,
+                                      width: 45,
+                                      color: const Color(0xFF00E050),
+                                      fit: BoxFit.cover,
+                                    )),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                GestureDetector(
+                                  onTap: () => matchFunction(),
                                   child: SvgPicture.asset(
-                                    'assets/icons/circle-x.svg',
+                                    'assets/icons/heart.svg',
                                     height: 45,
                                     width: 45,
                                     color: const Color(0xFF00E050),
                                     fit: BoxFit.cover,
-                                  )),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () => matchFunction(),
-                                child: SvgPicture.asset(
-                                  'assets/icons/heart.svg',
-                                  height: 45,
-                                  width: 45,
-                                  color: const Color(0xFF00E050),
-                                  fit: BoxFit.cover,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  Positioned(
+                    top: MediaQuery.of(context).padding.top + 10,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: showTextField
+                            ? MainAxisAlignment.spaceBetween
+                            : MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (showTextField) {
+                                  showContainerResult = false;
+                                  player.clear();
+                                }
+
+                                showTextField = !showTextField;
+                              });
+                            },
+                            child: Icon(
+                              showTextField
+                                  ? Icons.close
+                                  : Icons.search_outlined,
+                              size: 44,
+                              color: const Color(0xFF00E050),
+                            ),
+                          ),
+                          Expanded(
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 300),
+                              child: showTextField
+                                  ? Column(
+                                      children: [
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 15),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5),
+                                          height: 44,
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                56, 1, 1, 1),
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          child: iField(player, 'Jugador',
+                                              onChanged: (value) {
+                                            if (value.length >= 3) {
+                                              setState(() {
+                                                showContainerResult = true;
+                                              });
+                                              filterUsers(value);
+                                            }
+                                          }),
+                                        ),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        if (showContainerResult)
+                                          userFilterResultWidget(
+                                            context,
+                                            usuariosFiltrados,
+                                          ),
+                                      ],
+                                    )
+                                  : null,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () => _showCustomMenu(context),
+                            child: SvgPicture.asset(
+                              'assets/icons/filter.svg',
+                              width: 36,
+                              height: 36,
+                              fit: BoxFit.cover,
+                              color: const Color(0xFF00E050),
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                Positioned(
-                  top: MediaQuery.of(context).padding.top + 10,
-                  right: 15,
-                  child: GestureDetector(
-                    onTap: () => _showCustomMenu(context),
-                    child: SvgPicture.asset(
-                      'assets/icons/filter.svg',
-                      width: 36,
-                      height: 36,
-                      fit: BoxFit.cover,
-                      color: const Color(0xFF00E050),
+                  if (_xOffset > 0)
+                    Positioned(
+                      top: MediaQuery.of(context).size.height / 2 - 50,
+                      right: 0,
+                      child: SvgPicture.asset(
+                        'assets/icons/Matchicon.svg',
+                        width: 200,
+                        height: 200,
+                      ),
                     ),
-                  ),
-                ),
-                if (_xOffset > 0)
-                  Positioned(
-                    top: MediaQuery.of(context).size.height / 2 - 50,
-                    right: 0,
-                    child: SvgPicture.asset(
-                      'assets/icons/Matchicon.svg',
-                      width: 200,
-                      height: 200,
+                  if (_xOffset < 0)
+                    Positioned(
+                      top: MediaQuery.of(context).size.height / 2 - 50,
+                      left: 5,
+                      child: SvgPicture.asset(
+                        'assets/icons/No Match.svg',
+                        width: 200,
+                        height: 200,
+                      ),
                     ),
-                  ),
-                if (_xOffset < 0)
-                  Positioned(
-                    top: MediaQuery.of(context).size.height / 2 - 50,
-                    left: 5,
-                    child: SvgPicture.asset(
-                      'assets/icons/No Match.svg',
-                      width: 200,
-                      height: 200,
-                    ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

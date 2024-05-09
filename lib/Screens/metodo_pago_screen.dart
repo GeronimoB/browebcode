@@ -1,9 +1,18 @@
+import 'dart:convert';
+
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
+import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/components/snackbar.dart';
+import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/current_state.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/agregar_tarjeta_screen.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../components/i_field.dart';
 
 class MetodoDePagoScreen extends StatefulWidget {
   final double valueToPay;
@@ -16,6 +25,22 @@ class MetodoDePagoScreen extends StatefulWidget {
 class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
   bool cardSelected = false;
   bool transferSelected = false;
+  double valueToPay = 0;
+  late TextEditingController cupon;
+  bool couponApplied = false;
+  String couponToSend = '';
+  @override
+  void initState() {
+    super.initState();
+    valueToPay = widget.valueToPay;
+    cupon = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    cupon.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +80,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Text(
-                '${widget.valueToPay} €',
+                '$valueToPay €',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: Color(0xFF00E050),
@@ -86,7 +111,9 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const AgregarTarjetaScreen()),
+                    builder: (context) =>
+                        AgregarTarjetaScreen(valueToPay: valueToPay, cupon: couponToSend),
+                  ),
                 );
               },
               child: Container(
@@ -123,56 +150,34 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 25.0),
+            Text(
+              translations!["applyDisc"],
+              style: const TextStyle(
+                  color: Color(0xFF00E050),
+                  fontSize: 18,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                SizedBox(width: 200, child: iField(cupon, '')),
+                const SizedBox(
+                  width: 10,
+                ),
+                CustomTextButton(
+                  onTap: () => handleApplyDisc(cupon.text),
+                  text: 'Aplicar',
+                  buttonPrimary: true,
+                  width: 100,
+                  height: 25,
+                )
+              ],
+            ),
             const SizedBox(height: 26),
-            // GestureDetector(
-            //   onTapDown: (_) {
-            //     setState(() {
-            //       transferSelected = true;
-            //       _mostrarMenuTransferencia();
-            //     });
-            //   },
-            //   onTapUp: (_) {
-            //     setState(() {
-            //       transferSelected = false;
-            //     });
-            //   },
-            //   onTapCancel: () {
-            //     setState(() {
-            //       transferSelected = false;
-            //     });
-            //   },
-            //   onTap: () async {},
-            //   child: Container(
-            //     width: metodoPagoWidth,
-            //     height: metodoPagoHeight,
-            //     decoration: BoxDecoration(
-            //         color: transferSelected ? Colors.black : Colors.white,
-            //         border:
-            //             Border.all(color: const Color(0xff05FF00), width: 1.5),
-            //         borderRadius: const BorderRadius.all(Radius.circular(10)),
-            //         boxShadow: transferSelected
-            //             ? [
-            //                 const CustomBoxShadow(
-            //                   color: Color(0xff05FF00),
-            //                   blurRadius: 4,
-            //                 )
-            //               ]
-            //             : null),
-            //     child: Center(
-            //       child: Text(
-            //         "TRANSFERENCIA BANCARIA",
-            //         style:  TextStyle(
-            //             color: transferSelected
-            //                 ? Colors.white
-            //                 : const Color(0xff1D6937),
-            //             fontFamily: 'Montserrat',
-            //             fontSize: 24,
-            //             fontWeight: FontWeight.w900),
-            //         textAlign: TextAlign.center,
-            //       ),
-            //     ),
-            //   ),
-            // ),
             const Spacer(),
             Align(
               alignment: Alignment.bottomCenter,
@@ -188,5 +193,34 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
         ),
       ),
     );
+  }
+
+  void handleApplyDisc(String coupon) async {
+    cupon.clear();
+    if (couponApplied) {
+      return showErrorSnackBar(context, translations!['justOneCoupon']);
+    }
+
+    if (coupon == "") {
+      return showErrorSnackBar(context, translations!['invalidCoupon']);
+    }
+
+    final response =
+        await ApiClient().post('auth/check-coupon', {"code": coupon});
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      final disc = jsonData["percent"];
+      showSucessSnackBar(context, '${translations!['validCoupon']} $disc%');
+      setState(() {
+        valueToPay = valueToPay * (1 - disc / 100);
+        couponApplied = true;
+        couponToSend = coupon;
+      });
+    } else {
+      final jsonData = jsonDecode(response.body);
+      final err = jsonData["error"];
+      showErrorSnackBar(context, err);
+    }
   }
 }

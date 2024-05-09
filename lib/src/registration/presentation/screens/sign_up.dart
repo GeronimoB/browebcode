@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bro_app_to/components/snackbar.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+  bool _acceptedTerms = false;
   bool obscureText = true;
   bool isLoading = false;
   late TextEditingController nameController;
@@ -32,6 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late TextEditingController passwordController;
   late TextEditingController dniController;
   late TextEditingController referralCodeCtlr;
+  late TextEditingController directionController;
 
   Future<bool> validateAndCheckEmail(BuildContext context, String email,
       String name, String lastName, DateTime fecha, String password) async {
@@ -40,7 +43,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         dniController.text.isEmpty ||
         fecha == DateTime.now() ||
         password.isEmpty ||
-        name.isEmpty) {
+        name.isEmpty ||
+        dniController.text.isEmpty ||
+        directionController.text.isEmpty) {
       showErrorSnackBar(context, translations!['complete_all_fields']);
 
       return false;
@@ -71,6 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       showErrorSnackBar(context, translations!['error_try_again']);
       return false;
     }
+
     if (referralCodeCtlr.text.isNotEmpty) {
       try {
         final response = await ApiClient().post(
@@ -106,6 +112,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     mailController = TextEditingController();
     lastNameController = TextEditingController();
     referralCodeCtlr = TextEditingController();
+    dniController = TextEditingController();
+    directionController = TextEditingController();
   }
 
   @override
@@ -116,6 +124,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     mailController.dispose();
     lastNameController.dispose();
     referralCodeCtlr.dispose();
+    dniController.dispose();
+    directionController.dispose();
     super.dispose();
   }
 
@@ -178,6 +188,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   iField(lastNameController, translations!['last_name']),
                   const SizedBox(height: 10),
                   iField(dniController, translations!['dni_label']),
+                  const SizedBox(height: 10),
+                  iField(directionController, translations!['direction_label']),
                   const SizedBox(height: 10),
                   InkWell(
                     onTap: () {
@@ -290,36 +302,193 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(height: 10),
                   iField(referralCodeCtlr, translations!['referral_code']),
                   const SizedBox(height: 20),
+                  Row(
+                    children: <Widget>[
+                      Checkbox(
+                        value: _acceptedTerms,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _acceptedTerms = value!;
+                          });
+                        },
+                        fillColor: MaterialStateProperty.resolveWith<Color?>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.selected)) {
+                              return const Color(0xff00E050);
+                            }
+                            return Colors.white;
+                          },
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _acceptedTerms = !_acceptedTerms;
+                            });
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              text: translations!['terms'],
+                              style: const TextStyle(
+                                fontFamily: 'Montserrat',
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: translations!['terms2'],
+                                  style: const TextStyle(
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: translations!['terms3'],
+                                  style: const TextStyle(),
+                                ),
+                                TextSpan(
+                                  text: translations!['terms4'],
+                                  style: const TextStyle(
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: translations!['terms5'],
+                                  style: const TextStyle(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Text(
+                      translations!['FAQ_label'],
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   CustomTextButton(
                     onTap: () async {
                       FocusScope.of(context).unfocus();
                       setState(() {
-                        isLoading = true; // Mostrar el loader
+                        isLoading = true;
                       });
                       bool isValid = await validateAndCheckEmail(
-                          context,
-                          mailController.text,
-                          nameController.text,
-                          lastNameController.text,
-                          _selectedDate,
-                          passwordController.text);
+                        context,
+                        mailController.text,
+                        nameController.text,
+                        lastNameController.text,
+                        _selectedDate,
+                        passwordController.text,
+                      );
+                      if (!_acceptedTerms) {
+                        showErrorSnackBar(
+                            context, translations!['accept_terms']);
+
+                        setState(() {
+                          isLoading = false;
+                        });
+                        return;
+                      }
+
                       if (isValid) {
                         final playerProvider =
                             Provider.of<PlayerProvider>(context, listen: false);
                         playerProvider.updateTemporalPlayer(
-                            dni: dniController.text,
-                            codigoReferido: referralCodeCtlr.text,
-                            email: mailController.text,
-                            name: nameController.text,
-                            lastName: lastNameController.text,
-                            birthDate: _selectedDate,
-                            password: passwordController.text);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const SelectCamp(registrando: true)),
+                          dni: dniController.text,
+                          codigoReferido: referralCodeCtlr.text,
+                          email: mailController.text,
+                          name: nameController.text,
+                          lastName: lastNameController.text,
+                          birthDate: _selectedDate,
+                          password: passwordController.text,
+                          direccion: directionController.text,
                         );
+
+                        try {
+                          final response = await ApiClient().post(
+                            'auth/player',
+                            playerProvider.getTemporalUser().toMap(),
+                          );
+
+                          if (response.statusCode == 200) {
+                            final jsonData = jsonDecode(response.body);
+                            final userId = jsonData["userId"];
+                            print("recibio el userId $userId");
+                            playerProvider.updateTemporalPlayer(
+                              userId: userId.toString(),
+                              dateCreated: DateTime.now(),
+                            );
+
+                            final name =
+                                "${playerProvider.getTemporalUser().name} ${playerProvider.getTemporalUser().lastName}";
+                            final email =
+                                playerProvider.getTemporalUser().email;
+
+                            final responseStripe = await ApiClient().post(
+                              'security_filter/v1/api/payment/customer',
+                              {
+                                "userId": userId.toString(),
+                                "CompleteName": name,
+                                "Email": email
+                              },
+                            );
+                            if (responseStripe.statusCode != 200) {
+                              showErrorSnackBar(context,
+                                  translations!['error_create_account']);
+
+                              return;
+                            }
+                            final jsonDataCus = jsonDecode(responseStripe.body);
+                            final customerId = jsonDataCus["customerId"];
+                            playerProvider.updateTemporalPlayer(
+                                customerStripeId: customerId);
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SelectCamp(registrando: true)),
+                            );
+                          } else {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            showErrorSnackBar(
+                                context, translations!['error_create_account']);
+                          }
+                        } on TimeoutException {
+                          showErrorSnackBar(
+                              context, translations!['error_try_again']);
+
+                          setState(() {
+                            isLoading = false;
+                          });
+                          return;
+                        } catch (e) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                          showErrorSnackBar(
+                              context, translations!['error_try_again']);
+
+                          return;
+                        }
                       }
                       setState(() {
                         isLoading = false;

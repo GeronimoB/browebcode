@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 Widget iField(TextEditingController ctlr, String label,
-    {TextInputType keybType = TextInputType.text}) {
+    {TextInputType keybType = TextInputType.text,
+    Function(String)? onChanged}) {
   return TextField(
     controller: ctlr,
     keyboardType: keybType,
@@ -20,5 +21,6 @@ Widget iField(TextEditingController ctlr, String label,
       ),
     ),
     style: const TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+    onChanged: onChanged,
   );
 }

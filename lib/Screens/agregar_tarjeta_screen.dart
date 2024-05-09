@@ -25,7 +25,13 @@ import '../utils/tarjeta_model.dart';
 import 'package:http_parser/http_parser.dart';
 
 class AgregarTarjetaScreen extends StatefulWidget {
-  const AgregarTarjetaScreen({Key? key}) : super(key: key);
+  final double valueToPay;
+  final String cupon;
+  const AgregarTarjetaScreen({
+    required this.valueToPay,
+    required this.cupon,
+    Key? key,
+  }) : super(key: key);
 
   @override
   AgregarTarjetaScreenState createState() => AgregarTarjetaScreenState();
@@ -442,8 +448,9 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
             "${playerProvider.selectedCard!.displayBrand!.toUpperCase()} *${playerProvider.selectedCard!.last4Numbers}",
         "plan": playerProvider.getActualPlan()!.nombre,
         "userId": player.userId,
-        "amount": playerProvider.getActualPlan()!.precio,
-        "isSuscription": "1"
+        "amount": widget.valueToPay.toString(),
+        "isSuscription": "1",
+        "cupon": widget.cupon
       },
     );
 
@@ -494,9 +501,10 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
             "${playerProvider.selectedCard!.displayBrand!.toUpperCase()} *${playerProvider.selectedCard!.last4Numbers}",
         "plan": "Destacar video",
         "userId": player.userId,
-        "amount": "0.99",
+        "amount": widget.valueToPay.toString(),
         "isSuscription": "0",
         'videoId': video?.id.toString(),
+        "cupon": widget.cupon
       },
     );
 

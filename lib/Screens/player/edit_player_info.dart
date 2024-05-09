@@ -6,6 +6,7 @@ import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_dropdown.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/components/i_field.dart';
+import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
@@ -42,6 +43,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
   late TextEditingController _dniController;
   late TextEditingController _clubController;
   late TextEditingController _categoriaSeleccionController;
+  late TextEditingController _directionController;
 
   late PlayerProvider provider;
   late PlayerFullModel player;
@@ -60,7 +62,8 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     _nombreController = TextEditingController(text: player.name);
     _apellidoController = TextEditingController(text: player.lastName);
     _correoController = TextEditingController(text: player.email);
-    _paisController = TextEditingController(text: player.pais);
+    _paisController = TextEditingController(
+        text: player.pais!.isNotEmpty ? player.pais : 'España');
     _provinciaController = TextEditingController(text: player.provincia);
     _posicionController = TextEditingController(text: player.position);
     _categoriaController = TextEditingController(text: player.categoria);
@@ -68,12 +71,15 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
         TextEditingController(text: player.logrosIndividuales);
     _alturaController = TextEditingController(text: player.altura);
     _pieDominanteController = TextEditingController(text: player.pieDominante);
-    _seleccionNacionalController =
-        TextEditingController(text: player.seleccionNacional);
+    _seleccionNacionalController = TextEditingController(
+        text: player.seleccionNacional!.isNotEmpty
+            ? player.seleccionNacional
+            : 'Masculina');
     _categoriaSeleccionController =
         TextEditingController(text: player.categoriaSeleccion);
     _dniController = TextEditingController(text: player.dni);
     _clubController = TextEditingController(text: player.club);
+    _directionController = TextEditingController(text: player.direccion);
   }
 
   @override
@@ -92,6 +98,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     _categoriaSeleccionController.dispose();
     _dniController.dispose();
     _clubController.dispose();
+    _directionController.dispose();
     super.dispose();
   }
 
@@ -128,13 +135,43 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     }
   }
 
+  Future<void> validateFields() async {
+    if (_nombreController.text.isEmpty ||
+        _apellidoController.text.isEmpty ||
+        _correoController.text.isEmpty ||
+        _paisController.text.isEmpty ||
+        _provinciaController.text.isEmpty ||
+        _posicionController.text.isEmpty ||
+        _categoriaController.text.isEmpty ||
+        _logrosIndividualesController.text.isEmpty ||
+        _alturaController.text.isEmpty ||
+        _pieDominanteController.text.isEmpty ||
+        _seleccionNacionalController.text.isEmpty ||
+        _clubController.text.isEmpty ||
+        _categoriaSeleccionController.text.isEmpty ||
+        _directionController.text.isEmpty) {
+      return showErrorSnackBar(
+          context, translations!['completAllFieldEditProfile']);
+    }
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final response = await ApiClient().post('auth/player-check',
+        {"userId": userProvider.getCurrentUser().userId.toString()});
+    if (response.statusCode == 200) {
+      Navigator.of(context).pushReplacementNamed('/config-player');
+    } else {
+      showErrorSnackBar(context, translations!['error_try_again']);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: true);
     final user = userProvider.getCurrentUser();
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).pushReplacementNamed('/config-player');
+        validateFields();
+
         return false;
       },
       child: Container(
@@ -153,14 +190,14 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Color(0xFF00E050),
-                size: 32,
-              ),
-              onPressed: () =>
-                  Navigator.of(context).pushReplacementNamed('/config-player'),
-            ),
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Color(0xFF00E050),
+                  size: 32,
+                ),
+                onPressed: () {
+                  validateFields();
+                }),
           ),
           backgroundColor: Colors.transparent,
           body: SingleChildScrollView(
@@ -235,6 +272,10 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                     label: translations!["Email"],
                     controller: _correoController,
                     camp: 'email'),
+                _buildTextField(
+                    label: translations!["Direction"],
+                    controller: _directionController,
+                    camp: 'direccion'),
                 // _buildTextField(
                 //     label: 'DOCUMENTO DE IDENTIDAD',
                 //     controller: _dniController,
@@ -253,16 +294,16 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                   items: provincesByCountry[_paisController.text],
                 ),
                 _buildTextField(
-                    label:  translations!["position_label"],
+                    label: translations!["Position"],
                     controller: _posicionController,
                     camp: 'position',
                     goToSelCamp: true),
                 _buildTextField(
-                    label: translations!["club_label"],
+                    label: translations!["Club"],
                     controller: _clubController,
                     camp: 'club'),
                 _buildTextField(
-                    label: translations!["category_label_short"],
+                    label: translations!["Category"],
                     controller: _categoriaController,
                     camp: 'categoria',
                     select: true,

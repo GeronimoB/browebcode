@@ -47,15 +47,13 @@ class PlayerProfileState extends State<PlayerProfile> {
     userProvider = Provider.of<UserProvider>(context, listen: false);
     user = userProvider.getCurrentUser();
 
-    if (player.emailVerified) {
+    if (!player.emailVerified) {
       _showAlert = true;
       DateTime dateCreated = player.dateCreated ?? DateTime.now();
       DateTime now = DateTime.now();
-      print(dateCreated);
       Duration difference = now.difference(dateCreated);
-
       int daysPassed = difference.inDays;
-      diasTranscurridos = diasTranscurridos;
+      diasTranscurridos = daysPassed;
       diasFaltantes -= daysPassed;
     }
   }

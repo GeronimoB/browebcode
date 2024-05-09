@@ -35,6 +35,7 @@
   "female": "Weiblich",
   "ref_code_no_exist": "Der eingegebene Empfehlungscode existiert nicht.",
   "dni_label": "Geben Sie Ihre Ausweis-/NIE-/NIF-Nummer (Personalausweis) ein",
+  "direction_label": "Dirección",
   "country_label": "Land",
   "state_label": "Bundesland",
   "height_label": "Größe",
@@ -155,7 +156,7 @@
   "Front_ID": "VORDERSEITE AUSWEIS",
   "Back_ID": "RÜCKSEITE AUSWEIS",
   "Selfie": "SELFIE",
-  "InactiveSubscriptionMessage": "Sie haben kein aktives Abonnement. Gehen Sie zu Ihrem Konto, um Videos hochzuladen und mit den Agenten zu interagieren.",
+  "InactiveSubscriptionMessage": "Tu cuenta no esta activa, debes verificar tu email, completar tu información de perfil o suscribirte. Ve a tu cuenta para poder subir videos e interactuar con los agentes.",
   "VideoLoadError": "Beim Laden des Videos ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
   "VideoLimitExceededMessage": "Sie haben das Video-Limit Ihres Plans überschritten. Wenn Sie ein neues Video hochladen möchten, löschen Sie eines aus Ihrem Profil.",
   "ErrorOccurredMessage": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
@@ -177,5 +178,14 @@
   "please_upload_pdf": "Die Rechnung muss im PDF-Format vorliegen.",
   "PDFInvoice": "PDF-Rechnung",
   "036orCIFDocument": "DOKUMENT 036 oder CIF",
-  "NoFundsToWithdrawMessage": "Sie haben kein Geld zum Abheben. Machen Sie weiterhin Freunde darauf aufmerksam."
+  "NoFundsToWithdrawMessage": "Sie haben kein Geld zum Abheben. Machen Sie weiterhin Freunde darauf aufmerksam.",
+  "Position": "POSICIÓN",
+  "Club": "ENTIDAD DEPORTIVA",
+  "Category": "CATEGORIA",
+  "Direction": "DIRECCIÓN",
+  "applyDisc": "Aplicar Cupon",
+  "invalidCoupon": "Ingresa un cupon",
+  "validCoupon": "¡Felicidades! Obtuviste un descuento del",
+  "justOneCoupon": "Ya has aplicado un cupon",
+  "completAllFieldEditProfile": "Debes completar todos los campos, para que tu cuenta quede activa."
 }

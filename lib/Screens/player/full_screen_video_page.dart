@@ -583,6 +583,7 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
       );
     } else {
       playerProvider.isSubscriptionPayment = false;
+      _controller.pause();
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => const MetodoDePagoScreen(valueToPay: 0.99),

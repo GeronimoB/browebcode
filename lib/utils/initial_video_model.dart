@@ -23,6 +23,22 @@ class InitialVideoModel {
   }
 }
 
+class UserFilter {
+  int userId;
+  String user;
+
+  UserFilter({
+    required this.userId,
+    required this.user,
+  });
+}
+
 List<InitialVideoModel> mapListToInitialVideos(List<dynamic> lista) {
   return lista.map((item) => InitialVideoModel.fromJson(item)).toList();
+}
+
+List<UserFilter> listFilterUserFromVideos(List<InitialVideoModel> lista) {
+  return lista
+      .map((item) => UserFilter(user: item.user, userId: item.userId))
+      .toList();
 }

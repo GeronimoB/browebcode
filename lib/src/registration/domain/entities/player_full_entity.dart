@@ -21,6 +21,8 @@ class PlayerFullEntity extends Equatable {
 
   final String? dni;
 
+  final String? direccion;
+
   final String? pais;
 
   final String? provincia;
@@ -49,6 +51,7 @@ class PlayerFullEntity extends Equatable {
 
   final bool verificado;
   final bool emailVerified;
+  final bool registroCompleto;
 
   const PlayerFullEntity({
     this.customerStripeId,
@@ -61,6 +64,7 @@ class PlayerFullEntity extends Equatable {
     this.isAgent,
     this.birthDate,
     this.dni,
+    this.direccion,
     this.position,
     this.pais,
     this.provincia,
@@ -77,6 +81,7 @@ class PlayerFullEntity extends Equatable {
     this.password,
     this.verificado = false,
     this.emailVerified = false,
+    this.registroCompleto = false,
   });
 
   PlayerFullEntity copyWith({
@@ -90,6 +95,7 @@ class PlayerFullEntity extends Equatable {
     bool? isAgent,
     DateTime? birthDate,
     String? dni,
+    String? direccion,
     String? pais,
     String? provincia,
     String? altura,
@@ -106,35 +112,37 @@ class PlayerFullEntity extends Equatable {
     String? password,
     bool? verificado,
     bool? emailVerified,
+    bool? registroCompleto,
   }) {
     return PlayerFullEntity(
-      customerStripeId: customerStripeId ?? this.customerStripeId,
-      userId: userId ?? this.userId,
-      uid: uid ?? this.uid,
-      name: name ?? this.name,
-      lastName: lastName ?? this.lastName,
-      email: email ?? this.email,
-      referralCode: referralCode ?? this.referralCode,
-      isAgent: isAgent ?? this.isAgent,
-      birthDate: birthDate ?? this.birthDate,
-      password: password ?? this.password,
-      dni: dni ?? this.dni,
-      position: position ?? this.position,
-      pais: pais ?? this.pais,
-      provincia: provincia ?? this.provincia,
-      altura: altura ?? this.altura,
-      categoria: categoria ?? this.categoria,
-      club: club ?? this.club,
-      logrosIndividuales: logrosIndividuales ?? this.logrosIndividuales,
-      pieDominante: pieDominante ?? this.pieDominante,
-      seleccionNacional: seleccionNacional ?? this.seleccionNacional,
-      categoriaSeleccion: categoriaSeleccion ?? this.categoriaSeleccion,
-      dateCreated: dateCreated ?? this.dateCreated,
-      dateUpdated: dateUpdated ?? this.dateUpdated,
-      userImage: userImage ?? this.userImage,
-      verificado: verificado ?? this.verificado,
-      emailVerified: emailVerified ?? this.emailVerified,
-    );
+        customerStripeId: customerStripeId ?? this.customerStripeId,
+        userId: userId ?? this.userId,
+        uid: uid ?? this.uid,
+        name: name ?? this.name,
+        lastName: lastName ?? this.lastName,
+        email: email ?? this.email,
+        referralCode: referralCode ?? this.referralCode,
+        isAgent: isAgent ?? this.isAgent,
+        birthDate: birthDate ?? this.birthDate,
+        password: password ?? this.password,
+        dni: dni ?? this.dni,
+        position: position ?? this.position,
+        pais: pais ?? this.pais,
+        provincia: provincia ?? this.provincia,
+        altura: altura ?? this.altura,
+        categoria: categoria ?? this.categoria,
+        club: club ?? this.club,
+        logrosIndividuales: logrosIndividuales ?? this.logrosIndividuales,
+        pieDominante: pieDominante ?? this.pieDominante,
+        seleccionNacional: seleccionNacional ?? this.seleccionNacional,
+        categoriaSeleccion: categoriaSeleccion ?? this.categoriaSeleccion,
+        dateCreated: dateCreated ?? this.dateCreated,
+        dateUpdated: dateUpdated ?? this.dateUpdated,
+        userImage: userImage ?? this.userImage,
+        verificado: verificado ?? this.verificado,
+        emailVerified: emailVerified ?? this.emailVerified,
+        registroCompleto: registroCompleto ?? this.registroCompleto,
+        direccion: direccion ?? this.direccion);
   }
 
   @override
@@ -164,6 +172,8 @@ class PlayerFullEntity extends Equatable {
         dateUpdated,
         userImage,
         verificado,
-        emailVerified
+        emailVerified,
+        registroCompleto,
+        direccion
       ];
 }
