@@ -5,6 +5,7 @@ import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -112,9 +113,9 @@ class _MatchProfileState extends State<MatchProfile> {
                 ),
               );
             } else if (snapshot.hasError) {
-              return const Center(
+              return Center(
                   child: Text(
-                'Error al cargar la información del usuario',
+                translations!["ErrorLoadingUserInfo"],
                 style: const TextStyle(
                   fontFamily: 'Montserrat',
                   fontSize: 24,
@@ -179,21 +180,21 @@ class _MatchProfileState extends State<MatchProfile> {
                         ],
                       ),
                       _buildDataRow(
-                          context, 'Fecha de nacimiento: $formattedDate'),
+                          context, '${translations!["BirthDate"]}: $formattedDate'),
                       _buildDataRow(context,
-                          'Provincia: ${userData.provincia}, ${userData.pais}'),
-                      _buildDataRow(context, 'Altura: ${userData.altura}'),
+                          '${translations!["state_label"]}: ${userData.provincia}, ${userData.pais}'),
+                      _buildDataRow(context, '${translations!["height_label"]}: ${userData.altura}'),
                       _buildDataRow(
-                          context, 'Pie Dominante: ${userData.pieDominante}'),
-                      _buildDataRow(context, 'Posicion: ${userData.position}'),
+                          context, '${translations!["dominant_feet"]}: ${userData.pieDominante}'),
+                      _buildDataRow(context, '${translations!["position_label"]}: ${userData.position}'),
                       _buildDataRow(
-                          context, 'Categoria: ${userData.categoria}'),
+                          context, '${translations!["Categorys"]}: ${userData.categoria}'),
                       _buildDataRow(
-                          context, 'Escuela deportiva: ${userData.club}'),
+                          context, '${translations!["SportsSchool"]}: ${userData.club}'),
                       _buildDataRow(context,
-                          'Logros individuales: ${userData.logrosIndividuales}'),
+                          '${translations!["IndividualAchievements"]}: ${userData.logrosIndividuales}'),
                       _buildDataRow(context,
-                          'Seleccion: ${userData.seleccionNacional} ${userData.categoriaSeleccion}'),
+                          '${translations!["Selections"]}: ${userData.seleccionNacional} ${userData.categoriaSeleccion}'),
                       const SizedBox(height: 20),
                       CustomTextButton(
                           onTap: () {
@@ -205,7 +206,7 @@ class _MatchProfileState extends State<MatchProfile> {
                                           friend: friend,
                                         )));
                           },
-                          text: '¡Vamos al Chat!',
+                          text: translations!["goToChat"],
                           buttonPrimary: false,
                           width: 154,
                           height: 40),

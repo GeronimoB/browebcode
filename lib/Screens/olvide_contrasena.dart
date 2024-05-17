@@ -62,10 +62,10 @@ class OlvideContrasenaPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             const SizedBox(height: 25),
-            const Padding(
+             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                'Te enviaremos un correo electrónico con un enlace con el que ingresarás de inmediato.',
+                translations!["emailLinkMessage"],
                 style: const TextStyle(
                   fontFamily: 'Montserrat',
                   fontSize: 13,
@@ -77,18 +77,18 @@ class OlvideContrasenaPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 35),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40),
+             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: TextField(
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  hintText: 'Email',
+                  hintText: translations!["email"],
                   hintStyle:
-                      TextStyle(color: Color.fromARGB(255, 255, 250, 250)),
-                  enabledBorder: UnderlineInputBorder(
+                      const TextStyle(color: Color.fromARGB(255, 255, 250, 250)),
+                  enabledBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
-                  focusedBorder: UnderlineInputBorder(
+                  focusedBorder: const UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.green),
                   ),
                 ),
@@ -104,7 +104,7 @@ class OlvideContrasenaPage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => const SignInPage()),
                   );
                 },
-                text: 'Recuperar',
+                text: translations!["recover"],
                 buttonPrimary: false,
                 width: 183.5,
                 height: 39),

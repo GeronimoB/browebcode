@@ -1,3 +1,4 @@
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_text_button.dart';
@@ -55,7 +56,7 @@ class _ModalDecitionState extends State<ModalDecition> {
                     onTap: () {
                       widget.confirmCallback.call();
                     },
-                    text: "SÍ",
+                    text: translations!["yes"],
                     buttonPrimary: true,
                     width: 60,
                     height: 35),
@@ -63,7 +64,7 @@ class _ModalDecitionState extends State<ModalDecition> {
                     onTap: () {
                       widget.cancelCallback.call();
                     },
-                    text: "NO",
+                    text: translations!["no"],
                     buttonPrimary: false,
                     width: 60,
                     height: 35),

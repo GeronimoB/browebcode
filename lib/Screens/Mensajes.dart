@@ -61,17 +61,17 @@ class MensajesPage extends StatelessWidget {
                 } else if (snapshot.hasError) {
                   return Expanded(
                     child: Center(
-                      child: Text('Error: ${snapshot.error}'),
+                      child: Text('${translations!["error"]}: ${snapshot.error}'),
                     ),
                   );
                 } else {
                   final messagesWithUsers = snapshot.data ?? [];
 
                   if (messagesWithUsers.isEmpty) {
-                    return const Expanded(
+                    return  Expanded(
                       child: Center(
                         child: Text(
-                          "¡Aún no tienes mensajes!",
+                          translations!["noMessages"],
                           style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'Montserrat',

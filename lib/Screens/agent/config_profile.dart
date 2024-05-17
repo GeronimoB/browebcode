@@ -97,7 +97,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                   children: [
                     const SizedBox(height: 22),
                     _buildListItem(
-                        'EDITAR INFORMACION', context, true, EditarInfo()),
+                        translations!["EditInformation"], context, true, EditarInfo()),
                     _buildListItem(
                       translations!['change_pss'],
                       context,
@@ -108,14 +108,14 @@ class _ConfigProfileState extends State<ConfigProfile> {
                       },
                     ),
                     const SizedBox(height: 15),
-                    _buildListItem('CENTRO DE AYUDA (FAQ)', context, false,
+                    _buildListItem(translations!["HelpCenter(FAQ)"], context, false,
                         const ConfigProfile()),
                     _buildListItem(
-                        'SOPORTE', context, false, const ConfigProfile()),
-                    _buildListItem('NOTIFICACIONES', context, true,
+                        translations!["Support"], context, false, const ConfigProfile()),
+                    _buildListItem(translations!["Notifications"], context, true,
                         const Notificaciones()),
                     _buildListItem(
-                      'AFILIADOS',
+                      translations!["Affiliates"],
                       context,
                       true,
                       const AfiliadosPlayer(),
@@ -132,7 +132,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                       },
                     ),
                     _buildListItem(
-                      'IDIOMA',
+                      translations!["Language"],
                       context,
                       true,
                       const Servicios(),
@@ -142,12 +142,12 @@ class _ConfigProfileState extends State<ConfigProfile> {
                     ),
                     const SizedBox(height: 15),
                     _buildListItem(
-                        'BORRAR CUENTA', context, false, const Servicios(),
+                        translations!["DeleteAccount"], context, false, const Servicios(),
                         callback: () {
                       handleDeleteAccount(context);
                     }),
                     _buildListItem(
-                        'CERRAR SESIÓN', context, false, const Servicios(),
+                        translations!["LogOut"], context, false, const Servicios(),
                         callback: () {
                       handleLogOut(context);
                     }),
@@ -196,10 +196,10 @@ class _ConfigProfileState extends State<ConfigProfile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const SizedBox(
+                  SizedBox(
                     width: double.maxFinite,
                     child: Text(
-                      "¿Estás seguro de cerrar sesión?",
+                      translations!["AreYouSureYouWantToLogOut"],
                       style: const TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,
@@ -215,7 +215,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                     children: [
                       CustomTextButton(
                         onTap: () => Navigator.of(context).pop(),
-                        text: 'No',
+                        text: translations!["No"],
                         buttonPrimary: false,
                         width: 90,
                         height: 35,
@@ -234,7 +234,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                           Navigator.pushNamedAndRemoveUntil(
                               context, '/login', (route) => false);
                         },
-                        text: 'Si',
+                        text: translations!["Yes"],
                         buttonPrimary: true,
                         width: 90,
                         height: 35,
@@ -519,23 +519,23 @@ class _ConfigProfileState extends State<ConfigProfile> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   languageTile(
-                      context, 'en', 'English', currentLanguage == 'en'),
+                      context, 'en', translations!["english"], currentLanguage == 'en'),
                   languageTile(
-                      context, 'es', 'Español', currentLanguage == 'es'),
+                      context, 'es', translations!["spanish"], currentLanguage == 'es'),
                   languageTile(
-                      context, 'de', 'Aleman', currentLanguage == 'de'),
+                      context, 'de', translations!["german"], currentLanguage == 'de'),
                   languageTile(
-                      context, 'it', 'Italiano', currentLanguage == 'it'),
+                      context, 'it', translations!["italian"], currentLanguage == 'it'),
                   languageTile(
-                      context, 'fr', 'Frances', currentLanguage == 'fr'),
+                      context, 'fr', translations!["french"], currentLanguage == 'fr'),
                   languageTile(
-                      context, 'pt', 'Português', currentLanguage == 'pt'),
+                      context, 'pt', translations!["portuguese"], currentLanguage == 'pt'),
                   const SizedBox(
                     height: 10,
                   ),
                   Center(
                     child: CustomTextButton(
-                      text: 'Cerrar',
+                      text: translations!["Close"],
                       buttonPrimary: true,
                       width: 120,
                       height: 35,
@@ -607,10 +607,10 @@ class _ConfigProfileState extends State<ConfigProfile> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const SizedBox(
+                    SizedBox(
                       width: double.maxFinite,
                       child: Text(
-                        "¿Éstas seguro de que quieres borrar la cuenta? Se borrarán todos los datos asociados a la cuenta.",
+                        translations!["ConfirmDeleteAccount"],
                         style: const TextStyle(
                           fontFamily: 'Montserrat',
                           color: Colors.white,
@@ -626,7 +626,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                       children: [
                         CustomTextButton(
                           onTap: () => Navigator.of(context).pop(),
-                          text: 'NO',
+                          text: translations!["not"],
                           buttonPrimary: false,
                           width: 90,
                           height: 35,
@@ -643,7 +643,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                             agenteProvider.logOut();
                             userProvider.logOut();
                           },
-                          text: 'SI',
+                          text: translations!["yes"],
                           buttonPrimary: true,
                           width: 90,
                           height: 35,

@@ -89,8 +89,8 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
               child: ListView(
                 children: [
                   const SizedBox(height: 22),
-                  _buildListItem('CUENTA', context, true, const CuentaPage()),
-                  _buildListItem('EDITAR INFORMACION', context, true,
+                  _buildListItem( translations!['ACCOUNT'], context, true, const CuentaPage()),
+                  _buildListItem(translations!['EDIT_INFORMATION'], context, true,
                       const EditarInfoPlayer()),
                   _buildListItem(
                     translations!['change_pss'],
@@ -111,14 +111,14 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                       ),
                     ),
                   const SizedBox(height: 15),
-                  _buildListItem('CENTRO DE AYUDA (FAQ)', context, false,
+                  _buildListItem( translations!['HelpCenter(FAQ)'], context, false,
                       const ConfigProfilePlayer()),
                   _buildListItem(
-                      'SOPORTE', context, false, const ConfigProfilePlayer()),
+                      translations!['Support(FAQ)'], context, false, const ConfigProfilePlayer()),
                   _buildListItem(
-                      'NOTIFICACIONES', context, true, const Notificaciones()),
+                      translations!['Notifications'], context, true, const Notificaciones()),
                   _buildListItem(
-                    'AFILIADOS',
+                    translations!['Affiliates'],
                     context,
                     true,
                     const AfiliadosPlayer(),
@@ -133,10 +133,10 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                           : showVerificationReferral(context);
                     },
                   ),
-                  _buildListItem('PEDIDOS', context, true, const Pedidos()),
-                  _buildListItem('SERVICIOS', context, true, const Servicios()),
+                  _buildListItem(translations!['ORDERS'], context, true, const Pedidos()),
+                  _buildListItem(translations!['SERVICES'], context, true, const Servicios()),
                   _buildListItem(
-                    'IDIOMA',
+                    translations!['Language'],
                     context,
                     true,
                     const Servicios(),
@@ -146,12 +146,12 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                   ),
                   const SizedBox(height: 15),
                   _buildListItem(
-                      'BORRAR CUENTA', context, false, const Servicios(),
+                      translations!['DeleteAccount'], context, false, const Servicios(),
                       callback: () {
                     handleDeleteAccount(context);
                   }),
                   _buildListItem(
-                      'CERRAR SESIÓN', context, false, const Servicios(),
+                      translations!['LogOut'], context, false, const Servicios(),
                       callback: () {
                     handleLogOut(context);
                   }),
@@ -212,23 +212,23 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   languageTile(
-                      context, 'en', 'English', currentLanguage == 'en'),
+                      context, 'en', translations!['english'], currentLanguage == 'en'),
                   languageTile(
-                      context, 'es', 'Español', currentLanguage == 'es'),
+                      context, 'es', translations!['spanish'], currentLanguage == 'es'),
                   languageTile(
-                      context, 'de', 'Aleman', currentLanguage == 'de'),
+                      context, 'de', translations!['german'], currentLanguage == 'de'),
                   languageTile(
-                      context, 'it', 'Italiano', currentLanguage == 'it'),
+                      context, 'it', translations!['italian'], currentLanguage == 'it'),
                   languageTile(
-                      context, 'fr', 'Frances', currentLanguage == 'fr'),
+                      context, 'fr', translations!['french'], currentLanguage == 'fr'),
                   languageTile(
-                      context, 'pt', 'Português', currentLanguage == 'pt'),
+                      context, 'pt', translations!['portuguese'], currentLanguage == 'pt'),
                   const SizedBox(
                     height: 10,
                   ),
                   Center(
                     child: CustomTextButton(
-                      text: 'Cerrar',
+                      text: translations!['close'],
                       buttonPrimary: true,
                       width: 120,
                       height: 35,
@@ -271,11 +271,11 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const SizedBox(
+                   SizedBox(
                     width: double.maxFinite,
                     child: Text(
-                      "¿Estás seguro de cerrar sesión?",
-                      style: const TextStyle(
+                      translations!['AreYouSureYouWantToLogOut'],
+                      style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -290,7 +290,7 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                     children: [
                       CustomTextButton(
                         onTap: () => Navigator.of(context).pop(),
-                        text: 'No',
+                        text: translations!['No'],
                         buttonPrimary: false,
                         width: 90,
                         height: 35,
@@ -309,7 +309,7 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                           Navigator.pushNamedAndRemoveUntil(
                               context, '/login', (route) => false);
                         },
-                        text: 'Si',
+                        text: translations!['Yes'],
                         buttonPrimary: true,
                         width: 90,
                         height: 35,
@@ -351,10 +351,10 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const SizedBox(
+                   SizedBox(
                     width: double.maxFinite,
                     child: Text(
-                      "¿Éstas seguro de que quieres borrar la cuenta? Se borrarán todos los datos asociados a la cuenta.",
+                      translations!['ConfirmDeleteAccount'],
                       style: const TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,

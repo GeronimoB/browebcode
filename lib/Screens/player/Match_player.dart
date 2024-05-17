@@ -134,9 +134,9 @@ class MatcheState extends State<MatchePlayer> {
                       ),
                     ],
                   )
-                : const Center(
+                :  Center(
                     child: Text(
-                      "¡Aún no tienes match!",
+                      translations!["NoMatchesYet!"],
                       style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat',
@@ -277,7 +277,7 @@ class MatcheState extends State<MatchePlayer> {
                                       friend: friend,
                                     )));
                       },
-                      text: '¡Vamos al Chat!',
+                      text: translations!["goToChat!"],
                       buttonPrimary: false,
                       width: 145,
                       height: 38),

@@ -308,7 +308,7 @@ class EditarInfoState extends State<EditarInfo> {
                       children: [
                         CustomTextButton(
                           onTap: () => Navigator.of(context).pop(),
-                          text: 'Cancelar',
+                          text: translations!["cancel"],
                           buttonPrimary: false,
                           width: 90,
                           height: 27,
@@ -336,7 +336,7 @@ class EditarInfoState extends State<EditarInfo> {
                                 provider.getAgente().toMap());
                             Navigator.of(context).pop();
                           },
-                          text: 'Guardar',
+                          text: translations!["save"],
                           buttonPrimary: true,
                           width: 90,
                           height: 27,

@@ -60,23 +60,23 @@ class SignInPageState extends State<SignInPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   languageTile(
-                      context, 'en', 'English', currentLanguage == 'en'),
+                      context, 'en', translations!["english"], currentLanguage == 'en'),
                   languageTile(
-                      context, 'es', 'Español', currentLanguage == 'es'),
+                      context, 'es', translations!["spanish"], currentLanguage == 'es'),
                   languageTile(
-                      context, 'de', 'Aleman', currentLanguage == 'de'),
+                      context, 'de', translations!["german"], currentLanguage == 'de'),
                   languageTile(
-                      context, 'it', 'Italiano', currentLanguage == 'it'),
+                      context, 'it', translations!["italian"], currentLanguage == 'it'),
                   languageTile(
-                      context, 'fr', 'Frances', currentLanguage == 'fr'),
+                      context, 'fr', translations!["french"], currentLanguage == 'fr'),
                   languageTile(
-                      context, 'pt', 'Português', currentLanguage == 'pt'),
+                      context, 'pt', translations!["portuguese"], currentLanguage == 'pt'),
                   const SizedBox(
                     height: 10,
                   ),
                   Center(
                     child: CustomTextButton(
-                      text: 'Cerrar',
+                      text: translations!["close"],
                       buttonPrimary: true,
                       width: 120,
                       height: 35,

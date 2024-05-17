@@ -1,5 +1,6 @@
 import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -22,8 +23,8 @@ class PlanDetailsScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'PLANES',
+             Text(
+              translations!["PLANS"],
               style: const TextStyle(
                 fontFamily: 'Montserrat',
                 color: Colors.white,
@@ -54,10 +55,10 @@ class PlanDetailsScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ...generatePlanItems(planItems),
-            const Padding(
+             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+                translations!["loremIpsum"],
                 style: const TextStyle(fontFamily: 'Montserrat'),
                 textAlign: TextAlign.center,
               ),
@@ -68,8 +69,8 @@ class PlanDetailsScreen extends StatelessWidget {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    const Text(
-                      '1 MES',
+                     Text(
+                      translations!["oneMonth"],
                       style: const TextStyle(
                         fontFamily: 'Montserrat',
                         color: Color(0xff00E050),
@@ -102,7 +103,7 @@ class PlanDetailsScreen extends StatelessWidget {
                       );
                     } else {}
                   },
-                  text: ' Subscribirse',
+                  text: translations!["subscribe"],
                   buttonPrimary: true,
                   width: 116,
                   height: 39,

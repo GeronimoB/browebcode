@@ -78,9 +78,9 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
                   const SizedBox(
                     height: 20,
                   ),
-                  Text(
-                    'El archivo se ha guardado en la carpeta de descargas.',
-                    style: const TextStyle(
+                   Text(
+                    translations!["fileSaved"],
+                    style: TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.bold,
@@ -104,15 +104,16 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Error'),
-          content: const Text(
-              'Ha habido un error en la descarga, intente nuevamente.'),
+          title:  Text(translations!["error"],),
+          content:  Text(
+              translations!["downloadError"],),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('OK'),
+              child:  Text(translations!["ok"],
+              ),
             ),
           ],
         );

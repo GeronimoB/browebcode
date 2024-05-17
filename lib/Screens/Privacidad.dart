@@ -63,8 +63,8 @@ class Privacidad extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    const Text(
-                      'CAMBIAR CONTRASEÑA',
+                    Text(
+                      translations!["ChangePassword"],
                       style: TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
@@ -147,7 +147,7 @@ class Privacidad extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "CAMBIAR CONTRASEÑA",
+                  translations!["ChangePassword"],
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: Color(0xff00E050),
@@ -162,7 +162,7 @@ class Privacidad extends StatelessWidget {
                   child: TextFormField(
                     controller: oldPasswordCtlr,
                     decoration: InputDecoration(
-                      labelText: 'Contraseña Antigua',
+                      labelText: translations!["OldPassword"],
                       labelStyle: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
@@ -201,8 +201,8 @@ class Privacidad extends StatelessWidget {
                   key: _formKey2,
                   child: TextFormField(
                     controller: newPasswordCtlr,
-                    decoration: const InputDecoration(
-                      labelText: 'Nueva Contraseña',
+                    decoration: InputDecoration(
+                      labelText: translations!["NewPassword"],
                       labelStyle: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
@@ -256,8 +256,8 @@ class Privacidad extends StatelessWidget {
                   key: _formKey3,
                   child: TextFormField(
                     controller: confirmPasswordCtlr,
-                    decoration: const InputDecoration(
-                      labelText: 'Confirmar Nueva Contraseña',
+                    decoration: InputDecoration(
+                      labelText: translations!["ConfirmNewPassword"],
                       labelStyle: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
@@ -299,7 +299,7 @@ class Privacidad extends StatelessWidget {
                   children: [
                     CustomTextButton(
                       onTap: () => Navigator.of(context).pop(),
-                      text: 'Cancelar',
+                      text: translations!["cancel"],
                       buttonPrimary: false,
                       width: 90,
                       height: 27,
@@ -332,7 +332,7 @@ class Privacidad extends StatelessWidget {
                           showErrorSnackBar(context, errorMessage);
                         }
                       },
-                      text: 'Guardar',
+                      text: translations!["save"],
                       buttonPrimary: true,
                       width: 90,
                       height: 27,
@@ -380,7 +380,7 @@ class Privacidad extends StatelessWidget {
                     Navigator.pop(context);
                   },
                   title: Text(
-                    'Google Authenticator',
+                    translations!["GoogleAuthenticator"],
                     style: const TextStyle(
                       color: Color(0xff00E050),
                       fontWeight: FontWeight.bold,

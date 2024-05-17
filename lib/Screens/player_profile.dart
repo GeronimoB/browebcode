@@ -4,6 +4,7 @@ import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/auth/data/models/user_model.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -209,7 +210,7 @@ class PlayerProfileState extends State<PlayerProfile> {
                     });
                   },
                   child: Text(
-                    _isExpanded ? 'Ver menos' : 'Ver más',
+                    _isExpanded ? translations!["seLess"] : translations!["seMore"],
                     style: const TextStyle(
                       color: Color(0xFF05FF00),
                       fontSize: 16.0,
@@ -252,10 +253,10 @@ class PlayerProfileState extends State<PlayerProfile> {
                         final videos = snapshot.data ?? [];
 
                         if (videos.isEmpty) {
-                          return const Expanded(
+                          return  Expanded(
                             child: Center(
                               child: Text(
-                                "¡Aún no tienes videos, sube uno! ",
+                                translations!["noVideos"],
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Montserrat',
@@ -363,7 +364,7 @@ class PlayerProfileState extends State<PlayerProfile> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Tienes $diasFaltantes días para confirmar tu email", // Texto del aviso
+                            "${translations!["Have"]} $diasFaltantes ${translations!["DaysToConfirmYourEmail"]}", // Texto del aviso
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14.0,

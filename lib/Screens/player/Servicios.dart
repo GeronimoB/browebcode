@@ -229,7 +229,7 @@ class _PlanesPagoState extends State<Servicios> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      'Precio: ${plan.precio}',
+                      '${translations!["Price"]}: ${plan.precio}',
                       style: const TextStyle(
                         color: Color(0xFF00F056),
                         fontWeight: FontWeight.bold,
@@ -242,8 +242,8 @@ class _PlanesPagoState extends State<Servicios> {
               ],
             ),
             const SizedBox(height: 5),
-            const Text(
-              'Que Incluye:',
+            Text(
+              translations!["IncludedItems"],
               style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -261,8 +261,8 @@ class _PlanesPagoState extends State<Servicios> {
                 overflow: TextOverflow.ellipsis,
               ),
               InkWell(
-                child: const Text(
-                  'Ver más...',
+                child: Text(
+                  translations!["seeMore"],
                   style: const TextStyle(
                       color: Color(0xFF00F056),
                       fontWeight: FontWeight.bold,
@@ -283,8 +283,8 @@ class _PlanesPagoState extends State<Servicios> {
                     fontStyle: FontStyle.italic),
               ),
               InkWell(
-                child: const Text(
-                  'Ver menos...',
+                child: Text(
+                  translations!["seeLess"],
                   style: const TextStyle(
                       color: Color(0xFF00F056),
                       fontWeight: FontWeight.bold,

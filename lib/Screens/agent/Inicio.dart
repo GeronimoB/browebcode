@@ -450,14 +450,14 @@ class InicioPageState extends State<InicioPage> {
   }
 
   Widget loadingWidget() {
-    return const Center(
+    return  Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
+          const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00))),
           SizedBox(height: 20),
-          Text('Cargando videos...'),
+          Text(translations!["LoadingVideos..."]),
         ],
       ),
     );
@@ -480,8 +480,8 @@ class InicioPageState extends State<InicioPage> {
             ),
           ),
           const SizedBox(height: 10),
-          const Text(
-            'Error al cargar los videos!',
+          Text(
+            translations!["ErrorLoadingVideos!"],
             style: const TextStyle(
               fontFamily: 'Montserrat',
               color: Colors.white,
@@ -512,8 +512,8 @@ class InicioPageState extends State<InicioPage> {
             ),
           ),
           const SizedBox(height: 10),
-          const Text(
-            'Has llegado al final de los videos!',
+           Text(
+            translations!["EndOfVideos"],
             style: const TextStyle(
               fontFamily: 'Montserrat',
               color: Colors.white,

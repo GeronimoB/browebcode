@@ -5,6 +5,7 @@ import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/video_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -187,7 +188,7 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
                 });
               },
               child: Text(
-                _isExpanded ? 'Ver menos...' : 'Ver más...',
+                _isExpanded ? translations!['seeLess'] : translations!['seseeMoreeLess'],
                 style: const TextStyle(
                     color: Color(0xFF05FF00),
                     fontSize: 16.0,
@@ -229,10 +230,10 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
                     final videos = snapshot.data ?? [];
 
                     if (videos.isEmpty) {
-                      return const Expanded(
+                      return Expanded(
                         child: Center(
                           child: Text(
-                            "¡Aún no hay videos!",
+                            translations!["NoVideosYet!"],
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Montserrat',

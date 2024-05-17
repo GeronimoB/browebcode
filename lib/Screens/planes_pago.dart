@@ -172,7 +172,7 @@ class PlanesPagoState extends State<PlanesPago> {
                               )),
                     );
                   },
-                  text: 'Siguiente',
+                  text: translations!["next"],
                   buttonPrimary: true,
                   width: 116,
                   height: 39,
@@ -260,8 +260,8 @@ class PlanesPagoState extends State<PlanesPago> {
               ],
             ),
             const SizedBox(height: 5),
-            const Text(
-              'Qué incluye:',
+            Text(
+              translations!["whatsIncluded"],
               style: const TextStyle(
                 fontSize: 14,
                 fontFamily: 'Montserrat',
@@ -275,8 +275,8 @@ class PlanesPagoState extends State<PlanesPago> {
                   .toList()
                   .take(2),
               InkWell(
-                child: const Text(
-                  'Ver más...',
+                child: Text(
+                  translations!["seeMore"],
                   style: const TextStyle(
                       color: Color(0xFF00F056),
                       fontWeight: FontWeight.bold,
@@ -292,8 +292,8 @@ class PlanesPagoState extends State<PlanesPago> {
                   .map((cualidad) => cualidades(cualidad))
                   .toList(),
               InkWell(
-                child: const Text(
-                  'Ver menos...',
+                child: Text(
+                  translations!["seeLess"],
                   style: const TextStyle(
                       color: Color(0xFF00F056),
                       fontWeight: FontWeight.bold,

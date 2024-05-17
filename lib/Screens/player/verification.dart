@@ -168,7 +168,7 @@ class VerificationScreenState extends State<VerificationScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomTextButton(
-                        text: 'Subir',
+                        text: translations!["upload"],
                         buttonPrimary: true,
                         width: 150,
                         height: 45,
@@ -179,7 +179,7 @@ class VerificationScreenState extends State<VerificationScreen> {
                           width: 15,
                         ),
                         CustomTextButton(
-                          text: 'Omitir',
+                          text: translations!["skip"],
                           buttonPrimary: false,
                           width: 150,
                           height: 45,

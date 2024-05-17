@@ -76,9 +76,9 @@ class UploadInvoiceState extends State<UploadInvoice> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              "Sube tu factura con todos los datos necesarios",
-              style: TextStyle(
+             Text(
+              translations!["uploadInvoice"],
+              style: const TextStyle(
                 fontFamily: 'Montserrat',
                 color: Color(0xff00E050),
                 fontWeight: FontWeight.bold,
@@ -88,17 +88,8 @@ class UploadInvoiceState extends State<UploadInvoice> {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "NOMBRE BRO\nDNI BRO\nDIRECCION BRO",
-              style: TextStyle(
-                fontFamily: 'Montserrat',
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-              ),
-            ),
             Text(
-              "SUBTOTAL: $subtotal €",
+              '${translations!["nameBro"]}\n${translations!["dniBro"]}\n${translations!["addressBro"]}',
               style: const TextStyle(
                 fontFamily: 'Montserrat',
                 color: Colors.white,
@@ -107,7 +98,7 @@ class UploadInvoiceState extends State<UploadInvoice> {
               ),
             ),
             Text(
-              "IVA(21%): $iva €",
+              "${translations!["subTotal"]}: $subtotal €",
               style: const TextStyle(
                 fontFamily: 'Montserrat',
                 color: Colors.white,
@@ -116,7 +107,16 @@ class UploadInvoiceState extends State<UploadInvoice> {
               ),
             ),
             Text(
-              "TOTAL: ${widget.total} €",
+              "${translations!["vat21"]}: $iva €",
+              style: const TextStyle(
+                fontFamily: 'Montserrat',
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              "${translations!["total"]}: ${widget.total} €",
               style: const TextStyle(
                 fontFamily: 'Montserrat',
                 color: Colors.white,
@@ -134,7 +134,7 @@ class UploadInvoiceState extends State<UploadInvoice> {
               children: [
                 CustomTextButton(
                   onTap: () => Navigator.of(context).pop(),
-                  text: "Omitir",
+                  text: translations!["skip"],
                   buttonPrimary: false,
                   width: 90,
                   height: 27,

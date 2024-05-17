@@ -2,6 +2,7 @@ import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/plan_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -63,8 +64,8 @@ class _PlanesCuentaWidgetState extends State<PlanesCuentaWidget> {
               ],
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Qué incluye:',
+            Text(
+              translations!["whatsIncluded"],
               style: const TextStyle(
                 fontSize: 16,
                 fontFamily: 'Montserrat',
@@ -95,7 +96,7 @@ class _PlanesCuentaWidgetState extends State<PlanesCuentaWidget> {
                     widget.cancelModal(context, playerProvider);
                   }
                 },
-                text: isActualPlan ? 'Cancelar' : 'Subscribirse',
+                text: isActualPlan ? translations!["cancel"] : translations!["subscribe"],
                 buttonPrimary: true,
                 width: 116,
                 height: 42,

@@ -8,6 +8,7 @@ import 'package:bro_app_to/components/chat_item.dart';
 import 'package:bro_app_to/components/file_item.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/message.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -260,7 +261,7 @@ class ChatPageState extends State<ChatPage> {
                         if (snapshot.data.docs.length < 1) {
                           return Center(
                             child: Text(
-                              "Saluda!",
+                              translations!["greet"],
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Montserrat',
@@ -343,9 +344,9 @@ class ChatPageState extends State<ChatPage> {
                 style: const TextStyle(color: Colors.white),
                 minLines: 1,
                 maxLines: 3,
-                decoration: const InputDecoration(
-                  hintText: "Enviar un mensaje...",
-                  hintStyle: TextStyle(color: Colors.white54),
+                decoration:  InputDecoration(
+                  hintText: translations!["sendMessage"],
+                  hintStyle: const TextStyle(color: Colors.white54),
                   border: InputBorder.none,
                 ),
               ),
@@ -517,7 +518,7 @@ class ChatPageState extends State<ChatPage> {
                   children: <Widget>[
                     if (userProvider.getCurrentUser().isAgent)
                       ListTile(
-                        title: const Text('Ver Perfil',
+                        title:  Text(translations!["viewProfile"],
                             style: const TextStyle(color: Colors.white)),
                         onTap: () {
                           _overlayEntry?.remove();
@@ -533,7 +534,7 @@ class ChatPageState extends State<ChatPage> {
                       ),
                     ListTile(
                       title: Text(
-                          isPinned ? 'Dejar de anclar' : 'Anclar arriba',
+                          isPinned ? translations!["unpin"] : translations!["pinToTop"],
                           style: const TextStyle(color: Colors.white)),
                       onTap: () {
                         pinFriend();
@@ -545,8 +546,8 @@ class ChatPageState extends State<ChatPage> {
                     ListTile(
                       title: Text(
                           isMute
-                              ? 'Dejar de silenciar'
-                              : 'Silenciar notificaciones',
+                              ? translations!["unmute"]
+                              : translations!["muteNotifications"],
                           style: const TextStyle(color: Colors.white)),
                       onTap: () {
                         muteFriend();

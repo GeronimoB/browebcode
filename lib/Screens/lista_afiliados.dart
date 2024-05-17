@@ -47,7 +47,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
         return {'afiliados': [], 'total': 0.0};
       }
     } catch (error) {
-      print('Error al obtener los referidos: $error');
+      print('${translations!["errorGettingReferrals"]}: $error');
       return {'afiliados': [], 'total': 0.0};
     }
   }
@@ -137,8 +137,8 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'TU CÓDIGO: ',
+                       Text(
+                        translations!["yourCode"],
                         style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat',
@@ -160,8 +160,8 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                 ),
               ),
               const SizedBox(height: 24.0),
-              const Text(
-                'PERSONAS REFERIDAS',
+               Text(
+                translations!["referredPeople"],
                 style: const TextStyle(
                   color: Color(0xFF05FF00),
                   fontFamily: 'Montserrat',
@@ -187,7 +187,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                     return Expanded(
                       child: Center(
                         child: Text(
-                          'Error: ${snapshot.error}',
+                          '${translations!["error"]}: ${snapshot.error}',
                           style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'Montserrat',
@@ -204,12 +204,12 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                     final double total = snapshot.data?['total'] ?? 0.0;
 
                     if (afiliados.isEmpty) {
-                      return const Expanded(
+                      return  Expanded(
                         child: Center(
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 35.0),
                             child: Text(
-                              'Aún no tienes afiliados, comparte tu codigo con tus amigos para poder ganar comisiones.',
+                              translations!["noReferralsMessage"],
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontFamily: 'Montserrat',
@@ -242,7 +242,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                         ),
                         RichText(
                           text: TextSpan(
-                            text: 'TOTAL:',
+                            text: '${translations!["total"]}:',
                             style: const TextStyle(
                               color: Colors.white,
                               fontFamily: 'Montserrat',
@@ -277,7 +277,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                                   translations!["NoFundsToWithdrawMessage"]);
                             }
                           },
-                          text: 'Retirar',
+                          text: translations!["withdraw"],
                           buttonPrimary: true,
                           width: 100,
                           height: 40,

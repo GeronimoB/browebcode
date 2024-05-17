@@ -304,7 +304,7 @@ class CuentaPageState extends State<CuentaPage> {
                   children: <Widget>[
                     const SizedBox(height: 5),
                     Text(
-                      '¿Estás seguro de que quieres cancelar tu suscripción?',
+                      translations!["ConfirmCancelSubscription"],
                       style: const TextStyle(
                         fontFamily: 'Montserrat',
                         color: Color(0xff00E050),
@@ -314,7 +314,7 @@ class CuentaPageState extends State<CuentaPage> {
                     ),
                     const SizedBox(height: 40),
                     Text(
-                      'Ingrese el motivo de la cancelación',
+                      translations!["EnterReasonForCancellation"],
                       style: const TextStyle(
                           fontFamily: 'Montserrat',
                           color: Colors.white,
@@ -329,7 +329,7 @@ class CuentaPageState extends State<CuentaPage> {
                       children: [
                         CustomTextButton(
                           onTap: () => Navigator.of(context).pop(),
-                          text: 'Cancelar',
+                          text: translations!["cancel"],
                           buttonPrimary: false,
                           width: 90,
                           height: 27,
@@ -342,7 +342,7 @@ class CuentaPageState extends State<CuentaPage> {
                                 {"userId": id, "reason": ctlr.text});
                             Navigator.of(context).pop();
                           },
-                          text: 'Continuar',
+                          text: translations!["Continue"],
                           buttonPrimary: true,
                           width: 90,
                           height: 27,

@@ -1,3 +1,4 @@
+import 'package:bro_app_to/utils/current_state.dart';
 import 'package:flutter/material.dart';
 
 class PerfilDetallePage extends StatelessWidget {
@@ -25,8 +26,8 @@ class PerfilDetallePage extends StatelessWidget {
               ),
               onPressed: () => Navigator.pop(context),
             ),
-            title: const Text(
-              'Perfil Jugador Info',
+            title: Text(
+              translations!["playerProfileInfo"],
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
@@ -43,15 +44,15 @@ class PerfilDetallePage extends StatelessWidget {
                       'path/to/player/image.png'), // Tu imagen de jugador aquí.
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Nombres y Apellidos',
+                 Text(
+                  translations!["fullName"],
                   style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold),
                 ),
-                const Text(
-                  'Fecha de Nacimiento\nPaís, Provincia\nCategoría en la que juega\nEscuela deportiva en la que juega\nLogros individuales\nSelección Nacional Masculina U18',
+                Text(
+                  '${translations!["birthDate"]}\n ${translations!["countryProvince"]}\n${translations!["playingCategory"]}\n${translations!["sportsSchool"]}\n${translations!["individualAchievements"]}\n${translations!["nationalTeamSelectionU18"]}',
                   style: const TextStyle(color: Colors.grey),
                   textAlign: TextAlign.center,
                 ),
@@ -63,8 +64,8 @@ class PerfilDetallePage extends StatelessWidget {
                   onPressed: () {
                     // Acción para ir al chat
                   },
-                  child: const Text('¡Vamos al Chat!',
-                      style: const TextStyle(color: Colors.green)),
+                  child:  Text(translations!["goToChat"],
+                      style: TextStyle(color: Colors.green)),
                 ),
               ],
             ),

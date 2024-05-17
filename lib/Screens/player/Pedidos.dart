@@ -230,7 +230,7 @@ class PedidosState extends State<Pedidos> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "Gracias por tu compra",
+                  translations!["PurchaseThanks"],
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: Color(0xff00E050),
@@ -242,7 +242,7 @@ class PedidosState extends State<Pedidos> {
                   height: 25,
                 ),
                 Text(
-                  "Producto: ${pedido.description}",
+                  "${translations!["Product"]}: ${pedido.description}",
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: Colors.white,
@@ -255,7 +255,7 @@ class PedidosState extends State<Pedidos> {
                   height: 8,
                 ),
                 Text(
-                  "Fecha y hora de compra: $fechaHoraFormateada",
+                  "${translations!["PurchaseDateTime"]}: $fechaHoraFormateada",
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: Colors.white,
@@ -268,7 +268,7 @@ class PedidosState extends State<Pedidos> {
                   height: 8,
                 ),
                 Text(
-                  "Método de pago: ${pedido.paymentMethod}",
+                  "${translations!["PaymentMethod"]}: ${pedido.paymentMethod}",
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: Colors.white,
@@ -281,7 +281,7 @@ class PedidosState extends State<Pedidos> {
                   height: 8,
                 ),
                 Text(
-                  "Factura: #${pedido.orderId}",
+                  "${translations!["facture"]}: #${pedido.orderId}",
                   style: const TextStyle(
                     fontFamily: 'Montserrat',
                     color: Colors.white,
@@ -298,7 +298,7 @@ class PedidosState extends State<Pedidos> {
                       onTap: () {
                         _handleDownload(pedido.url);
                       },
-                      text: "Descargar Factura",
+                      text:translations!["Dfacture"],
                       buttonPrimary: true,
                       width: 164,
                       height: 31),
@@ -371,7 +371,7 @@ class PedidosState extends State<Pedidos> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '¡Felicidades!',
+                      translations!["congrats"],
                       style: const TextStyle(
                           color: Color(0xff00E050),
                           fontFamily: 'Montserrat',
@@ -382,7 +382,7 @@ class PedidosState extends State<Pedidos> {
                       height: 20,
                     ),
                     Text(
-                      'La factura se ha guardado en la carpeta de descargas.',
+                      translations!["Factureincar"],
                       style: const TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat',

@@ -170,7 +170,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
                 ),
                 CustomTextButton(
                   onTap: () => handleApplyDisc(cupon.text),
-                  text: 'Aplicar',
+                  text: translations!["apply"],
                   buttonPrimary: true,
                   width: 100,
                   height: 25,

@@ -92,8 +92,8 @@ class _RetirarMenuState extends State<RetirarMenu> {
                 const SizedBox(
                   height: 30,
                 ),
-                const Text(
-                  'Total:',
+                Text(
+                  '${translations!["Total"]}:',
                   style: const TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
@@ -131,7 +131,7 @@ class _RetirarMenuState extends State<RetirarMenu> {
                     showUploadInvoice(context, banco.text, titular.text,
                         nroCuenta.text, widget.total);
                   },
-                  text: 'Retirar',
+                  text: translations!["Withdraw"],
                   buttonPrimary: true,
                   width: 100,
                   height: 40,

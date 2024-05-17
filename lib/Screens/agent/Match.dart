@@ -353,7 +353,7 @@ class MatcheState extends State<Matche> {
                                           friend: friend,
                                         )));
                           },
-                          text: '¡Vamos al Chat!',
+                          text: translations!['goToChat'],
                           buttonPrimary: false,
                           width: 145,
                           height: 38),
@@ -366,7 +366,7 @@ class MatcheState extends State<Matche> {
                                   ),
                                 ),
                               ),
-                          text: 'Ver Perfil',
+                          text: translations!['viewProfile'],
                           buttonPrimary: true,
                           width: 135,
                           height: 32)
