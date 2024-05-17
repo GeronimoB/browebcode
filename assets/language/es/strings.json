@@ -227,4 +227,79 @@
   "apply": "Aplicar",
   "emailLinkMessage": "Te enviaremos un correo electrónico con un enlace con el que ingresarás de inmediato.",
   "email": "Email",
+  "recover": "Recuperar",
+  "playerProfileInfo": "Perfil Jugador Info",
+  "fullName": "Nombres y Apellidos",
+  "goToChat": "¡Vamos al Chat!",
+  "birthDate": "Fecha de Nacimiento",
+  "countryProvince": "País, Provincia",
+  "playingCategory": "Categoría en la que juega",
+  "sportsSchool": "Escuela deportiva en la que juega",
+  "individualAchievements":"Logros individuales",
+  "nationalTeamSelectionU18": "Selección Nacional Masculina U18",
+  "seeMore": "Ver más...",
+  "seeLess": "Ver menos...",
+  "seLess": "Ver menos",
+  "noVideos": "¡Aún no tienes videos, sube uno!",
+  "seMore": "Ver más",
+  "Have": "Tienes",
+  "DaysToConfirmYourEmail": "Días para confirmar tu email",
+  "ChangePassword": "CAMBIAR CONTRASEÑA",
+  "OldPassword": "Contraseña Antigua",
+  "NewPassword": "Nueva Contraseña",
+  "ConfirmNewPassword": "Confirmar Nueva Contraseña",
+  "GoogleAuthenticator": "Google Authenticator",
+  "Withdraw": "Retirar",
+  "Total": "Total",
+  "EditInformation": "EDITAR INFORMACION",
+  "HelpCenter(FAQ)": "CENTRO DE AYUDA (FAQ)",
+  "Support": "SOPORTE",
+  "Notifications": "NOTIFICACIONES",
+  "Affiliates": "AFILIADOS",
+  "Language": "IDIOMA",
+  "DeleteAccount": "BORRAR CUENTA",
+  "LogOut": "CERRAR SESIÓN",
+  "AreYouSureYouWantToLogOut": "¿Estás seguro de cerrar sesión?",
+  "No": "No",
+  "Yes": "Si",
+  "Close": "Cerrar",
+  "ConfirmDeleteAccount": "¿Estás seguro de que quieres borrar la cuenta? Se borrarán todos los datos asociados a la cuenta.",
+  "LoadingVideos...": "Cargando videos...",
+  "ErrorLoadingVideos!": "Error al cargar los videos!",
+  "EndOfVideos": "Has llegado al final de los videos!",
+  "ErrorLoadingUserInfo": "Error al cargar la información del usuario",
+  "BirthDate": "Fecha de nacimiento",
+  "Categorys": "Categoria",
+  "SportsSchool": "Escuela deportiva",
+  "IndividualAchievements": "Logros individuales",
+  "Selections": "Seleccion",
+  "NoVideosYet!": "¡Aún no hay videos!",
+  "ConfirmCancelSubscription": "¿Estás seguro de que quieres cancelar tu suscripción?",
+  "EnterReasonForCancellation": "Ingrese el motivo de la cancelación",
+  "Continue": "Continuar",
+  "NoMatchesYet!": "¡Aún no tienes match!",
+  "PurchaseThanks": "Gracias por tu compra",
+  "Product": "Producto",
+  "PurchaseDateTime": "Fecha y hora de compra",
+  "PaymentMethod": "Método de pago",
+  "facture": "Factura",
+  "Dfacture": "Descargar Factura",
+  "Factureincar": "Factura en carpeta de descargas",
+  "IncludedItems": "Que Incluye",
+  "Price": "Precio"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
