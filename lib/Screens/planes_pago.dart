@@ -14,94 +14,86 @@ import '../utils/plan_model.dart';
 List<Plan> planes = [
   Plan(
     idPlan: 'price_1OwbK8IkdX2ffauu5v0rezbw',
-    nombre: 'Basic',
-    precio: '19,99',
-    descripcion:
-        'Posibilita subir 2 videos de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD.',
-    descripcionLarga:
-        'Suscripcion Basic: PVP 19,99€. Tiempo de vigencia un mes. Posibilita subir 2 videos (3 videos) de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD. Sube nuevo video una vez tengas el cupo de 2 cubierto, para ello deberás eliminar uno de la plataforma para que sea efectiva la subida, y seguir manteniendo tus 2 videos (3 videos) activos. Destaca tu video: PVP 2,99€ por video (Recomendación 0,99€ por video).',
+    nombre: translations!["Plan_1_name"],
+    precio: translations!["Plan_1_price"],
+    descripcion: translations!["Plan_1_description"],
+    descripcionLarga: translations!["Plan_1_long_description"],
     cualidades: [
-      {"text": "Sube hasta 2 vídeos", "included": true},
-      {"text": "Videos de hasta 2 minutos", "included": true},
+      {"text": translations!["Plan_1_quality_1"], "included": true},
+      {"text": translations!["Plan_1_quality_2"], "included": true},
       {
-        "text": "Visualizacíon: ",
+        "text": translations!["Plan_1_quality_3"],
         "included": true,
         "isVisualizacion": true,
-        "visualizacion": "Baja",
+        "visualizacion": translations!["Plan_1_visualization"],
         "color": 0xfff23325
       },
-      {"text": "Verificación de perfil opcional", "included": false},
-      {"text": "Destacado de vídeos opcional", "included": false},
-      {"text": "Tiempo de vigencia de 1 mes", "included": true},
+      {"text": translations!["Plan_1_quality_4"], "included": false},
+      {"text": translations!["Plan_1_quality_5"], "included": false},
+      {"text": translations!["Plan_1_quality_6"], "included": true},
     ],
   ),
   Plan(
-    nombre: 'Gold',
     idPlan: 'price_1OwceiIkdX2ffauuyNaKIHHL',
-    precio: '29,99',
-    descripcion:
-        'Posibilita subir 5 videos de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD.',
-    descripcionLarga:
-        'Sube nuevo video una vez tengas el cupo de 5 cubierto, para ello deberás eliminar uno de la plataforma para que sea efectiva la subida y seguir manteniendo tus 5 videos activos..',
+    nombre: translations!["Plan_2_name"],
+    precio: translations!["Plan_2_price"],
+    descripcion: translations!["Plan_2_description"],
+    descripcionLarga: translations!["Plan_2_long_description"],
     cualidades: [
-      {"text": "Sube hasta 5 vídeos", "included": true},
-      {"text": "Videos de hasta 2 minutos", "included": true},
+      {"text": translations!["Plan_2_quality_1"], "included": true},
+      {"text": translations!["Plan_2_quality_2"], "included": true},
       {
-        "text": "Visualizacíon: ",
+        "text": translations!["Plan_2_quality_3"],
         "included": true,
         "isVisualizacion": true,
-        "visualizacion": "Media",
+        "visualizacion": translations!["Plan_2_visualization"],
         "color": 0xfff2c925
       },
-      {"text": "Verificación de perfil opcional", "included": false},
-      {"text": "Destacado de vídeos opcional", "included": false},
-      {"text": "Tiempo de vigencia de 3 meses", "included": true},
+      {"text": translations!["Plan_2_quality_4"], "included": false},
+      {"text": translations!["Plan_2_quality_5"], "included": false},
+      {"text": translations!["Plan_2_quality_6"], "included": true},
     ],
   ),
   Plan(
     idPlan: 'price_1Owcf5IkdX2ffauudm4v0KAQ',
-    nombre: 'Platinum',
-    precio: '49,99',
-    descripcion:
-        'Posibilita subir 10 videos de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD.',
-    descripcionLarga:
-        'Sube nuevo video una vez tengas el cupo de 10 cubiertos, para ellos deberás eliminar uno de la plataforma para que sea efectiva la subida y seguir  manteniendo tus 10 videos activos',
+    nombre: translations!["Plan_3_name"],
+    precio: translations!["Plan_3_price"],
+    descripcion: translations!["Plan_3_description"],
+    descripcionLarga: translations!["Plan_3_long_description"],
     cualidades: [
-      {"text": "Sube hasta 10 vídeos", "included": true},
-      {"text": "Videos de hasta 2 minutos", "included": true},
+      {"text": translations!["Plan_3_quality_1"], "included": true},
+      {"text": translations!["Plan_3_quality_2"], "included": true},
       {
-        "text": "Visualizacíon: ",
+        "text": translations!["Plan_3_quality_3"],
         "included": true,
         "isVisualizacion": true,
-        "visualizacion": "Alta",
+        "visualizacion": translations!["Plan_3_visualization"],
         "color": 0xffd1eb6c
       },
-      {"text": "Verificación de perfil opcional", "included": false},
-      {"text": "Destacado de vídeos opcional", "included": false},
-      {"text": "Tiempo de vigencia de 6 meses", "included": true},
+      {"text": translations!["Plan_3_quality_4"], "included": false},
+      {"text": translations!["Plan_3_quality_5"], "included": false},
+      {"text": translations!["Plan_3_quality_6"], "included": true},
     ],
   ),
   Plan(
     idPlan: 'price_1OwcfMIkdX2ffauuEqdLsX5h',
-    nombre: 'Unlimited',
-    precio: '89,99',
-    descripcion:
-        'Dicha suscripción tiene una duración de 12 meses, y posibilita subir videos ilimitados con un máximo de 2min',
-    descripcionLarga:
-        'Dicha suscripción tiene una duración de 12 meses, y posibilita subir videos ilimitados con un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD',
+    nombre: translations!["Plan_4_name"],
+    precio: translations!["Plan_4_price"],
+    descripcion: translations!["Plan_4_description"],
+    descripcionLarga: translations!["Plan_4_long_description"],
     cualidades: [
-      {"text": "Sube hasta 25 vídeos", "included": true},
-      {"text": "Videos de hasta 2 minutos", "included": true},
+      {"text": translations!["Plan_4_quality_1"], "included": true},
+      {"text": translations!["Plan_4_quality_2"], "included": true},
       {
-        "text": "Visualizacíon: ",
+        "text": translations!["Plan_4_quality_3"],
         "included": true,
         "isVisualizacion": true,
-        "visualizacion": "Máxima",
+        "visualizacion": translations!["Plan_4_visualization"],
         "color": 0xff05FF00
       },
-      {"text": "Verificación de perfil opcional", "included": true},
-      {"text": "Destacado de vídeos opcional(1)", "included": true},
-      {"text": "Tiempo de vigencia de 12 meses", "included": true},
+      {"text": translations!["Plan_4_quality_4"], "included": true},
+      {"text": translations!["Plan_4_quality_5"], "included": true},
+      {"text": translations!["Plan_4_quality_6"], "included": true},
     ],
   ),
 ];

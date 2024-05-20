@@ -88,9 +88,9 @@ class CuentaPageState extends State<CuentaPage> {
     String formattedDate =
         birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
     String shortInfo =
-        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate';
+        '${player.provincia}, ${player.pais}\n ${translations!["birthdate"]}: $formattedDate';
     String fullInfo =
-        '${player.provincia}, ${player.pais}\n Fecha de nacimiento: $formattedDate\n Categoría: ${player.categoria}\n Posición: ${player.position}\nEntidad deportiva: ${player.club}\n Selección: ${player.seleccionNacional} ${player.categoriaSeleccion}\n Pie Dominante: ${player.pieDominante} \n Logros: ${player.logrosIndividuales}  \n Altura: ${player.altura}';
+        '${player.provincia}, ${player.pais}\n ${translations!["birthdate"]}: $formattedDate\n ${translations!["Categorys"]}: ${player.categoria}\n ${translations!["position_label"]}: ${player.position}\n ${translations!["club_label"]}: ${player.club}\n ${translations!["national_selection_short"]}: ${player.seleccionNacional} ${player.categoriaSeleccion}\n ${translations!["dominant_feet"]}: ${player.pieDominante} \n ${translations!["Achievements2"]}: ${player.logrosIndividuales}  \n ${translations!["height_label"]}: ${player.altura}';
 
     double width = MediaQuery.of(context).size.width;
     print(width);

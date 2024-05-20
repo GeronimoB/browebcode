@@ -34,36 +34,28 @@ class Plan {
 
 List<Plan> planes = [
   Plan(
-    nombre: 'Coaching Deportivo',
-    precio: 'consultar',
-    descripcion:
-        'Desde Nuestra Plataforma, somo conscientes de la gran importancia que tiene la fortaleza mental de un deportista de alto nivel.',
-    descripcionLarga:
-        'Desde Nuestra Plataforma, somo conscientes de la gran importancia que tiene la fortaleza mental de un deportista de alto nivel. Es por ello, que el Coaching deportivo está cada vez más presente en el día a día de vida deportiva, de ahí nuestra aportación en propuesta de valor personal y deportivo a los usuarios.',
+    nombre: translations!["Plan_s_1_name"],
+    precio: translations!["Plan_s_1_price"],
+    descripcion: translations!["Plan_s_1_description"], 
+    descripcionLarga:translations!["Plan_s_1_large_description"],
   ),
   Plan(
-    nombre: 'Asesoramiento Deportivo',
-    precio: 'consultar',
-    descripcion:
-        'Ante cualquier duda que le pueda surgir a nuestros usuarios para la toma de una determinada decisión deportiva',
-    descripcionLarga:
-        'Ante cualquier duda que le pueda surgir a nuestros usuarios para la toma de una determinada decisión deportiva, Nuestra plataforma cuenta con personal altamente cualificado para tal asesoramiento y ayudar a una toma de decisión acertada.',
+    nombre: translations!["Plan_s_2_name"],
+    precio: translations!["Plan_s_2_price"],
+    descripcion: translations!["Plan_s_2_description"], 
+    descripcionLarga:translations!["Plan_s_2_large_description"],
   ),
   Plan(
-    nombre: 'Representación Deportiva',
-    precio: 'consultar',
-    descripcion:
-        'Dentro del apartado de Representación Deportiva, se informará al usuario que contamos con los mecanismo oportunos ',
-    descripcionLarga:
-        'Dentro del apartado de Representación Deportiva, se informará al usuario que contamos con los mecanismo oportunos y altamente cualificados para prestar los servicios a nuestros usuarios de que puedan disponer de Representación Deportiva a través de nuestra plataforma.',
+    nombre: translations!["Plan_s_3_name"],
+    precio: translations!["Plan_s_3_price"],
+    descripcion: translations!["Plan_s_3_description"], 
+    descripcionLarga:translations!["Plan_s_3_large_description"],
   ),
   Plan(
-    nombre: 'Asesoramiento Legal',
-    precio: 'consultar',
-    descripcion:
-        'La tranquilidad y la paz deportiva es indispensable para obtener un rendimiento de éxito. ',
-    descripcionLarga:
-        'La tranquilidad y la paz deportiva es indispensable para obtener un rendimiento de éxito. Por ello, ofrecemos a nuestros usuarios la opción de poder obtener ayuda Legal en el caso de tener cualquier controversia contractual con algún otro.',
+    nombre: translations!["Plan_s_4_name"],
+    precio: translations!["Plan_s_4_price"],
+    descripcion: translations!["Plan_s_4_description"], 
+    descripcionLarga:translations!["Plan_s_4_large_description"],
   ),
 ];
 

@@ -153,6 +153,7 @@
   "Category": "CATEGORIA",
   "Direction": "DIRECCIÓN",
   "Achievements": "LOGROS",
+  "Achievements2": "Logros",
   "height_label2": "ALTURA",
   "Dominate_foot": "PIE DOMINANTE",
   "Selection": "SELECCION",
@@ -286,20 +287,72 @@
   "Dfacture": "Descargar Factura",
   "Factureincar": "Factura en carpeta de descargas",
   "IncludedItems": "Que Incluye",
-  "Price": "Precio"
+  "Price": "Precio",
+
+  "Plan_s_1_name": "Coaching Deportivo",
+  "Plan_s_1_price": "consultar",
+  "Plan_s_1_description": "Desde Nuestra Plataforma, somo conscientes de la gran importancia que tiene la fortaleza mental de un deportista de alto nivel.",
+  "Plan_s_1_large_description": "Desde Nuestra Plataforma, somo conscientes de la gran importancia que tiene la fortaleza mental de un deportista de alto nivel. Es por ello, que el Coaching deportivo está cada vez más presente en el día a día de vida deportiva, de ahí nuestra aportación en propuesta de valor personal y deportivo a los usuarios.",
+  
+  "Plan_s_2_name": "Asesoramiento Deportivo",
+  "Plan_s_2_price": "consultar",
+  "Plan_s_2_description": "Ante cualquier duda que le pueda surgir a nuestros usuarios para la toma de una determinada decisión deportiva",
+  "Plan_s_2_large_description": "Ante cualquier duda que le pueda surgir a nuestros usuarios para la toma de una determinada decisión deportiva, Nuestra plataforma cuenta con personal altamente cualificado para tal asesoramiento y ayudar a una toma de decisión acertada.",
+
+  "Plan_s_3_name": "Representación Deportiva",
+  "Plan_s_3_price": "consultar",
+  "Plan_s_3_description": "Dentro del apartado de Representación Deportiva, se informará al usuario que contamos con los mecanismo oportunos",
+  "Plan_s_3_large_description": "Dentro del apartado de Representación Deportiva, se informará al usuario que contamos con los mecanismo oportunos y altamente cualificados para prestar los servicios a nuestros usuarios de que puedan disponer de Representación Deportiva a través de nuestra plataforma.",
 
 
+  "Plan_s_4_name": "Asesoramiento Legal",
+  "Plan_s_4_price": "consultar",
+  "Plan_s_4_description": "La tranquilidad y la paz deportiva es indispensable para obtener un rendimiento de éxito.",
+  "Plan_s_4_large_description": "La tranquilidad y la paz deportiva es indispensable para obtener un rendimiento de éxito. Por ello, ofrecemos a nuestros usuarios la opción de poder obtener ayuda Legal en el caso de tener cualquier controversia contractual con algún otro.",
 
+  "Plan_1_name": "Basic",
+  "Plan_1_description": "Posibilita subir 2 videos de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD.",
+  "Plan_1_long_description": "Suscripcion Basic: PVP 19,99€. Tiempo de vigencia un mes. Posibilita subir 2 videos (3 videos) de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD. Sube nuevo video una vez tengas el cupo de 2 cubierto, para ello deberás eliminar uno de la plataforma para que sea efectiva la subida, y seguir manteniendo tus 2 videos (3 videos) activos. Destaca tu video: PVP 2,99€ por video (Recomendación 0,99€ por video).",
+  "Plan_1_quality_1": "Sube hasta 2 vídeos",
+  "Plan_1_quality_2": "Videos de hasta 2 minutos",
+  "Plan_1_quality_3": "Visualizacíon: ",
+  "Plan_1_visualization": "Baja",
+  "Plan_1_quality_4": "Verificación de perfil opcional",
+  "Plan_1_quality_5": "Destacado de vídeos opcional",
+  "Plan_1_quality_6": "Tiempo de vigencia de 1 mes",
 
+  "Plan_2_name": "Gold",
+  "Plan_2_description": "Posibilita subir 5 videos de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD.",
+  "Plan_2_long_description": "Sube nuevo video una vez tengas el cupo de 5 cubierto, para ello deberás eliminar uno de la plataforma para que sea efectiva la subida y seguir manteniendo tus 5 videos activos.",
+  "Plan_2_quality_1": "Sube hasta 5 vídeos",
+  "Plan_2_quality_2": "Videos de hasta 2 minutos",
+  "Plan_2_quality_3": "Visualizacíon: ",
+  "Plan_2_visualization": "Media",
+  "Plan_2_quality_4": "Verificación de perfil opcional",
+  "Plan_2_quality_5": "Destacado de vídeos opcional",
+  "Plan_2_quality_6": "Tiempo de vigencia de 3 meses",
 
+  "Plan_3_name": "Platinum",
+  "Plan_3_description": "Posibilita subir 10 videos de un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD.",
+  "Plan_3_long_description": "Sube nuevo video una vez tengas el cupo de 10 cubiertos, para ellos deberás eliminar uno de la plataforma para que sea efectiva la subida y seguir manteniendo tus 10 videos activos.",
+  "Plan_3_quality_1": "Sube hasta 10 vídeos",
+  "Plan_3_quality_2": "Videos de hasta 2 minutos",
+  "Plan_3_quality_3": "Visualizacíon: ",
+  "Plan_3_visualization": "Alta",
+  "Plan_3_quality_4": "Verificación de perfil opcional",
+  "Plan_3_quality_5": "Destacado de vídeos opcional",
+  "Plan_3_quality_6": "Tiempo de vigencia de 6 meses",  
 
-
-
-
-
-
-
-
+  "Plan_4_name": "Unlimited",
+  "Plan_4_description": "Dicha suscripción tiene una duración de 12 meses, y posibilita subir videos ilimitados con un máximo de 2min.",
+  "Plan_4_long_description": "Dicha suscripción tiene una duración de 12 meses, y posibilita subir videos ilimitados con un máximo de 2min cada uno de ellos, con una calidad recomendada de 1080 Full HD.",
+  "Plan_4_quality_1": "Sube hasta 25 vídeos",
+  "Plan_4_quality_2": "Videos de hasta 2 minutos",
+  "Plan_4_quality_3": "Visualizacíon: ",
+  "Plan_4_visualization": "Máxima",
+  "Plan_4_quality_4": "Verificación de perfil opcional",
+  "Plan_4_quality_5": "Destacado de vídeos opcional(1)",
+  "Plan_4_quality_6": "Tiempo de vigencia de 12 meses"
 
 
 }
