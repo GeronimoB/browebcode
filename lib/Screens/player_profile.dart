@@ -48,15 +48,15 @@ class PlayerProfileState extends State<PlayerProfile> {
     userProvider = Provider.of<UserProvider>(context, listen: false);
     user = userProvider.getCurrentUser();
 
-    if (!player.emailVerified) {
-      _showAlert = true;
-      DateTime dateCreated = player.dateCreated ?? DateTime.now();
-      DateTime now = DateTime.now();
-      Duration difference = now.difference(dateCreated);
-      int daysPassed = difference.inDays;
-      diasTranscurridos = daysPassed;
-      diasFaltantes -= daysPassed;
-    }
+    // if (!player.emailVerified) {
+    //   _showAlert = true;
+    //   DateTime dateCreated = player.dateCreated ?? DateTime.now();
+    //   DateTime now = DateTime.now();
+    //   Duration difference = now.difference(dateCreated);
+    //   int daysPassed = difference.inDays;
+    //   diasTranscurridos = daysPassed;
+    //   diasFaltantes -= daysPassed;
+    // }
   }
 
   Future<List<Video>> fetchVideos() async {
@@ -210,7 +210,9 @@ class PlayerProfileState extends State<PlayerProfile> {
                     });
                   },
                   child: Text(
-                    _isExpanded ? translations!["seLess"] : translations!["seMore"],
+                    _isExpanded
+                        ? translations!["seLess"]
+                        : translations!["seMore"],
                     style: const TextStyle(
                       color: Color(0xFF05FF00),
                       fontSize: 16.0,
@@ -253,7 +255,7 @@ class PlayerProfileState extends State<PlayerProfile> {
                         final videos = snapshot.data ?? [];
 
                         if (videos.isEmpty) {
-                          return  Expanded(
+                          return Expanded(
                             child: Center(
                               child: Text(
                                 translations!["noVideos"],

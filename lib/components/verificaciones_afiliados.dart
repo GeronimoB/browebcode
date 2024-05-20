@@ -65,10 +65,6 @@ class VerificationReferralState extends State<VerificationReferral> {
 
   void _uploadFiles() async {
     try {
-      setState(() {
-        isLoading = true;
-      });
-
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final usuario = userProvider.getCurrentUser();
       String userId = usuario.userId.toString();
@@ -90,23 +86,14 @@ class VerificationReferralState extends State<VerificationReferral> {
       var response = await request.send();
 
       if (response.statusCode == 200) {
-        setState(() {
-          isLoading = false;
-        });
         showSucessSnackBar(
             context, translations!['scss_upload_referals_files']);
 
         Navigator.of(context).pop();
       } else {
-        setState(() {
-          isLoading = false;
-        });
         showErrorSnackBar(context, translations!['error_try_again']);
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
       showErrorSnackBar(context, translations!['error_try_again']);
     }
   }
@@ -160,7 +147,8 @@ class VerificationReferralState extends State<VerificationReferral> {
                   ),
                   const SizedBox(height: 10),
                   _buildTextField(
-                      label: translations!["036orCIFDocument"], camp: 'documento'),
+                      label: translations!["036orCIFDocument"],
+                      camp: 'documento'),
                   const SizedBox(height: 10),
                   SizedBox(
                     width: double.maxFinite,
@@ -176,8 +164,10 @@ class VerificationReferralState extends State<VerificationReferral> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  _buildTextField(label: translations!["Front_ID"], camp: 'dni_frontal'),
-                  _buildTextField(label: translations!["Back_ID"], camp: 'dni_trasero'),
+                  _buildTextField(
+                      label: translations!["Front_ID"], camp: 'dni_frontal'),
+                  _buildTextField(
+                      label: translations!["Back_ID"], camp: 'dni_trasero'),
                   const SizedBox(height: 35),
                   Center(
                     child: CustomTextButton(

@@ -89,9 +89,10 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
               child: ListView(
                 children: [
                   const SizedBox(height: 22),
-                  _buildListItem( translations!['ACCOUNT'], context, true, const CuentaPage()),
-                  _buildListItem(translations!['EDIT_INFORMATION'], context, true,
-                      const EditarInfoPlayer()),
+                  _buildListItem(translations!['ACCOUNT'], context, true,
+                      const CuentaPage()),
+                  _buildListItem(translations!['EDIT_INFORMATION'], context,
+                      true, const EditarInfoPlayer()),
                   _buildListItem(
                     translations!['change_pss'],
                     context,
@@ -111,12 +112,12 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                       ),
                     ),
                   const SizedBox(height: 15),
-                  _buildListItem( translations!['HelpCenter(FAQ)'], context, false,
+                  _buildListItem(translations!['HelpCenter(FAQ)'], context,
+                      false, const ConfigProfilePlayer()),
+                  _buildListItem(translations!['Support'], context, false,
                       const ConfigProfilePlayer()),
-                  _buildListItem(
-                      translations!['Support(FAQ)'], context, false, const ConfigProfilePlayer()),
-                  _buildListItem(
-                      translations!['Notifications'], context, true, const Notificaciones()),
+                  _buildListItem(translations!['Notifications'], context, true,
+                      const Notificaciones()),
                   _buildListItem(
                     translations!['Affiliates'],
                     context,
@@ -133,8 +134,10 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                           : showVerificationReferral(context);
                     },
                   ),
-                  _buildListItem(translations!['ORDERS'], context, true, const Pedidos()),
-                  _buildListItem(translations!['SERVICES'], context, true, const Servicios()),
+                  _buildListItem(
+                      translations!['ORDERS'], context, true, const Pedidos()),
+                  _buildListItem(translations!['SERVICES'], context, true,
+                      const Servicios()),
                   _buildListItem(
                     translations!['Language'],
                     context,
@@ -145,14 +148,12 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                     },
                   ),
                   const SizedBox(height: 15),
-                  _buildListItem(
-                      translations!['DeleteAccount'], context, false, const Servicios(),
-                      callback: () {
+                  _buildListItem(translations!['DeleteAccount'], context, false,
+                      const Servicios(), callback: () {
                     handleDeleteAccount(context);
                   }),
-                  _buildListItem(
-                      translations!['LogOut'], context, false, const Servicios(),
-                      callback: () {
+                  _buildListItem(translations!['LogOut'], context, false,
+                      const Servicios(), callback: () {
                     handleLogOut(context);
                   }),
                 ],
@@ -211,18 +212,18 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  languageTile(
-                      context, 'en', translations!['english'], currentLanguage == 'en'),
-                  languageTile(
-                      context, 'es', translations!['spanish'], currentLanguage == 'es'),
-                  languageTile(
-                      context, 'de', translations!['german'], currentLanguage == 'de'),
-                  languageTile(
-                      context, 'it', translations!['italian'], currentLanguage == 'it'),
-                  languageTile(
-                      context, 'fr', translations!['french'], currentLanguage == 'fr'),
-                  languageTile(
-                      context, 'pt', translations!['portuguese'], currentLanguage == 'pt'),
+                  languageTile(context, 'en', translations!['english'],
+                      currentLanguage == 'en'),
+                  languageTile(context, 'es', translations!['spanish'],
+                      currentLanguage == 'es'),
+                  languageTile(context, 'de', translations!['german'],
+                      currentLanguage == 'de'),
+                  languageTile(context, 'it', translations!['italian'],
+                      currentLanguage == 'it'),
+                  languageTile(context, 'fr', translations!['french'],
+                      currentLanguage == 'fr'),
+                  languageTile(context, 'pt', translations!['portuguese'],
+                      currentLanguage == 'pt'),
                   const SizedBox(
                     height: 10,
                   ),
@@ -271,7 +272,7 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                   SizedBox(
+                  SizedBox(
                     width: double.maxFinite,
                     child: Text(
                       translations!['AreYouSureYouWantToLogOut'],
@@ -351,7 +352,7 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                   SizedBox(
+                  SizedBox(
                     width: double.maxFinite,
                     child: Text(
                       translations!['ConfirmDeleteAccount'],
