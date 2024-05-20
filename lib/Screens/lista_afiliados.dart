@@ -104,11 +104,13 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
               GestureDetector(
                 onTap: () {
                   Clipboard.setData(ClipboardData(
-                      text: 'https://bró.com/ref?=${user.referralCode}'));
-                  showSucessSnackBar(context, translations!["AffiliateLinkCopiedMessage"]);
+                      text:
+                          'https://panel-bro.vercel.app/ref/${user.referralCode}'));
+                  showSucessSnackBar(
+                      context, translations!["AffiliateLinkCopiedMessage"]);
                 },
                 child: Text(
-                  'https://bró.com/ref?=${user.referralCode}',
+                  'https://panel-bro.vercel.app/ref/${user.referralCode}',
                   style: const TextStyle(
                     color: Color(0xFF05FF00),
                     fontFamily: 'Montserrat',
@@ -121,7 +123,8 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
               GestureDetector(
                 onTap: () {
                   Clipboard.setData(ClipboardData(text: user.referralCode));
-                  showSucessSnackBar(context, translations!["AffiliateCodeCopiedMessage"]);
+                  showSucessSnackBar(
+                      context, translations!["AffiliateCodeCopiedMessage"]);
                 },
                 child: Container(
                   margin: const EdgeInsets.all(25),
@@ -137,7 +140,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                       Text(
+                      Text(
                         translations!["yourCode"],
                         style: const TextStyle(
                           color: Colors.white,
@@ -160,7 +163,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                 ),
               ),
               const SizedBox(height: 24.0),
-               Text(
+              Text(
                 translations!["referredPeople"],
                 style: const TextStyle(
                   color: Color(0xFF05FF00),
@@ -204,7 +207,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                     final double total = snapshot.data?['total'] ?? 0.0;
 
                     if (afiliados.isEmpty) {
-                      return  Expanded(
+                      return Expanded(
                         child: Center(
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 35.0),
