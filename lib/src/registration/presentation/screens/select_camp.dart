@@ -166,13 +166,14 @@ class SelectCampState extends State<SelectCamp> {
     ).toList();
 
     return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: <Widget>[
+      onWillPop: () async => false,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Stack(
+              children: <Widget>[
             Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -332,6 +333,8 @@ class SelectCampState extends State<SelectCamp> {
               ),
           ],
         ),
+      ),
+      ),
       ),
     );
   }

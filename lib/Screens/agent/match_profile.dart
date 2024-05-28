@@ -75,17 +75,18 @@ class _MatchProfileState extends State<MatchProfile> {
     final double availableHeight =
         MediaQuery.of(context).size.height - appBarHeight;
     final width = MediaQuery.of(context).size.width;
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.fromARGB(255, 44, 44, 44),
-            Color.fromARGB(255, 0, 0, 0),
-          ],
-        ),
-      ),
+    return Scaffold(
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
+              ),
+            ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
@@ -217,6 +218,9 @@ class _MatchProfileState extends State<MatchProfile> {
             }
           },
         ),
+      ),
+      ),
+      ),
       ),
     );
   }

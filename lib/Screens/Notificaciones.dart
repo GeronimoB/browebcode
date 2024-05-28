@@ -18,7 +18,10 @@ class Notificaciones extends StatefulWidget {
 class _NotificacionesState extends State<Notificaciones> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold(
+      body: Center(
+        child: Container(
+          width: 800,
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -73,6 +76,8 @@ class _NotificacionesState extends State<Notificaciones> {
             ),
           ],
         ),
+      ),
+      ),
       ),
     );
   }

@@ -78,17 +78,20 @@ class _ConfigProfileState extends State<ConfigProfile> {
             ),
           ),
         ),
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color.fromARGB(255, 44, 44, 44),
-                Color.fromARGB(255, 0, 0, 0),
-              ],
-            ),
-          ),
+        body: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 800),
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color.fromARGB(255, 44, 44, 44),
+                    Color.fromARGB(255, 0, 0, 0),
+                  ],
+                ),
+              ),
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Column(
             children: [
@@ -164,6 +167,8 @@ class _ConfigProfileState extends State<ConfigProfile> {
               ),
             ],
           ),
+        ),
+      ),
         ),
       ),
     );
@@ -257,25 +262,28 @@ class _ConfigProfileState extends State<ConfigProfile> {
     final formKey = GlobalKey<FormState>();
     final formKey2 = GlobalKey<FormState>();
     final formKey3 = GlobalKey<FormState>();
-    showDialog(
-      context: context,
-      barrierColor: Colors.black.withOpacity(0.7),
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: Container(
-            padding: const EdgeInsets.all(35),
-            decoration: BoxDecoration(
-              color: const Color(0xff3B3B3B),
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
-                  blurRadius: 10,
-                  offset: const Offset(5, 4),
-                ),
-              ],
-            ),
+  showDialog(
+    context: context,
+    barrierColor: Colors.black.withOpacity(0.7),
+    builder: (BuildContext context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.all(35),
+              decoration: BoxDecoration(
+                color: const Color(0xff3B3B3B),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.4),
+                    blurRadius: 10,
+                    offset: const Offset(5, 4),
+                  ),
+                ],
+              ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -474,6 +482,8 @@ class _ConfigProfileState extends State<ConfigProfile> {
               ],
             ),
           ),
+          ),
+        ),
         );
       },
     );
@@ -494,12 +504,15 @@ class _ConfigProfileState extends State<ConfigProfile> {
   void languageDialog(BuildContext context) {
     String currentLanguage =
         LanguageLocalizations.of(context)?.currentLanguage ?? 'es';
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return Dialog(
-            backgroundColor: Colors.transparent,
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: Center(
             child: Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
@@ -546,7 +559,10 @@ class _ConfigProfileState extends State<ConfigProfile> {
                   ),
                 ],
               ),
-            ));
+            )
+        ),
+        ),
+        );
       },
     );
   }

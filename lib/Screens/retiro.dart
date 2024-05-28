@@ -56,14 +56,15 @@ class _RetirarMenuState extends State<RetirarMenu> {
         );
         return false;
       },
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
+        child: Container(
+          width: 800, 
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
+            ),
           ),
-        ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           extendBody: true,

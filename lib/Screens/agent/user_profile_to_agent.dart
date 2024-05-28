@@ -91,14 +91,18 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
     String fullInfo =
         '${player?.provincia}, ${player?.pais}\n ${translations!["birthdate"]}: $formattedDate\n ${translations!["Categorys"]}: ${player?.categoria}\n ${translations!["position_label"]}: ${player?.position}\n ${translations!["club_label"]}: ${player?.club}\n ${translations!["national_selection_short"]}: ${player?.seleccionNacional} ${player?.categoriaSeleccion}\n ${translations!["dominant_feet"]}: ${player?.pieDominante} \n ${translations!["Achievements2"]}: ${player?.logrosIndividuales}  \n ${translations!["height_label"]}: ${player?.altura}';
 
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
-        ),
-      ),
+    return Scaffold(
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
+              ),
+            ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
@@ -320,6 +324,9 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
                 }),
           ],
         ),
+      ),
+      ),
+      ),
       ),
     );
   }

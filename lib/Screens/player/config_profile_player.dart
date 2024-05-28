@@ -74,11 +74,14 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
           ),
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+        body: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 800),
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
             colors: [Color(0xFF212121), Color(0xFF121212)],
           ),
         ),
@@ -170,6 +173,8 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
           ],
         ),
       ),
+      ),
+      ),
     );
   }
 
@@ -185,15 +190,18 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
     }
   }
 
-  void languageDialog(BuildContext context) {
-    String currentLanguage =
-        LanguageLocalizations.of(context)?.currentLanguage ?? 'es';
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return Dialog(
-            backgroundColor: Colors.transparent,
+ void languageDialog(BuildContext context) {
+  String currentLanguage =
+      LanguageLocalizations.of(context)?.currentLanguage ?? 'es';
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: Center(
             child: Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
@@ -240,7 +248,10 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                   ),
                 ],
               ),
-            ));
+            )
+          ),
+        ),
+        );
       },
     );
   }
@@ -327,16 +338,17 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
   }
 
   void handleDeleteAccount(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierColor: Colors.black.withOpacity(0.2),
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
+  showDialog(
+    context: context,
+    barrierColor: Colors.black.withOpacity(0.7),
+    builder: (BuildContext context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Center(
             child: Container(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(35),
               decoration: BoxDecoration(
                 color: const Color(0xff3B3B3B),
                 borderRadius: BorderRadius.circular(15),
@@ -413,6 +425,7 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
               ),
             ),
           ),
+        ),
         );
       },
     );

@@ -11,12 +11,15 @@ class OlvideContrasenaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/Fondo_oc.png'),
-          fit: BoxFit.cover,
-        ),
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 800),
+        child: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/Fondo_oc.png'),
+              fit: BoxFit.cover,
+            ),
         color: Color.fromARGB(255, 27, 23, 23),
       ),
       child: Scaffold(
@@ -117,6 +120,8 @@ class OlvideContrasenaPage extends StatelessWidget {
             const SizedBox(height: 30),
           ],
         ),
+      ),
+      ),
       ),
     );
   }

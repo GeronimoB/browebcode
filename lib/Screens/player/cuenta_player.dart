@@ -95,16 +95,19 @@ class CuentaPageState extends State<CuentaPage> {
     double width = MediaQuery.of(context).size.width;
     print(width);
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.fromARGB(255, 44, 44, 44),
-            Color.fromARGB(255, 0, 0, 0),
-          ],
+      alignment: Alignment.center, // Asegura que el contenedor esté centrado
+      child: Container(
+        width: 800, // Ancho máximo de 800px
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromARGB(255, 44, 44, 44),
+              Color.fromARGB(255, 0, 0, 0),
+            ],
+          ),
         ),
-      ),
       child: Scaffold(
         appBar: AppBar(
           scrolledUnderElevation: 0,
@@ -269,6 +272,7 @@ class CuentaPageState extends State<CuentaPage> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

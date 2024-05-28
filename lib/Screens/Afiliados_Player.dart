@@ -14,16 +14,20 @@ import 'lista_afiliados.dart';
 class AfiliadosPlayer extends StatelessWidget {
   const AfiliadosPlayer({super.key});
 
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
-        ),
-      ),
+    return Scaffold(
+      body: Center(
+        child: Container(
+          width: 800, // Ancho máximo del contenedor
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
+            ),
+          ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
@@ -97,6 +101,8 @@ class AfiliadosPlayer extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      ),
       ),
     );
   }

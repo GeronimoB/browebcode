@@ -57,12 +57,13 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
     user = provider.getCurrentUser();
     return WillPopScope(
       onWillPop: () async {
-        Navigator.of(context).pushReplacementNamed(
-          user.isAgent ? '/config-agent' : '/config-player',
-        );
+        Navigator.of(context).pushReplacementNamed(user.isAgent ? '/config-agent' : '/config-player');
         return false;
       },
-      child: Container(
+      child: Scaffold(
+        body: Center(
+          child: Container(
+            width: 800, 
         height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -301,6 +302,8 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
             ],
           ),
         ),
+      ),
+      ),
       ),
     );
   }

@@ -73,6 +73,7 @@ class _PlanesPagoState extends State<Servicios> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 800,
       decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/backgroundplanes.png'),

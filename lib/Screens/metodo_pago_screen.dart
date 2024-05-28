@@ -47,15 +47,18 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
     const double metodoPagoWidth = 325.0;
     const double metodoPagoHeight = 106.0;
 
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
+    return Center(
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
+          ),
         ),
-      ),
-      child: Scaffold(
+        child: Container(
+          width: 800, // Ancho máximo para el contenedor
+          child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           scrolledUnderElevation: 0,
@@ -191,6 +194,8 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
             ),
           ],
         ),
+      ),
+      ),
       ),
     );
   }

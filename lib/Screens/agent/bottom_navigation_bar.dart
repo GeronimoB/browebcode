@@ -45,6 +45,9 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       onWillPop: () async {
         return false;
       },
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
       child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -70,6 +73,8 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
             ),
           ),
         ),
+      ),
+      ),
       ),
     );
   }

@@ -148,17 +148,20 @@ class ChatPageState extends State<ChatPage> {
 
         return false;
       },
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 44, 44, 44),
-              Color.fromARGB(255, 0, 0, 0),
-            ],
-          ),
-        ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromARGB(255, 44, 44, 44),
+                  Color.fromARGB(255, 0, 0, 0),
+                ],
+              ),
+            ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           extendBody: true,
@@ -318,6 +321,8 @@ class ChatPageState extends State<ChatPage> {
             ],
           ),
         ),
+      ),
+      ),
       ),
     );
   }

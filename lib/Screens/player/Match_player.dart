@@ -93,57 +93,63 @@ class MatcheState extends State<MatchePlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.fromARGB(255, 44, 44, 44),
-            Color.fromARGB(255, 0, 0, 0),
-          ],
+    return Center(
+      child: Container(
+        width: 800,
+        constraints: const BoxConstraints(maxWidth: 800),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromARGB(255, 44, 44, 44),
+              Color.fromARGB(255, 0, 0, 0),
+            ],
+          ),
         ),
-      ),
-      child: Scaffold(
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
+        child: Scaffold(
+          appBar: AppBar(
+            scrolledUnderElevation: 0,
+            backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: false,
+            centerTitle: true,
+            title: appBarTitle(translations!["MATCH"]),
+          ),
           backgroundColor: Colors.transparent,
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          title: appBarTitle(translations!["MATCH"]),
-        ),
-        backgroundColor: Colors.transparent,
-        extendBody: true,
-        body: isLoading
-            ? const Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
-                ),
-              )
-            : agentes.isNotEmpty
-                ? Column(
-                    children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: _isSelected.length,
-                          itemBuilder: (context, index) {
-                            final agente = agentes[index];
-                            return _buildMatchComponent(agente, index, context);
-                          },
-                        ),
-                      ),
-                    ],
-                  )
-                :  Center(
-                    child: Text(
-                      translations!["NoMatchesYet!"],
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22.0),
-                    ),
+          extendBody: true,
+          body: isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
                   ),
+                )
+              : agentes.isNotEmpty
+                  ? Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: _isSelected.length,
+                            itemBuilder: (context, index) {
+                              final agente = agentes[index];
+                              return _buildMatchComponent(
+                                  agente, index, context);
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  : Center(
+                      child: Text(
+                        translations!["NoMatchesYet!"],
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22.0),
+                      ),
+                    ),
+        ),
       ),
     );
   }

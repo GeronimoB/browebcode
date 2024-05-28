@@ -201,109 +201,115 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
   @override
   Widget build(BuildContext context) {
     final videoHeight = MediaQuery.of(context).size.height - 100;
-    return Stack(
-      children: [
-        GestureDetector(
-          onTap: _togglePlayPause,
-          child: _controller.value.isInitialized
-              ? SizedBox(
-                  width: double.maxFinite,
-                  height: videoHeight,
-                  child: VideoPlayer(_controller),
-                )
-              : const Center(
-                  child: CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
-                  ),
-                ),
-        ),
-        Positioned(
-          top: MediaQuery.of(context).padding.top,
-          left: 8.0,
-          child: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Color(0xFF00E050),
-              size: 32,
+    return Center(
+      child: Container(
+        width: double.infinity,
+        constraints: BoxConstraints(maxWidth: 800),
+        child: Stack(
+          children: [
+            GestureDetector(
+              onTap: _togglePlayPause,
+              child: _controller.value.isInitialized
+                  ? SizedBox(
+                      width: double.maxFinite,
+                      height: videoHeight,
+                      child: VideoPlayer(_controller),
+                    )
+                  : const Center(
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                      ),
+                    ),
             ),
-            onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => widget.showOptions
-                      ? const CustomBottomNavigationBarPlayer(
-                          initialIndex: 4,
-                        )
-                      : const CustomBottomNavigationBar(
-                          initialIndex: 3,
-                        ),
-                ),
-              );
-            },
-          ),
-        ),
-        if (widget.showOptions)
-          Positioned(
-            top: MediaQuery.of(context).padding.top,
-            right: 8.0,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                iconTheme: const IconThemeData(color: Color(0xFF00E050)),
-              ),
+            Positioned(
+              top: MediaQuery.of(context).padding.top,
+              left: 8.0,
               child: IconButton(
-                icon: const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Color(0xFF00E050),
+                  size: 32,
+                ),
                 onPressed: () {
-                  _showCustomMenu(context);
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => widget.showOptions
+                          ? const CustomBottomNavigationBarPlayer(
+                              initialIndex: 4,
+                            )
+                          : const CustomBottomNavigationBar(
+                              initialIndex: 3,
+                            ),
+                    ),
+                  );
                 },
               ),
             ),
-          ),
-        Positioned(
-          bottom: 0,
-          left: MediaQuery.of(context).size.width / 2 - 52,
-          child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: SvgPicture.asset(
-              'assets/icons/Logo.svg',
-              fit: BoxFit.fitWidth,
-              width: 104,
-            ),
-          ),
-        ),
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: MediaQuery.of(context).size.height - videoHeight - 2,
-          child: VideoProgressIndicator(
-            _controller,
-            allowScrubbing: true,
-            padding: const EdgeInsets.symmetric(vertical: 0),
-            colors: const VideoProgressColors(
-              playedColor: Color(0xFF00E050),
-              bufferedColor: Colors.white60,
-              backgroundColor: Colors.white24,
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: _togglePlayPause,
-          child: AnimatedOpacity(
-            opacity: _showPauseIcon || !_controller.value.isPlaying ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 300),
-            child: Center(
-              child: Icon(
-                _controller.value.isPlaying
-                    ? Icons.pause_circle_filled
-                    : Icons.play_circle_fill,
-                color: _controller.value.isPlaying
-                    ? const Color.fromARGB(142, 255, 255, 255)
-                    : Colors.white,
-                size: 64,
+            if (widget.showOptions)
+              Positioned(
+                top: MediaQuery.of(context).padding.top,
+                right: 8.0,
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    iconTheme: const IconThemeData(color: Color(0xFF00E050)),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
+                    onPressed: () {
+                      _showCustomMenu(context);
+                    },
+                  ),
+                ),
+              ),
+            Positioned(
+              bottom: 0,
+              left: MediaQuery.of(context).size.width / 2 - 52,
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: SvgPicture.asset(
+                  'assets/icons/Logo.svg',
+                  fit: BoxFit.fitWidth,
+                  width: 104,
+                ),
               ),
             ),
-          ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: MediaQuery.of(context).size.height - videoHeight - 2,
+              child: VideoProgressIndicator(
+                _controller,
+                allowScrubbing: true,
+                padding: const EdgeInsets.symmetric(vertical: 0),
+                colors: const VideoProgressColors(
+                  playedColor: Color(0xFF00E050),
+                  bufferedColor: Colors.white60,
+                  backgroundColor: Colors.white24,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: _togglePlayPause,
+              child: AnimatedOpacity(
+                opacity: _showPauseIcon || !_controller.value.isPlaying ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 300),
+                child: Center(
+                  child: Icon(
+                    _controller.value.isPlaying
+                        ? Icons.pause_circle_filled
+                        : Icons.play_circle_fill,
+                    color: _controller.value.isPlaying
+                        ? const Color.fromARGB(142, 255, 255, 255)
+                        : Colors.white,
+                    size: 64,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 

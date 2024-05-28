@@ -47,7 +47,10 @@ class CustomBottomNavigationBarPlayerState
       onWillPop: () async {
         return false;
       },
-      child: Container(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -72,6 +75,8 @@ class CustomBottomNavigationBarPlayerState
             ),
           ),
         ),
+      ),
+      ),
       ),
     );
   }

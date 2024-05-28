@@ -144,19 +144,22 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: true);
     return WillPopScope(
-      onWillPop: () async => false,
-      child: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/Background_2.png'),
-            fit: BoxFit.cover,
-          ),
-          color: Color.fromARGB(255, 19, 12, 12),
-        ),
+     onWillPop: () async => false,
+      child: Center( // Centro el contenido en la pantalla
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800), // Ancho máximo de 800px
+          child: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/Background_2.png'),
+                fit: BoxFit.fill,
+              ),
+            ),
         child: Scaffold(
             appBar: AppBar(
               scrolledUnderElevation: 0,
@@ -381,6 +384,8 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
               ],
             )),
+      ),
+      ),
       ),
     );
   }

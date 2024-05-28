@@ -89,14 +89,17 @@ class EditarInfoState extends State<EditarInfo> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF212121), Color(0xFF121212)],
-        ),
-      ),
+    return Scaffold(
+      body: Center(
+        child: Container(
+          width: 800,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF212121), Color(0xFF121212)],
+            ),
+          ),
       child: Scaffold(
         appBar: AppBar(
           scrolledUnderElevation: 0,
@@ -197,6 +200,8 @@ class EditarInfoState extends State<EditarInfo> {
             ],
           ),
         ),
+      ),
+      ),
       ),
     );
   }

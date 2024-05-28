@@ -46,78 +46,93 @@ class PedidosState extends State<Pedidos> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: appBarTitle(translations!["ORDERS"]),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Color(0xFF00E050),
-            size: 32,
+    return Center(
+      child: Container(
+        width: 800, // Ancho máximo para el contenedor
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: Container(
+              width: double.infinity,
+              child: AppBar(
+                scrolledUnderElevation: 0,
+                backgroundColor: Colors.transparent,
+                automaticallyImplyLeading: false,
+                centerTitle: true,
+                title: appBarTitle(translations!["MATCH"]),
+                leading: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Color(0xFF00E050),
+                    size: 32,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ),
           ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF212121), Color(0xFF121212)],
-          ),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: MediaQuery.of(context).padding.top + 50),
-            FutureBuilder<List<PedidosModel>>(
-                future: fetchPedidos(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
-                        ),
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Expanded(
-                      child: Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      ),
-                    );
-                  } else {
-                    final orders = snapshot.data ?? [];
-
-                    if (orders.isEmpty) {
+          backgroundColor: Colors.transparent,
+          extendBody: true,
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromARGB(255, 44, 44, 44),
+                  Color.fromARGB(255, 0, 0, 0),
+                ],
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: MediaQuery.of(context).padding.top + 50),
+                FutureBuilder<List<PedidosModel>>(
+                  future: fetchPedidos(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Expanded(
                         child: Center(
-                          child: Text(
-                            "¡Aún no tienes pedidos!",
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 22.0),
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
                           ),
                         ),
                       );
-                    }
-                    return Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 15),
-                        child: ListView.builder(
+                    } else if (snapshot.hasError) {
+                      return Expanded(
+                        child: Center(
+                          child: Text('Error: ${snapshot.error}'),
+                        ),
+                      );
+                    } else {
+                      final orders = snapshot.data ?? [];
+
+                      if (orders.isEmpty) {
+                        return const Expanded(
+                          child: Center(
+                            child: Text(
+                              "¡Aún no tienes pedidos!",
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22.0),
+                            ),
+                          ),
+                        );
+                      }
+                      return Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 15),
+                          child: ListView.builder(
                             padding: const EdgeInsets.all(0),
                             itemCount: orders.length,
                             itemBuilder: (context, index) {
@@ -125,24 +140,28 @@ class PedidosState extends State<Pedidos> {
 
                               return _buildPedidoItem(
                                   order, _selectedPedido == index, index);
-                            }),
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: Image.asset(
+                        'assets/images/Logo.png',
+                        width: 104,
                       ),
-                    );
-                  }
-                }),
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: Image.asset(
-                    'assets/images/Logo.png',
-                    width: 104,
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

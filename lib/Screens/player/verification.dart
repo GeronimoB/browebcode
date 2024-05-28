@@ -119,14 +119,16 @@ class VerificationScreenState extends State<VerificationScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.of(context).pushReplacementNamed('/config-player');
-        return false;
-      },
+@override
+Widget build(BuildContext context) {
+  return WillPopScope(
+    onWillPop: () async {
+      Navigator.of(context).pushReplacementNamed('/config-player');
+      return false;
+    },
+    child: Center(
       child: Container(
+        width: 800, // Ancho máximo para el contenedor
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -221,6 +223,7 @@ class VerificationScreenState extends State<VerificationScreen> {
           ],
         ),
       ),
+    ),
     );
   }
 

@@ -149,7 +149,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: Scaffold(
       body: Stack(
         children: [
           Container(
@@ -526,6 +531,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
         ],
+      ),
+      ),
+      ),
       ),
     );
   }
