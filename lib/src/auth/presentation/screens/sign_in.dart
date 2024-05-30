@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:bro_app_to/components/i_field.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/select_camp.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/sign_up.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/olvide_contrasena.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../components/custom_text_button.dart';
 import '../../../../utils/current_state.dart';
@@ -27,12 +31,14 @@ class _SignInScreenState extends State<SignInScreen> {
   late TextEditingController passwordController;
   bool isLoading = false;
   bool obscureText = true;
-
+  bool _showAlert = true;
+  String storeUrl = 'https://play.google.com/store';
   @override
   void initState() {
     super.initState();
     emailController = TextEditingController();
     passwordController = TextEditingController();
+    showPlatformToast();
   }
 
   @override
@@ -40,6 +46,31 @@ class _SignInScreenState extends State<SignInScreen> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  void showPlatformToast() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    if (Platform.isAndroid) {
+      setState(() {
+        _showAlert = true;
+        storeUrl = 'https://play.google.com/store';
+      });
+    } else if (Platform.isIOS) {
+      setState(() {
+        _showAlert = true;
+        storeUrl = 'https://www.apple.com/app-store/';
+      });
+    }
+  }
+
+  Future<bool> launchAction(String url) =>
+      launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+
+  void _closeAlert() {
+    setState(() {
+      _showAlert = false;
+    });
   }
 
   void changeLanguage(BuildContext context, String languageCode) async {
@@ -144,15 +175,14 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: true);
     return WillPopScope(
-     onWillPop: () async => false,
-      child: Center( // Centro el contenido en la pantalla
+      onWillPop: () async => false,
+      child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 800), // Ancho máximo de 800px
+          constraints: BoxConstraints(maxWidth: 800),
           child: Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -160,232 +190,283 @@ class _SignInScreenState extends State<SignInScreen> {
                 fit: BoxFit.fill,
               ),
             ),
-        child: Scaffold(
-            appBar: AppBar(
-              scrolledUnderElevation: 0,
-              automaticallyImplyLeading: false,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      languageDialog(context);
-                    },
-                    child: const Icon(
-                      Icons.language,
-                      color: Color(0xff00E050),
-                      size: 32,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            backgroundColor: Colors.transparent,
-            extendBody: true,
-            body: Stack(
-              children: [
-                SingleChildScrollView(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height -
-                        (MediaQuery.of(context).padding.top + 40),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0, vertical: 50),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          translations!['identify'],
-                          style: const TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            height: 0.5,
-                          ),
-                          textAlign: TextAlign.center,
+            child: Scaffold(
+                appBar: AppBar(
+                  scrolledUnderElevation: 0,
+                  automaticallyImplyLeading: false,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          languageDialog(context);
+                        },
+                        child: const Icon(
+                          Icons.language,
+                          color: Color(0xff00E050),
+                          size: 32,
                         ),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        iField(emailController, translations!['user_or_email']),
-                        TextFormField(
-                          controller: passwordController,
-                          decoration: InputDecoration(
-                            labelText: translations!['password'],
-                            labelStyle: const TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FontStyle.italic,
-                              fontSize: 16,
-                            ),
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 10),
-                            enabledBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color(0xFF00E050), width: 2),
-                            ),
-                            focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color(0xFF00E050), width: 2),
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                obscureText
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  obscureText = !obscureText;
-                                });
-                              },
-                            ),
-                          ),
-                          obscureText: obscureText,
-                          style: const TextStyle(
-                              color: Colors.white, fontFamily: 'Montserrat'),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const OlvideContrasenaPage()),
-                            );
-                          },
-                          child: Text(
-                            translations!['forget_pass_mssg'],
-                            style: const TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomTextButton(
-                            onTap: () {
-                              FocusScope.of(context).unfocus();
-                              RemoteDataSourceImpl(playerProvider).signIn(
-                                  UserEntity(
-                                      username: emailController.text,
-                                      password: passwordController.text),
-                                  context,
-                                  rememberMe,
-                                  false);
-                            },
-                            text: translations!['enter'],
-                            buttonPrimary: true,
-                            width: 100,
-                            height: 39),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                    )
+                  ],
+                ),
+                backgroundColor: Colors.transparent,
+                extendBody: true,
+                body: Stack(
+                  children: [
+                    SingleChildScrollView(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height -
+                            (MediaQuery.of(context).padding.top + 40),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30.0, vertical: 50),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              translations!['remember_session'],
+                              translations!['identify'],
                               style: const TextStyle(
                                 fontFamily: 'Montserrat',
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                fontStyle: FontStyle.normal,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                                 color: Colors.white,
+                                height: 0.5,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(
+                              height: 25,
+                            ),
+                            iField(emailController,
+                                translations!['user_or_email']),
+                            TextFormField(
+                              controller: passwordController,
+                              decoration: InputDecoration(
+                                labelText: translations!['password'],
+                                labelStyle: const TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 16,
+                                ),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                enabledBorder: const UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xFF00E050), width: 2),
+                                ),
+                                focusedBorder: const UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xFF00E050), width: 2),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    obscureText
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      obscureText = !obscureText;
+                                    });
+                                  },
+                                ),
+                              ),
+                              obscureText: obscureText,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat'),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const OlvideContrasenaPage()),
+                                );
+                              },
+                              child: Text(
+                                translations!['forget_pass_mssg'],
+                                style: const TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                            Checkbox(
-                              value: rememberMe,
-                              onChanged: (value) {
-                                setState(() {
-                                  rememberMe = !rememberMe;
-                                });
-                              },
-                              fillColor:
-                                  MaterialStateProperty.resolveWith<Color?>(
-                                (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.selected)) {
-                                    return const Color(0xff00E050);
-                                  }
-                                  return Colors.white;
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            CustomTextButton(
+                                onTap: () {
+                                  FocusScope.of(context).unfocus();
+                                  RemoteDataSourceImpl(playerProvider).signIn(
+                                      UserEntity(
+                                          username: emailController.text,
+                                          password: passwordController.text),
+                                      context,
+                                      rememberMe,
+                                      false);
                                 },
+                                text: translations!['enter'],
+                                buttonPrimary: true,
+                                width: 100,
+                                height: 39),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  translations!['remember_session'],
+                                  style: const TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    fontStyle: FontStyle.normal,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Checkbox(
+                                  value: rememberMe,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      rememberMe = !rememberMe;
+                                    });
+                                  },
+                                  fillColor:
+                                      MaterialStateProperty.resolveWith<Color?>(
+                                    (Set<MaterialState> states) {
+                                      if (states
+                                          .contains(MaterialState.selected)) {
+                                        return const Color(0xff00E050);
+                                      }
+                                      return Colors.white;
+                                    },
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SignUpScreen()),
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
+                              child: RichText(
+                                  text: TextSpan(
+                                text: translations!['if_you_dn_acct'],
+                                style: const TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  fontStyle: FontStyle.normal,
+                                  color: Colors.white,
+                                ),
+                                children: [
+                                  TextSpan(
+                                      text: translations!['register_here'],
+                                      style: const TextStyle(
+                                          decoration:
+                                              TextDecoration.underline)),
+                                ],
+                              )),
+                            ),
+                            SizedBox(
+                              height: 90,
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: SvgPicture.asset(
+                                  width: 104,
+                                  'assets/icons/Logo.svg',
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        GestureDetector(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SignUpScreen()),
-                          ),
-                          child: RichText(
-                              text: TextSpan(
-                            text: translations!['if_you_dn_acct'],
-                            style: const TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              fontStyle: FontStyle.normal,
-                              color: Colors.white,
-                            ),
-                            children: [
-                              TextSpan(
-                                  text: translations!['register_here'],
-                                  style: const TextStyle(
-                                      decoration: TextDecoration.underline)),
-                            ],
-                          )),
-                        ),
-                        SizedBox(
-                          height: 90,
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: SvgPicture.asset(
-                              width: 104,
-                              'assets/icons/Logo.svg',
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                if (playerProvider.isLoading)
-                  Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    color: Colors.black
-                        .withOpacity(0.5), // Color de fondo semitransparente
-                    child: const Center(
-                      child: CircularProgressIndicator(
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
                       ),
                     ),
-                  ),
-              ],
-            )),
-      ),
-      ),
+                    if (_showAlert)
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          margin: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xff3B3B3B),
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.close),
+                                    iconSize: 32,
+                                    color: const Color(0xFF00E050),
+                                    onPressed: _closeAlert,
+                                  ),
+                                  Text(
+                                    "Bró Football Platform",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w700,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  ),
+                                  CustomTextButton(
+                                    text: 'Abrir',
+                                    buttonPrimary: true,
+                                    width: 80,
+                                    height: 32,
+                                    onTap: () => launchAction(storeUrl),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    if (playerProvider.isLoading)
+                      Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: Colors.black.withOpacity(
+                            0.5), // Color de fondo semitransparente
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFF05FF00)),
+                          ),
+                        ),
+                      ),
+                  ],
+                )),
+          ),
+        ),
       ),
     );
   }
