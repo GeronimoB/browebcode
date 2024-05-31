@@ -55,24 +55,23 @@ class EditarInfoState extends State<EditarInfo> {
 
   Future<void> _openGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
     if (pickedFile != null) {
-      await _uploadImage(File(pickedFile.path));
+      await _uploadImage(pickedFile);
     } else {
       debugPrint('No image selected.');
     }
   }
 
-  Future<void> _uploadImage(File imageFile) async {
+  Future<void> _uploadImage(XFile imageFile) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final agenteProvider = Provider.of<AgenteProvider>(context, listen: false);
     final usuario = userProvider.getCurrentUser();
     const url = '${ApiConstants.baseUrl}/auth/upload-player-image';
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
-
-    request.files
-        .add(await http.MultipartFile.fromPath('imagen', imageFile.path));
+    var bytes = await imageFile.readAsBytes();
+    request.files.add(
+        http.MultipartFile.fromBytes('imagen', bytes, filename: 'image.jpg'));
     request.fields["userId"] = usuario.userId.toString();
     request.fields["isAgent"] = "true";
     var response = await request.send();
@@ -100,108 +99,112 @@ class EditarInfoState extends State<EditarInfo> {
               colors: [Color(0xFF212121), Color(0xFF121212)],
             ),
           ),
-      child: Scaffold(
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          centerTitle: true,
-          title: appBarTitle(translations!["EDIT_INFORMATION"]),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Color(0xFF00E050),
-              size: 32,
+          child: Scaffold(
+            appBar: AppBar(
+              scrolledUnderElevation: 0,
+              centerTitle: true,
+              title: appBarTitle(translations!["EDIT_INFORMATION"]),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Color(0xFF00E050),
+                  size: 32,
+                ),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
             ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: _openGallery,
-                child: Stack(
-                  children: [
-                    ClipOval(
-                      child: agente.imageUrl != ''
-                          ? ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                Colors.grey.withOpacity(0.5),
-                                BlendMode.dstATop,
-                              ),
-                              child: CachedNetworkImage(
-                                placeholder: (context, url) =>
-                                    AvatarPlaceholder(150),
-                                errorWidget: (context, error, stackTrace) {
-                                  return Image.asset(
-                                    'assets/images/fot.png',
+            backgroundColor: Colors.transparent,
+            body: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: _openGallery,
+                    child: Stack(
+                      children: [
+                        ClipOval(
+                          child: agente.imageUrl != ''
+                              ? ColorFiltered(
+                                  colorFilter: ColorFilter.mode(
+                                    Colors.grey.withOpacity(0.5),
+                                    BlendMode.dstATop,
+                                  ),
+                                  child: CachedNetworkImage(
+                                    placeholder: (context, url) =>
+                                        AvatarPlaceholder(150),
+                                    errorWidget: (context, error, stackTrace) {
+                                      return Image.asset(
+                                        'assets/images/fot.png',
+                                        fit: BoxFit.fill,
+                                        width: 150,
+                                        height: 150,
+                                      );
+                                    },
+                                    imageUrl: agente.imageUrl ?? '',
                                     fit: BoxFit.fill,
                                     width: 150,
                                     height: 150,
-                                  );
-                                },
-                                imageUrl: agente.imageUrl ?? '',
-                                fit: BoxFit.fill,
-                                width: 150,
-                                height: 150,
-                              ),
-                            )
-                          : ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                Colors.grey.withOpacity(0.5),
-                                BlendMode.dstATop,
-                              ),
-                              child: Image.asset(
-                                'assets/images/fot.png',
-                                width: 150,
-                                height: 150,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                                  ),
+                                )
+                              : ColorFiltered(
+                                  colorFilter: ColorFilter.mode(
+                                    Colors.grey.withOpacity(0.5),
+                                    BlendMode.dstATop,
+                                  ),
+                                  child: Image.asset(
+                                    'assets/images/fot.png',
+                                    width: 150,
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                        ),
+                        const Positioned(
+                          bottom: 0,
+                          top: 0,
+                          right: 0,
+                          left: 0,
+                          child: Icon(
+                            Icons.camera_alt,
+                            color: Colors.white,
+                            size: 42,
+                          ),
+                        ),
+                      ],
                     ),
-                    const Positioned(
-                      bottom: 0,
-                      top: 0,
-                      right: 0,
-                      left: 0,
-                      child: Icon(
-                        Icons.camera_alt,
-                        color: Colors.white,
-                        size: 42,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildTextField(
+                      label: translations!["Name"],
+                      controller: _nombreController,
+                      camp: 'name'),
+                  _buildTextField(
+                      label: translations!["Last_name"],
+                      controller: _apellidoController,
+                      camp: 'lastname'),
+                  _buildTextField(
+                      label: translations!["Email"],
+                      controller: _correoController,
+                      camp: 'email'),
+                  _buildTextField(
+                      label: translations!["username"],
+                      controller: _usuarioController,
+                      camp: 'username'),
+                  _buildTextField(
+                      label: translations!["Country"],
+                      controller: _paisController,
+                      camp: 'pais'),
+                  _buildTextField(
+                      label: translations!["Province"],
+                      controller: _provinciaController,
+                      camp: 'provincia'),
+                ],
               ),
-              const SizedBox(height: 20),
-              _buildTextField(
-                  label: translations!["Name"], controller: _nombreController, camp: 'name'),
-              _buildTextField(
-                  label: translations!["Last_name"],
-                  controller: _apellidoController,
-                  camp: 'lastname'),
-              _buildTextField(
-                  label:  translations!["Email"],
-                  controller: _correoController,
-                  camp: 'email'),
-              _buildTextField(
-                  label: translations!["username"],
-                  controller: _usuarioController,
-                  camp: 'username'),
-              _buildTextField(
-                  label: translations!["Country"], controller: _paisController, camp: 'pais'),
-              _buildTextField(
-                  label: translations!["Province"],
-                  controller: _provinciaController,
-                  camp: 'provincia'),
-            ],
+            ),
           ),
         ),
-      ),
-      ),
       ),
     );
   }

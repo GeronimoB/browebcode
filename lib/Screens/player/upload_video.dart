@@ -1,6 +1,5 @@
+import 'dart:html' as html;
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
@@ -12,10 +11,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import '../../providers/player_provider.dart';
 import '../../utils/api_client.dart';
@@ -59,105 +57,129 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
 
     if (result != null) {
       PlatformFile file = result.files.first;
-      String videoPath = file.path!;
+      Uint8List? videoBytes;
 
-      if (!await _validateVideo(videoPath)) {
+      if (kIsWeb) {
+        videoBytes = file.bytes;
+        if (videoBytes == null) {
+          // Error handling if bytes are null
+          return;
+        }
+
+        if (!await _validateVideoBytes(videoBytes)) {
+          return;
+        }
+
+        Uint8List? thumbnail = await _generateThumbnailFromBytes(videoBytes);
+        if (thumbnail == null) {
+          return;
+        }
+
+        _showUploadDialog();
+        await uploadVideoAndImageBytes(
+          videoBytes,
+          thumbnail,
+          playerProvider.getPlayer()!.userId,
+        );
+      } else {
+        // The following block should not be executed in a web-only context
         return;
       }
-
-      Uint8List? thumbnail = await _generateThumbnail(videoPath);
-      if (thumbnail == null) {
-        return;
-      }
-
-      _showUploadDialog();
-      await uploadVideoAndImage(
-          videoPath, thumbnail, playerProvider.getPlayer()!.userId);
+    } else {
+      // User canceled the picker
     }
   }
 
-  Future<bool> _validateVideo(String videoPath) async {
-    VideoPlayerController temporalVideoController =
-        VideoPlayerController.file(File(videoPath));
-    await temporalVideoController.initialize();
+  Future<bool> _validateVideoBytes(Uint8List bytes) async {
+    final blob = html.Blob([bytes], 'video/mp4');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final videoElement = html.VideoElement()
+      ..src = url
+      ..load();
 
-    Duration duration = temporalVideoController.value.duration;
-    if (duration.inSeconds > 120) {
+    await videoElement.onLoadedMetadata.first;
+
+    if (videoElement.duration > 120) {
       _showChargeDialog("El video no puede durar más de 2 minutos", false);
-      temporalVideoController.dispose();
+      html.Url.revokeObjectUrl(url);
       return false;
     }
 
-    if (temporalVideoController.value.size.height < 720 ||
-        temporalVideoController.value.size.width < 720) {
+    if (videoElement.videoHeight < 720 || videoElement.videoWidth < 720) {
       _showChargeDialog("La resolución mínima es de 720p", false);
-      temporalVideoController.dispose();
-      return false;
-    }
-    if (temporalVideoController.value.aspectRatio > 1) {
-      _showChargeDialog("Solo se pueden subir videos verticales", false);
-      temporalVideoController.dispose();
+      html.Url.revokeObjectUrl(url);
       return false;
     }
 
-    temporalVideoController.dispose();
+    if (videoElement.videoWidth > videoElement.videoHeight) {
+      _showChargeDialog("Solo se pueden subir videos verticales", false);
+      html.Url.revokeObjectUrl(url);
+      return false;
+    }
+
+    html.Url.revokeObjectUrl(url);
     return true;
   }
 
-  Future<Uint8List?> _generateThumbnail(String videoPath) async {
-    final uint8list = await VideoThumbnail.thumbnailData(
-      video: videoPath,
-      imageFormat: ImageFormat.PNG,
-      maxHeight: 200,
-      quality: 30,
+  Future<Uint8List?> _generateThumbnailFromBytes(Uint8List bytes) async {
+    final blob = html.Blob([bytes], 'video/mp4');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final videoElement = html.VideoElement()
+      ..src = url
+      ..load();
+
+    await videoElement.onLoadedMetadata.first;
+    videoElement.currentTime = 1; // Captura el fotograma en el segundo 1
+    await videoElement.onSeeked.first;
+
+    final canvas = html.CanvasElement(
+      width: videoElement.videoWidth,
+      height: videoElement.videoHeight,
     );
+    final ctx = canvas.context2D;
+    ctx.drawImage(videoElement, 0, 0);
 
-    return uint8list;
+    final thumbnailDataUrl = canvas.toDataUrl('image/png');
+    html.Url.revokeObjectUrl(url);
+
+    final byteString = html.window.atob(thumbnailDataUrl.split(',').last);
+    final buffer = Uint8List(byteString.length);
+    for (int i = 0; i < byteString.length; i++) {
+      buffer[i] = byteString.codeUnitAt(i);
+    }
+    return buffer;
   }
-
-  // Future<VideoPlayerController?> _initializeVideoController(
-  //     String videoPath) async {
-  //   VideoPlayerController videoController =
-  //       VideoPlayerController.file(File(videoPath));
-  //   await videoController.initialize();
-  //   await videoController.play();
-  //   videoController.setLooping(true);
-
-  //   videoController.addListener(() {
-  //     setState(() {
-  //       _sliderValue = videoController.value.position.inSeconds.toDouble();
-  //     });
-  //   });
-
-  //   return videoController;
-  // }
 
   void _showSubscriptionRe() {
     showErrorSnackBar(context, translations!["InactiveSubscriptionMessage"]);
   }
 
-  Future<void> uploadVideoAndImage(
-      String? videoPath, Uint8List? uint8list, String? userId) async {
+  Future<void> uploadVideoAndImageBytes(
+      Uint8List videoBytes, Uint8List? imageBytes, String? userId) async {
     var request = http.MultipartRequest(
       'POST',
       Uri.parse('${ApiConstants.baseUrl}/auth/uploadFiles'),
     );
     request.fields["userId"] = userId ?? '';
-    if (videoPath != null) {
-      request.files.add(await http.MultipartFile.fromPath(
-        'video',
-        videoPath,
-      ));
-    }
 
-    if (uint8list != null) {
+    // Agregar el video como bytes
+    request.files.add(http.MultipartFile.fromBytes(
+      'video',
+      videoBytes,
+      filename: 'video.mp4',
+      contentType: MediaType('video', 'mp4'),
+    ));
+
+    // Agregar la imagen como bytes si está presente
+    if (imageBytes != null) {
       request.files.add(http.MultipartFile.fromBytes(
         'imagen',
-        uint8list,
+        imageBytes,
         filename: 'imagen.png',
         contentType: MediaType('image', 'png'),
       ));
     }
+
     var response = await request.send();
 
     if (response.statusCode == 200) {
@@ -165,8 +187,9 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
       Future.delayed(const Duration(seconds: 3));
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-            builder: (context) =>
-                const CustomBottomNavigationBarPlayer(initialIndex: 4)),
+          builder: (context) =>
+              const CustomBottomNavigationBarPlayer(initialIndex: 4),
+        ),
       );
     } else {
       Navigator.of(context).pop();

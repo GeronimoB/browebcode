@@ -529,7 +529,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
     });
   }
 
-  Future<void> uploadVideoAndImage(String? videoPath, Uint8List? uint8list,
+  Future<void> uploadVideoAndImage(Uint8List? videoPath, Uint8List? uint8list,
       String? userId, String? plan) async {
     var request = http.MultipartRequest(
       'POST',
@@ -537,9 +537,11 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
     );
     request.fields["userId"] = userId ?? '';
     if (videoPath != null) {
-      request.files.add(await http.MultipartFile.fromPath(
+      request.files.add(http.MultipartFile.fromBytes(
         'video',
         videoPath,
+        filename: 'video.mp4',
+        contentType: MediaType('video', 'mp4'),
       ));
     }
 

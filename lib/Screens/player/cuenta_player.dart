@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
-import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/Screens/planes_pago.dart';
 import 'package:bro_app_to/components/planes_cuenta_widget.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
@@ -14,7 +12,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -48,29 +45,31 @@ class CuentaPageState extends State<CuentaPage> {
 
   Future<void> _openGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
     if (pickedFile != null) {
-      await _uploadImage(File(pickedFile.path));
+      await _uploadImage(pickedFile);
     } else {
       debugPrint('No image selected.');
     }
   }
 
-  Future<void> _uploadImage(File imageFile) async {
+  Future<void> _uploadImage(XFile imageFile) async {
     final player = playerProvider.getPlayer()!;
-    const url = '${ApiConstants.baseUrl}/auth/upload-player-image';
+    final url = '${ApiConstants.baseUrl}/auth/upload-player-image';
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
 
-    request.files
-        .add(await http.MultipartFile.fromPath('imagen', imageFile.path));
-    request.fields["userId"] = player.userId ?? '0';
-    request.fields["isAgent"] = player.isAgent.toString();
+    var bytes = await imageFile.readAsBytes();
+    request.files.add(
+        http.MultipartFile.fromBytes('imagen', bytes, filename: 'image.jpg'));
+
+    request.fields['userId'] = player.userId ?? '0';
+    request.fields['isAgent'] = player.isAgent.toString();
+
     var response = await request.send();
 
     if (response.statusCode == 200) {
       var responseBody = await response.stream.bytesToString();
-      final image = jsonDecode(responseBody)["image"];
+      final image = jsonDecode(responseBody)['image'];
       playerProvider.updateLocalImage(image);
       userProvider.updateLocalImage(image);
       debugPrint('Image uploaded successfully');
@@ -88,16 +87,15 @@ class CuentaPageState extends State<CuentaPage> {
     String formattedDate =
         birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
     String shortInfo =
-        '${player.provincia}, ${player.pais}\n ${translations!["birthdate"]}: $formattedDate';
+        '${provincesByCountry[player.pais][player.provincia]}, ${countries[player.pais]}\n ${translations!["birthdate"]}: $formattedDate';
     String fullInfo =
-        '${player.provincia}, ${player.pais}\n ${translations!["birthdate"]}: $formattedDate\n ${translations!["Categorys"]}: ${player.categoria}\n ${translations!["position_label"]}: ${player.position}\n ${translations!["club_label"]}: ${player.club}\n ${translations!["national_selection_short"]}: ${player.seleccionNacional} ${player.categoriaSeleccion}\n ${translations!["dominant_feet"]}: ${player.pieDominante} \n ${translations!["Achievements2"]}: ${player.logrosIndividuales}  \n ${translations!["height_label"]}: ${player.altura}';
+        '${provincesByCountry[player.pais][player.provincia]}, ${countries[player.pais]}\n ${translations!["birthdate"]}: $formattedDate\n ${translations!["Categorys"]}: ${categorias[player.categoria]}\n ${translations!["position_label"]}: ${player.position}\n ${translations!["club_label"]}: ${player.club}\n ${translations!["national_selection_short"]}: ${selecciones[player.seleccionNacional]} ${nationalCategories[player.seleccionNacional][player.categoriaSeleccion]}\n ${translations!["dominant_feet"]}: ${piesDominantes[player.pieDominante]} \n ${translations!["Achievements2"]}: ${player.logrosIndividuales}  \n ${translations!["height_label"]}: ${player.altura}';
 
     double width = MediaQuery.of(context).size.width;
-    print(width);
     return Container(
-      alignment: Alignment.center, // Asegura que el contenedor esté centrado
+      alignment: Alignment.center,
       child: Container(
-        width: 800, // Ancho máximo de 800px
+        width: 800,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -108,171 +106,173 @@ class CuentaPageState extends State<CuentaPage> {
             ],
           ),
         ),
-      child: Scaffold(
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          backgroundColor: Colors.transparent,
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          title: appBarTitle(translations!["ACCOUNT"]),
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Color(0xFF00E050),
-              size: 32,
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        extendBody: true,
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 20,
+        child: Scaffold(
+          appBar: AppBar(
+            scrolledUnderElevation: 0,
+            backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: false,
+            centerTitle: true,
+            title: appBarTitle(translations!["ACCOUNT"]),
+            leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Color(0xFF00E050),
+                size: 32,
               ),
-              GestureDetector(
-                onTap: _openGallery,
-                child: Stack(
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+          backgroundColor: Colors.transparent,
+          extendBody: true,
+          body: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                  onTap: _openGallery,
+                  child: Stack(
+                    children: [
+                      ClipOval(
+                        child: player.userImage != ''
+                            ? ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                  Colors.grey.withOpacity(0.5),
+                                  BlendMode.dstATop,
+                                ),
+                                child: CachedNetworkImage(
+                                  placeholder: (context, url) =>
+                                      AvatarPlaceholder(150),
+                                  errorWidget: (context, error, stackTrace) {
+                                    return Image.asset(
+                                      'assets/images/fot.png',
+                                      fit: BoxFit.fill,
+                                      width: 150,
+                                      height: 150,
+                                    );
+                                  },
+                                  imageUrl: player.userImage ?? '',
+                                  fit: BoxFit.fill,
+                                  width: 150,
+                                  height: 150,
+                                ),
+                              )
+                            : ColorFiltered(
+                                colorFilter: ColorFilter.mode(
+                                  Colors.grey.withOpacity(0.5),
+                                  BlendMode.dstATop,
+                                ),
+                                child: Image.asset(
+                                  'assets/images/fot.png',
+                                  width: 150,
+                                  height: 150,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                      ),
+                      const Positioned(
+                        bottom: 0,
+                        top: 0,
+                        right: 0,
+                        left: 0,
+                        child: Icon(
+                          Icons.camera_alt,
+                          color: Colors.white,
+                          size: 42,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ClipOval(
-                      child: player.userImage != ''
-                          ? ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                Colors.grey.withOpacity(0.5),
-                                BlendMode.dstATop,
-                              ),
-                              child: CachedNetworkImage(
-                                placeholder: (context, url) =>
-                                    AvatarPlaceholder(150),
-                                errorWidget: (context, error, stackTrace) {
-                                  return Image.asset(
-                                    'assets/images/fot.png',
-                                    fit: BoxFit.fill,
-                                    width: 150,
-                                    height: 150,
-                                  );
-                                },
-                                imageUrl: player.userImage ?? '',
-                                fit: BoxFit.fill,
-                                width: 150,
-                                height: 150,
-                              ),
-                            )
-                          : ColorFiltered(
-                              colorFilter: ColorFilter.mode(
-                                Colors.grey.withOpacity(0.5),
-                                BlendMode.dstATop,
-                              ),
-                              child: Image.asset(
-                                'assets/images/fot.png',
-                                width: 150,
-                                height: 150,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                    ),
-                    const Positioned(
-                      bottom: 0,
-                      top: 0,
-                      right: 0,
-                      left: 0,
-                      child: Icon(
-                        Icons.camera_alt,
-                        color: Colors.white,
-                        size: 42,
+                    Text(
+                      '${player.name} ${player.lastName}',
+                      style: const TextStyle(
+                        color: Color(0xFF05FF00),
+                        fontFamily: 'Montserrat',
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    if (player.verificado)
+                      const Icon(
+                        Icons.verified,
+                        color: Color(0xFF00E050),
+                        size: 24,
+                      ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${player.name} ${player.lastName}',
+                const SizedBox(height: 5),
+                Text(
+                  _isExpanded ? fullInfo : shortInfo,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Montserrat',
+                    fontStyle: FontStyle.italic,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isExpanded = !_isExpanded;
+                    });
+                  },
+                  child: Text(
+                    _isExpanded ? 'Ver menos' : 'Ver más',
                     style: const TextStyle(
                       color: Color(0xFF05FF00),
-                      fontFamily: 'Montserrat',
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
                     ),
                   ),
-                  const SizedBox(
-                    width: 5,
+                ),
+                const SizedBox(height: 35),
+                CarouselSlider(
+                  options: CarouselOptions(
+                    height: 400.0,
+                    enlargeCenterPage: true,
+                    autoPlay: false,
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    enableInfiniteScroll: true,
+                    autoPlayAnimationDuration:
+                        const Duration(milliseconds: 800),
+                    viewportFraction: width > 550 ? 0.5 : 0.8,
                   ),
-                  if (player.verificado)
-                    const Icon(
-                      Icons.verified,
-                      color: Color(0xFF00E050),
-                      size: 24,
+                  items: planes.map((plan) {
+                    final isActualPlan =
+                        userProvider.getCurrentUser().subscription ==
+                            plan.nombre;
+                    return PlanesCuentaWidget(
+                      plan: plan,
+                      isActualPlan: isActualPlan,
+                      cancelModal: confirmationCancelDialog,
+                    );
+                  }).toList(),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: Image.asset(
+                      'assets/images/Logo.png',
+                      width: 104,
                     ),
-                ],
-              ),
-              const SizedBox(height: 5),
-              Text(
-                _isExpanded ? fullInfo : shortInfo,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Montserrat',
-                  fontStyle: FontStyle.italic,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _isExpanded = !_isExpanded;
-                  });
-                },
-                child: Text(
-                  _isExpanded ? 'Ver menos' : 'Ver más',
-                  style: const TextStyle(
-                    color: Color(0xFF05FF00),
-                    fontSize: 16.0,
                   ),
                 ),
-              ),
-              const SizedBox(height: 35),
-              CarouselSlider(
-                options: CarouselOptions(
-                  height: 400.0,
-                  enlargeCenterPage: true,
-                  autoPlay: false,
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  enableInfiniteScroll: true,
-                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                  viewportFraction: width > 550 ? 0.5 : 0.8,
-                ),
-                items: planes.map((plan) {
-                  final isActualPlan =
-                      userProvider.getCurrentUser().subscription == plan.nombre;
-                  return PlanesCuentaWidget(
-                    plan: plan,
-                    isActualPlan: isActualPlan,
-                    cancelModal: confirmationCancelDialog,
-                  );
-                }).toList(),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: Image.asset(
-                    'assets/images/Logo.png',
-                    width: 104,
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }

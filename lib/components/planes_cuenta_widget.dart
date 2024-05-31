@@ -31,6 +31,8 @@ class _PlanesCuentaWidgetState extends State<PlanesCuentaWidget> {
     final plan = widget.plan;
     final isActualPlan = widget.isActualPlan;
     final playerProvider = Provider.of<PlayerProvider>(context);
+    print(plan.nombre);
+    print(translations!["whatsIncluded"]);
     return Container(
       width: 360,
       margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
@@ -96,7 +98,9 @@ class _PlanesCuentaWidgetState extends State<PlanesCuentaWidget> {
                     widget.cancelModal(context, playerProvider);
                   }
                 },
-                text: isActualPlan ? translations!["cancel"] : translations!["subscribe"],
+                text: isActualPlan
+                    ? translations!["cancel"]
+                    : translations!["subscribe"],
                 buttonPrimary: true,
                 width: 116,
                 height: 42,
@@ -114,6 +118,7 @@ class _PlanesCuentaWidgetState extends State<PlanesCuentaWidget> {
     String visualizacion = cualidad["visualizacion"] ?? '';
     int color = cualidad["color"] ?? 0;
     bool isVisualizacion = cualidad["isVisualizacion"] ?? false;
+    print(text);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(

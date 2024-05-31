@@ -44,7 +44,6 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
   late TextEditingController _clubController;
   late TextEditingController _categoriaSeleccionController;
   late TextEditingController _directionController;
-
   late PlayerProvider provider;
   late PlayerFullModel player;
   final picker = ImagePicker();
@@ -63,7 +62,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     _apellidoController = TextEditingController(text: player.lastName);
     _correoController = TextEditingController(text: player.email);
     _paisController = TextEditingController(
-        text: player.pais!.isNotEmpty ? player.pais : 'España');
+        text: player.pais!.isNotEmpty ? player.pais : 'spain');
     _provinciaController = TextEditingController(text: player.provincia);
     _posicionController = TextEditingController(text: player.position);
     _categoriaController = TextEditingController(text: player.categoria);
@@ -74,7 +73,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     _seleccionNacionalController = TextEditingController(
         text: player.seleccionNacional!.isNotEmpty
             ? player.seleccionNacional
-            : 'Masculina');
+            : 'male');
     _categoriaSeleccionController =
         TextEditingController(text: player.categoriaSeleccion);
     _dniController = TextEditingController(text: player.dni);
@@ -104,23 +103,24 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
 
   Future<void> _openGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
     if (pickedFile != null) {
-      await _uploadImage(File(pickedFile.path));
+      await _uploadImage(pickedFile);
     } else {
       debugPrint('No image selected.');
     }
   }
 
-  Future<void> _uploadImage(File imageFile) async {
+  Future<void> _uploadImage(XFile imageFile) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final agenteProvider = Provider.of<PlayerProvider>(context, listen: false);
     final usuario = userProvider.getCurrentUser();
     const url = '${ApiConstants.baseUrl}/auth/upload-player-image';
     var request = http.MultipartRequest('POST', Uri.parse(url));
 
-    request.files
-        .add(await http.MultipartFile.fromPath('imagen', imageFile.path));
+    var bytes = await imageFile.readAsBytes();
+    request.files.add(
+        http.MultipartFile.fromBytes('imagen', bytes, filename: 'image.jpg'));
+
     request.fields["userId"] = usuario.userId.toString();
     request.fields["isAgent"] = "false";
     var response = await request.send();
@@ -174,183 +174,186 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
 
         return false;
       },
-    child: Center(
-      child: Container(
-        width: MediaQuery.of(context).size.width > 800 ? 800 : MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF444444), Color(0xFF000000)],
+      child: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width > 800
+              ? 800
+              : MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF444444), Color(0xFF000000)],
+            ),
           ),
-        ),
-        child: Scaffold(
-          appBar: AppBar(
-            scrolledUnderElevation: 0,
-            centerTitle: true,
-            title: appBarTitle(translations!["EDIT_INFORMATION"]),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Color(0xFF00E050),
-                  size: 32,
-                ),
-                onPressed: () {
-                  validateFields();
-                }),
-          ),
-          backgroundColor: Colors.transparent,
-          body: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: _openGallery,
-                  child: Stack(
-                    children: [
-                      ClipOval(
-                        child: user.imageUrl != ''
-                            ? ColorFiltered(
-                                colorFilter: ColorFilter.mode(
-                                  Colors.grey.withOpacity(0.5),
-                                  BlendMode.dstATop,
-                                ),
-                                child: CachedNetworkImage(
-                                  placeholder: (context, url) =>
-                                      AvatarPlaceholder(150),
-                                  errorWidget: (context, error, stackTrace) {
-                                    return Image.asset(
-                                      'assets/images/fot.png',
-                                      fit: BoxFit.fill,
-                                      width: 150,
-                                      height: 150,
-                                    );
-                                  },
-                                  imageUrl: user.imageUrl,
-                                  fit: BoxFit.fill,
-                                  width: 150,
-                                  height: 150,
-                                ),
-                              )
-                            : ColorFiltered(
-                                colorFilter: ColorFilter.mode(
-                                  Colors.grey.withOpacity(0.5),
-                                  BlendMode.dstATop,
-                                ),
-                                child: Image.asset(
-                                  'assets/images/fot.png',
-                                  width: 150,
-                                  height: 150,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                      ),
-                      const Positioned(
-                        bottom: 0,
-                        top: 0,
-                        right: 0,
-                        left: 0,
-                        child: Icon(
-                          Icons.camera_alt,
-                          color: Colors.white,
-                          size: 42,
-                        ),
-                      ),
-                    ],
+          child: Scaffold(
+            appBar: AppBar(
+              scrolledUnderElevation: 0,
+              centerTitle: true,
+              title: appBarTitle(translations!["EDIT_INFORMATION"]),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Color(0xFF00E050),
+                    size: 32,
                   ),
-                ),
-                const SizedBox(height: 20),
-                _buildTextField(
-                    label: translations!["Name"],
-                    controller: _nombreController,
-                    camp: 'name'),
-                _buildTextField(
-                    label: translations!["Last_name"],
-                    controller: _apellidoController,
-                    camp: 'lastname'),
-                _buildTextField(
-                    label: translations!["Email"],
-                    controller: _correoController,
-                    camp: 'email'),
-                _buildTextField(
-                    label: translations!["Direction"],
-                    controller: _directionController,
-                    camp: 'direccion'),
-                // _buildTextField(
-                //     label: 'DOCUMENTO DE IDENTIDAD',
-                //     controller: _dniController,
-                //     camp: 'dni'),
-                _buildTextField(
-                    label: translations!["Country"],
-                    controller: _paisController,
-                    camp: 'pais',
+                  onPressed: () {
+                    validateFields();
+                  }),
+            ),
+            backgroundColor: Colors.transparent,
+            body: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: _openGallery,
+                    child: Stack(
+                      children: [
+                        ClipOval(
+                          child: user.imageUrl != ''
+                              ? ColorFiltered(
+                                  colorFilter: ColorFilter.mode(
+                                    Colors.grey.withOpacity(0.5),
+                                    BlendMode.dstATop,
+                                  ),
+                                  child: CachedNetworkImage(
+                                    placeholder: (context, url) =>
+                                        AvatarPlaceholder(150),
+                                    errorWidget: (context, error, stackTrace) {
+                                      return Image.asset(
+                                        'assets/images/fot.png',
+                                        fit: BoxFit.fill,
+                                        width: 150,
+                                        height: 150,
+                                      );
+                                    },
+                                    imageUrl: user.imageUrl,
+                                    fit: BoxFit.fill,
+                                    width: 150,
+                                    height: 150,
+                                  ),
+                                )
+                              : ColorFiltered(
+                                  colorFilter: ColorFilter.mode(
+                                    Colors.grey.withOpacity(0.5),
+                                    BlendMode.dstATop,
+                                  ),
+                                  child: Image.asset(
+                                    'assets/images/fot.png',
+                                    width: 150,
+                                    height: 150,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                        ),
+                        const Positioned(
+                          bottom: 0,
+                          top: 0,
+                          right: 0,
+                          left: 0,
+                          child: Icon(
+                            Icons.camera_alt,
+                            color: Colors.white,
+                            size: 42,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildTextField(
+                      label: translations!["Name"],
+                      controller: _nombreController,
+                      camp: 'name'),
+                  _buildTextField(
+                      label: translations!["Last_name"],
+                      controller: _apellidoController,
+                      camp: 'lastname'),
+                  _buildTextField(
+                      label: translations!["Email"],
+                      controller: _correoController,
+                      camp: 'email'),
+                  _buildTextField(
+                      label: translations!["Direction"],
+                      controller: _directionController,
+                      camp: 'direccion'),
+                  // _buildTextField(
+                  //     label: 'DOCUMENTO DE IDENTIDAD',
+                  //     controller: _dniController,
+                  //     camp: 'dni'),
+                  _buildTextField(
+                      label: translations!["Country"],
+                      controller: _paisController,
+                      camp: 'pais',
+                      select: true,
+                      items: countries),
+                  _buildTextField(
+                    label: translations!["Province"],
+                    controller: _provinciaController,
+                    camp: 'provincia',
                     select: true,
-                    items: countries),
-                _buildTextField(
-                  label: translations!["Province"],
-                  controller: _provinciaController,
-                  camp: 'provincia',
-                  select: true,
-                  items: provincesByCountry[_paisController.text],
-                ),
-                _buildTextField(
-                    label: translations!["Position"],
-                    controller: _posicionController,
-                    camp: 'position',
-                    goToSelCamp: true),
-                _buildTextField(
-                    label: translations!["Club"],
-                    controller: _clubController,
-                    camp: 'club'),
-                _buildTextField(
-                    label: translations!["Category"],
-                    controller: _categoriaController,
-                    camp: 'categoria',
+                    items: provincesByCountry[_paisController.text],
+                  ),
+                  _buildTextField(
+                      label: translations!["Position"],
+                      controller: _posicionController,
+                      camp: 'position',
+                      goToSelCamp: true),
+                  _buildTextField(
+                      label: translations!["Club"],
+                      controller: _clubController,
+                      camp: 'club'),
+                  _buildTextField(
+                      label: translations!["Category"],
+                      controller: _categoriaController,
+                      camp: 'categoria',
+                      select: true,
+                      items: categorias),
+                  _buildTextField(
+                      label: translations!["Achievements"],
+                      controller: _logrosIndividualesController,
+                      camp: 'logros'),
+                  _buildTextField(
+                    label: translations!["height_label2"],
+                    controller: _alturaController,
+                    camp: 'altura',
                     select: true,
-                    items: categorias),
-                _buildTextField(
-                    label: translations!["Achievements"],
-                    controller: _logrosIndividualesController,
-                    camp: 'logros'),
-                _buildTextField(
-                  label: translations!["height_label2"],
-                  controller: _alturaController,
-                  camp: 'altura',
-                  select: true,
-                  items: alturas,
-                ),
-                _buildTextField(
-                  label: translations!["Dominate_foot"],
-                  controller: _pieDominanteController,
-                  camp: 'piedominante',
-                  select: true,
-                  items: piesDominantes,
-                ),
-                _buildTextField(
-                  label: translations!["Selection"],
-                  controller: _seleccionNacionalController,
-                  camp: 'seleccion',
-                  select: true,
-                  items: selecciones,
-                ),
-                _buildTextField(
-                  label: translations!["Selection_category"],
-                  controller: _categoriaSeleccionController,
-                  camp: 'categoriaseleccion',
-                  select: true,
-                  items: nationalCategories[_seleccionNacionalController.text],
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-              ],
+                    items: alturas,
+                  ),
+                  _buildTextField(
+                    label: translations!["Dominate_foot"],
+                    controller: _pieDominanteController,
+                    camp: 'piedominante',
+                    select: true,
+                    items: piesDominantes,
+                  ),
+                  _buildTextField(
+                    label: translations!["Selection"],
+                    controller: _seleccionNacionalController,
+                    camp: 'seleccion',
+                    select: true,
+                    items: selecciones,
+                  ),
+                  _buildTextField(
+                    label: translations!["Selection_category"],
+                    controller: _categoriaSeleccionController,
+                    camp: 'categoriaseleccion',
+                    select: true,
+                    items:
+                        nationalCategories[_seleccionNacionalController.text],
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -360,7 +363,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     required String camp,
     bool? goToSelCamp,
     bool select = false,
-    List<String> items = const [],
+    Map<String, String> items = const {},
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
@@ -423,7 +426,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     TextEditingController controller,
     String camp, {
     bool select = false,
-    List<String> items = const [],
+    Map<String, String> items = const {},
   }) {
     showDialog(
       context: context,
@@ -476,9 +479,6 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                               setState(() {
                                 editingController.text = newValue!;
                               });
-                            },
-                            itemBuilder: (String item) {
-                              return item;
                             },
                             width: 300,
                           );

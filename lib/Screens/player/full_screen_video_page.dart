@@ -255,7 +255,8 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                     iconTheme: const IconThemeData(color: Color(0xFF00E050)),
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
+                    icon:
+                        const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
                     onPressed: () {
                       _showCustomMenu(context);
                     },
@@ -292,7 +293,8 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
             GestureDetector(
               onTap: _togglePlayPause,
               child: AnimatedOpacity(
-                opacity: _showPauseIcon || !_controller.value.isPlaying ? 1.0 : 0.0,
+                opacity:
+                    _showPauseIcon || !_controller.value.isPlaying ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 300),
                 child: Center(
                   child: Icon(
@@ -432,6 +434,9 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
       context: context,
       barrierColor: Colors.black.withOpacity(0.6),
       builder: (BuildContext context) {
+        print(translations!['delete_video_confirmation']);
+        print(videoId.toString());
+        print(translations!['delete_video_err']);
         return ModalDecition(
           text: translations!['delete_video_confirmation'],
           confirmCallback: () async {

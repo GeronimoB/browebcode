@@ -1,22 +1,22 @@
 import 'dart:typed_data';
 
+import 'package:bro_app_to/Screens/planes_pago.dart';
+import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
-import 'package:bro_app_to/Screens/planes_pago.dart';
+import 'package:bro_app_to/components/snackbar.dart';
+import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-
-import 'package:video_thumbnail/video_thumbnail.dart';
-
-import '../../../../providers/player_provider.dart';
 import '../../../../utils/current_state.dart';
+import 'dart:html' as html;
 
 class FirstVideoWidget extends StatefulWidget {
   const FirstVideoWidget({super.key});
@@ -79,6 +79,66 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
     );
   }
 
+  Future<Uint8List?> _generateThumbnailFromBytes(Uint8List bytes) async {
+    final blob = html.Blob([bytes], 'video/mp4');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final videoElement = html.VideoElement()
+      ..src = url
+      ..load();
+
+    await videoElement.onLoadedMetadata.first;
+    videoElement.currentTime = 1; // Captura el fotograma en el segundo 1
+    await videoElement.onSeeked.first;
+
+    final canvas = html.CanvasElement(
+      width: videoElement.videoWidth,
+      height: videoElement.videoHeight,
+    );
+    final ctx = canvas.context2D;
+    ctx.drawImage(videoElement, 0, 0);
+
+    final thumbnailDataUrl = canvas.toDataUrl('image/png');
+    html.Url.revokeObjectUrl(url);
+
+    final byteString = html.window.atob(thumbnailDataUrl.split(',').last);
+    final buffer = Uint8List(byteString.length);
+    for (int i = 0; i < byteString.length; i++) {
+      buffer[i] = byteString.codeUnitAt(i);
+    }
+    return buffer;
+  }
+
+  Future<bool> _validateVideoBytes(Uint8List bytes) async {
+    final blob = html.Blob([bytes], 'video/mp4');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    final videoElement = html.VideoElement()
+      ..src = url
+      ..load();
+
+    await videoElement.onLoadedMetadata.first;
+
+    if (videoElement.duration > 120) {
+      showUploadDialog("El video no puede durar más de 2 minutos", false);
+      html.Url.revokeObjectUrl(url);
+      return false;
+    }
+
+    if (videoElement.videoHeight < 720 || videoElement.videoWidth < 720) {
+      showUploadDialog("La resolución mínima es de 720p", false);
+      html.Url.revokeObjectUrl(url);
+      return false;
+    }
+
+    if (videoElement.videoWidth > videoElement.videoHeight) {
+      showUploadDialog("Solo se pueden subir videos verticales", false);
+      html.Url.revokeObjectUrl(url);
+      return false;
+    }
+
+    html.Url.revokeObjectUrl(url);
+    return true;
+  }
+
   Future<void> _pickVideo() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.video,
@@ -87,90 +147,43 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
 
     if (result != null) {
       PlatformFile file = result.files.first;
-      String videoPath = file.path!;
-      videoPathToUpload = videoPath;
-      _temporalVideoController?.dispose();
-      _temporalVideoController = VideoPlayerController.file(File(videoPath));
+      Uint8List? videoBytes;
 
-      await _temporalVideoController?.initialize();
+      if (kIsWeb) {
+        videoBytes = file.bytes;
+        if (videoBytes == null) {
+          // Error handling if bytes are null
+          return;
+        }
 
-      Duration duration = _temporalVideoController!.value.duration;
-      if (duration.inSeconds > 120) {
-        showUploadDialog(translations!['video_max_2m'], false);
-        return;
-      }
+        if (!await _validateVideoBytes(videoBytes)) {
+          return;
+        }
 
-      if (_temporalVideoController!.value.size.height < 720 ||
-          _temporalVideoController!.value.size.width < 720) {
-        showUploadDialog(translations!['video_720'], false);
-        return;
-      }
+        Uint8List? thumbnail = await _generateThumbnailFromBytes(videoBytes);
+        if (thumbnail == null) {
+          return;
+        }
 
-      if (_temporalVideoController!.value.aspectRatio > 1) {
-        showUploadDialog(translations!['video_vertical'], false);
-        return;
-      }
+        final playerProvider =
+            Provider.of<PlayerProvider>(context, listen: false);
 
-      final uint8list = await VideoThumbnail.thumbnailData(
-        video: videoPath,
-        imageFormat: ImageFormat.PNG,
-        maxHeight: 200,
-        quality: 30,
-      );
-      imagePathToUpload = uint8list;
-      final playerProvider =
-          Provider.of<PlayerProvider>(context, listen: false);
+        playerProvider.updateDataToUpload(videoBytes, thumbnail);
+        playerProvider.isSubscriptionPayment = true;
+        playerProvider.isNewSubscriptionPayment = true;
 
-      playerProvider.updateDataToUpload(videoPath, uint8list);
-      playerProvider.isSubscriptionPayment = true;
-      playerProvider.isNewSubscriptionPayment = true;
-      _temporalVideoController?.dispose();
-      _videoController?.dispose();
-      _videoController = VideoPlayerController.file(File(videoPath));
-      showUploadDialog(translations!['video_scss'], true);
-      await _videoController?.initialize();
+        showUploadDialog(translations!['video_scss'], true);
 
-      await _videoController?.play();
-      Future.delayed(const Duration(seconds: 6), () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const PlanesPago()),
-        );
-      });
-
-      _videoController?.setLooping(true);
-
-      _videoController?.addListener(() {
-        setState(() {
-          _sliderValue = _videoController!.value.position.inSeconds.toDouble();
+        Future.delayed(const Duration(seconds: 6), () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const PlanesPago()),
+          );
         });
-      });
-    }
-  }
-
-  Future<void> uploadVideoAndImage(
-      String? videoPath, Uint8List? uint8list) async {
-    var request = http.MultipartRequest(
-      'POST',
-      Uri.parse('${ApiConstants.baseUrl}/auth/uploadFiles'),
-    );
-    if (videoPath != null) {
-      request.files.add(await http.MultipartFile.fromPath(
-        'video',
-        videoPath,
-      ));
-    }
-
-    if (uint8list != null) {
-      request.files.add(http.MultipartFile.fromBytes(
-        'imagen',
-        uint8list,
-        filename: 'imagen.png',
-        contentType: MediaType('image', 'png'),
-      ));
-    }
-
-    await request.send();
+      } else {
+        return;
+      }
+    } else {}
   }
 
   @override

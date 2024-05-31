@@ -12,7 +12,7 @@ class PlayerProvider extends ChangeNotifier {
   Plan? _plan;
   List<Tarjeta> _savedCards = [];
   Tarjeta? selectedCard;
-  String? videoPathToUpload;
+  Uint8List? videoPathToUpload;
   Uint8List? imagePathToUpload;
   List<Video> userVideos = [];
   bool isLoading = false;
@@ -146,7 +146,7 @@ class PlayerProvider extends ChangeNotifier {
     return _savedCards;
   }
 
-  void updateDataToUpload(String? video, Uint8List? image) {
+  void updateDataToUpload(Uint8List? video, Uint8List? image) {
     imagePathToUpload = image;
     videoPathToUpload = video;
     notifyListeners();
