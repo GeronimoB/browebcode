@@ -1,17 +1,13 @@
-import 'dart:io';
-
 import 'package:bro_app_to/components/i_field.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
-import 'package:bro_app_to/src/registration/presentation/screens/select_camp.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/sign_up.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/olvide_contrasena.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'dart:html' as html;
 import '../../../../components/custom_text_button.dart';
 import '../../../../utils/current_state.dart';
 import '../../../../utils/language_localizations.dart';
@@ -31,7 +27,7 @@ class _SignInScreenState extends State<SignInScreen> {
   late TextEditingController passwordController;
   bool isLoading = false;
   bool obscureText = true;
-  bool _showAlert = true;
+  bool _showAlert = false;
   String storeUrl = 'https://play.google.com/store';
   @override
   void initState() {
@@ -49,14 +45,14 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void showPlatformToast() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    String userAgent = html.window.navigator.userAgent;
 
-    if (Platform.isAndroid) {
+    if (userAgent.contains('Android')) {
       setState(() {
         _showAlert = true;
         storeUrl = 'https://play.google.com/store';
       });
-    } else if (Platform.isIOS) {
+    } else if (userAgent.contains('iPhone') || userAgent.contains('iPad')) {
       setState(() {
         _showAlert = true;
         storeUrl = 'https://www.apple.com/app-store/';
@@ -422,25 +418,36 @@ class _SignInScreenState extends State<SignInScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.close),
-                                    iconSize: 32,
-                                    color: const Color(0xFF00E050),
-                                    onPressed: _closeAlert,
+                                  GestureDetector(
+                                    onTap: _closeAlert,
+                                    child: const Icon(
+                                      Icons.close,
+                                      size: 24,
+                                      color: Color(0xFF00E050),
+                                    ),
                                   ),
-                                  Text(
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.asset(
+                                      'assets/images/logo_tiendas.png',
+                                      width: 55,
+                                      height: 55,
+                                    ),
+                                  ),
+                                  const Text(
                                     "Bró Football Platform",
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 14.0,
                                       fontWeight: FontWeight.w700,
                                       fontFamily: 'Montserrat',
                                     ),
+                                    maxLines: 2,
                                   ),
                                   CustomTextButton(
                                     text: 'Abrir',
                                     buttonPrimary: true,
-                                    width: 80,
+                                    width: 65,
                                     height: 32,
                                     onTap: () => launchAction(storeUrl),
                                   )

@@ -1,15 +1,11 @@
-import 'dart:io';
-
 import 'package:bro_app_to/components/custom_text_button.dart';
-import 'package:bro_app_to/src/registration/presentation/screens/select_camp.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/sign_up.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/src/auth/presentation/screens/sign_in.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'dart:html' as html;
 import '../utils/current_state.dart';
 import '../utils/language_localizations.dart';
 
@@ -23,7 +19,7 @@ class SignInPage extends StatefulWidget {
 class SignInPageState extends State<SignInPage> {
   bool isPressedSignIn = false;
   bool isPressedCreateAccount = false;
-  bool _showAlert = true;
+  bool _showAlert = false;
   String storeUrl = 'https://play.google.com/store';
   void changeLanguage(BuildContext context, String languageCode) async {
     LanguageLocalizations? localizations = LanguageLocalizations.of(context);
@@ -44,21 +40,19 @@ class SignInPageState extends State<SignInPage> {
   }
 
   void showPlatformToast() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    String userAgent = html.window.navigator.userAgent;
 
-    if (Platform.isAndroid) {
+    if (userAgent.contains('Android')) {
       setState(() {
         _showAlert = true;
         storeUrl = 'https://play.google.com/store';
       });
-    } else if (Platform.isIOS) {
+    } else if (userAgent.contains('iPhone') || userAgent.contains('iPad')) {
       setState(() {
         _showAlert = true;
         storeUrl = 'https://www.apple.com/app-store/';
       });
     }
-
-    // Ejemplo: launch(storeUrl);
   }
 
   void languageDialog(BuildContext context) {
@@ -167,133 +161,125 @@ class SignInPageState extends State<SignInPage> {
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 800),
-          child: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/Background_1.png'),
-                fit: BoxFit.fill,
-              ),
-              color: Color.fromARGB(26, 0, 0, 0),
-            ),
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-              appBar: AppBar(
-                backgroundColor: Colors.transparent,
-                automaticallyImplyLeading: false,
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        languageDialog(context);
-                      },
-                      child: const Icon(
-                        Icons.language,
-                        color: Color(0xff00E050),
-                        size: 32,
-                      ),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                ),
+                Positioned.fill(
+                  child: Image.asset(
+                    'assets/images/Background_1.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned(
+                  bottom: 150,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          width: 239,
+                          height: 117,
+                          fit: BoxFit.fill,
+                          'assets/icons/Logo.svg',
+                        ),
+                        const SizedBox(height: 35),
+                        CustomTextButton(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SignInScreen()),
+                              );
+                            },
+                            text: translations!['sign_in'],
+                            buttonPrimary: false,
+                            width: 304,
+                            height: 39),
+                        const SizedBox(height: 20),
+                        CustomTextButton(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SignUpScreen()),
+                            );
+                          },
+                          text: translations!['create_account'],
+                          buttonPrimary: true,
+                          width: 304,
+                          height: 39,
+                        ),
+                      ],
                     ),
-                  )
-                ],
-              ),
-              extendBody: true,
-              body: Stack(
-                alignment: Alignment.center,
-                children: [
+                  ),
+                ),
+                if (_showAlert)
                   Positioned(
-                    bottom: 150,
+                    top: 0,
                     left: 0,
                     right: 0,
-                    child: Center(
+                    child: Container(
+                      margin: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff3B3B3B),
+                        borderRadius: BorderRadius.circular(7),
+                      ),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgPicture.asset(
-                            width: 239,
-                            height: 117,
-                            fit: BoxFit.fill,
-                            'assets/icons/Logo.svg',
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: _closeAlert,
+                                child: const Icon(
+                                  Icons.close,
+                                  size: 24,
+                                  color: Color(0xFF00E050),
+                                ),
+                              ),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.asset(
+                                  'assets/images/logo_tiendas.png',
+                                  width: 55,
+                                  height: 55,
+                                ),
+                              ),
+                              const Text(
+                                "Bró Football Platform",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Montserrat',
+                                ),
+                                maxLines: 2,
+                              ),
+                              CustomTextButton(
+                                text: 'Abrir',
+                                buttonPrimary: true,
+                                width: 65,
+                                height: 32,
+                                onTap: () => launchAction(storeUrl),
+                              )
+                            ],
                           ),
-                          const SizedBox(height: 35),
-                          CustomTextButton(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SignInScreen()),
-                                );
-                              },
-                              text: translations!['sign_in'],
-                              buttonPrimary: false,
-                              width: 304,
-                              height: 39),
-                          const SizedBox(height: 20),
-                          CustomTextButton(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SignUpScreen()),
-                                );
-                              },
-                              text: translations!['create_account'],
-                              buttonPrimary: true,
-                              width: 304,
-                              height: 39),
                         ],
                       ),
                     ),
                   ),
-                  if (_showAlert)
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        margin: const EdgeInsets.all(8),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xff3B3B3B),
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.close),
-                                  iconSize: 32,
-                                  color: const Color(0xFF00E050),
-                                  onPressed: _closeAlert,
-                                ),
-                                Text(
-                                  "Bró Football Platform",
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Montserrat',
-                                  ),
-                                ),
-                                CustomTextButton(
-                                  text: 'Abrir',
-                                  buttonPrimary: true,
-                                  width: 80,
-                                  height: 32,
-                                  onTap: () => launchAction(storeUrl),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                ],
-              ),
+              ],
             ),
           ),
         ),

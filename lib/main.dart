@@ -87,7 +87,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: GetMaterialApp(
-        title: 'Bro app',
+        title: 'Bró Football Platform',
         debugShowCheckedModeBanner: false,
         navigatorKey: Get.key,
         theme: ThemeData(
@@ -103,8 +103,6 @@ class MyApp extends StatelessWidget {
         locale: const Locale('es', ''),
         initialRoute: RouteHelper.getInitialRoute(),
         getPages: RouteHelper.routes,
-        defaultTransition: Transition.leftToRightWithFade,
-        transitionDuration: const Duration(milliseconds: 350),
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
