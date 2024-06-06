@@ -74,106 +74,107 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
           ),
         ),
       ),
-        body: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 800),
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-            colors: [Color(0xFF212121), Color(0xFF121212)],
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF212121), Color(0xFF121212)],
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    children: [
+                      const SizedBox(height: 22),
+                      _buildListItem(translations!['ACCOUNT'], context, true,
+                          const CuentaPage()),
+                      _buildListItem(translations!['EDIT_INFORMATION'], context,
+                          true, const EditarInfoPlayer()),
+                      _buildListItem(
+                        translations!['change_pss'],
+                        context,
+                        true,
+                        Privacidad(),
+                        callback: () {
+                          showPassDialog(context);
+                        },
+                      ),
+                      if (!user.verificado)
+                        _buildListItem(
+                          translations!['verification_profile'],
+                          context,
+                          true,
+                          const VerificationScreen(
+                            newUser: false,
+                          ),
+                        ),
+                      const SizedBox(height: 15),
+                      _buildListItem(translations!['HelpCenter(FAQ)'], context,
+                          false, const ConfigProfilePlayer()),
+                      _buildListItem(translations!['Support'], context, false,
+                          const ConfigProfilePlayer()),
+                      _buildListItem(translations!['Notifications'], context,
+                          true, const Notificaciones()),
+                      _buildListItem(
+                        translations!['Affiliates'],
+                        context,
+                        true,
+                        const AfiliadosPlayer(),
+                        callback: () {
+                          user.verificadoReferral
+                              ? Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          user.referralCode != ""
+                                              ? const ListaReferidosScreen()
+                                              : const AfiliadosPlayer()),
+                                )
+                              : showVerificationReferral(context);
+                        },
+                      ),
+                      _buildListItem(translations!['ORDERS'], context, true,
+                          const Pedidos()),
+                      _buildListItem(translations!['SERVICES'], context, true,
+                          const Servicios()),
+                      _buildListItem(
+                        translations!['Language'],
+                        context,
+                        true,
+                        const Servicios(),
+                        callback: () {
+                          languageDialog(context);
+                        },
+                      ),
+                      const SizedBox(height: 15),
+                      _buildListItem(translations!['DeleteAccount'], context,
+                          false, const Servicios(), callback: () {
+                        handleDeleteAccount(context);
+                      }),
+                      _buildListItem(translations!['LogOut'], context, false,
+                          const Servicios(), callback: () {
+                        handleLogOut(context);
+                      }),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(bottom: 32.0),
+                  alignment: Alignment.center,
+                  child: Image.asset(
+                    'assets/images/Logo.png',
+                    width: 104,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView(
-                children: [
-                  const SizedBox(height: 22),
-                  _buildListItem(translations!['ACCOUNT'], context, true,
-                      const CuentaPage()),
-                  _buildListItem(translations!['EDIT_INFORMATION'], context,
-                      true, const EditarInfoPlayer()),
-                  _buildListItem(
-                    translations!['change_pss'],
-                    context,
-                    true,
-                    Privacidad(),
-                    callback: () {
-                      showPassDialog(context);
-                    },
-                  ),
-                  if (!user.verificado)
-                    _buildListItem(
-                      translations!['verification_profile'],
-                      context,
-                      true,
-                      const VerificationScreen(
-                        newUser: false,
-                      ),
-                    ),
-                  const SizedBox(height: 15),
-                  _buildListItem(translations!['HelpCenter(FAQ)'], context,
-                      false, const ConfigProfilePlayer()),
-                  _buildListItem(translations!['Support'], context, false,
-                      const ConfigProfilePlayer()),
-                  _buildListItem(translations!['Notifications'], context, true,
-                      const Notificaciones()),
-                  _buildListItem(
-                    translations!['Affiliates'],
-                    context,
-                    true,
-                    const AfiliadosPlayer(),
-                    callback: () {
-                      user.verificadoReferral
-                          ? Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => user.referralCode != ""
-                                      ? const ListaReferidosScreen()
-                                      : const AfiliadosPlayer()),
-                            )
-                          : showVerificationReferral(context);
-                    },
-                  ),
-                  _buildListItem(
-                      translations!['ORDERS'], context, true, const Pedidos()),
-                  _buildListItem(translations!['SERVICES'], context, true,
-                      const Servicios()),
-                  _buildListItem(
-                    translations!['Language'],
-                    context,
-                    true,
-                    const Servicios(),
-                    callback: () {
-                      languageDialog(context);
-                    },
-                  ),
-                  const SizedBox(height: 15),
-                  _buildListItem(translations!['DeleteAccount'], context, false,
-                      const Servicios(), callback: () {
-                    handleDeleteAccount(context);
-                  }),
-                  _buildListItem(translations!['LogOut'], context, false,
-                      const Servicios(), callback: () {
-                    handleLogOut(context);
-                  }),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(bottom: 32.0),
-              alignment: Alignment.center,
-              child: Image.asset(
-                'assets/images/Logo.png',
-                width: 104,
-              ),
-            ),
-          ],
-        ),
-      ),
-      ),
       ),
     );
   }
@@ -190,19 +191,19 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
     }
   }
 
- void languageDialog(BuildContext context) {
-  String currentLanguage =
-      LanguageLocalizations.of(context)?.currentLanguage ?? 'es';
-  showDialog(
-    context: context,
-    barrierDismissible: true,
-    builder: (BuildContext context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 800),
-          child: Center(
-            child: Container(
+  void languageDialog(BuildContext context) {
+    String currentLanguage =
+        LanguageLocalizations.of(context)?.currentLanguage ?? 'es';
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 400),
+            child: Center(
+                child: Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                 color: const Color(0xff3B3B3B),
@@ -220,17 +221,17 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  languageTile(context, 'en', translations!['english'],
+                  languageTile(context, 'en', translations!["english"],
                       currentLanguage == 'en'),
-                  languageTile(context, 'es', translations!['spanish'],
+                  languageTile(context, 'es', translations!["spanish"],
                       currentLanguage == 'es'),
-                  languageTile(context, 'de', translations!['german'],
+                  languageTile(context, 'de', translations!["german"],
                       currentLanguage == 'de'),
-                  languageTile(context, 'it', translations!['italian'],
+                  languageTile(context, 'it', translations!["italian"],
                       currentLanguage == 'it'),
-                  languageTile(context, 'fr', translations!['french'],
+                  languageTile(context, 'fr', translations!["french"],
                       currentLanguage == 'fr'),
-                  languageTile(context, 'pt', translations!['portuguese'],
+                  languageTile(context, 'pt', translations!["portuguese"],
                       currentLanguage == 'pt'),
                   const SizedBox(
                     height: 10,
@@ -248,9 +249,8 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                   ),
                 ],
               ),
-            )
+            )),
           ),
-        ),
         );
       },
     );
@@ -338,94 +338,95 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
   }
 
   void handleDeleteAccount(BuildContext context) {
-  showDialog(
-    context: context,
-    barrierColor: Colors.black.withOpacity(0.7),
-    builder: (BuildContext context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.all(35),
-              decoration: BoxDecoration(
-                color: const Color(0xff3B3B3B),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
-                    blurRadius: 10,
-                    offset: const Offset(5, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    width: double.maxFinite,
-                    child: Text(
-                      translations!['ConfirmDeleteAccount'],
-                      style: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
-                      textAlign: TextAlign.center,
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.7),
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(35),
+                decoration: BoxDecoration(
+                  color: const Color(0xff3B3B3B),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: 10,
+                      offset: const Offset(5, 4),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CustomTextButton(
-                        onTap: () => Navigator.of(context).pop(),
-                        text: 'NO',
-                        buttonPrimary: false,
-                        width: 90,
-                        height: 35,
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      width: double.maxFinite,
+                      child: Text(
+                        translations!['ConfirmDeleteAccount'],
+                        style: const TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      CustomTextButton(
-                        onTap: () async {
-                          final playerProvider = Provider.of<PlayerProvider>(
-                              context,
-                              listen: false);
-                          final userProvider =
-                              Provider.of<UserProvider>(context, listen: false);
-                          final userId = userProvider.getCurrentUser().userId;
-                          final url = Uri.parse(
-                              '${ApiConstants.baseUrl}/auth/player/$userId');
-                          try {
-                            final response = await http.delete(url);
-                            if (response.statusCode == 200) {
-                              playerProvider.logOut();
-                              userProvider.logOut();
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context, '/intro', (route) => false);
-                            } else {
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CustomTextButton(
+                          onTap: () => Navigator.of(context).pop(),
+                          text: 'NO',
+                          buttonPrimary: false,
+                          width: 90,
+                          height: 35,
+                        ),
+                        CustomTextButton(
+                          onTap: () async {
+                            final playerProvider = Provider.of<PlayerProvider>(
+                                context,
+                                listen: false);
+                            final userProvider = Provider.of<UserProvider>(
+                                context,
+                                listen: false);
+                            final userId = userProvider.getCurrentUser().userId;
+                            final url = Uri.parse(
+                                '${ApiConstants.baseUrl}/auth/player/$userId');
+                            try {
+                              final response = await http.delete(url);
+                              if (response.statusCode == 200) {
+                                playerProvider.logOut();
+                                userProvider.logOut();
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, '/intro', (route) => false);
+                              } else {
+                                debugPrint(
+                                    'Error al eliminar el usuario: ${response.statusCode}');
+                              }
+                            } catch (error) {
                               debugPrint(
-                                  'Error al eliminar el usuario: ${response.statusCode}');
+                                  'Error al realizar la solicitud DELETE: $error');
                             }
-                          } catch (error) {
-                            debugPrint(
-                                'Error al realizar la solicitud DELETE: $error');
-                          }
-                        },
-                        text: 'SÍ',
-                        buttonPrimary: true,
-                        width: 90,
-                        height: 35,
-                      ),
-                    ],
-                  ),
-                ],
+                          },
+                          text: 'SÍ',
+                          buttonPrimary: true,
+                          width: 90,
+                          height: 35,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
         );
       },
     );

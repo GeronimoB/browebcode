@@ -92,83 +92,81 @@ class _ConfigProfileState extends State<ConfigProfile> {
                   ],
                 ),
               ),
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  children: [
-                    const SizedBox(height: 22),
-                    _buildListItem(
-                        translations!["EditInformation"], context, true, EditarInfo()),
-                    _buildListItem(
-                      translations!['change_pss'],
-                      context,
-                      true,
-                      Privacidad(),
-                      callback: () {
-                        showPassDialog(context);
-                      },
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        const SizedBox(height: 22),
+                        _buildListItem(translations!["EditInformation"],
+                            context, true, EditarInfo()),
+                        _buildListItem(
+                          translations!['change_pss'],
+                          context,
+                          true,
+                          Privacidad(),
+                          callback: () {
+                            showPassDialog(context);
+                          },
+                        ),
+                        const SizedBox(height: 15),
+                        _buildListItem(translations!["HelpCenter(FAQ)"],
+                            context, false, const ConfigProfile()),
+                        _buildListItem(translations!["Support"], context, false,
+                            const ConfigProfile()),
+                        _buildListItem(translations!["Notifications"], context,
+                            true, const Notificaciones()),
+                        _buildListItem(
+                          translations!["Affiliates"],
+                          context,
+                          true,
+                          const AfiliadosPlayer(),
+                          callback: () {
+                            user.verificadoReferral
+                                ? Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            user.referralCode != ""
+                                                ? const ListaReferidosScreen()
+                                                : const AfiliadosPlayer()),
+                                  )
+                                : showVerificationReferral(context);
+                          },
+                        ),
+                        _buildListItem(
+                          translations!["Language"],
+                          context,
+                          true,
+                          const Servicios(),
+                          callback: () {
+                            languageDialog(context);
+                          },
+                        ),
+                        const SizedBox(height: 15),
+                        _buildListItem(translations!["DeleteAccount"], context,
+                            false, const Servicios(), callback: () {
+                          handleDeleteAccount(context);
+                        }),
+                        _buildListItem(translations!["LogOut"], context, false,
+                            const Servicios(), callback: () {
+                          handleLogOut(context);
+                        }),
+                      ],
                     ),
-                    const SizedBox(height: 15),
-                    _buildListItem(translations!["HelpCenter(FAQ)"], context, false,
-                        const ConfigProfile()),
-                    _buildListItem(
-                        translations!["Support"], context, false, const ConfigProfile()),
-                    _buildListItem(translations!["Notifications"], context, true,
-                        const Notificaciones()),
-                    _buildListItem(
-                      translations!["Affiliates"],
-                      context,
-                      true,
-                      const AfiliadosPlayer(),
-                      callback: () {
-                        user.verificadoReferral
-                            ? Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        user.referralCode != ""
-                                            ? const ListaReferidosScreen()
-                                            : const AfiliadosPlayer()),
-                              )
-                            : showVerificationReferral(context);
-                      },
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 32.0),
+                    alignment: Alignment.center,
+                    child: SvgPicture.asset(
+                      'assets/icons/Logo.svg',
+                      width: 104,
                     ),
-                    _buildListItem(
-                      translations!["Language"],
-                      context,
-                      true,
-                      const Servicios(),
-                      callback: () {
-                        languageDialog(context);
-                      },
-                    ),
-                    const SizedBox(height: 15),
-                    _buildListItem(
-                        translations!["DeleteAccount"], context, false, const Servicios(),
-                        callback: () {
-                      handleDeleteAccount(context);
-                    }),
-                    _buildListItem(
-                        translations!["LogOut"], context, false, const Servicios(),
-                        callback: () {
-                      handleLogOut(context);
-                    }),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Container(
-                padding: const EdgeInsets.only(bottom: 32.0),
-                alignment: Alignment.center,
-                child: SvgPicture.asset(
-                  'assets/icons/Logo.svg',
-                  width: 104,
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
         ),
       ),
     );
@@ -262,228 +260,234 @@ class _ConfigProfileState extends State<ConfigProfile> {
     final formKey = GlobalKey<FormState>();
     final formKey2 = GlobalKey<FormState>();
     final formKey3 = GlobalKey<FormState>();
-  showDialog(
-    context: context,
-    barrierColor: Colors.black.withOpacity(0.7),
-    builder: (BuildContext context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Center(
-            child: Container(
-              padding: const EdgeInsets.all(35),
-              decoration: BoxDecoration(
-                color: const Color(0xff3B3B3B),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
-                    blurRadius: 10,
-                    offset: const Offset(5, 4),
-                  ),
-                ],
-              ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  translations!['change_pss'],
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Color(0xff00E050),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Form(
-                  autovalidateMode: AutovalidateMode.always,
-                  key: formKey,
-                  child: TextFormField(
-                    controller: oldPasswordCtlr,
-                    decoration: InputDecoration(
-                      labelText: translations!['old_pss'],
-                      labelStyle: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        fontSize: 16,
-                      ),
-                      errorStyle: const TextStyle(
-                        color: Color.fromARGB(255, 255, 106, 106),
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        fontSize: 11,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 5),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color(0xFF00E050), width: 2),
-                      ),
-                    ),
-                    style: const TextStyle(
-                        color: Colors.white, fontFamily: 'Montserrat'),
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return translations!['enter_password'];
-                      }
-
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Form(
-                  autovalidateMode: AutovalidateMode.always,
-                  key: formKey2,
-                  child: TextFormField(
-                    controller: newPasswordCtlr,
-                    decoration: InputDecoration(
-                      labelText: translations!['new_pss'],
-                      labelStyle: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        fontSize: 16,
-                      ),
-                      errorStyle: const TextStyle(
-                        color: Color.fromARGB(255, 255, 106, 106),
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        fontSize: 11,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 5),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color(0xFF00E050), width: 2),
-                      ),
-                    ),
-                    style: const TextStyle(
-                        color: Colors.white, fontFamily: 'Montserrat'),
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return translations!['enter_password'];
-                      }
-                      if (value.length < 8) {
-                        return translations!['pssw_8_characters'];
-                      }
-                      if (!value.contains(RegExp(r'[A-Z]'))) {
-                        return translations!['pssw_mayus_letter'];
-                      }
-                      if (!value.contains(RegExp(r'[a-z]'))) {
-                        return translations!['pssw_minus_letter'];
-                      }
-                      if (!value.contains(RegExp(r'[0-9]'))) {
-                        return translations!['pssw_number'];
-                      }
-
-                      if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                        return translations!['pssw_special'];
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Form(
-                  autovalidateMode: AutovalidateMode.always,
-                  key: formKey3,
-                  child: TextFormField(
-                    controller: confirmPasswordCtlr,
-                    decoration: InputDecoration(
-                      labelText: translations!['new_pss_confirmation'],
-                      labelStyle: const TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        fontSize: 16,
-                      ),
-                      errorStyle: const TextStyle(
-                        color: Color.fromARGB(255, 255, 106, 106),
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        fontSize: 11,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 5),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide:
-                            BorderSide(color: Color(0xFF00E050), width: 2),
-                      ),
-                    ),
-                    style: const TextStyle(
-                        color: Colors.white, fontFamily: 'Montserrat'),
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return translations!['enter_password'];
-                      }
-                      if (value != newPasswordCtlr.text) {
-                        return translations!['pss_dont_match'];
-                      }
-
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 35),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomTextButton(
-                      onTap: () => Navigator.of(context).pop(),
-                      text: translations!['Cancelar'],
-                      buttonPrimary: false,
-                      width: 90,
-                      height: 27,
-                    ),
-                    CustomTextButton(
-                      onTap: () async {
-                        final userProvider =
-                            Provider.of<UserProvider>(context, listen: false);
-                        final id =
-                            userProvider.getCurrentUser().userId.toString();
-                        final response =
-                            await ApiClient().post('auth/change-pssw', {
-                          "UserId": id,
-                          "OldPassword": oldPasswordCtlr.text,
-                          "NewPassword": newPasswordCtlr.text
-                        });
-                        if (response.statusCode == 200) {
-                          final prefs = await SharedPreferences.getInstance();
-                          prefs.setString('username', "");
-                          prefs.setString('password', "");
-                          Navigator.of(context).pop();
-                          showSucessSnackBar(
-                              context, translations!['update_pss_scss']);
-                        } else {
-                          final jsonData = json.decode(response.body);
-                          final errorMessage = jsonData["error"];
-                          Navigator.of(context).pop();
-                          showErrorSnackBar(context, errorMessage);
-                        }
-                      },
-                      text: translations!['save'],
-                      buttonPrimary: true,
-                      width: 90,
-                      height: 27,
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.7),
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(35),
+                decoration: BoxDecoration(
+                  color: const Color(0xff3B3B3B),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: 10,
+                      offset: const Offset(5, 4),
                     ),
                   ],
                 ),
-              ],
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      translations!['change_pss'],
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        color: Color(0xff00E050),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Form(
+                      autovalidateMode: AutovalidateMode.always,
+                      key: formKey,
+                      child: TextFormField(
+                        controller: oldPasswordCtlr,
+                        decoration: InputDecoration(
+                          labelText: translations!['old_pss'],
+                          labelStyle: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            fontSize: 16,
+                          ),
+                          errorStyle: const TextStyle(
+                            color: Color.fromARGB(255, 255, 106, 106),
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            fontSize: 11,
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 5),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Color(0xFF00E050), width: 2),
+                          ),
+                        ),
+                        style: const TextStyle(
+                            color: Colors.white, fontFamily: 'Montserrat'),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return translations!['enter_password'];
+                          }
+
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Form(
+                      autovalidateMode: AutovalidateMode.always,
+                      key: formKey2,
+                      child: TextFormField(
+                        controller: newPasswordCtlr,
+                        decoration: InputDecoration(
+                          labelText: translations!['new_pss'],
+                          labelStyle: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            fontSize: 16,
+                          ),
+                          errorStyle: const TextStyle(
+                            color: Color.fromARGB(255, 255, 106, 106),
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            fontSize: 11,
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 5),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Color(0xFF00E050), width: 2),
+                          ),
+                        ),
+                        style: const TextStyle(
+                            color: Colors.white, fontFamily: 'Montserrat'),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return translations!['enter_password'];
+                          }
+                          if (value.length < 8) {
+                            return translations!['pssw_8_characters'];
+                          }
+                          if (!value.contains(RegExp(r'[A-Z]'))) {
+                            return translations!['pssw_mayus_letter'];
+                          }
+                          if (!value.contains(RegExp(r'[a-z]'))) {
+                            return translations!['pssw_minus_letter'];
+                          }
+                          if (!value.contains(RegExp(r'[0-9]'))) {
+                            return translations!['pssw_number'];
+                          }
+
+                          if (!value
+                              .contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                            return translations!['pssw_special'];
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Form(
+                      autovalidateMode: AutovalidateMode.always,
+                      key: formKey3,
+                      child: TextFormField(
+                        controller: confirmPasswordCtlr,
+                        decoration: InputDecoration(
+                          labelText: translations!['new_pss_confirmation'],
+                          labelStyle: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            fontSize: 16,
+                          ),
+                          errorStyle: const TextStyle(
+                            color: Color.fromARGB(255, 255, 106, 106),
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FontStyle.italic,
+                            fontSize: 11,
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 5),
+                          enabledBorder: const UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Color(0xFF00E050), width: 2),
+                          ),
+                        ),
+                        style: const TextStyle(
+                            color: Colors.white, fontFamily: 'Montserrat'),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return translations!['enter_password'];
+                          }
+                          if (value != newPasswordCtlr.text) {
+                            return translations!['pss_dont_match'];
+                          }
+
+                          return null;
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 35),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CustomTextButton(
+                          onTap: () => Navigator.of(context).pop(),
+                          text: translations!['Cancelar'],
+                          buttonPrimary: false,
+                          width: 90,
+                          height: 27,
+                        ),
+                        CustomTextButton(
+                          onTap: () async {
+                            final userProvider = Provider.of<UserProvider>(
+                                context,
+                                listen: false);
+                            final id =
+                                userProvider.getCurrentUser().userId.toString();
+                            final response =
+                                await ApiClient().post('auth/change-pssw', {
+                              "UserId": id,
+                              "OldPassword": oldPasswordCtlr.text,
+                              "NewPassword": newPasswordCtlr.text
+                            });
+                            if (response.statusCode == 200) {
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.setString('username', "");
+                              prefs.setString('password', "");
+                              Navigator.of(context).pop();
+                              showSucessSnackBar(
+                                  context, translations!['update_pss_scss']);
+                            } else {
+                              final jsonData = json.decode(response.body);
+                              final errorMessage = jsonData["error"];
+                              Navigator.of(context).pop();
+                              showErrorSnackBar(context, errorMessage);
+                            }
+                          },
+                          text: translations!['save'],
+                          buttonPrimary: true,
+                          width: 90,
+                          height: 27,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-          ),
-        ),
         );
       },
     );
@@ -504,16 +508,16 @@ class _ConfigProfileState extends State<ConfigProfile> {
   void languageDialog(BuildContext context) {
     String currentLanguage =
         LanguageLocalizations.of(context)?.currentLanguage ?? 'es';
-  showDialog(
-    context: context,
-    barrierDismissible: true,
-    builder: (BuildContext context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 800),
-          child: Center(
-            child: Container(
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 400),
+            child: Center(
+                child: Container(
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                 color: const Color(0xff3B3B3B),
@@ -531,18 +535,18 @@ class _ConfigProfileState extends State<ConfigProfile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  languageTile(
-                      context, 'en', translations!["english"], currentLanguage == 'en'),
-                  languageTile(
-                      context, 'es', translations!["spanish"], currentLanguage == 'es'),
-                  languageTile(
-                      context, 'de', translations!["german"], currentLanguage == 'de'),
-                  languageTile(
-                      context, 'it', translations!["italian"], currentLanguage == 'it'),
-                  languageTile(
-                      context, 'fr', translations!["french"], currentLanguage == 'fr'),
-                  languageTile(
-                      context, 'pt', translations!["portuguese"], currentLanguage == 'pt'),
+                  languageTile(context, 'en', translations!["english"],
+                      currentLanguage == 'en'),
+                  languageTile(context, 'es', translations!["spanish"],
+                      currentLanguage == 'es'),
+                  languageTile(context, 'de', translations!["german"],
+                      currentLanguage == 'de'),
+                  languageTile(context, 'it', translations!["italian"],
+                      currentLanguage == 'it'),
+                  languageTile(context, 'fr', translations!["french"],
+                      currentLanguage == 'fr'),
+                  languageTile(context, 'pt', translations!["portuguese"],
+                      currentLanguage == 'pt'),
                   const SizedBox(
                     height: 10,
                   ),
@@ -559,9 +563,8 @@ class _ConfigProfileState extends State<ConfigProfile> {
                   ),
                 ],
               ),
-            )
-        ),
-        ),
+            )),
+          ),
         );
       },
     );
