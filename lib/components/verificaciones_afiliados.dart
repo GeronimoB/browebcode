@@ -103,6 +103,7 @@ class VerificationReferralState extends State<VerificationReferral> {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
+        constraints: const BoxConstraints(maxWidth: 400),
         padding: const EdgeInsets.all(35),
         decoration: BoxDecoration(
           color: const Color(0xff3B3B3B),

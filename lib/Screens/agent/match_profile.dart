@@ -87,140 +87,143 @@ class _MatchProfileState extends State<MatchProfile> {
                 colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
               ),
             ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          centerTitle: true,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Color(0xFF00E050),
-              size: 32,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
-        extendBody: true,
-        body: FutureBuilder(
-          future: _fetchUserData(widget.userId),
-          builder: (context, AsyncSnapshot<PlayerFullModel> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: AppBar(
+                scrolledUnderElevation: 0,
+                centerTitle: true,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Color(0xFF00E050),
+                    size: 32,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                  child: Text(
-                translations!["ErrorLoadingUserInfo"],
-                style: const TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ));
-            } else {
-              final userData = snapshot.data!;
-              DateTime? birthDate = userData.birthDate;
+              ),
+              extendBody: true,
+              body: FutureBuilder(
+                future: _fetchUserData(widget.userId),
+                builder: (context, AsyncSnapshot<PlayerFullModel> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                        child: Text(
+                      translations!["ErrorLoadingUserInfo"],
+                      style: const TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ));
+                  } else {
+                    final userData = snapshot.data!;
+                    DateTime? birthDate = userData.birthDate;
 
-              String formattedDate = birthDate != null
-                  ? DateFormat('dd-MM-yyyy').format(birthDate)
-                  : '';
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(0),
-                child: SizedBox(
-                  height: availableHeight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ClipOval(
-                        child: CachedNetworkImage(
-                          placeholder: (context, url) =>
-                              AvatarPlaceholder(width / 2),
-                          errorWidget: (context, error, stackTrace) {
-                            return Image.asset(
-                              'assets/images/fot.png',
-                              fit: BoxFit.fill,
-                              width: width / 2,
-                              height: width / 2,
-                            );
-                          },
-                          imageUrl: userData.userImage ?? '',
-                          fit: BoxFit.fill,
-                          width: width / 2,
-                          height: width / 2,
+                    String formattedDate = birthDate != null
+                        ? DateFormat('dd-MM-yyyy').format(birthDate)
+                        : '';
+                    return SingleChildScrollView(
+                      padding: const EdgeInsets.all(0),
+                      child: SizedBox(
+                        height: availableHeight,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ClipOval(
+                              child: CachedNetworkImage(
+                                placeholder: (context, url) =>
+                                    AvatarPlaceholder(400 / 2),
+                                errorWidget: (context, error, stackTrace) {
+                                  return Image.asset(
+                                    'assets/images/fot.png',
+                                    fit: BoxFit.fill,
+                                    width: 400 / 2,
+                                    height: 400 / 2,
+                                  );
+                                },
+                                imageUrl: userData.userImage ?? '',
+                                fit: BoxFit.fill,
+                                width: 400 / 2,
+                                height: 400 / 2,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${userData.name} ${userData.lastName}',
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Montserrat',
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                if (userData.verificado)
+                                  const Icon(
+                                    Icons.verified,
+                                    color: Color(0xFF00E050),
+                                    size: 24,
+                                  ),
+                              ],
+                            ),
+                            _buildDataRow(context,
+                                '${translations!["BirthDate"]}: $formattedDate'),
+                            _buildDataRow(context,
+                                '${translations!["state_label"]}: ${userData.provincia}, ${userData.pais}'),
+                            _buildDataRow(context,
+                                '${translations!["height_label"]}: ${userData.altura}'),
+                            _buildDataRow(context,
+                                '${translations!["dominant_feet"]}: ${userData.pieDominante}'),
+                            _buildDataRow(context,
+                                '${translations!["position_label"]}: ${userData.position}'),
+                            _buildDataRow(context,
+                                '${translations!["Categorys"]}: ${userData.categoria}'),
+                            _buildDataRow(context,
+                                '${translations!["SportsSchool"]}: ${userData.club}'),
+                            _buildDataRow(context,
+                                '${translations!["IndividualAchievements"]}: ${userData.logrosIndividuales}'),
+                            _buildDataRow(context,
+                                '${translations!["Selections"]}: ${userData.seleccionNacional} ${userData.categoriaSeleccion}'),
+                            const SizedBox(height: 20),
+                            CustomTextButton(
+                                onTap: () {
+                                  final friend = UserModel.fromPlayer(userData);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ChatPage(
+                                                friend: friend,
+                                              )));
+                                },
+                                text: translations!["goToChat"],
+                                buttonPrimary: false,
+                                width: 154,
+                                height: 40),
+                          ],
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${userData.name} ${userData.lastName}',
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Montserrat',
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          if (userData.verificado)
-                            const Icon(
-                              Icons.verified,
-                              color: Color(0xFF00E050),
-                              size: 24,
-                            ),
-                        ],
-                      ),
-                      _buildDataRow(
-                          context, '${translations!["BirthDate"]}: $formattedDate'),
-                      _buildDataRow(context,
-                          '${translations!["state_label"]}: ${userData.provincia}, ${userData.pais}'),
-                      _buildDataRow(context, '${translations!["height_label"]}: ${userData.altura}'),
-                      _buildDataRow(
-                          context, '${translations!["dominant_feet"]}: ${userData.pieDominante}'),
-                      _buildDataRow(context, '${translations!["position_label"]}: ${userData.position}'),
-                      _buildDataRow(
-                          context, '${translations!["Categorys"]}: ${userData.categoria}'),
-                      _buildDataRow(
-                          context, '${translations!["SportsSchool"]}: ${userData.club}'),
-                      _buildDataRow(context,
-                          '${translations!["IndividualAchievements"]}: ${userData.logrosIndividuales}'),
-                      _buildDataRow(context,
-                          '${translations!["Selections"]}: ${userData.seleccionNacional} ${userData.categoriaSeleccion}'),
-                      const SizedBox(height: 20),
-                      CustomTextButton(
-                          onTap: () {
-                            final friend = UserModel.fromPlayer(userData);
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChatPage(
-                                          friend: friend,
-                                        )));
-                          },
-                          text: translations!["goToChat"],
-                          buttonPrimary: false,
-                          width: 154,
-                          height: 40),
-                    ],
-                  ),
-                ),
-              );
-            }
-          },
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
         ),
-      ),
-      ),
-      ),
       ),
     );
   }

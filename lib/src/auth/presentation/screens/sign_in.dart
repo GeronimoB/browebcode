@@ -3,6 +3,7 @@ import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/olvide_contrasena.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -89,57 +90,56 @@ class _SignInScreenState extends State<SignInScreen> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
-            backgroundColor: Colors.transparent,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 400),
-              child: Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: const Color(0xff3B3B3B),
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.4),
-                      blurRadius: 10,
-                      offset: const Offset(5, 4),
-                    ),
-                  ],
+          backgroundColor: Colors.transparent,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: const Color(0xff3B3B3B),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 10,
+                  offset: const Offset(5, 4),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    languageTile(context, 'en', translations!["english"],
-                        currentLanguage == 'en'),
-                    languageTile(context, 'es', translations!["spanish"],
-                        currentLanguage == 'es'),
-                    languageTile(context, 'de', translations!["german"],
-                        currentLanguage == 'de'),
-                    languageTile(context, 'it', translations!["italian"],
-                        currentLanguage == 'it'),
-                    languageTile(context, 'fr', translations!["french"],
-                        currentLanguage == 'fr'),
-                    languageTile(context, 'pt', translations!["portuguese"],
-                        currentLanguage == 'pt'),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Center(
-                      child: CustomTextButton(
-                        text: 'Cerrar',
-                        buttonPrimary: true,
-                        width: 120,
-                        height: 35,
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
-                  ],
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                languageTile(context, 'en', translations!["english"],
+                    currentLanguage == 'en'),
+                languageTile(context, 'es', translations!["spanish"],
+                    currentLanguage == 'es'),
+                languageTile(context, 'de', translations!["german"],
+                    currentLanguage == 'de'),
+                languageTile(context, 'it', translations!["italian"],
+                    currentLanguage == 'it'),
+                languageTile(context, 'fr', translations!["french"],
+                    currentLanguage == 'fr'),
+                languageTile(context, 'pt', translations!["portuguese"],
+                    currentLanguage == 'pt'),
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-            ));
+                Center(
+                  child: CustomTextButton(
+                    text: translations!["close"],
+                    buttonPrimary: true,
+                    width: 120,
+                    height: 35,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }
@@ -183,30 +183,9 @@ class _SignInScreenState extends State<SignInScreen> {
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 800),
           child: Scaffold(
-              appBar: AppBar(
-                scrolledUnderElevation: 0,
-                automaticallyImplyLeading: false,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        languageDialog(context);
-                      },
-                      child: const Icon(
-                        Icons.language,
-                        color: Color(0xff00E050),
-                        size: 32,
-                      ),
-                    ),
-                  )
-                ],
-              ),
               backgroundColor: Colors.transparent,
-              extendBody: true,
               body: Stack(
+                alignment: Alignment.center,
                 children: [
                   Container(
                     color: const Color.fromARGB(255, 0, 0, 0),
@@ -401,6 +380,22 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          languageDialog(context);
+                        },
+                        child: const Icon(
+                          Icons.language,
+                          color: Color(0xff00E050),
+                          size: 32,
+                        ),
                       ),
                     ),
                   ),

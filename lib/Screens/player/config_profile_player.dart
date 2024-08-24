@@ -200,56 +200,53 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          child: ConstrainedBox(
+          child: Container(
             constraints: BoxConstraints(maxWidth: 400),
-            child: Center(
-                child: Container(
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: const Color(0xff3B3B3B),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
-                    blurRadius: 10,
-                    offset: const Offset(5, 4),
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: const Color(0xff3B3B3B),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 10,
+                  offset: const Offset(5, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                languageTile(context, 'en', translations!["english"],
+                    currentLanguage == 'en'),
+                languageTile(context, 'es', translations!["spanish"],
+                    currentLanguage == 'es'),
+                languageTile(context, 'de', translations!["german"],
+                    currentLanguage == 'de'),
+                languageTile(context, 'it', translations!["italian"],
+                    currentLanguage == 'it'),
+                languageTile(context, 'fr', translations!["french"],
+                    currentLanguage == 'fr'),
+                languageTile(context, 'pt', translations!["portuguese"],
+                    currentLanguage == 'pt'),
+                const SizedBox(
+                  height: 10,
+                ),
+                Center(
+                  child: CustomTextButton(
+                    text: translations!["close"],
+                    buttonPrimary: true,
+                    width: 120,
+                    height: 35,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  languageTile(context, 'en', translations!["english"],
-                      currentLanguage == 'en'),
-                  languageTile(context, 'es', translations!["spanish"],
-                      currentLanguage == 'es'),
-                  languageTile(context, 'de', translations!["german"],
-                      currentLanguage == 'de'),
-                  languageTile(context, 'it', translations!["italian"],
-                      currentLanguage == 'it'),
-                  languageTile(context, 'fr', translations!["french"],
-                      currentLanguage == 'fr'),
-                  languageTile(context, 'pt', translations!["portuguese"],
-                      currentLanguage == 'pt'),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Center(
-                    child: CustomTextButton(
-                      text: translations!['close'],
-                      buttonPrimary: true,
-                      width: 120,
-                      height: 35,
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            )),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -345,7 +342,7 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
         return Dialog(
           backgroundColor: Colors.transparent,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 800),
+            constraints: const BoxConstraints(maxWidth: 400),
             child: Center(
               child: Container(
                 padding: const EdgeInsets.all(35),
@@ -446,6 +443,7 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
         return Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
             padding: const EdgeInsets.all(35),
             decoration: BoxDecoration(
               color: const Color(0xff3B3B3B),
@@ -559,9 +557,6 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                         return translations!['pssw_number'];
                       }
 
-                      if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                        return translations!['pssw_special'];
-                      }
                       return null;
                     },
                   ),

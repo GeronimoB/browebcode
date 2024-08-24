@@ -132,8 +132,7 @@ class ChatPageState extends State<ChatPage> {
     double height = MediaQuery.of(context).size.height;
     Sizes.initSizes(width, height);
     String fullName = '${widget.friend.name} ${widget.friend.lastName}';
-    String trimmedName =
-        fullName.length > 15 ? fullName.substring(0, 15) + '...' : fullName;
+    String trimmedName = fullName;
 
     return WillPopScope(
       onWillPop: () async {
@@ -162,167 +161,169 @@ class ChatPageState extends State<ChatPage> {
                 ],
               ),
             ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          extendBody: true,
-          appBar: AppBar(
-            scrolledUnderElevation: 0,
-            toolbarHeight: 100,
-            backgroundColor: Colors.transparent,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                ClipOval(
-                  child: CachedNetworkImage(
-                    placeholder: (context, url) => AvatarPlaceholder(40),
-                    errorWidget: (context, error, stackTrace) {
-                      return Image.asset(
-                        'assets/images/fot.png',
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              extendBody: true,
+              appBar: AppBar(
+                scrolledUnderElevation: 0,
+                toolbarHeight: 100,
+                backgroundColor: Colors.transparent,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    ClipOval(
+                      child: CachedNetworkImage(
+                        placeholder: (context, url) => AvatarPlaceholder(40),
+                        errorWidget: (context, error, stackTrace) {
+                          return Image.asset(
+                            'assets/images/fot.png',
+                            fit: BoxFit.fill,
+                            width: 40,
+                            height: 40,
+                          );
+                        },
+                        imageUrl: widget.friend.imageUrl,
                         fit: BoxFit.fill,
                         width: 40,
                         height: 40,
-                      );
-                    },
-                    imageUrl: widget.friend.imageUrl,
-                    fit: BoxFit.fill,
-                    width: 40,
-                    height: 40,
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Row(
-                  children: [
-                    Text(
-                      trimmedName,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Montserrat',
-                        color: Colors.white,
                       ),
-                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(
-                      width: 5,
+                    const SizedBox(width: 20),
+                    Row(
+                      children: [
+                        Text(
+                          trimmedName,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat',
+                            color: Colors.white,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        if (widget.friend.verificado)
+                          const Icon(
+                            Icons.verified,
+                            color: Colors.white,
+                            size: 16,
+                          ),
+                      ],
                     ),
-                    if (widget.friend.verificado)
-                      const Icon(
-                        Icons.verified,
-                        color: Colors.white,
-                        size: 16,
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.more_horiz,
+                        color: Color(0xFF00E050),
+                        size: 32,
                       ),
+                      onPressed: () {
+                        _showCustomMenu(context);
+                      },
+                    ),
                   ],
                 ),
-                const Spacer(),
-                IconButton(
+                leading: IconButton(
                   icon: const Icon(
-                    Icons.more_horiz,
+                    Icons.arrow_back,
                     color: Color(0xFF00E050),
                     size: 32,
                   ),
                   onPressed: () {
-                    _showCustomMenu(context);
+                    final userProvider =
+                        Provider.of<UserProvider>(context, listen: false);
+                    final user = userProvider.getCurrentUser();
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                          builder: (context) => user.isAgent
+                              ? const CustomBottomNavigationBar(initialIndex: 2)
+                              : const CustomBottomNavigationBarPlayer(
+                                  initialIndex: 3)),
+                    );
                   },
                 ),
-              ],
-            ),
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Color(0xFF00E050),
-                size: 32,
               ),
-              onPressed: () {
-                final userProvider =
-                    Provider.of<UserProvider>(context, listen: false);
-                final user = userProvider.getCurrentUser();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) => user.isAgent
-                          ? const CustomBottomNavigationBar(initialIndex: 2)
-                          : const CustomBottomNavigationBarPlayer(
-                              initialIndex: 3)),
-                );
-              },
-            ),
-          ),
-          body: Column(
-            children: [
-              Expanded(
-                child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection("users")
-                        .doc(_buildSenderId())
-                        .collection('messages')
-                        .doc(_buildReceiverId())
-                        .collection('chats')
-                        .orderBy("date", descending: true)
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data.docs.length < 1) {
-                          return Center(
-                            child: Text(
-                              translations!["greet"],
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24.0,
-                              ),
+              body: Column(
+                children: [
+                  Expanded(
+                    child: StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(_buildSenderId())
+                            .collection('messages')
+                            .doc(_buildReceiverId())
+                            .collection('chats')
+                            .orderBy("date", descending: true)
+                            .snapshots(),
+                        builder: (context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data.docs.length < 1) {
+                              return Center(
+                                child: Text(
+                                  translations!["greet"],
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24.0,
+                                  ),
+                                ),
+                              );
+                            }
+                            return ListView.builder(
+                                controller: _scrollController,
+                                itemCount: snapshot.data.docs.length,
+                                physics: const BouncingScrollPhysics(),
+                                reverse: true,
+                                itemBuilder: (context, index) {
+                                  Timestamp timestamp =
+                                      snapshot.data.docs[index]['date'];
+                                  DateTime dateTime = timestamp.toDate();
+                                  if (snapshot.data.docs[index]['type'] ==
+                                      "text") {
+                                    return chatItem(
+                                      snapshot.data.docs[index]['message'],
+                                      dateTime,
+                                      snapshot.data.docs[index]['sent'],
+                                      snapshot.data.docs[index]['read'],
+                                    );
+                                  } else if (snapshot.data.docs[index]
+                                          ['type'] ==
+                                      "image") {
+                                    return imageItem(
+                                      context,
+                                      snapshot.data.docs[index]['url'],
+                                      dateTime,
+                                      snapshot.data.docs[index]['sent'],
+                                      snapshot.data.docs[index]['read'],
+                                    );
+                                  } else {
+                                    return fileItem(
+                                        snapshot.data.docs[index]['url'],
+                                        dateTime,
+                                        snapshot.data.docs[index]['sent'],
+                                        snapshot.data.docs[index]['read'],
+                                        context);
+                                  }
+                                });
+                          }
+                          return const Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color(0xFF05FF00)),
                             ),
                           );
-                        }
-                        return ListView.builder(
-                            controller: _scrollController,
-                            itemCount: snapshot.data.docs.length,
-                            physics: const BouncingScrollPhysics(),
-                            reverse: true,
-                            itemBuilder: (context, index) {
-                              Timestamp timestamp =
-                                  snapshot.data.docs[index]['date'];
-                              DateTime dateTime = timestamp.toDate();
-                              if (snapshot.data.docs[index]['type'] == "text") {
-                                return chatItem(
-                                  snapshot.data.docs[index]['message'],
-                                  dateTime,
-                                  snapshot.data.docs[index]['sent'],
-                                  snapshot.data.docs[index]['read'],
-                                );
-                              } else if (snapshot.data.docs[index]['type'] ==
-                                  "image") {
-                                return imageItem(
-                                  context,
-                                  snapshot.data.docs[index]['url'],
-                                  dateTime,
-                                  snapshot.data.docs[index]['sent'],
-                                  snapshot.data.docs[index]['read'],
-                                );
-                              } else {
-                                return fileItem(
-                                    snapshot.data.docs[index]['url'],
-                                    dateTime,
-                                    snapshot.data.docs[index]['sent'],
-                                    snapshot.data.docs[index]['read'],
-                                    context);
-                              }
-                            });
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
-                        ),
-                      );
-                    }),
+                        }),
+                  ),
+                  _buildTextComposer(),
+                ],
               ),
-              _buildTextComposer(),
-            ],
+            ),
           ),
         ),
-      ),
-      ),
       ),
     );
   }
@@ -349,7 +350,7 @@ class ChatPageState extends State<ChatPage> {
                 style: const TextStyle(color: Colors.white),
                 minLines: 1,
                 maxLines: 3,
-                decoration:  InputDecoration(
+                decoration: InputDecoration(
                   hintText: translations!["sendMessage"],
                   hintStyle: const TextStyle(color: Colors.white54),
                   border: InputBorder.none,
@@ -481,7 +482,9 @@ class ChatPageState extends State<ChatPage> {
     RenderBox renderBox = context.findRenderObject() as RenderBox;
     var size = renderBox.size;
     var offset = renderBox.localToGlobal(Offset.zero);
-
+    double sizeWidth = size.width > 800 ? 800 : size.width;
+    double sizeWidth2 =
+        size.width > 800 ? ((size.width - 800) / 2 + 800) : size.width;
     return OverlayEntry(
       builder: (context) => Stack(
         children: [
@@ -491,13 +494,13 @@ class ChatPageState extends State<ChatPage> {
               _overlayEntry = null;
             },
             child: Container(
-              width: MediaQuery.of(context).size.width,
+              width: sizeWidth,
               height: MediaQuery.of(context).size.height,
               color: Colors.transparent,
             ),
           ),
           Positioned(
-            left: offset.dx + size.width - 230,
+            left: offset.dx + sizeWidth2 - 230,
             top: offset.dy + 95,
             width: 220,
             child: Material(
@@ -523,7 +526,7 @@ class ChatPageState extends State<ChatPage> {
                   children: <Widget>[
                     if (userProvider.getCurrentUser().isAgent)
                       ListTile(
-                        title:  Text(translations!["viewProfile"],
+                        title: Text(translations!["viewProfile"],
                             style: const TextStyle(color: Colors.white)),
                         onTap: () {
                           _overlayEntry?.remove();
@@ -539,7 +542,9 @@ class ChatPageState extends State<ChatPage> {
                       ),
                     ListTile(
                       title: Text(
-                          isPinned ? translations!["unpin"] : translations!["pinToTop"],
+                          isPinned
+                              ? translations!["unpin"]
+                              : translations!["pinToTop"],
                           style: const TextStyle(color: Colors.white)),
                       onTap: () {
                         pinFriend();

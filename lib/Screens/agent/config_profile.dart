@@ -44,44 +44,44 @@ class _ConfigProfileState extends State<ConfigProfile> {
         );
         return false;
       },
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          centerTitle: true,
-          title: Column(
-            children: [
-              const SizedBox(height: 22),
-              Text(
-                '${user.name} ${user.lastName}',
-                style: const TextStyle(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 800),
+          child: Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: AppBar(
+              scrolledUnderElevation: 0,
+              centerTitle: true,
+              title: Column(
+                children: [
+                  const SizedBox(height: 22),
+                  Text(
+                    '${user.name} ${user.lastName}',
+                    style: const TextStyle(
+                      color: Color(0xFF05FF00),
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                  appBarTitle(translations!["SETTING"]),
+                ],
+              ),
+              backgroundColor: Colors.transparent,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
                   color: Color(0xFF05FF00),
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
+                  size: 32,
+                ),
+                onPressed: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const CustomBottomNavigationBar(initialIndex: 3)),
                 ),
               ),
-              appBarTitle(translations!["SETTING"]),
-            ],
-          ),
-          backgroundColor: Colors.transparent,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Color(0xFF05FF00),
-              size: 32,
             ),
-            onPressed: () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                  builder: (context) =>
-                      const CustomBottomNavigationBar(initialIndex: 3)),
-            ),
-          ),
-        ),
-        body: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 800),
-            child: Container(
+            body: Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -267,7 +267,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
         return Dialog(
           backgroundColor: Colors.transparent,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 800),
+            constraints: const BoxConstraints(maxWidth: 400),
             child: Center(
               child: Container(
                 padding: const EdgeInsets.all(35),
@@ -385,10 +385,6 @@ class _ConfigProfileState extends State<ConfigProfile> {
                             return translations!['pssw_number'];
                           }
 
-                          if (!value
-                              .contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                            return translations!['pssw_special'];
-                          }
                           return null;
                         },
                       ),
@@ -443,7 +439,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                       children: [
                         CustomTextButton(
                           onTap: () => Navigator.of(context).pop(),
-                          text: translations!['Cancelar'],
+                          text: translations!['cancel'],
                           buttonPrimary: false,
                           width: 90,
                           height: 27,
@@ -514,56 +510,53 @@ class _ConfigProfileState extends State<ConfigProfile> {
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          child: ConstrainedBox(
+          child: Container(
             constraints: BoxConstraints(maxWidth: 400),
-            child: Center(
-                child: Container(
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: const Color(0xff3B3B3B),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
-                    blurRadius: 10,
-                    offset: const Offset(5, 4),
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: const Color(0xff3B3B3B),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 10,
+                  offset: const Offset(5, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                languageTile(context, 'en', translations!["english"],
+                    currentLanguage == 'en'),
+                languageTile(context, 'es', translations!["spanish"],
+                    currentLanguage == 'es'),
+                languageTile(context, 'de', translations!["german"],
+                    currentLanguage == 'de'),
+                languageTile(context, 'it', translations!["italian"],
+                    currentLanguage == 'it'),
+                languageTile(context, 'fr', translations!["french"],
+                    currentLanguage == 'fr'),
+                languageTile(context, 'pt', translations!["portuguese"],
+                    currentLanguage == 'pt'),
+                const SizedBox(
+                  height: 10,
+                ),
+                Center(
+                  child: CustomTextButton(
+                    text: translations!["close"],
+                    buttonPrimary: true,
+                    width: 120,
+                    height: 35,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  languageTile(context, 'en', translations!["english"],
-                      currentLanguage == 'en'),
-                  languageTile(context, 'es', translations!["spanish"],
-                      currentLanguage == 'es'),
-                  languageTile(context, 'de', translations!["german"],
-                      currentLanguage == 'de'),
-                  languageTile(context, 'it', translations!["italian"],
-                      currentLanguage == 'it'),
-                  languageTile(context, 'fr', translations!["french"],
-                      currentLanguage == 'fr'),
-                  languageTile(context, 'pt', translations!["portuguese"],
-                      currentLanguage == 'pt'),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Center(
-                    child: CustomTextButton(
-                      text: translations!["Close"],
-                      buttonPrimary: true,
-                      width: 120,
-                      height: 35,
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            )),
+                ),
+              ],
+            ),
           ),
         );
       },

@@ -100,8 +100,8 @@ class PedidosState extends State<Pedidos> {
                       return const Expanded(
                         child: Center(
                           child: CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFF05FF00)),
                           ),
                         ),
                       );
@@ -232,6 +232,7 @@ class PedidosState extends State<Pedidos> {
         return Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
             padding: const EdgeInsets.all(25),
             decoration: BoxDecoration(
               color: const Color(0xff3B3B3B),
@@ -317,7 +318,7 @@ class PedidosState extends State<Pedidos> {
                       onTap: () {
                         _handleDownload(pedido.url);
                       },
-                      text:translations!["Dfacture"],
+                      text: translations!["Dfacture"],
                       buttonPrimary: true,
                       width: 164,
                       height: 31),
@@ -373,6 +374,7 @@ class PedidosState extends State<Pedidos> {
           return Dialog(
               backgroundColor: Colors.transparent,
               child: Container(
+                constraints: const BoxConstraints(maxWidth: 400),
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   color: const Color(0xff3B3B3B),

@@ -358,6 +358,7 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
           return Dialog(
               backgroundColor: Colors.transparent,
               child: Container(
+                constraints: const BoxConstraints(maxWidth: 400),
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   color: const Color(0xff3B3B3B),

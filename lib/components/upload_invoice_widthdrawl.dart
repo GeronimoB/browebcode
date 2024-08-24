@@ -60,6 +60,7 @@ class UploadInvoiceState extends State<UploadInvoice> {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
+        constraints: const BoxConstraints(maxWidth: 400),
         padding: const EdgeInsets.all(35),
         decoration: BoxDecoration(
           color: const Color(0xff3B3B3B),
@@ -76,7 +77,7 @@ class UploadInvoiceState extends State<UploadInvoice> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-             Text(
+            Text(
               translations!["uploadInvoice"],
               style: const TextStyle(
                 fontFamily: 'Montserrat',

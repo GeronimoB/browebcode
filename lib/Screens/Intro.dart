@@ -1,4 +1,5 @@
 import 'package:bro_app_to/components/custom_text_button.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/select_camp.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/src/auth/presentation/screens/sign_in.dart';
@@ -63,54 +64,56 @@ class SignInPageState extends State<SignInPage> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
-            backgroundColor: Colors.transparent,
-            child: Container(
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: const Color(0xff3B3B3B),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
-                    blurRadius: 10,
-                    offset: const Offset(5, 4),
+          backgroundColor: Colors.transparent,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: const Color(0xff3B3B3B),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 10,
+                  offset: const Offset(5, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                languageTile(context, 'en', translations!["english"],
+                    currentLanguage == 'en'),
+                languageTile(context, 'es', translations!["spanish"],
+                    currentLanguage == 'es'),
+                languageTile(context, 'de', translations!["german"],
+                    currentLanguage == 'de'),
+                languageTile(context, 'it', translations!["italian"],
+                    currentLanguage == 'it'),
+                languageTile(context, 'fr', translations!["french"],
+                    currentLanguage == 'fr'),
+                languageTile(context, 'pt', translations!["portuguese"],
+                    currentLanguage == 'pt'),
+                const SizedBox(
+                  height: 10,
+                ),
+                Center(
+                  child: CustomTextButton(
+                    text: translations!["close"],
+                    buttonPrimary: true,
+                    width: 120,
+                    height: 35,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  languageTile(context, 'en', translations!["english"],
-                      currentLanguage == 'en'),
-                  languageTile(context, 'es', translations!["spanish"],
-                      currentLanguage == 'es'),
-                  languageTile(context, 'de', translations!["german"],
-                      currentLanguage == 'de'),
-                  languageTile(context, 'it', translations!["italian"],
-                      currentLanguage == 'it'),
-                  languageTile(context, 'fr', translations!["french"],
-                      currentLanguage == 'fr'),
-                  languageTile(context, 'pt', translations!["portuguese"],
-                      currentLanguage == 'pt'),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Center(
-                    child: CustomTextButton(
-                      text: translations!["close"],
-                      buttonPrimary: true,
-                      width: 120,
-                      height: 35,
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ));
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   }
@@ -175,6 +178,22 @@ class SignInPageState extends State<SignInPage> {
                   child: Image.asset(
                     'assets/images/Background_1.png',
                     fit: BoxFit.cover,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        languageDialog(context);
+                      },
+                      child: const Icon(
+                        Icons.language,
+                        color: Color(0xff00E050),
+                        size: 32,
+                      ),
+                    ),
                   ),
                 ),
                 Positioned(

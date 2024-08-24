@@ -51,6 +51,7 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
         return Dialog(
             backgroundColor: Colors.transparent,
             child: Container(
+              constraints: const BoxConstraints(maxWidth: 400),
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                 color: const Color(0xff3B3B3B),
@@ -78,7 +79,7 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
                   const SizedBox(
                     height: 20,
                   ),
-                   Text(
+                  Text(
                     translations!["fileSaved"],
                     style: TextStyle(
                         color: Colors.white,
@@ -104,15 +105,19 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title:  Text(translations!["error"],),
-          content:  Text(
-              translations!["downloadError"],),
+          title: Text(
+            translations!["error"],
+          ),
+          content: Text(
+            translations!["downloadError"],
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child:  Text(translations!["ok"],
+              child: Text(
+                translations!["ok"],
               ),
             ),
           ],

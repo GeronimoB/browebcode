@@ -27,112 +27,112 @@ class SelectCampState extends State<SelectCamp> {
   bool isPhone = true;
   List<Player> players = [
     Player(position: translations!['goalKeeper'], number: "1", posiciones: {
+      "pc": {
+        "top": 0.66,
+        "left": 0.48,
+      },
       "phone": {
         "top": 0.64,
         "left": 0.43,
       },
-      "tablet": {
-        "top": 0.67,
-        "left": 0.46,
-      },
     }),
     Player(position: translations!['LD'], number: "2", posiciones: {
+      "pc": {
+        "top": 0.62,
+        "left": 0.85,
+      },
       "phone": {
         "top": 0.62,
         "left": 0.85,
       },
-      "tablet": {
-        "top": 0.62,
-        "left": 0.89,
-      },
     }),
     Player(position: translations!['LI'], number: "3", posiciones: {
-      "phone": {
+      "pc": {
         "top": 0.62,
         "left": 0.01,
       },
-      "tablet": {
+      "phone": {
         "top": 0.62,
         "left": 0.01,
       },
     }),
     Player(position: translations!['DFD'], number: "4", posiciones: {
+      "pc": {
+        "top": 0.6,
+        "left": 0.6,
+      },
       "phone": {
         "top": 0.6,
         "left": 0.6,
       },
-      "tablet": {
-        "top": 0.63,
-        "left": 0.63,
-      },
     }),
     Player(position: translations!['DFI'], number: "5", posiciones: {
+      "pc": {
+        "top": 0.60,
+        "left": 0.26,
+      },
       "phone": {
         "top": 0.60,
         "left": 0.26,
       },
-      "tablet": {
-        "top": 0.63,
-        "left": 0.27,
-      },
     }),
     Player(position: translations!['MCD'], number: "6", posiciones: {
+      "pc": {
+        "top": 0.55,
+        "left": 0.17,
+      },
       "phone": {
         "top": 0.55,
         "left": 0.17,
       },
-      "tablet": {
-        "top": 0.55,
-        "left": 0.20,
-      },
     }),
     Player(position: translations!['MDD'], number: "7", posiciones: {
+      "pc": {
+        "top": 0.48,
+        "left": 0.73,
+      },
       "phone": {
         "top": 0.48,
         "left": 0.73,
       },
-      "tablet": {
-        "top": 0.50,
-        "left": 0.70,
-      },
     }),
     Player(position: translations!['MDI'], number: "8", posiciones: {
-      "phone": {
+      "pc": {
         "top": 0.55,
         "left": 0.67,
       },
-      "tablet": {
+      "phone": {
         "top": 0.55,
         "left": 0.67,
       },
     }),
     Player(position: translations!['DC'], number: "9", posiciones: {
+      "pc": {
+        "top": 0.51,
+        "left": 0.475,
+      },
       "phone": {
         "top": 0.51,
         "left": 0.475,
       },
-      "tablet": {
-        "top": 0.50,
-        "left": 0.475,
-      },
     }),
     Player(position: translations!['MCO'], number: "10", posiciones: {
+      "pc": {
+        "top": 0.53,
+        "left": 0.4,
+      },
       "phone": {
         "top": 0.53,
         "left": 0.4,
       },
-      "tablet": {
-        "top": 0.54,
-        "left": 0.42,
-      },
     }),
     Player(position: translations!['EXT'], number: "11", posiciones: {
-      "phone": {
+      "pc": {
         "top": 0.48,
         "left": 0.24,
       },
-      "tablet": {
-        "top": 0.50,
+      "phone": {
+        "top": 0.48,
         "left": 0.24,
       },
     }),
@@ -158,9 +158,10 @@ class SelectCampState extends State<SelectCamp> {
         return playerPic(
           players[index],
           screenSize.height *
-              players[index].posiciones![isPhone ? "phone" : "tablet"]["top"],
-          screenSize.width *
-              players[index].posiciones![isPhone ? "phone" : "tablet"]["left"],
+              players[index].posiciones![isPhone ? "phone" : "pc"]["top"],
+          isPhone
+              ? screenSize.width * players[index].posiciones!["phone"]["left"]
+              : 800.0 * players[index].posiciones!["pc"]["left"],
         );
       },
     ).toList();
@@ -174,167 +175,167 @@ class SelectCampState extends State<SelectCamp> {
             backgroundColor: Colors.transparent,
             body: Stack(
               children: <Widget>[
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color.fromARGB(255, 44, 44, 44),
-                    Color.fromARGB(255, 0, 0, 0),
-                  ],
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 44, 44, 44),
+                        Color.fromARGB(255, 0, 0, 0),
+                      ],
+                    ),
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
                 ),
-              ),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-            ),
-            Positioned(
-              top: screenSize.height * 0.1,
-              left: 0,
-              right: 0,
-              child: Image.asset(
-                'assets/images/Campo.png',
-                width: screenSize.width,
-                height: screenSize.height * 0.7,
-                fit: BoxFit.fill,
-              ),
-            ),
-            Positioned(
-              top: screenSize.height * 0.1,
-              left: 0,
-              right: 0,
-              child: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.center,
-                    colors: [
-                      Color.fromARGB(255, 40, 40, 40),
-                      Color.fromARGB(0, 43, 43, 43),
-                    ],
+                Positioned(
+                  top: screenSize.height * 0.1,
+                  left: 0,
+                  right: 0,
+                  child: Image.asset(
+                    'assets/images/Campo.png',
+                    width: screenSize.width,
+                    height: screenSize.height * 0.7,
+                    fit: BoxFit.fill,
                   ),
                 ),
-                width: MediaQuery.of(context).size.width,
-                height: 394,
-              ),
-            ),
-            Positioned(
-              top: screenSize.height * 0.38,
-              left: 0,
-              right: 0,
-              child: Text(
-                translations!['choose_position'],
-                style: const TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  height: 1,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            ...playerWidgets,
-            Positioned(
-              top: screenSize.height * 0.82,
-              left: 0,
-              right: 0,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  children: <Widget>[
-                    const SizedBox(height: 10),
-                    CustomTextButton(
-                        onTap: () async {
-                          setState(() {
-                            isLoading = true;
-                          });
-
-                          final playerProvider = Provider.of<PlayerProvider>(
-                              context,
-                              listen: false);
-
-                          if (!players.any((player) => player.isSelected)) {
-                            showErrorSnackBar(
-                                context, translations!['select_position']);
-
-                            setState(() {
-                              isLoading = false;
-                            });
-                            return;
-                          }
-
-                          final selectedPlayer = players
-                              .firstWhere((element) => element.isSelected);
-                          setState(() {
-                            isLoading = false;
-                          });
-                          if (widget.registrando) {
-                            playerProvider.updateTemporalPlayer(
-                              position: selectedPlayer.position,
-                            );
-
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SignUpScreen2()));
-                          } else {
-                            playerProvider.updatePlayer(
-                              fieldName: "position",
-                              value: selectedPlayer.position,
-                            );
-                            final player = playerProvider.getPlayer()!;
-
-                            final userProvider = Provider.of<UserProvider>(
-                                context,
-                                listen: false);
-
-                            userProvider.updateUserFromPlayer(player);
-
-                            await ApiClient().post('auth/edit-player',
-                                playerProvider.getPlayer()!.toMap());
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const EditarInfoPlayer()));
-                          }
-                        },
-                        text: translations!['next'],
-                        buttonPrimary: true,
-                        width: 150,
-                        height: 45),
-                    const SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: screenSize.height * 0.03,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: SvgPicture.asset(
-                  'assets/icons/Logo.svg',
-                  width: 104,
-                ),
-              ),
-            ),
-            if (isLoading)
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: Colors.black.withOpacity(0.5),
-                child: const Center(
-                  child: CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                Positioned(
+                  top: screenSize.height * 0.1,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.center,
+                        colors: [
+                          Color.fromARGB(255, 40, 40, 40),
+                          Color.fromARGB(0, 43, 43, 43),
+                        ],
+                      ),
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    height: 394,
                   ),
                 ),
-              ),
-          ],
+                Positioned(
+                  top: screenSize.height * 0.38,
+                  left: 0,
+                  right: 0,
+                  child: Text(
+                    translations!['choose_position'],
+                    style: const TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      height: 1,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                ...playerWidgets,
+                Positioned(
+                  top: screenSize.height * 0.82,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Column(
+                      children: <Widget>[
+                        const SizedBox(height: 10),
+                        CustomTextButton(
+                            onTap: () async {
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              final playerProvider =
+                                  Provider.of<PlayerProvider>(context,
+                                      listen: false);
+
+                              if (!players.any((player) => player.isSelected)) {
+                                showErrorSnackBar(
+                                    context, translations!['select_position']);
+
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                return;
+                              }
+
+                              final selectedPlayer = players
+                                  .firstWhere((element) => element.isSelected);
+                              setState(() {
+                                isLoading = false;
+                              });
+                              if (widget.registrando) {
+                                playerProvider.updateTemporalPlayer(
+                                  position: selectedPlayer.position,
+                                );
+
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SignUpScreen2()));
+                              } else {
+                                playerProvider.updatePlayer(
+                                  fieldName: "position",
+                                  value: selectedPlayer.position,
+                                );
+                                final player = playerProvider.getPlayer()!;
+
+                                final userProvider = Provider.of<UserProvider>(
+                                    context,
+                                    listen: false);
+
+                                userProvider.updateUserFromPlayer(player);
+
+                                await ApiClient().post('auth/edit-player',
+                                    playerProvider.getPlayer()!.toMap());
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const EditarInfoPlayer()));
+                              }
+                            },
+                            text: translations!['next'],
+                            buttonPrimary: true,
+                            width: 150,
+                            height: 45),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: screenSize.height * 0.03,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      'assets/icons/Logo.svg',
+                      width: 104,
+                    ),
+                  ),
+                ),
+                if (isLoading)
+                  Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: Colors.black.withOpacity(0.5),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
         ),
-      ),
-      ),
       ),
     );
   }

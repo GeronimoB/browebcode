@@ -130,6 +130,7 @@ class Privacidad extends StatelessWidget {
         return Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
             padding: const EdgeInsets.all(35),
             decoration: BoxDecoration(
               color: const Color(0xff3B3B3B),
@@ -358,6 +359,7 @@ class Privacidad extends StatelessWidget {
         return Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: const Color(0xff3B3B3B),

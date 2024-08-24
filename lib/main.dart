@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
+import 'package:bro_app_to/common/path_strategy.dart';
 import 'package:bro_app_to/firebase_options.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:bro_app_to/utils/current_state.dart';
@@ -22,13 +23,20 @@ import 'providers/agent_provider.dart';
 import 'providers/player_provider.dart';
 import 'providers/user_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'src/auth/data/datasources/remote_data_source_impl.dart';
 import 'src/auth/domain/entitites/user_entity.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setUrlStrategy(
+      CustomPathStrategy(appTitle: 'Bró Football Platform') as UrlStrategy);
+  SystemChrome.setApplicationSwitcherDescription(
+    const ApplicationSwitcherDescription(
+      label: 'Bró Football Platform',
+    ),
+  );
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
