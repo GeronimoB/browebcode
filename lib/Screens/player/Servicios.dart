@@ -36,26 +36,26 @@ List<Plan> planes = [
   Plan(
     nombre: translations!["Plan_s_1_name"],
     precio: translations!["Plan_s_1_price"],
-    descripcion: translations!["Plan_s_1_description"], 
-    descripcionLarga:translations!["Plan_s_1_large_description"],
+    descripcion: translations!["Plan_s_1_description"],
+    descripcionLarga: translations!["Plan_s_1_large_description"],
   ),
   Plan(
     nombre: translations!["Plan_s_2_name"],
     precio: translations!["Plan_s_2_price"],
-    descripcion: translations!["Plan_s_2_description"], 
-    descripcionLarga:translations!["Plan_s_2_large_description"],
+    descripcion: translations!["Plan_s_2_description"],
+    descripcionLarga: translations!["Plan_s_2_large_description"],
   ),
   Plan(
     nombre: translations!["Plan_s_3_name"],
     precio: translations!["Plan_s_3_price"],
-    descripcion: translations!["Plan_s_3_description"], 
-    descripcionLarga:translations!["Plan_s_3_large_description"],
+    descripcion: translations!["Plan_s_3_description"],
+    descripcionLarga: translations!["Plan_s_3_large_description"],
   ),
   Plan(
     nombre: translations!["Plan_s_4_name"],
     precio: translations!["Plan_s_4_price"],
-    descripcion: translations!["Plan_s_4_description"], 
-    descripcionLarga:translations!["Plan_s_4_large_description"],
+    descripcion: translations!["Plan_s_4_description"],
+    descripcionLarga: translations!["Plan_s_4_large_description"],
   ),
 ];
 
@@ -72,93 +72,100 @@ class _PlanesPagoState extends State<Servicios> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 800,
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/backgroundplanes.png'),
-          fit: BoxFit.cover,
-        ),
-        color: Color.fromARGB(255, 0, 0, 0),
-      ),
-      child: Scaffold(
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          centerTitle: true,
-          title: appBarTitle(translations!["SERVICES"]),
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Color(0xFF00E050),
-              size: 32,
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/backgroundplanes.png'),
+              fit: BoxFit.cover,
             ),
-            onPressed: () => Navigator.pop(context),
+            color: Color.fromARGB(255, 0, 0, 0),
           ),
-          backgroundColor: Colors.transparent,
-        ),
-        extendBody: true,
-        backgroundColor: Colors.transparent,
-        body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(10),
-                  itemCount: planes.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildCard(index);
-                  },
+          child: Scaffold(
+            appBar: AppBar(
+              scrolledUnderElevation: 0,
+              centerTitle: true,
+              title: appBarTitle(translations!["SERVICES"]),
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Color(0xFF00E050),
+                  size: 32,
                 ),
+                onPressed: () => Navigator.pop(context),
               ),
-              Padding(
-                padding: const EdgeInsets.all(22.0),
-                child: CustomTextButton(
-                    onTap: () async {
-                      try {
-                        if (_selectedCardIndex == -1) {
-                          showErrorSnackBar(
-                              context, translations!['please_select_service']);
-                          return;
-                        }
-                        final userProvider =
-                            Provider.of<UserProvider>(context, listen: false);
-                        final response =
-                            await ApiClient().post('auth/service-consult', {
-                          "userId":
-                              userProvider.getCurrentUser().userId.toString(),
-                          "service": planes[_selectedCardIndex].nombre,
-                        });
-                        if (response.statusCode == 200) {
-                          showSucessSnackBar(
-                              context, translations!['scss_ask_service']);
-                        } else {
-                          showErrorSnackBar(
-                              context, translations!['err_ask_service']);
-                        }
-                      } catch (e) {
-                        showErrorSnackBar(
-                            context, translations!['err_ask_service']);
-                      }
-                    },
-                    text: translations!['ask'],
-                    buttonPrimary: true,
-                    width: 116,
-                    height: 39),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: SvgPicture.asset(
-                    'assets/icons/Logo.svg',
-                    width: 104,
+              backgroundColor: Colors.transparent,
+            ),
+            extendBody: true,
+            backgroundColor: Colors.transparent,
+            body: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(10),
+                      itemCount: planes.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return _buildCard(index);
+                      },
+                    ),
                   ),
-                ),
-              )
-            ],
+                  Padding(
+                    padding: const EdgeInsets.all(22.0),
+                    child: CustomTextButton(
+                        onTap: () async {
+                          try {
+                            if (_selectedCardIndex == -1) {
+                              showErrorSnackBar(context,
+                                  translations!['please_select_service']);
+                              return;
+                            }
+                            final userProvider = Provider.of<UserProvider>(
+                                context,
+                                listen: false);
+                            final response =
+                                await ApiClient().post('auth/service-consult', {
+                              "userId": userProvider
+                                  .getCurrentUser()
+                                  .userId
+                                  .toString(),
+                              "service": planes[_selectedCardIndex].nombre,
+                            });
+                            if (response.statusCode == 200) {
+                              showSucessSnackBar(
+                                  context, translations!['scss_ask_service']);
+                            } else {
+                              showErrorSnackBar(
+                                  context, translations!['err_ask_service']);
+                            }
+                          } catch (e) {
+                            showErrorSnackBar(
+                                context, translations!['err_ask_service']);
+                          }
+                        },
+                        text: translations!['ask'],
+                        buttonPrimary: true,
+                        width: 116,
+                        height: 39),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: SvgPicture.asset(
+                        'assets/icons/Logo.svg',
+                        width: 104,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),

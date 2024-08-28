@@ -25,7 +25,7 @@
   "pssw_8_characters": "La contraseña debe tener al menos 8 caracteres.",
   "pssw_mayus_letter": "La contraseña debe contener al menos una letra mayúscula.",
   "pssw_minus_letter": "La contraseña debe contener al menos una letra minúscula.",
-  "pssw_number": "La contraseña debe contener al menos un número.",
+  "pssw_number": "La contraseña debe contener al menos ocho números.",
   "pssw_special": "La contraseña debe contener al menos un carácter especial.",
   "next": "Siguiente",
   "left_feet": "Zurdo",

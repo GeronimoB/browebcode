@@ -1,28 +1,17 @@
-import 'dart:io';
-import 'package:bro_app_to/utils/current_state.dart';
-import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
-import 'package:http/http.dart' as http;
-import 'package:permission_handler/permission_handler.dart';
+import 'dart:html' as html;
 
 import '../common/sizes.dart';
+import '../utils/current_state.dart';
 
 Future<void> _handleDownload(String fileUrl, BuildContext context) async {
   if (fileUrl.isEmpty) {
     return;
   }
 
-  final status = await Permission.storage.status;
-
-  if (!status.isGranted) {
-    final result = await Permission.storage.request();
-    if (!result.isGranted) {
-      return;
-    }
-  }
-
   try {
+    // Show a loading dialog
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -35,71 +24,68 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
       },
     );
 
-    final fileExtension = path.extension(fileUrl);
-    final response = await http.get(Uri.parse(fileUrl));
-    final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
-    final file = File(
-        '${downloadsDirectory!.path}/archivo_${DateTime.now().millisecondsSinceEpoch}$fileExtension');
-
-    await file.writeAsBytes(response.bodyBytes);
+    html.window.open(fileUrl, '_blank');
 
     Navigator.of(context).pop();
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
-            backgroundColor: Colors.transparent,
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 400),
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: const Color(0xff3B3B3B),
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
-                    blurRadius: 10,
-                    offset: const Offset(5, 4),
+          backgroundColor: Colors.transparent,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: const Color(0xff3B3B3B),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.4),
+                  blurRadius: 10,
+                  offset: const Offset(5, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  translations!["congrats"],
+                  style: const TextStyle(
+                    color: Color(0xff00E050),
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
                   ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    translations!["congrats"],
-                    style: const TextStyle(
-                        color: Color(0xff00E050),
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  translations!["fileSaved"],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    translations!["fileSaved"],
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
-            ));
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          ),
+        );
       },
     );
   } catch (e) {
     Navigator.of(context).pop();
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -124,7 +110,6 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
         );
       },
     );
-
     debugPrint(e.toString());
   }
 }
@@ -182,8 +167,13 @@ String getFileDisplayName(String fileUrl) {
   return fileName;
 }
 
-Widget fileItem(String fileUrl, DateTime datetime, bool sent, bool read,
-    BuildContext context) {
+Widget fileItem(
+  String fileUrl,
+  DateTime datetime,
+  bool sent,
+  bool read,
+  BuildContext context,
+) {
   String fileType = getFileType(fileUrl);
   return Container(
     width: Sizes.width,

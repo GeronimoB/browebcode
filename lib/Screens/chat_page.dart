@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
@@ -46,6 +47,7 @@ class ChatPageState extends State<ChatPage> {
   bool isPinned = false;
   OverlayEntry? _overlayEntry;
   late UserProvider userProvider;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -128,7 +130,9 @@ class ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width > 800
+        ? 800
+        : MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     Sizes.initSizes(width, height);
     String fullName = '${widget.friend.name} ${widget.friend.lastName}';
@@ -149,7 +153,7 @@ class ChatPageState extends State<ChatPage> {
       },
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 800),
+          constraints: const BoxConstraints(maxWidth: 800),
           child: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -246,79 +250,95 @@ class ChatPageState extends State<ChatPage> {
                   },
                 ),
               ),
-              body: Column(
+              body: Stack(
                 children: [
-                  Expanded(
-                    child: StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(_buildSenderId())
-                            .collection('messages')
-                            .doc(_buildReceiverId())
-                            .collection('chats')
-                            .orderBy("date", descending: true)
-                            .snapshots(),
-                        builder: (context, AsyncSnapshot snapshot) {
-                          if (snapshot.hasData) {
-                            if (snapshot.data.docs.length < 1) {
-                              return Center(
-                                child: Text(
-                                  translations!["greet"],
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 24.0,
-                                  ),
+                  Column(
+                    children: [
+                      Expanded(
+                        child: StreamBuilder(
+                            stream: FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(_buildSenderId())
+                                .collection('messages')
+                                .doc(_buildReceiverId())
+                                .collection('chats')
+                                .orderBy("date", descending: true)
+                                .snapshots(),
+                            builder: (context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                if (snapshot.data.docs.length < 1) {
+                                  return Center(
+                                    child: Text(
+                                      translations!["greet"],
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 24.0,
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return ListView.builder(
+                                    controller: _scrollController,
+                                    itemCount: snapshot.data.docs.length,
+                                    physics: const BouncingScrollPhysics(),
+                                    reverse: true,
+                                    itemBuilder: (context, index) {
+                                      Timestamp timestamp =
+                                          snapshot.data.docs[index]['date'];
+                                      DateTime dateTime = timestamp.toDate();
+                                      if (snapshot.data.docs[index]['type'] ==
+                                          "text") {
+                                        return chatItem(
+                                          snapshot.data.docs[index]['message'],
+                                          dateTime,
+                                          snapshot.data.docs[index]['sent'],
+                                          snapshot.data.docs[index]['read'],
+                                        );
+                                      } else if (snapshot.data.docs[index]
+                                              ['type'] ==
+                                          "image") {
+                                        return imageItem(
+                                          context,
+                                          snapshot.data.docs[index]['url'],
+                                          dateTime,
+                                          snapshot.data.docs[index]['sent'],
+                                          snapshot.data.docs[index]['read'],
+                                        );
+                                      } else {
+                                        return fileItem(
+                                            snapshot.data.docs[index]['url'],
+                                            dateTime,
+                                            snapshot.data.docs[index]['sent'],
+                                            snapshot.data.docs[index]['read'],
+                                            context);
+                                      }
+                                    });
+                              }
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Color(0xFF05FF00)),
                                 ),
                               );
-                            }
-                            return ListView.builder(
-                                controller: _scrollController,
-                                itemCount: snapshot.data.docs.length,
-                                physics: const BouncingScrollPhysics(),
-                                reverse: true,
-                                itemBuilder: (context, index) {
-                                  Timestamp timestamp =
-                                      snapshot.data.docs[index]['date'];
-                                  DateTime dateTime = timestamp.toDate();
-                                  if (snapshot.data.docs[index]['type'] ==
-                                      "text") {
-                                    return chatItem(
-                                      snapshot.data.docs[index]['message'],
-                                      dateTime,
-                                      snapshot.data.docs[index]['sent'],
-                                      snapshot.data.docs[index]['read'],
-                                    );
-                                  } else if (snapshot.data.docs[index]
-                                          ['type'] ==
-                                      "image") {
-                                    return imageItem(
-                                      context,
-                                      snapshot.data.docs[index]['url'],
-                                      dateTime,
-                                      snapshot.data.docs[index]['sent'],
-                                      snapshot.data.docs[index]['read'],
-                                    );
-                                  } else {
-                                    return fileItem(
-                                        snapshot.data.docs[index]['url'],
-                                        dateTime,
-                                        snapshot.data.docs[index]['sent'],
-                                        snapshot.data.docs[index]['read'],
-                                        context);
-                                  }
-                                });
-                          }
-                          return const Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  Color(0xFF05FF00)),
-                            ),
-                          );
-                        }),
+                            }),
+                      ),
+                      _buildTextComposer(),
+                    ],
                   ),
-                  _buildTextComposer(),
+                  if (isLoading)
+                    Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: Colors.black.withOpacity(0.5),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -387,11 +407,12 @@ class ChatPageState extends State<ChatPage> {
       maxWidth: 1440,
       source: ImageSource.gallery,
     );
-
+    setState(() {
+      isLoading = true;
+    });
     if (result != null) {
-      final file = File(result.path);
-      final bytes = await file.readAsBytes();
-      final image = await decodeImageFromList(bytes);
+      Uint8List bytes = await result.readAsBytes();
+      String filename = '${DateTime.now().millisecondsSinceEpoch}.jpg';
 
       var request = http.MultipartRequest(
         'POST',
@@ -401,16 +422,22 @@ class ChatPageState extends State<ChatPage> {
       request.files.add(http.MultipartFile.fromBytes(
         'file',
         bytes,
-        filename: '${DateTime.now().millisecondsSinceEpoch}.jpg',
+        filename: filename,
         contentType: MediaType('image', 'jpg'),
       ));
+
       var response = await request.send();
-      var imageUrl = '';
       if (response.statusCode == 200) {
         var responseBody = await response.stream.bytesToString();
-        imageUrl = jsonDecode(responseBody)["url"];
+        var imageUrl = jsonDecode(responseBody)["url"];
         _sendImage(imageUrl);
+        setState(() {
+          isLoading = false;
+        });
       } else {
+        setState(() {
+          isLoading = false;
+        });
         debugPrint(
             'Failed to upload image. Error code: ${response.statusCode}');
       }
@@ -419,13 +446,18 @@ class ChatPageState extends State<ChatPage> {
 
   Future<void> _handleFileSelection() async {
     final FilePickerResult? result = await FilePicker.platform.pickFiles();
-
+    setState(() {
+      isLoading = true;
+    });
     if (result != null) {
       final PlatformFile file = result.files.first;
-      final String filePath = file.path ?? '';
       final String fileName = file.name;
+      Uint8List? bytes = file.bytes;
 
-      final bytes = await File(filePath).readAsBytes();
+      if (bytes == null) {
+        final String filePath = file.path ?? '';
+        bytes = await File(filePath).readAsBytes();
+      }
 
       var request = http.MultipartRequest(
         'POST',
@@ -456,11 +488,20 @@ class ChatPageState extends State<ChatPage> {
             fileName,
             friendName,
           );
+          setState(() {
+            isLoading = false;
+          });
           _scrollController.jumpTo(0);
         } catch (e) {
+          setState(() {
+            isLoading = false;
+          });
           print(e);
         }
       } else {
+        setState(() {
+          isLoading = false;
+        });
         debugPrint('Failed to upload file. Error code: ${response.statusCode}');
       }
     }

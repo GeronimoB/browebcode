@@ -14,11 +14,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 import '../../components/verificaciones_afiliados.dart';
 import '../../providers/agent_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../utils/api_client.dart';
+import '../../utils/api_constants.dart';
 import '../../utils/current_state.dart';
 import '../../utils/language_localizations.dart';
 
@@ -375,15 +377,15 @@ class _ConfigProfileState extends State<ConfigProfile> {
                           if (value.length < 8) {
                             return translations!['pssw_8_characters'];
                           }
-                          if (!value.contains(RegExp(r'[A-Z]'))) {
-                            return translations!['pssw_mayus_letter'];
-                          }
-                          if (!value.contains(RegExp(r'[a-z]'))) {
-                            return translations!['pssw_minus_letter'];
-                          }
-                          if (!value.contains(RegExp(r'[0-9]'))) {
-                            return translations!['pssw_number'];
-                          }
+                          // if (!value.contains(RegExp(r'[A-Z]'))) {
+                          //   return translations!['pssw_mayus_letter'];
+                          // }
+                          // if (!value.contains(RegExp(r'[a-z]'))) {
+                          //   return translations!['pssw_minus_letter'];
+                          // }
+                          // if (value.replaceAll(RegExp(r'\D'), '').length < 8) {
+                          //   return translations!['pssw_number'];
+                          // }
 
                           return null;
                         },
@@ -652,8 +654,24 @@ class _ConfigProfileState extends State<ConfigProfile> {
                                 context,
                                 listen: false);
 
-                            agenteProvider.logOut();
-                            userProvider.logOut();
+                            final userId = agenteProvider.getAgente().userId;
+                            final url = Uri.parse(
+                                '${ApiConstants.baseUrl}/auth/agent/$userId');
+                            try {
+                              final response = await http.delete(url);
+                              if (response.statusCode == 200) {
+                                userProvider.logOut();
+                                userProvider.logOut();
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, '/intro', (route) => false);
+                              } else {
+                                debugPrint(
+                                    'Error al eliminar el usuario: ${response.statusCode}');
+                              }
+                            } catch (error) {
+                              debugPrint(
+                                  'Error al realizar la solicitud DELETE: $error');
+                            }
                           },
                           text: translations!["yes"],
                           buttonPrimary: true,

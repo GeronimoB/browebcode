@@ -9,42 +9,52 @@ class ImageFullScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.fromARGB(255, 44, 44, 44),
-            Color.fromARGB(255, 0, 0, 0),
-          ],
-        ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.close,
-              color: Color(0xFF00E050),
-              size: 32,
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 44, 44, 44),
+                Color.fromARGB(255, 0, 0, 0),
+              ],
             ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
           ),
-        ),
-        body: Center(
-          child: Image.network(imageUrl),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.close,
+                  color: Color(0xFF00E050),
+                  size: 32,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+            body: Center(
+              child: Image.network(imageUrl),
+            ),
+          ),
         ),
       ),
     );
   }
 }
 
-Widget imageItem(BuildContext context, String imageUrl, DateTime datetime,
-    bool sent, bool read) {
+Widget imageItem(
+  BuildContext context,
+  String imageUrl,
+  DateTime datetime,
+  bool sent,
+  bool read,
+) {
   return Container(
     width: Sizes.width,
     padding: EdgeInsets.symmetric(horizontal: Sizes.padding),

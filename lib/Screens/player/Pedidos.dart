@@ -1,11 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:bro_app_to/utils/current_state.dart';
-import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart' as path;
-import 'package:http/http.dart' as http;
-import 'package:permission_handler/permission_handler.dart';
+import 'dart:html' as html;
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
@@ -61,7 +57,7 @@ class PedidosState extends State<Pedidos> {
                 backgroundColor: Colors.transparent,
                 automaticallyImplyLeading: false,
                 centerTitle: true,
-                title: appBarTitle(translations!["MATCH"]),
+                title: appBarTitle(translations!["ORDERS"]),
                 leading: IconButton(
                   icon: const Icon(
                     Icons.arrow_back,
@@ -335,16 +331,6 @@ class PedidosState extends State<Pedidos> {
     if (fileUrl.isEmpty) {
       return;
     }
-
-    final status = await Permission.storage.status;
-
-    if (!status.isGranted) {
-      final result = await Permission.storage.request();
-      if (!result.isGranted) {
-        return;
-      }
-    }
-
     try {
       showDialog(
         context: context,
@@ -358,91 +344,94 @@ class PedidosState extends State<Pedidos> {
         },
       );
 
-      final fileExtension = path.extension(fileUrl);
-      final response = await http.get(Uri.parse(fileUrl));
-      final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
-      final file = File(
-          '${downloadsDirectory!.path}/factura_${DateTime.now().millisecondsSinceEpoch}$fileExtension');
+      html.window.open(fileUrl, '_blank');
 
-      await file.writeAsBytes(response.bodyBytes);
-
+      // Close the loading dialog
       Navigator.of(context).pop();
+
+      // Show a success dialog
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return Dialog(
-              backgroundColor: Colors.transparent,
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 400),
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: const Color(0xff3B3B3B),
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.4),
-                      blurRadius: 10,
-                      offset: const Offset(5, 4),
+            backgroundColor: Colors.transparent,
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 400),
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xff3B3B3B),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.4),
+                    blurRadius: 10,
+                    offset: const Offset(5, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    translations!["congrats"],
+                    style: const TextStyle(
+                      color: Color(0xff00E050),
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      translations!["congrats"],
-                      style: const TextStyle(
-                          color: Color(0xff00E050),
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    translations!["Factureincar"],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      translations!["Factureincar"],
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
-              ));
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            ),
+          );
         },
       );
     } catch (e) {
       Navigator.of(context).pop();
+
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Error'),
-            content: const Text(
-                'Ha habido un error en la descarga, intente nuevamente.'),
+            title: Text(
+              translations!["error"],
+            ),
+            content: Text(
+              translations!["downloadError"],
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('OK'),
+                child: Text(
+                  translations!["ok"],
+                ),
               ),
             ],
           );
         },
       );
-
       debugPrint(e.toString());
     }
   }

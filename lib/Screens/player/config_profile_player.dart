@@ -39,45 +39,45 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
     final userProvider = Provider.of<UserProvider>(context);
     final user = userProvider.getCurrentUser();
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        centerTitle: true,
-        title: Column(
-          children: [
-            const SizedBox(height: 22),
-            Text(
-              '${user.name} ${user.lastName}',
-              style: const TextStyle(
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBar(
+            scrolledUnderElevation: 0,
+            centerTitle: true,
+            title: Column(
+              children: [
+                const SizedBox(height: 22),
+                Text(
+                  '${user.name} ${user.lastName}',
+                  style: const TextStyle(
+                    color: Color(0xFF05FF00),
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+                appBarTitle(translations!["SETTING"]),
+              ],
+            ),
+            backgroundColor: Colors.transparent,
+            leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
                 color: Color(0xFF05FF00),
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
+                size: 32,
+              ),
+              onPressed: () => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const CustomBottomNavigationBarPlayer(initialIndex: 4)),
               ),
             ),
-            appBarTitle(translations!["SETTING"]),
-          ],
-        ),
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Color(0xFF05FF00),
-            size: 32,
           ),
-          onPressed: () => Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    const CustomBottomNavigationBarPlayer(initialIndex: 4)),
-          ),
-        ),
-      ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 800),
-          child: Container(
+          body: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -547,15 +547,15 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                       if (value.length < 8) {
                         return translations!['pssw_8_characters'];
                       }
-                      if (!value.contains(RegExp(r'[A-Z]'))) {
-                        return translations!['pssw_mayus_letter'];
-                      }
-                      if (!value.contains(RegExp(r'[a-z]'))) {
-                        return translations!['pssw_minus_letter'];
-                      }
-                      if (!value.contains(RegExp(r'[0-9]'))) {
-                        return translations!['pssw_number'];
-                      }
+                      // if (!value.contains(RegExp(r'[A-Z]'))) {
+                      //   return translations!['pssw_mayus_letter'];
+                      // }
+                      // if (!value.contains(RegExp(r'[a-z]'))) {
+                      //   return translations!['pssw_minus_letter'];
+                      // }
+                      // if (value.replaceAll(RegExp(r'\D'), '').length < 8) {
+                      //   return translations!['pssw_number'];
+                      // }
 
                       return null;
                     },

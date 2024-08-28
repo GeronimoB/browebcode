@@ -229,7 +229,9 @@ class SignInPageState extends State<SignInPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const SignUpScreen()),
+                                  builder: (context) => const SelectCamp(
+                                        registrando: true,
+                                      )),
                             );
                           },
                           text: translations!['create_account'],

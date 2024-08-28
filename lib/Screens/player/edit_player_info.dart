@@ -61,21 +61,24 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     _nombreController = TextEditingController(text: player.name);
     _apellidoController = TextEditingController(text: player.lastName);
     _correoController = TextEditingController(text: player.email);
-    _paisController = TextEditingController(
-        text: player.pais!.isNotEmpty ? player.pais : 'spain');
-    _provinciaController = TextEditingController(text: player.provincia);
-    _posicionController = TextEditingController(text: player.position);
-    _categoriaController = TextEditingController(text: player.categoria);
+    _paisController = TextEditingController(text: countries[player.pais] ?? '');
+    _provinciaController = TextEditingController(
+        text: provincesByCountry[player.pais]?[player.provincia] ?? '');
+    _posicionController =
+        TextEditingController(text: posiciones[player.position] ?? '');
+    _categoriaController =
+        TextEditingController(text: categorias[player.categoria] ?? '');
     _logrosIndividualesController =
         TextEditingController(text: player.logrosIndividuales);
     _alturaController = TextEditingController(text: player.altura);
-    _pieDominanteController = TextEditingController(text: player.pieDominante);
+    _pieDominanteController =
+        TextEditingController(text: piesDominantes[player.pieDominante] ?? '');
     _seleccionNacionalController = TextEditingController(
-        text: player.seleccionNacional!.isNotEmpty
-            ? player.seleccionNacional
-            : 'male');
-    _categoriaSeleccionController =
-        TextEditingController(text: player.categoriaSeleccion);
+        text: selecciones[player.seleccionNacional] ?? '');
+    _categoriaSeleccionController = TextEditingController(
+        text: nationalCategories[player.seleccionNacional]
+                ?[player.categoriaSeleccion] ??
+            '');
     _dniController = TextEditingController(text: player.dni);
     _clubController = TextEditingController(text: player.club);
     _directionController = TextEditingController(text: player.direccion);
@@ -295,7 +298,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                     controller: _provinciaController,
                     camp: 'provincia',
                     select: true,
-                    items: provincesByCountry[_paisController.text],
+                    items: provincesByCountry[player.pais ?? 'spain'],
                   ),
                   _buildTextField(
                       label: translations!["Position"],
@@ -343,7 +346,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                     camp: 'categoriaseleccion',
                     select: true,
                     items:
-                        nationalCategories[_seleccionNacionalController.text],
+                        nationalCategories[player.seleccionNacional ?? 'male'],
                   ),
                   const SizedBox(
                     height: 15,

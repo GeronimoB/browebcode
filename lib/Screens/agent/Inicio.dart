@@ -216,7 +216,9 @@ class InicioPageState extends State<InicioPage> {
   Widget build(BuildContext context) {
     double scale = 1;
     double height = MediaQuery.of(context).size.height;
-
+    double width = MediaQuery.of(context).size.width > 800
+        ? 800
+        : MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -337,7 +339,7 @@ class InicioPageState extends State<InicioPage> {
                   Positioned(
                     top: MediaQuery.of(context).padding.top + 10,
                     child: Container(
-                      width: MediaQuery.of(context).size.width,
+                      width: width,
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,

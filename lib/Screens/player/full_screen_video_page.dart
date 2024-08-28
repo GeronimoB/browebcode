@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:bro_app_to/Screens/agent/bottom_navigation_bar.dart';
 import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
 import 'package:bro_app_to/components/modal_decision.dart';
@@ -7,17 +5,14 @@ import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/video_model.dart';
-import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import '../../components/custom_text_button.dart';
 import '../../utils/api_client.dart';
 import 'bottom_navigation_bar_player.dart';
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
+import 'dart:html' as html;
 
 class FullScreenVideoPage extends StatefulWidget {
   final Video video;
@@ -265,7 +260,11 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
               ),
             Positioned(
               bottom: 0,
-              left: MediaQuery.of(context).size.width / 2 - 52,
+              left: (MediaQuery.of(context).size.width > 800
+                          ? 800
+                          : MediaQuery.of(context).size.width) /
+                      2 -
+                  52,
               child: Padding(
                 padding: const EdgeInsets.all(5),
                 child: SvgPicture.asset(
@@ -320,15 +319,6 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
     if (videoUrl == null || videoUrl.isEmpty) {
       return;
     }
-    final status = await Permission.storage.status;
-
-    if (!status.isGranted) {
-      final result = await Permission.storage.request();
-      if (!result.isGranted) {
-        showErrorSnackBar(context, translations!['download_grant_denied']);
-        return;
-      }
-    }
     try {
       showDialog(
         context: context,
@@ -341,91 +331,95 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
           );
         },
       );
-      final videoExtension = path.extension(videoUrl);
-      final response = await http.get(Uri.parse(videoUrl));
-      final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
 
-      final apkFile = File(
-          '${downloadsDirectory!.path}/video_${video.id}_${DateTime.now().millisecondsSinceEpoch}.$videoExtension');
+      html.window.open(videoUrl, '_blank');
 
-      await apkFile.writeAsBytes(response.bodyBytes);
-
+      // Close the loading dialog
       Navigator.of(context).pop();
+
+      // Show a success dialog
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return Dialog(
-              backgroundColor: Colors.transparent,
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 400),
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: const Color(0xff3B3B3B),
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.4),
-                      blurRadius: 10,
-                      offset: const Offset(5, 4),
+            backgroundColor: Colors.transparent,
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 400),
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xff3B3B3B),
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.4),
+                    blurRadius: 10,
+                    offset: const Offset(5, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    translations!["congrats"],
+                    style: const TextStyle(
+                      color: Color(0xff00E050),
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      translations!['congrats'],
-                      style: const TextStyle(
-                          color: Color(0xff00E050),
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    translations!["fileSaved"],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      translations!['video_save'],
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: translations!['ok'],
-                    ),
-                  ],
-                ),
-              ));
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            ),
+          );
         },
       );
     } catch (e) {
       Navigator.of(context).pop();
+
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(translations!['error_label']),
-            content: Text(translations!['download_error']),
+            title: Text(
+              translations!["error"],
+            ),
+            content: Text(
+              translations!["downloadError"],
+            ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text(translations!['ok']),
+                child: Text(
+                  translations!["ok"],
+                ),
               ),
             ],
           );
         },
       );
-
       debugPrint(e.toString());
     }
   }

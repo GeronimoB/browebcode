@@ -1,20 +1,15 @@
 import 'dart:typed_data';
 
 import 'package:bro_app_to/Screens/planes_pago.dart';
-import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
-import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
-import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import '../../../../utils/current_state.dart';
 import 'dart:html' as html;
 
@@ -190,113 +185,118 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color.fromARGB(255, 44, 44, 44),
-                Color.fromARGB(255, 33, 33, 33),
-                Color.fromARGB(255, 22, 22, 22),
-                Color.fromARGB(255, 22, 22, 22),
-                Color.fromARGB(255, 18, 18, 18),
-              ],
-              stops: [
-                0.0,
-                0.5,
-                0.8,
-                0.9,
-                1.0
-              ]),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          extendBody: true,
-          appBar: AppBar(
-            scrolledUnderElevation: 0,
-            backgroundColor: Colors.transparent,
-            centerTitle: true,
-            title: appBarTitle(translations!['first_video']),
-            automaticallyImplyLeading: false,
-          ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox.shrink(),
-              _videoController?.value.isInitialized ?? false
-                  ? Column(
-                      children: [
-                        SizedBox(
-                          width: double.maxFinite,
-                          height: 500,
-                          child: VideoPlayer(_videoController!),
-                        ),
-                        Slider(
-                          activeColor: const Color(0xff3EAE64),
-                          inactiveColor: const Color(0xff00F056),
-                          value: _sliderValue,
-                          min: 0.0,
-                          max: _videoController!.value.duration.inSeconds
-                              .toDouble(),
-                          onChanged: (value) {
-                            setState(() {
-                              _sliderValue = value;
-                              _videoController!
-                                  .seekTo(Duration(seconds: value.toInt()));
-                            });
-                          },
-                        ),
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        GestureDetector(
-                          onTap: _pickVideo,
-                          child: SvgPicture.asset(
-                            'assets/icons/CloudIcon.svg',
-                            width: 210,
-                          ),
-                        ),
-                        Text(
-                          translations!['upload'],
-                          style: const TextStyle(
-                            color: Color(0xFF00E050),
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w900,
-                            fontSize: 15.0,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        SizedBox(
-                          width: 300,
-                          child: Text(
-                            translations!['show_your_habilities'],
-                            style: const TextStyle(
-                              color: Color(0xFF00E050),
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.w900,
-                              fontSize: 15.0,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(25),
-                  child: SvgPicture.asset(
-                    width: 104,
-                    'assets/icons/Logo.svg',
-                  ),
-                ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color.fromARGB(255, 44, 44, 44),
+                    Color.fromARGB(255, 33, 33, 33),
+                    Color.fromARGB(255, 22, 22, 22),
+                    Color.fromARGB(255, 22, 22, 22),
+                    Color.fromARGB(255, 18, 18, 18),
+                  ],
+                  stops: [
+                    0.0,
+                    0.5,
+                    0.8,
+                    0.9,
+                    1.0
+                  ]),
+            ),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              extendBody: true,
+              appBar: AppBar(
+                scrolledUnderElevation: 0,
+                backgroundColor: Colors.transparent,
+                centerTitle: true,
+                title: appBarTitle(translations!['first_video']),
+                automaticallyImplyLeading: false,
               ),
-            ],
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox.shrink(),
+                  _videoController?.value.isInitialized ?? false
+                      ? Column(
+                          children: [
+                            SizedBox(
+                              width: double.maxFinite,
+                              height: 500,
+                              child: VideoPlayer(_videoController!),
+                            ),
+                            Slider(
+                              activeColor: const Color(0xff3EAE64),
+                              inactiveColor: const Color(0xff00F056),
+                              value: _sliderValue,
+                              min: 0.0,
+                              max: _videoController!.value.duration.inSeconds
+                                  .toDouble(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _sliderValue = value;
+                                  _videoController!
+                                      .seekTo(Duration(seconds: value.toInt()));
+                                });
+                              },
+                            ),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            GestureDetector(
+                              onTap: _pickVideo,
+                              child: SvgPicture.asset(
+                                'assets/icons/CloudIcon.svg',
+                                width: 210,
+                              ),
+                            ),
+                            Text(
+                              translations!['upload'],
+                              style: const TextStyle(
+                                color: Color(0xFF00E050),
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w900,
+                                fontSize: 15.0,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            SizedBox(
+                              width: 300,
+                              child: Text(
+                                translations!['show_your_habilities'],
+                                style: const TextStyle(
+                                  color: Color(0xFF00E050),
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 15.0,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(25),
+                      child: SvgPicture.asset(
+                        width: 104,
+                        'assets/icons/Logo.svg',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

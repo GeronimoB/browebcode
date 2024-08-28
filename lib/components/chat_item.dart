@@ -10,7 +10,7 @@ Widget chatItem(
 ) {
   return Container(
     width: Sizes.width,
-    padding: EdgeInsets.symmetric(horizontal: Sizes.padding),
+    padding: EdgeInsets.symmetric(horizontal: 20),
     alignment: sent ? Alignment.centerRight : Alignment.centerLeft,
     child: Container(
       width: Sizes.width * 0.65,

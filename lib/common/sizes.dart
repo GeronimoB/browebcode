@@ -35,7 +35,7 @@ class Sizes {
   static void initSizes(double newWidth, double newHeight) {
     width = newWidth;
     height = newHeight;
-    padding = width / 12;
+    padding = width / 22;
     boxSeparation = padding / 2;
     boxSize = width / 3.6;
     bigButtonSize = width / 2.8;
