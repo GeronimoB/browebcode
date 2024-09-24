@@ -1,5 +1,6 @@
 import 'dart:html' as html;
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
@@ -59,35 +60,41 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
       PlatformFile file = result.files.first;
       Uint8List? videoBytes;
 
-      if (kIsWeb) {
-        videoBytes = file.bytes;
-        if (videoBytes == null) {
-          // Error handling if bytes are null
-          return;
-        }
-
-        if (!await _validateVideoBytes(videoBytes)) {
-          return;
-        }
-
-        Uint8List? thumbnail = await _generateThumbnailFromBytes(videoBytes);
-        if (thumbnail == null) {
-          return;
-        }
-
-        _showUploadDialog();
-        await uploadVideoAndImageBytes(
-          videoBytes,
-          thumbnail,
-          playerProvider.getPlayer()!.userId,
-        );
+      // Si estás en la web, puede que necesites leer el archivo de una forma diferente.
+      if (file.bytes != null) {
+        videoBytes = file.bytes; // Web y PC
+      } else if (file.path != null) {
+        // Para dispositivos móviles o en caso de que bytes sea nulo, leer el archivo desde la ruta
+        videoBytes = await _readFileBytes(file.path!);
       } else {
-        // The following block should not be executed in a web-only context
+        // Error handling if both bytes and path are null
         return;
       }
+
+      if (!await _validateVideoBytes(videoBytes!)) {
+        return;
+      }
+
+      Uint8List? thumbnail = await _generateThumbnailFromBytes(videoBytes);
+      if (thumbnail == null) {
+        return;
+      }
+
+      _showUploadDialog();
+      await uploadVideoAndImageBytes(
+        videoBytes,
+        thumbnail,
+        playerProvider.getPlayer()!.userId,
+      );
     } else {
       // User canceled the picker
     }
+  }
+
+  Future<Uint8List> _readFileBytes(String path) async {
+    // Usa el paquete 'dart:io' para leer archivos en móviles y de escritorio
+    final File file = File(path);
+    return await file.readAsBytes();
   }
 
   Future<bool> _validateVideoBytes(Uint8List bytes) async {
@@ -104,7 +111,8 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
       html.Url.revokeObjectUrl(url);
       return false;
     }
-
+    showSucessSnackBar(context,
+        'alto: ${videoElement.videoHeight} ancho: ${videoElement.videoWidth}');
     if (videoElement.videoHeight < 720 || videoElement.videoWidth < 720) {
       _showChargeDialog("La resolución mínima es de 720p", false);
       html.Url.revokeObjectUrl(url);

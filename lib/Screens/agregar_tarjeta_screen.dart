@@ -41,14 +41,31 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
   final controller = CardFormEditController();
   int isSelected = -1;
   bool _isLoading = false;
+  final ScrollController _scrollController = ScrollController();
+  Color _appBarColor = Colors.transparent;
+
+  void _onScroll() {
+    if (_scrollController.offset > 50) {
+      setState(() {
+        _appBarColor = Colors.black.withOpacity(0.9);
+      });
+    } else {
+      setState(() {
+        _appBarColor = Colors.transparent;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_onScroll);
     controller.addListener(update);
   }
 
   @override
   void dispose() {
+    _scrollController.dispose();
     controller.removeListener(update);
     controller.dispose();
     super.dispose();
@@ -76,7 +93,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
               scrolledUnderElevation: 0,
               centerTitle: true,
               title: appBarTitle(translations!["payment_method"]),
-              backgroundColor: Colors.transparent,
+              backgroundColor: _appBarColor,
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(
@@ -116,6 +133,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
                             ? MediaQuery.of(context).size.height * 0.15
                             : MediaQuery.of(context).size.height * 0.25,
                     child: ListView.builder(
+                      controller: _scrollController,
                       shrinkWrap: true,
                       itemCount: playerProvider.getSavedCards()!.length,
                       itemBuilder: (context, index) {

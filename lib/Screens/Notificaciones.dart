@@ -16,68 +16,96 @@ class Notificaciones extends StatefulWidget {
 }
 
 class _NotificacionesState extends State<Notificaciones> {
+  final ScrollController _scrollController = ScrollController();
+  Color _appBarColor = Colors.transparent;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.offset > 50) {
+      setState(() {
+        _appBarColor = Colors.black.withOpacity(0.9);
+      });
+    } else {
+      setState(() {
+        _appBarColor = Colors.transparent;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Container(
           width: 800,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.fromARGB(255, 44, 44, 44),
-            Color.fromARGB(255, 0, 0, 0),
-          ],
-        ),
-      ),
-      child: Scaffold(
-        extendBody: true,
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          centerTitle: true,
-          title: appBarTitle(translations!["NOTIFICATIONS"]),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Color(0xFF00E050),
-              size: 32,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 44, 44, 44),
+                Color.fromARGB(255, 0, 0, 0),
+              ],
             ),
-            onPressed: () => Navigator.pop(context),
+          ),
+          child: Scaffold(
+            extendBody: true,
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              scrolledUnderElevation: 0,
+              centerTitle: true,
+              title: appBarTitle(translations!["NOTIFICATIONS"]),
+              backgroundColor: _appBarColor,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Color(0xFF00E050),
+                  size: 32,
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(10),
+                    itemCount: currentNotifications.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final noti = currentNotifications[index];
+                      return Container(
+                        alignment: Alignment.center,
+                        width: 400,
+                        child: _buildNotificacionItem(noti),
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Image.asset(
+                    'assets/images/Logo.png',
+                    width: 104,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(10),
-                itemCount: currentNotifications.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final noti = currentNotifications[index];
-                  return Container(
-                    alignment: Alignment.center,
-                    width: 400,
-                    child: _buildNotificacionItem(noti),
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: Image.asset(
-                'assets/images/Logo.png',
-                width: 104,
-              ),
-            ),
-          ],
-        ),
-      ),
-      ),
       ),
     );
   }

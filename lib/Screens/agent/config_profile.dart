@@ -32,6 +32,33 @@ class ConfigProfile extends StatefulWidget {
 }
 
 class _ConfigProfileState extends State<ConfigProfile> {
+  final ScrollController _scrollController = ScrollController();
+  Color _appBarColor = Colors.transparent;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.offset > 50) {
+      setState(() {
+        _appBarColor = Colors.black.withOpacity(0.9);
+      });
+    } else {
+      setState(() {
+        _appBarColor = Colors.transparent;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
@@ -69,7 +96,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                   appBarTitle(translations!["SETTING"]),
                 ],
               ),
-              backgroundColor: Colors.transparent,
+              backgroundColor: _appBarColor,
               leading: IconButton(
                 icon: const Icon(
                   Icons.arrow_back,
@@ -99,6 +126,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                 children: [
                   Expanded(
                     child: ListView(
+                      controller: _scrollController,
                       children: [
                         const SizedBox(height: 22),
                         _buildListItem(translations!["EditInformation"],

@@ -37,11 +37,7 @@ void main() async {
       label: 'Bró Football Platform',
     ),
   );
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  Stripe.publishableKey = ApiConstants.stripePublicKey;
-  await Stripe.instance.applySettings();
+
   List<NotificationModel> notificaciones = await getSavedNotifications();
   if (notificaciones.isNotEmpty) {
     currentNotifications.addAll(notificaciones.reversed);
@@ -141,17 +137,6 @@ class MySplashScreenState extends State<MySplashScreen> {
   @override
   void initState() {
     super.initState();
-    init();
-  }
-
-  Future<void> init() async {
-    await FirebaseApi().initNotifications(context);
-    Stream<RemoteMessage> stream = FirebaseMessaging.onMessageOpenedApp;
-    stream.listen((RemoteMessage event) async {
-      await Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) =>
-              const CustomBottomNavigationBarPlayer(initialIndex: 3)));
-    });
     loadRememberMe();
   }
 
@@ -164,6 +149,7 @@ class MySplashScreenState extends State<MySplashScreen> {
       if (savedUsername.isNotEmpty && savedPassword.isNotEmpty) {
         final playerProvider =
             Provider.of<PlayerProvider>(context, listen: false);
+
         RemoteDataSourceImpl(playerProvider).signIn(
             UserEntity(username: savedUsername, password: savedPassword),
             context,

@@ -254,7 +254,7 @@ class PerfilPageState extends State<PerfilPage> {
                       ),
                     ),
                   ),
-                  child:  Text(
+                  child: Text(
                     '${translations!['viewProfile']}...',
                     style: const TextStyle(
                         color: Color(0xff00E050),

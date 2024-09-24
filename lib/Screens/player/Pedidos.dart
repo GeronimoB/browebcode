@@ -20,6 +20,32 @@ class Pedidos extends StatefulWidget {
 
 class PedidosState extends State<Pedidos> {
   int _selectedPedido = -1;
+  final ScrollController _scrollController = ScrollController();
+  Color _appBarColor = Colors.transparent;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.offset > 50) {
+      setState(() {
+        _appBarColor = Colors.black.withOpacity(0.9);
+      });
+    } else {
+      setState(() {
+        _appBarColor = Colors.transparent;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   Future<List<PedidosModel>> fetchPedidos() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -54,7 +80,7 @@ class PedidosState extends State<Pedidos> {
               width: double.infinity,
               child: AppBar(
                 scrolledUnderElevation: 0,
-                backgroundColor: Colors.transparent,
+                backgroundColor: _appBarColor,
                 automaticallyImplyLeading: false,
                 centerTitle: true,
                 title: appBarTitle(translations!["ORDERS"]),
@@ -129,6 +155,7 @@ class PedidosState extends State<Pedidos> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 15, vertical: 15),
                           child: ListView.builder(
+                            controller: _scrollController,
                             padding: const EdgeInsets.all(0),
                             itemCount: orders.length,
                             itemBuilder: (context, index) {

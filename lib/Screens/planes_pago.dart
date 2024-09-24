@@ -108,6 +108,32 @@ class PlanesPago extends StatefulWidget {
 
 class PlanesPagoState extends State<PlanesPago> {
   int _selectedCardIndex = -1; // Índice de la tarjeta seleccionada
+  final ScrollController _scrollController = ScrollController();
+  Color _appBarColor = Colors.transparent;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.offset > 50) {
+      setState(() {
+        _appBarColor = Colors.black.withOpacity(0.9);
+      });
+    } else {
+      setState(() {
+        _appBarColor = Colors.transparent;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +151,7 @@ class PlanesPagoState extends State<PlanesPago> {
           centerTitle: true,
           title: appBarTitle(translations!["PLANS"]),
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
+          backgroundColor: _appBarColor,
         ),
         backgroundColor: Colors.transparent,
         extendBody: true,
@@ -138,6 +164,7 @@ class PlanesPagoState extends State<PlanesPago> {
               const SizedBox(height: 50),
               Expanded(
                 child: ListView.builder(
+                  controller: _scrollController,
                   padding: const EdgeInsets.all(10),
                   itemCount: planes.length,
                   itemBuilder: (BuildContext context, int index) {

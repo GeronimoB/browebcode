@@ -47,10 +47,25 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
   late PlayerProvider provider;
   late PlayerFullModel player;
   final picker = ImagePicker();
+  final ScrollController _scrollController = ScrollController();
+  Color _appBarColor = Colors.transparent;
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.offset > 50) {
+      setState(() {
+        _appBarColor = Colors.black.withOpacity(0.9);
+      });
+    } else {
+      setState(() {
+        _appBarColor = Colors.transparent;
+      });
+    }
   }
 
   @override
@@ -86,6 +101,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _nombreController.dispose();
     _apellidoController.dispose();
     _correoController.dispose();
@@ -194,7 +210,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
               scrolledUnderElevation: 0,
               centerTitle: true,
               title: appBarTitle(translations!["EDIT_INFORMATION"]),
-              backgroundColor: Colors.transparent,
+              backgroundColor: _appBarColor,
               elevation: 0,
               leading: IconButton(
                   icon: const Icon(
@@ -208,6 +224,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
             ),
             backgroundColor: Colors.transparent,
             body: SingleChildScrollView(
+              controller: _scrollController,
               child: Column(
                 children: <Widget>[
                   const SizedBox(height: 20),

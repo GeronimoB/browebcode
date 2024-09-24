@@ -34,7 +34,10 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
       final response = await ApiClient().post(
         'auth/login',
-        {'UserName': user.username, 'Password': user.password, 'fcm': fcmToken},
+        {
+          'UserName': user.username,
+          'Password': user.password,
+        },
       );
 
       debugPrint(response.body);

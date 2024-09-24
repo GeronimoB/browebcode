@@ -10,10 +10,42 @@ import '../components/app_bar_title.dart';
 import '../infrastructure/firebase_message_repository.dart';
 import '../providers/user_provider.dart';
 
-class MensajesPage extends StatelessWidget {
-  MensajesPage({super.key});
+class MensajesPage extends StatefulWidget {
+  const MensajesPage({super.key});
+
+  @override
+  State<MensajesPage> createState() => _MensajesPageState();
+}
+
+class _MensajesPageState extends State<MensajesPage> {
   final FirebaseMessageRepository messageRepository =
       FirebaseMessageRepository();
+  final ScrollController _scrollController = ScrollController();
+  Color _appBarColor = Colors.transparent;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.offset > 50) {
+      setState(() {
+        _appBarColor = Colors.black.withOpacity(0.9);
+      });
+    } else {
+      setState(() {
+        _appBarColor = Colors.transparent;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +66,7 @@ class MensajesPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           scrolledUnderElevation: 0,
-          backgroundColor: Colors.transparent,
+          backgroundColor: _appBarColor,
           automaticallyImplyLeading: false,
           centerTitle: true,
           title: appBarTitle(translations!["MESSAGE"]),
@@ -61,14 +93,15 @@ class MensajesPage extends StatelessWidget {
                 } else if (snapshot.hasError) {
                   return Expanded(
                     child: Center(
-                      child: Text('${translations!["error"]}: ${snapshot.error}'),
+                      child:
+                          Text('${translations!["error"]}: ${snapshot.error}'),
                     ),
                   );
                 } else {
                   final messagesWithUsers = snapshot.data ?? [];
 
                   if (messagesWithUsers.isEmpty) {
-                    return  Expanded(
+                    return Expanded(
                       child: Center(
                         child: Text(
                           translations!["noMessages"],
@@ -84,6 +117,7 @@ class MensajesPage extends StatelessWidget {
                   }
                   return Expanded(
                     child: ListView.builder(
+                      controller: _scrollController,
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       itemCount: messagesWithUsers.length,
                       itemBuilder: (context, index) {

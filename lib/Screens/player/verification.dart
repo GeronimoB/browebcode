@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:bro_app_to/components/app_bar_title.dart';
 
@@ -54,8 +55,9 @@ class VerificationScreenState extends State<VerificationScreen> {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
       setState(() {
-        files[camp] = pickedFile.path;
+        files[camp] = bytes;
         fileName[camp] = pickedFile.name;
       });
     } else {
@@ -77,14 +79,27 @@ class VerificationScreenState extends State<VerificationScreen> {
       var request = http.MultipartRequest('POST', Uri.parse(url));
 
       for (String camp in files.keys) {
-        String? filePath = files[camp];
-        if (filePath != null) {
-          request.files.add(await http.MultipartFile.fromPath(camp, filePath));
+        dynamic fileData = files[camp];
+
+        if (fileData != null) {
+          if (fileData is Uint8List) {
+            // Si estamos trabajando con bytes
+            request.files.add(http.MultipartFile.fromBytes(
+              camp,
+              fileData,
+              filename: fileName[camp],
+            ));
+          } else if (fileData is String) {
+            // Si es un path (para móviles)
+            request.files
+                .add(await http.MultipartFile.fromPath(camp, fileData));
+          }
         } else {
           showErrorSnackBar(context, translations!["UploadAllFilesMessage"]);
           return;
         }
       }
+
       request.fields["userId"] = userId;
       var response = await request.send();
 
@@ -119,111 +134,111 @@ class VerificationScreenState extends State<VerificationScreen> {
     }
   }
 
-@override
-Widget build(BuildContext context) {
-  return WillPopScope(
-    onWillPop: () async {
-      Navigator.of(context).pushReplacementNamed('/config-player');
-      return false;
-    },
-    child: Center(
-      child: Container(
-        width: 800, // Ancho máximo para el contenedor
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF444444), Color(0xFF000000)],
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pushReplacementNamed('/config-player');
+        return false;
+      },
+      child: Center(
+        child: Container(
+          width: 800, // Ancho máximo para el contenedor
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF444444), Color(0xFF000000)],
+            ),
           ),
-        ),
-        child: Stack(
-          children: [
-            Scaffold(
-              appBar: AppBar(
-                scrolledUnderElevation: 0,
-                centerTitle: true,
-                title: appBarTitle(translations!["Verification"]),
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: Color(0xFF00E050),
-                    size: 32,
+          child: Stack(
+            children: [
+              Scaffold(
+                appBar: AppBar(
+                  scrolledUnderElevation: 0,
+                  centerTitle: true,
+                  title: appBarTitle(translations!["Verification"]),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  leading: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Color(0xFF00E050),
+                      size: 32,
+                    ),
+                    onPressed: () => Navigator.of(context)
+                        .pushReplacementNamed('/config-player'),
                   ),
-                  onPressed: () => Navigator.of(context)
-                      .pushReplacementNamed('/config-player'),
                 ),
-              ),
-              backgroundColor: Colors.transparent,
-              body: Column(
-                children: <Widget>[
-                  const SizedBox(height: 20),
-                  _buildTextField(
-                      label: translations!["Front_ID"], camp: 'dni_frontal'),
-                  _buildTextField(
-                      label: translations!["Back_ID"], camp: 'dni_trasero'),
-                  _buildTextField(
-                      label: translations!["Selfie"], camp: 'selfie'),
-                  const SizedBox(height: 35),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomTextButton(
-                        text: translations!["upload"],
-                        buttonPrimary: true,
-                        width: 150,
-                        height: 45,
-                        onTap: _uploadFiles,
-                      ),
-                      if (widget.newUser) ...[
-                        const SizedBox(
-                          width: 15,
-                        ),
+                backgroundColor: Colors.transparent,
+                body: Column(
+                  children: <Widget>[
+                    const SizedBox(height: 20),
+                    _buildTextField(
+                        label: translations!["Front_ID"], camp: 'dni_frontal'),
+                    _buildTextField(
+                        label: translations!["Back_ID"], camp: 'dni_trasero'),
+                    _buildTextField(
+                        label: translations!["Selfie"], camp: 'selfie'),
+                    const SizedBox(height: 35),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                         CustomTextButton(
-                          text: translations!["skip"],
-                          buttonPrimary: false,
+                          text: translations!["upload"],
+                          buttonPrimary: true,
                           width: 150,
                           height: 45,
-                          onTap: () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const CustomBottomNavigationBarPlayer()),
-                            );
-                          },
+                          onTap: _uploadFiles,
                         ),
-                      ]
-                    ],
-                  ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Image.asset(
-                        'assets/images/Logo.png',
-                        width: 104,
-                      ),
+                        if (widget.newUser) ...[
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          CustomTextButton(
+                            text: translations!["skip"],
+                            buttonPrimary: false,
+                            width: 150,
+                            height: 45,
+                            onTap: () {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CustomBottomNavigationBarPlayer()),
+                              );
+                            },
+                          ),
+                        ]
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-            if (isLoading)
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                color: Colors.black.withOpacity(0.5),
-                child: const Center(
-                  child: CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
-                  ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Image.asset(
+                          'assets/images/Logo.png',
+                          width: 104,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
-          ],
+              if (isLoading)
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.black.withOpacity(0.5),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 

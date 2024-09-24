@@ -366,7 +366,7 @@ class SelectCampState extends State<SelectCamp> {
                   ),
                 ),
                 Positioned(
-                  bottom: screenSize.height * 0.03,
+                  bottom: screenSize.height * 0.015,
                   left: 0,
                   right: 0,
                   child: Center(
@@ -462,6 +462,7 @@ class SelectCampState extends State<SelectCamp> {
                               fontSize: 20)),
                     ],
                   ),
+                  const SizedBox(height: 15),
                   CustomTextButton(
                       onTap: () {
                         setState(() {

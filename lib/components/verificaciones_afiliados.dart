@@ -1,4 +1,5 @@
 import 'dart:io' as io;
+import 'dart:typed_data';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/utils/current_state.dart';
@@ -34,37 +35,37 @@ class VerificationReferralState extends State<VerificationReferral> {
   };
 
   Future<void> _openGallery(String camp) async {
-    if (io.Platform.isIOS || io.Platform.isAndroid) {
-      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
 
-      if (pickedFile != null) {
+    if (result != null) {
+      final pickedFile = result.files.single;
+
+      if (pickedFile.bytes != null) {
+        // En PC o Web, usar los bytes
         setState(() {
-          files[camp] = pickedFile.path;
+          files[camp] = pickedFile.bytes; // Guardar los bytes en lugar del path
           fileName[camp] = pickedFile.name;
         });
-      } else {
-        debugPrint('No image selected.');
-      }
-    } else {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.image,
-        allowMultiple: false,
-      );
-
-      if (result != null) {
-        final pickedFile = result.files.single;
+      } else if (pickedFile.path != null) {
+        // En móvil, usar el path
         setState(() {
           files[camp] = pickedFile.path!;
           fileName[camp] = pickedFile.name;
         });
-      } else {
-        debugPrint('No image selected.');
       }
+    } else {
+      debugPrint('No image selected.');
     }
   }
 
   void _uploadFiles() async {
     try {
+      setState(() {
+        isLoading = true;
+      });
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final usuario = userProvider.getCurrentUser();
       String userId = usuario.userId.toString();
@@ -74,26 +75,50 @@ class VerificationReferralState extends State<VerificationReferral> {
       var request = http.MultipartRequest('POST', Uri.parse(url));
 
       for (String camp in files.keys) {
-        String? filePath = files[camp];
-        if (filePath != null) {
-          request.files.add(await http.MultipartFile.fromPath(camp, filePath));
+        var fileData = files[camp];
+
+        if (fileData != null) {
+          if (fileData is Uint8List) {
+            // Si son bytes
+            request.files.add(http.MultipartFile.fromBytes(
+              camp,
+              fileData,
+              filename: fileName[camp],
+            ));
+          } else if (fileData is String) {
+            // Si es un path (para móvil)
+            request.files
+                .add(await http.MultipartFile.fromPath(camp, fileData));
+          }
         } else {
+          setState(() {
+            isLoading = false;
+          });
           showErrorSnackBar(context, translations!['please_upload_all_files']);
           return;
         }
       }
+
       request.fields["userId"] = userId;
       var response = await request.send();
 
       if (response.statusCode == 200) {
+        setState(() {
+          isLoading = false;
+        });
         showSucessSnackBar(
             context, translations!['scss_upload_referals_files']);
-
         Navigator.of(context).pop();
       } else {
+        setState(() {
+          isLoading = false;
+        });
         showErrorSnackBar(context, translations!['error_try_again']);
       }
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       showErrorSnackBar(context, translations!['error_try_again']);
     }
   }
@@ -118,106 +143,110 @@ class VerificationReferralState extends State<VerificationReferral> {
         ),
         child: Stack(
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  translations!['company_or_autum'],
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    color: Color(0xff00E050),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                if (showUploadFiles) ...[
-                  SizedBox(
-                    width: double.maxFinite,
-                    child: Text(
-                      translations!['upload_doc'],
-                      style: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 11,
-                        fontStyle: FontStyle.italic,
-                      ),
+            if (!isLoading)
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    translations!['company_or_autum'],
+                    style: const TextStyle(
+                      fontFamily: 'Montserrat',
+                      color: Color(0xff00E050),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  _buildTextField(
-                      label: translations!["036orCIFDocument"],
-                      camp: 'documento'),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.maxFinite,
-                    child: Text(
-                      translations!['upload_dni'],
-                      style: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 11,
-                        fontStyle: FontStyle.italic,
+                  const SizedBox(height: 5),
+                  if (showUploadFiles) ...[
+                    SizedBox(
+                      width: double.maxFinite,
+                      child: Text(
+                        translations!['upload_doc'],
+                        style: const TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 11,
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  _buildTextField(
-                      label: translations!["Front_ID"], camp: 'dni_frontal'),
-                  _buildTextField(
-                      label: translations!["Back_ID"], camp: 'dni_trasero'),
-                  const SizedBox(height: 35),
-                  Center(
-                    child: CustomTextButton(
-                      onTap: () {
-                        _uploadFiles();
-                      },
-                      text: translations!['send'],
-                      buttonPrimary: true,
-                      width: 90,
-                      height: 27,
-                    ),
-                  ),
-                ],
-                if (!showUploadFiles) ...[
-                  const SizedBox(height: 35),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CustomTextButton(
-                        onTap: () => Navigator.of(context).pop(),
-                        text: translations!['not'],
-                        buttonPrimary: false,
-                        width: 90,
-                        height: 27,
+                    const SizedBox(height: 10),
+                    _buildTextField(
+                        label: translations!["036orCIFDocument"],
+                        camp: 'documento'),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: double.maxFinite,
+                      child: Text(
+                        translations!['upload_dni'],
+                        style: const TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 11,
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
-                      CustomTextButton(
+                    ),
+                    const SizedBox(height: 20),
+                    _buildTextField(
+                        label: translations!["Front_ID"], camp: 'dni_frontal'),
+                    _buildTextField(
+                        label: translations!["Back_ID"], camp: 'dni_trasero'),
+                    const SizedBox(height: 35),
+                    Center(
+                      child: CustomTextButton(
                         onTap: () {
-                          setState(() {
-                            showUploadFiles = true;
-                          });
+                          _uploadFiles();
                         },
-                        text: translations!['yes'],
+                        text: translations!['send'],
                         buttonPrimary: true,
                         width: 90,
                         height: 27,
                       ),
-                    ],
-                  ),
-                ]
-              ],
-            ),
+                    ),
+                  ],
+                  if (!showUploadFiles) ...[
+                    const SizedBox(height: 35),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CustomTextButton(
+                          onTap: () => Navigator.of(context).pop(),
+                          text: translations!['not'],
+                          buttonPrimary: false,
+                          width: 90,
+                          height: 27,
+                        ),
+                        CustomTextButton(
+                          onTap: () {
+                            setState(() {
+                              showUploadFiles = true;
+                            });
+                          },
+                          text: translations!['yes'],
+                          buttonPrimary: true,
+                          width: 90,
+                          height: 27,
+                        ),
+                      ],
+                    ),
+                  ]
+                ],
+              ),
             if (isLoading)
-              const Expanded(
-                child: Center(
-                  child: CircularProgressIndicator(
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+              const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                    ),
                   ),
-                ),
+                ],
               ),
           ],
         ),

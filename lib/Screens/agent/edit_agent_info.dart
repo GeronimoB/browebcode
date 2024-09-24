@@ -34,10 +34,31 @@ class EditarInfoState extends State<EditarInfo> {
   late AgenteProvider provider;
   late Agente agente;
   final picker = ImagePicker();
+  final ScrollController _scrollController = ScrollController();
+  Color _appBarColor = Colors.transparent;
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.offset > 50) {
+      setState(() {
+        _appBarColor = Colors.black.withOpacity(0.9);
+      });
+    } else {
+      setState(() {
+        _appBarColor = Colors.transparent;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -104,7 +125,7 @@ class EditarInfoState extends State<EditarInfo> {
               scrolledUnderElevation: 0,
               centerTitle: true,
               title: appBarTitle(translations!["EDIT_INFORMATION"]),
-              backgroundColor: Colors.transparent,
+              backgroundColor: _appBarColor,
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(
@@ -117,6 +138,7 @@ class EditarInfoState extends State<EditarInfo> {
             ),
             backgroundColor: Colors.transparent,
             body: SingleChildScrollView(
+              controller: _scrollController,
               child: Column(
                 children: <Widget>[
                   const SizedBox(height: 20),
