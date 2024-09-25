@@ -197,9 +197,10 @@ class _MatchProfileState extends State<MatchProfile> {
                                     color: Colors.white,
                                   ),
                                 ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
+                                if (userData.verificado)
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
                                 if (userData.verificado)
                                   const Icon(
                                     Icons.verified,

@@ -174,6 +174,11 @@ class PlayerProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateStatus(bool value) {
+    _player = _player.copyWith(registroCompleto: value);
+    notifyListeners();
+  }
+
   void setIsLoading(bool val) {
     isLoading = val;
     notifyListeners();

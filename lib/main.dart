@@ -30,6 +30,11 @@ import 'src/auth/domain/entitites/user_entity.dart';
 final navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  Stripe.publishableKey = ApiConstants.stripePublicKey;
+  await Stripe.instance.applySettings();
   setUrlStrategy(
       CustomPathStrategy(appTitle: 'Bró Football Platform') as UrlStrategy);
   SystemChrome.setApplicationSwitcherDescription(

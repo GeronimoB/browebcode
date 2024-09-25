@@ -74,6 +74,7 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
           appBar: AppBar(
             scrolledUnderElevation: 0,
             centerTitle: true,
+            toolbarHeight: 85,
             title: Column(
               children: [
                 const SizedBox(height: 22),
@@ -87,6 +88,7 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                   ),
                 ),
                 appBarTitle(translations!["SETTING"]),
+                const SizedBox(height: 5),
               ],
             ),
             backgroundColor: _appBarColor,

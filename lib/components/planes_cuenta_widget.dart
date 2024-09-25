@@ -38,10 +38,12 @@ class _PlanesCuentaWidgetState extends State<PlanesCuentaWidget> {
       margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.transparent,
+        color: isActualPlan
+            ? const Color.fromARGB(255, 33, 33, 33)
+            : Colors.transparent,
         border: Border.all(color: const Color(0xFF05FF00)),
         boxShadow: isActualPlan
-            ? [const CustomBoxShadow(color: Color(0xFF05FF00), blurRadius: 10)]
+            ? [const CustomBoxShadow(color: Color(0xFF05FF00), blurRadius: 15)]
             : null,
         borderRadius: BorderRadius.circular(40),
       ),

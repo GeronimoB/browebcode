@@ -9,7 +9,7 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
   if (fileUrl.isEmpty) {
     return;
   }
-
+  String fileName = fileUrl.split('/').last;
   try {
     // Show a loading dialog
     showDialog(
@@ -24,65 +24,23 @@ Future<void> _handleDownload(String fileUrl, BuildContext context) async {
       },
     );
 
-    html.window.open(fileUrl, '_blank');
+    final response = await html.HttpRequest.request(fileUrl);
+
+    // Crea un blob con el contenido del video
+    final blob = html.Blob([response.response], 'video/mp4');
+
+    // Crea una URL para el blob
+    final url = html.Url.createObjectUrlFromBlob(blob);
+
+    // Crea un elemento de ancla para la descarga
+    final anchor = html.AnchorElement(href: url)
+      ..setAttribute('download', fileName) // Usa el nombre original del archivo
+      ..click();
+
+    // Limpieza
+    html.Url.revokeObjectUrl(url);
 
     Navigator.of(context).pop();
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 400),
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: const Color(0xff3B3B3B),
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
-                  blurRadius: 10,
-                  offset: const Offset(5, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  translations!["congrats"],
-                  style: const TextStyle(
-                    color: Color(0xff00E050),
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  translations!["fileSaved"],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   } catch (e) {
     Navigator.of(context).pop();
 

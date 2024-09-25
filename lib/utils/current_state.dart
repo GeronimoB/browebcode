@@ -6,7 +6,7 @@ Map<String, dynamic>? translations;
 Map<String, dynamic> nationalCategories = {
   'male': {'U15': 'U15', 'U17': 'U17', 'U19': 'U19', 'U21': 'U21'},
   'female': {'U17': 'U17', 'U20': 'U20'},
-  'none': {'ninguna'}
+  'none': {'ninguna': 'ninguna'}
 };
 
 Map<String, String> alturas = {

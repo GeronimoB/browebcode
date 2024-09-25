@@ -81,6 +81,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
             appBar: AppBar(
               scrolledUnderElevation: 0,
               centerTitle: true,
+              toolbarHeight: 100,
               title: Column(
                 children: [
                   const SizedBox(height: 22),
@@ -94,6 +95,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                     ),
                   ),
                   appBarTitle(translations!["SETTING"]),
+                  const SizedBox(height: 5),
                 ],
               ),
               backgroundColor: _appBarColor,
@@ -519,7 +521,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
     );
   }
 
-  void changeLanguage(BuildContext context, String languageCode) async {
+  Future<void> changeLanguage(BuildContext context, String languageCode) async {
     LanguageLocalizations? localizations = LanguageLocalizations.of(context);
     if (localizations != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -596,8 +598,8 @@ class _ConfigProfileState extends State<ConfigProfile> {
   Widget languageTile(
       BuildContext context, String languageCode, String language, bool select) {
     return InkWell(
-      onTap: () {
-        changeLanguage(context, languageCode);
+      onTap: () async {
+        await changeLanguage(context, languageCode);
         Navigator.pop(context);
       },
       child: Container(

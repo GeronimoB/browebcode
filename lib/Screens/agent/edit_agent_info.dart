@@ -28,9 +28,7 @@ class EditarInfoState extends State<EditarInfo> {
   late TextEditingController _nombreController;
   late TextEditingController _apellidoController;
   late TextEditingController _correoController;
-  late TextEditingController _usuarioController;
   late TextEditingController _paisController;
-  late TextEditingController _provinciaController;
   late AgenteProvider provider;
   late Agente agente;
   final picker = ImagePicker();
@@ -69,9 +67,7 @@ class EditarInfoState extends State<EditarInfo> {
     _nombreController = TextEditingController(text: agente.nombre);
     _apellidoController = TextEditingController(text: agente.apellido);
     _correoController = TextEditingController(text: agente.correo);
-    _usuarioController = TextEditingController(text: agente.usuario);
-    _paisController = TextEditingController(text: agente.pais);
-    _provinciaController = TextEditingController(text: agente.provincia);
+    _paisController = TextEditingController(text: countries[agente.pais]);
   }
 
   Future<void> _openGallery() async {
@@ -211,17 +207,9 @@ class EditarInfoState extends State<EditarInfo> {
                       controller: _correoController,
                       camp: 'email'),
                   _buildTextField(
-                      label: translations!["username"],
-                      controller: _usuarioController,
-                      camp: 'username'),
-                  _buildTextField(
                       label: translations!["Country"],
                       controller: _paisController,
                       camp: 'pais'),
-                  _buildTextField(
-                      label: translations!["Province"],
-                      controller: _provinciaController,
-                      camp: 'provincia'),
                 ],
               ),
             ),

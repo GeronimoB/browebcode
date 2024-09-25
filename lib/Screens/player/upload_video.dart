@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:html' as html;
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
@@ -38,6 +40,7 @@ class UploadVideoWidget extends StatefulWidget {
 class _UploadVideoWidgetState extends State<UploadVideoWidget> {
   late UserProvider userProvider;
   late PlayerProvider playerProvider;
+
   @override
   void initState() {
     super.initState();
@@ -61,31 +64,28 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
       Uint8List? videoBytes;
 
       // Si estás en la web, puede que necesites leer el archivo de una forma diferente.
-      if (file.bytes != null) {
-        videoBytes = file.bytes; // Web y PC
-      } else if (file.path != null) {
-        // Para dispositivos móviles o en caso de que bytes sea nulo, leer el archivo desde la ruta
-        videoBytes = await _readFileBytes(file.path!);
+      if (kIsWeb) {
+        videoBytes = file.bytes;
+        if (videoBytes == null) {
+          // Error handling if bytes are null
+          return;
+        }
+
+        if (!await _validateVideoBytes(videoBytes)) {
+          return;
+        }
+
+        Uint8List? thumbnail = await _generateThumbnailFromBytes(videoBytes);
+
+        _showUploadDialog();
+        await uploadVideoAndImageBytes(
+          videoBytes,
+          thumbnail,
+          playerProvider.getPlayer()!.userId,
+        );
       } else {
-        // Error handling if both bytes and path are null
         return;
       }
-
-      if (!await _validateVideoBytes(videoBytes!)) {
-        return;
-      }
-
-      Uint8List? thumbnail = await _generateThumbnailFromBytes(videoBytes);
-      if (thumbnail == null) {
-        return;
-      }
-
-      _showUploadDialog();
-      await uploadVideoAndImageBytes(
-        videoBytes,
-        thumbnail,
-        playerProvider.getPlayer()!.userId,
-      );
     } else {
       // User canceled the picker
     }
@@ -111,9 +111,8 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
       html.Url.revokeObjectUrl(url);
       return false;
     }
-    showSucessSnackBar(context,
-        'alto: ${videoElement.videoHeight} ancho: ${videoElement.videoWidth}');
-    if (videoElement.videoHeight < 720 || videoElement.videoWidth < 720) {
+
+    if (videoElement.videoHeight < 720 && videoElement.videoWidth < 720) {
       _showChargeDialog("La resolución mínima es de 720p", false);
       html.Url.revokeObjectUrl(url);
       return false;
@@ -135,31 +134,39 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     final videoElement = html.VideoElement()
       ..src = url
       ..load();
+    try {
+      await videoElement.onLoadedMetadata.first;
+      await videoElement.onCanPlayThrough.first;
+      videoElement.currentTime = 1;
+      await videoElement.onSeeked.first;
 
-    await videoElement.onLoadedMetadata.first;
-    videoElement.currentTime = 1; // Captura el fotograma en el segundo 1
-    await videoElement.onSeeked.first;
+      final canvas = html.CanvasElement(
+        width: videoElement.videoWidth,
+        height: videoElement.videoHeight,
+      );
+      final ctx = canvas.context2D;
+      ctx.drawImage(videoElement, 0, 0);
 
-    final canvas = html.CanvasElement(
-      width: videoElement.videoWidth,
-      height: videoElement.videoHeight,
-    );
-    final ctx = canvas.context2D;
-    ctx.drawImage(videoElement, 0, 0);
+      final thumbnailDataUrl = canvas.toDataUrl('image/png');
+      html.Url.revokeObjectUrl(url);
 
-    final thumbnailDataUrl = canvas.toDataUrl('image/png');
-    html.Url.revokeObjectUrl(url);
-
-    final byteString = html.window.atob(thumbnailDataUrl.split(',').last);
-    final buffer = Uint8List(byteString.length);
-    for (int i = 0; i < byteString.length; i++) {
-      buffer[i] = byteString.codeUnitAt(i);
+      final byteString = html.window.atob(thumbnailDataUrl.split(',').last);
+      final buffer = Uint8List(byteString.length);
+      for (int i = 0; i < byteString.length; i++) {
+        buffer[i] = byteString.codeUnitAt(i);
+      }
+      return buffer;
+    } catch (e) {
+      showErrorSnackBar(context, 'Error al generar la miniatura: $e');
+      html.Url.revokeObjectUrl(url);
+      return null;
     }
-    return buffer;
   }
 
-  void _showSubscriptionRe() {
-    showErrorSnackBar(context, translations!["InactiveSubscriptionMessage"]);
+  // Convierte el Data URL de la imagen en bytes
+  Future<Uint8List> _dataUrlToBytes(String dataUrl) async {
+    final uriData = Uri.parse(dataUrl);
+    return Uint8List.fromList(uriData.data!.contentAsBytes());
   }
 
   Future<void> uploadVideoAndImageBytes(
@@ -280,9 +287,52 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     );
   }
 
+  String errorMessage = '';
+
+  Future<bool> _canUploadMoreVideos() async {
+    final videosCountResponse = await ApiClient()
+        .get('auth/videos_count/${userProvider.getCurrentUser().userId}');
+
+    try {
+      // Verifica si la respuesta es exitosa
+      if (videosCountResponse.statusCode == 200) {
+        final jsonData = jsonDecode(videosCountResponse.body);
+        final total = jsonData["userVideosCount"];
+        final maxVideosAllowed =
+            videosForPlan[userProvider.getCurrentUser().subscription];
+
+        if (total >= maxVideosAllowed) {
+          setState(() {
+            errorMessage = translations!["VideoLimitExceededMessage"];
+          });
+          return false;
+        }
+        return true;
+      } else {
+        setState(() {
+          errorMessage = translations!["ErrorOccurredMessage"];
+        });
+        return false;
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = translations!["ErrorOccurredMessage"];
+      });
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final player = playerProvider.getPlayer();
+    final canUploadVideo = userProvider.getCurrentUser().status &&
+        (player?.registroCompleto ?? false) &&
+        (player?.emailVerified ?? false);
+
+    if (!canUploadVideo) {
+      errorMessage = translations!["InactiveSubscriptionMessage"];
+    }
+
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -306,88 +356,95 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
         ),
         extendBody: true,
         body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox.shrink(),
-              Column(
-                children: [
-                  GestureDetector(
-                    onTap: (userProvider.getCurrentUser().status &&
-                            (player?.registroCompleto ?? false) &&
-                            (player?.emailVerified ?? false))
-                        ? () async {
-                            final videosCount = await ApiClient().get(
-                                'auth/videos_count/${userProvider.getCurrentUser().userId}');
-                            try {
-                              if (videosCount.statusCode == 200) {
-                                final jsonData = jsonDecode(videosCount.body);
-                                final total = jsonData["userVideosCount"];
-
-                                if (total <
-                                    videosForPlan[userProvider
-                                        .getCurrentUser()
-                                        .subscription]) {
-                                  _pickVideo();
-                                } else {
-                                  showErrorSnackBar(
-                                      context,
-                                      translations![
-                                          "VideoLimitExceededMessage"]);
-                                }
-                              }
-                            } catch (e) {
-                              showErrorSnackBar(context,
-                                  translations!["ErrorOccurredMessage"]);
-                            }
-                          }
-                        : _showSubscriptionRe,
-                    child: SvgPicture.asset(
-                      'assets/icons/CloudIcon.svg',
-                      width: 210,
-                    ),
-                  ),
-                  Text(
-                    translations!['upload'],
+          child: errorMessage.isEmpty
+              ? FutureBuilder<bool>(
+                  future: _canUploadMoreVideos(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError || !(snapshot.data ?? false)) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Text(
+                            errorMessage ??
+                                translations!["ErrorOccurredMessage"],
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 18.0,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox.shrink(),
+                          Column(
+                            children: [
+                              GestureDetector(
+                                onTap: _pickVideo,
+                                child: SvgPicture.asset(
+                                  'assets/icons/CloudIcon.svg',
+                                  width: 210,
+                                ),
+                              ),
+                              Text(
+                                translations!['upload'],
+                                style: const TextStyle(
+                                  color: Color(0xFF00E050),
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 15.0,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              SizedBox(
+                                width: 300,
+                                child: Text(
+                                  translations!['show_your_habilities'],
+                                  style: const TextStyle(
+                                    color: Color(0xFF00E050),
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 15.0,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 25),
+                              child: SvgPicture.asset(
+                                'assets/icons/Logo.svg',
+                                width: 104,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                )
+              : Center(
+                  child: Text(
+                    errorMessage,
                     style: const TextStyle(
-                      color: Color(0xFF00E050),
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w900,
-                      fontSize: 15.0,
+                      color: Colors.red,
+                      fontSize: 18.0,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  SizedBox(
-                    width: 300,
-                    child: Text(
-                      translations!['show_your_habilities'],
-                      style: const TextStyle(
-                        color: Color(0xFF00E050),
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w900,
-                        fontSize: 15.0,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 25),
-                  child: SvgPicture.asset(
-                    'assets/icons/Logo.svg',
-                    width: 104,
-                  ),
                 ),
-              ),
-            ],
-          ),
         ),
       ),
     );

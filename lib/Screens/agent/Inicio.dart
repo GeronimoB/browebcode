@@ -251,9 +251,11 @@ class InicioPageState extends State<InicioPage> {
                     Positioned(
                       left: 0,
                       right: 0,
-                      bottom: 10,
+                      bottom: 4,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        color: Colors.black.withOpacity(0.6),
                         width: MediaQuery.of(context).size.width - 10,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

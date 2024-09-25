@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import '../../../../components/snackbar.dart';
 import '../../../../utils/current_state.dart';
 import 'dart:html' as html;
 
@@ -80,27 +81,33 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
     final videoElement = html.VideoElement()
       ..src = url
       ..load();
+    try {
+      await videoElement.onLoadedMetadata.first;
+      await videoElement.onCanPlayThrough.first;
+      videoElement.currentTime = 1;
+      await videoElement.onSeeked.first;
 
-    await videoElement.onLoadedMetadata.first;
-    videoElement.currentTime = 1; // Captura el fotograma en el segundo 1
-    await videoElement.onSeeked.first;
+      final canvas = html.CanvasElement(
+        width: videoElement.videoWidth,
+        height: videoElement.videoHeight,
+      );
+      final ctx = canvas.context2D;
+      ctx.drawImage(videoElement, 0, 0);
 
-    final canvas = html.CanvasElement(
-      width: videoElement.videoWidth,
-      height: videoElement.videoHeight,
-    );
-    final ctx = canvas.context2D;
-    ctx.drawImage(videoElement, 0, 0);
+      final thumbnailDataUrl = canvas.toDataUrl('image/png');
+      html.Url.revokeObjectUrl(url);
 
-    final thumbnailDataUrl = canvas.toDataUrl('image/png');
-    html.Url.revokeObjectUrl(url);
-
-    final byteString = html.window.atob(thumbnailDataUrl.split(',').last);
-    final buffer = Uint8List(byteString.length);
-    for (int i = 0; i < byteString.length; i++) {
-      buffer[i] = byteString.codeUnitAt(i);
+      final byteString = html.window.atob(thumbnailDataUrl.split(',').last);
+      final buffer = Uint8List(byteString.length);
+      for (int i = 0; i < byteString.length; i++) {
+        buffer[i] = byteString.codeUnitAt(i);
+      }
+      return buffer;
+    } catch (e) {
+      showErrorSnackBar(context, 'Error al generar la miniatura: $e');
+      html.Url.revokeObjectUrl(url);
+      return null;
     }
-    return buffer;
   }
 
   Future<bool> _validateVideoBytes(Uint8List bytes) async {
@@ -118,7 +125,7 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
       return false;
     }
 
-    if (videoElement.videoHeight < 720 || videoElement.videoWidth < 720) {
+    if (videoElement.videoHeight < 720 && videoElement.videoWidth < 720) {
       showUploadDialog("La resolución mínima es de 720p", false);
       html.Url.revokeObjectUrl(url);
       return false;
@@ -156,9 +163,6 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
         }
 
         Uint8List? thumbnail = await _generateThumbnailFromBytes(videoBytes);
-        if (thumbnail == null) {
-          return;
-        }
 
         final playerProvider =
             Provider.of<PlayerProvider>(context, listen: false);

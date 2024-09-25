@@ -38,7 +38,7 @@ class AgregarTarjetaScreen extends StatefulWidget {
 }
 
 class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
-  final controller = CardFormEditController();
+  final controller = CardEditController();
   int isSelected = -1;
   bool _isLoading = false;
   final ScrollController _scrollController = ScrollController();
@@ -77,152 +77,164 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
   Widget build(BuildContext context) {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: true);
 
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
-        ),
-      ),
-      child: Stack(
-        children: [
-          Scaffold(
-            appBar: AppBar(
-              scrolledUnderElevation: 0,
-              centerTitle: true,
-              title: appBarTitle(translations!["payment_method"]),
-              backgroundColor: _appBarColor,
-              elevation: 0,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Color(0xFF00E050),
-                  size: 32,
-                ),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ),
-            backgroundColor: Colors.transparent,
-            resizeToAvoidBottomInset: false,
-            body: Container(
-              height: MediaQuery.of(context).size.height - 100,
-              padding: const EdgeInsets.all(26.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: double.maxFinite,
-                    child: Text(
-                      translations!["available_cards"],
-                      style: const TextStyle(
-                          color: Color(0xFF00E050),
-                          fontSize: 18,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  Container(
-                    padding: const EdgeInsets.all(0),
-                    height: playerProvider.getSavedCards()!.isEmpty
-                        ? 0
-                        : playerProvider.getSavedCards()!.length < 3
-                            ? MediaQuery.of(context).size.height * 0.15
-                            : MediaQuery.of(context).size.height * 0.25,
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      shrinkWrap: true,
-                      itemCount: playerProvider.getSavedCards()!.length,
-                      itemBuilder: (context, index) {
-                        Tarjeta tarjeta =
-                            playerProvider.getSavedCards()![index];
-                        final player = playerProvider.getPlayer() ??
-                            playerProvider.getTemporalUser();
-                        final String titular =
-                            '${player.name} ${player.lastName}';
-                        return _buildListCard(
-                            tarjeta, index, titular, playerProvider);
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  SizedBox(
-                    width: double.maxFinite,
-                    child: Text(
-                      translations!["add_card_title"],
-                      style: const TextStyle(
-                          color: Color(0xFF00E050),
-                          fontSize: 18,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  CardFormField(
-                    countryCode: 'ES',
-                    enablePostalCode: false,
-                    onCardChanged: (details) {
-                      if (controller.details.complete) {
-                        FocusScope.of(context).unfocus();
-                      }
-                    },
-                    controller: controller,
-                    style: CardFormStyle(
-                      backgroundColor: Colors.white,
-                      borderWidth: 2,
-                      borderColor: const Color(0xFF00E050),
-                      cursorColor: const Color(0xFF00E050),
-                      borderRadius: 15,
-                      fontSize: 14,
-                      textColor: Colors.black,
-                      placeholderColor: Colors.black,
-                    ),
-                  ),
-                  CustomTextButton(
-                      onTap: controller.details.complete == true
-                          ? () {
-                              _handleAddCard();
-                            }
-                          : () => FocusScope.of(context).unfocus(),
-                      text: translations!["add_card_btn"],
-                      buttonPrimary: false,
-                      width: 233,
-                      height: 32),
-                  const SizedBox(height: 16.0),
-                  CustomTextButton(
-                      onTap: () {
-                        _handlePressPay();
-                      },
-                      text: translations!["pay_btn"],
-                      buttonPrimary: true,
-                      width: 233,
-                      height: 30),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child:
-                          SvgPicture.asset('assets/icons/Logo.svg', width: 80),
-                    ),
-                  ),
-                ],
-              ),
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
             ),
           ),
-          if (_isLoading)
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: Colors.black.withOpacity(0.5),
-              child: const Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+          child: Stack(
+            children: [
+              Scaffold(
+                appBar: AppBar(
+                  scrolledUnderElevation: 0,
+                  centerTitle: true,
+                  title: appBarTitle(translations!["payment_method"]),
+                  backgroundColor: _appBarColor,
+                  elevation: 0,
+                  leading: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Color(0xFF00E050),
+                      size: 32,
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ),
+                backgroundColor: Colors.transparent,
+                resizeToAvoidBottomInset: false,
+                body: Container(
+                  height: MediaQuery.of(context).size.height - 100,
+                  padding: const EdgeInsets.all(26.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: double.maxFinite,
+                        child: Text(
+                          translations!["available_cards"],
+                          style: const TextStyle(
+                              color: Color(0xFF00E050),
+                              fontSize: 18,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      Container(
+                        padding: const EdgeInsets.all(0),
+                        height: playerProvider.getSavedCards()!.isEmpty
+                            ? 0
+                            : playerProvider.getSavedCards()!.length < 3
+                                ? MediaQuery.of(context).size.height * 0.15
+                                : MediaQuery.of(context).size.height * 0.25,
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          shrinkWrap: true,
+                          itemCount: playerProvider.getSavedCards()!.length,
+                          itemBuilder: (context, index) {
+                            Tarjeta tarjeta =
+                                playerProvider.getSavedCards()![index];
+                            final player = playerProvider.getPlayer() ??
+                                playerProvider.getTemporalUser();
+                            final String titular =
+                                '${player.name} ${player.lastName}';
+                            return _buildListCard(
+                                tarjeta, index, titular, playerProvider);
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      SizedBox(
+                        width: double.maxFinite,
+                        child: Text(
+                          translations!["add_card_title"],
+                          style: const TextStyle(
+                              color: Color(0xFF00E050),
+                              fontSize: 18,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      CardField(
+                        countryCode: 'ES',
+                        controller: controller,
+                        autofocus: true,
+                        onCardChanged: (card) {
+                          if (controller.details.complete) {
+                            FocusScope.of(context).unfocus();
+                          }
+                        },
+                        numberHintText: 'Número de tarjeta',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          decoration: TextDecoration.none,
+                        ),
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(vertical: 5),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Color(0xFF00F056), width: 2),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      CustomTextButton(
+                          onTap: controller.details.complete == true
+                              ? () {
+                                  _handleAddCard();
+                                }
+                              : () => FocusScope.of(context).unfocus(),
+                          text: translations!["add_card_btn"],
+                          buttonPrimary: false,
+                          width: 233,
+                          height: 32),
+                      const SizedBox(height: 16.0),
+                      CustomTextButton(
+                          onTap: () {
+                            _handlePressPay();
+                          },
+                          text: translations!["pay_btn"],
+                          buttonPrimary: true,
+                          width: 233,
+                          height: 30),
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SvgPicture.asset('assets/icons/Logo.svg',
+                              width: 80),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-        ],
+              if (_isLoading)
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.black.withOpacity(0.5),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }

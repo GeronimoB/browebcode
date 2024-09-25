@@ -137,78 +137,83 @@ class PlanesPagoState extends State<PlanesPago> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/backgroundplanes.png'),
-          fit: BoxFit.cover,
-        ),
-        color: Color.fromARGB(255, 0, 0, 0),
-      ),
-      child: Scaffold(
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          centerTitle: true,
-          title: appBarTitle(translations!["PLANS"]),
-          automaticallyImplyLeading: false,
-          backgroundColor: _appBarColor,
-        ),
-        backgroundColor: Colors.transparent,
-        extendBody: true,
-        body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(height: 50),
-              Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.all(10),
-                  itemCount: planes.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildCard(index);
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(22.0),
-                child: CustomTextButton(
-                  onTap: () {
-                    final playerProvider =
-                        Provider.of<PlayerProvider>(context, listen: false);
-                    final precio = playerProvider
-                        .getActualPlan()!
-                        .precio
-                        .replaceAll(',', '.');
-                    final precioDouble = double.parse(precio);
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MetodoDePagoScreen(
-                                valueToPay: precioDouble,
-                              )),
-                    );
-                  },
-                  text: translations!["next"],
-                  buttonPrimary: true,
-                  width: 116,
-                  height: 39,
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: SvgPicture.asset(
-                    'assets/icons/Logo.svg',
-                    width: 104,
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/backgroundplanes.png'),
+              fit: BoxFit.cover,
+            ),
+            color: Color.fromARGB(255, 0, 0, 0),
+          ),
+          child: Scaffold(
+            appBar: AppBar(
+              scrolledUnderElevation: 0,
+              centerTitle: true,
+              title: appBarTitle(translations!["PLANS"]),
+              automaticallyImplyLeading: false,
+              backgroundColor: _appBarColor,
+            ),
+            backgroundColor: Colors.transparent,
+            extendBody: true,
+            body: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 50),
+                  Expanded(
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.all(10),
+                      itemCount: planes.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return _buildCard(index);
+                      },
+                    ),
                   ),
-                ),
-              )
-            ],
+                  Padding(
+                    padding: const EdgeInsets.all(22.0),
+                    child: CustomTextButton(
+                      onTap: () {
+                        final playerProvider =
+                            Provider.of<PlayerProvider>(context, listen: false);
+                        final precio = playerProvider
+                            .getActualPlan()!
+                            .precio
+                            .replaceAll(',', '.');
+                        final precioDouble = double.parse(precio);
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MetodoDePagoScreen(
+                                    valueToPay: precioDouble,
+                                  )),
+                        );
+                      },
+                      text: translations!["next"],
+                      buttonPrimary: true,
+                      width: 116,
+                      height: 39,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20.0),
+                      child: SvgPicture.asset(
+                        'assets/icons/Logo.svg',
+                        width: 104,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),

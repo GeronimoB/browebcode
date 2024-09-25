@@ -151,7 +151,7 @@ class PerfilPageState extends State<PerfilPage> {
               ),
             ),
             Text(
-              '${agente.provincia}, ${agente.pais}',
+              '${countries[agente.pais]}',
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
@@ -239,7 +239,7 @@ class PerfilPageState extends State<PerfilPage> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${player.position}',
+                  '${posiciones[player.position]}',
                   style: const TextStyle(
                     color: Colors.grey,
                   ),

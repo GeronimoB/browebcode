@@ -162,13 +162,12 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
         _provinciaController.text.isEmpty ||
         _posicionController.text.isEmpty ||
         _categoriaController.text.isEmpty ||
-        _logrosIndividualesController.text.isEmpty ||
         _alturaController.text.isEmpty ||
         _pieDominanteController.text.isEmpty ||
         _seleccionNacionalController.text.isEmpty ||
-        _clubController.text.isEmpty ||
         _categoriaSeleccionController.text.isEmpty ||
-        _directionController.text.isEmpty) {
+        _directionController.text.isEmpty ||
+        _dniController.text.isEmpty) {
       return showErrorSnackBar(
           context, translations!['completAllFieldEditProfile']);
     }
@@ -177,6 +176,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     final response = await ApiClient().post('auth/player-check',
         {"userId": userProvider.getCurrentUser().userId.toString()});
     if (response.statusCode == 200) {
+      provider.updateStatus(true);
       Navigator.of(context).pushReplacementNamed('/config-player');
     } else {
       showErrorSnackBar(context, translations!['error_try_again']);
@@ -300,10 +300,14 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                       label: translations!["Direction"],
                       controller: _directionController,
                       camp: 'direccion'),
-                  // _buildTextField(
-                  //     label: 'DOCUMENTO DE IDENTIDAD',
-                  //     controller: _dniController,
-                  //     camp: 'dni'),
+                  _buildTextField(
+                      label: 'DOCUMENTO DE IDENTIDAD',
+                      controller: _dniController,
+                      camp: 'dni'),
+                  _buildTextField(
+                      label: 'Direccion',
+                      controller: _directionController,
+                      camp: 'direccion'),
                   _buildTextField(
                       label: translations!["Country"],
                       controller: _paisController,

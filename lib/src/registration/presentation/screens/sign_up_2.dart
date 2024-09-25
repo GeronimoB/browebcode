@@ -273,7 +273,11 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                             onChanged: (String? newValue) {
                               setState(() {
                                 selection = newValue!;
-                                catSelection = 'U17';
+                                if (selection == 'none') {
+                                  catSelection = 'ninguna';
+                                } else {
+                                  catSelection = 'U17';
+                                }
                               });
                             },
                             width: 110,
