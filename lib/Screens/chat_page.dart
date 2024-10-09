@@ -542,7 +542,7 @@ class ChatPageState extends State<ChatPage> {
           ),
           Positioned(
             left: offset.dx + sizeWidth2 - 230,
-            top: offset.dy + 95,
+            top: offset.dy + 35,
             width: 220,
             child: Material(
               borderRadius: BorderRadius.circular(15),

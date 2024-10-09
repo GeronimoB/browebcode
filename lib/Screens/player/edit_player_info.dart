@@ -167,7 +167,8 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
         _seleccionNacionalController.text.isEmpty ||
         _categoriaSeleccionController.text.isEmpty ||
         _directionController.text.isEmpty ||
-        _dniController.text.isEmpty) {
+        _dniController.text.isEmpty ||
+        _clubController.text.isEmpty) {
       return showErrorSnackBar(
           context, translations!['completAllFieldEditProfile']);
     }

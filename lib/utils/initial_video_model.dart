@@ -38,7 +38,15 @@ List<InitialVideoModel> mapListToInitialVideos(List<dynamic> lista) {
 }
 
 List<UserFilter> listFilterUserFromVideos(List<InitialVideoModel> lista) {
-  return lista
-      .map((item) => UserFilter(user: item.user, userId: item.userId))
-      .toList();
+  Set<int> userIds = {};
+  List<UserFilter> uniqueUserFilters = [];
+
+  for (var item in lista) {
+    if (!userIds.contains(item.userId)) {
+      userIds.add(item.userId);
+      uniqueUserFilters.add(UserFilter(user: item.user, userId: item.userId));
+    }
+  }
+
+  return uniqueUserFilters;
 }

@@ -238,9 +238,10 @@ class CuentaPageState extends State<CuentaPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
+                    if (player.verificado)
+                      const SizedBox(
+                        width: 5,
+                      ),
                     if (player.verificado)
                       const Icon(
                         Icons.verified,

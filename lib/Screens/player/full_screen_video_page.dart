@@ -85,6 +85,9 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
     RenderBox renderBox = context.findRenderObject() as RenderBox;
     var size = renderBox.size;
     var offset = renderBox.localToGlobal(Offset.zero);
+    double sizeWidth = size.width > 800 ? 800 : size.width;
+    double sizeWidth2 =
+        size.width > 800 ? ((size.width - 800) / 2 + 800) : size.width;
 
     return OverlayEntry(
       builder: (context) => Stack(
@@ -95,13 +98,13 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
               _overlayEntry = null;
             },
             child: Container(
-              width: MediaQuery.of(context).size.width,
+              width: sizeWidth,
               height: MediaQuery.of(context).size.height,
               color: Colors.transparent,
             ),
           ),
           Positioned(
-            left: offset.dx + size.width - 230,
+            left: offset.dx + sizeWidth2 - 230,
             top: offset.dy + 35,
             width: 220,
             child: Material(

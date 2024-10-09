@@ -199,9 +199,10 @@ class PlayerProfileState extends State<PlayerProfile> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
+                    if (player.verificado)
+                      const SizedBox(
+                        width: 5,
+                      ),
                     if (player.verificado)
                       const Icon(
                         Icons.verified,

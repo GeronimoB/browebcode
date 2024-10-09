@@ -181,9 +181,10 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(
-                        width: 5,
-                      ),
+                      if (player?.verificado ?? false)
+                        const SizedBox(
+                          width: 5,
+                        ),
                       if (player?.verificado ?? false)
                         const Icon(
                           Icons.verified,

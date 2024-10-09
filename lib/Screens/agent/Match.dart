@@ -270,9 +270,10 @@ class MatcheState extends State<Matche> {
                                 color: Colors.white,
                               ),
                             ),
-                            const SizedBox(
-                              width: 5,
-                            ),
+                            if (player.verificado)
+                              const SizedBox(
+                                width: 5,
+                              ),
                             if (player.verificado)
                               const Icon(
                                 Icons.verified,

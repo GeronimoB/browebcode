@@ -196,6 +196,7 @@ class InicioPageState extends State<InicioPage> {
 
   void matchFunction() {
     final userId = _videosRandom[_currentIndex].userId;
+    currentController!.pause();
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => MatchProfile(userId: userId)),
     );
@@ -275,7 +276,7 @@ class InicioPageState extends State<InicioPage> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(
-                                  width: 10,
+                                  width: 5,
                                 ),
                                 if (!_videosRandom[_currentIndex].verificado)
                                   const Icon(

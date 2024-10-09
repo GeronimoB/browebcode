@@ -173,7 +173,16 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
 
         showUploadDialog(translations!['video_scss'], true);
 
-        Future.delayed(const Duration(seconds: 6), () {
+        final blob = html.Blob([videoBytes], 'video/mp4');
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        _temporalVideoController =
+            VideoPlayerController.networkUrl(Uri.parse(url))
+              ..initialize().then((_) {
+                setState(() {});
+                _temporalVideoController!.play();
+              });
+
+        Future.delayed(const Duration(seconds: 10), () {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const PlanesPago()),
