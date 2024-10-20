@@ -13,7 +13,7 @@ import '../utils/plan_model.dart';
 
 List<Plan> planes = [
   Plan(
-    idPlan: 'price_1OwbK8IkdX2ffauu5v0rezbw',
+    idPlan: 'price_1QC2HeLgnVzrMk83zySNqczj',
     nombre: translations!["Plan_1_name"],
     precio: '19,99',
     descripcion: translations!["Plan_1_description"],
@@ -34,7 +34,7 @@ List<Plan> planes = [
     ],
   ),
   Plan(
-    idPlan: 'price_1OwceiIkdX2ffauuyNaKIHHL',
+    idPlan: 'price_1QC2IjLgnVzrMk8350ISRYtB',
     nombre: translations!["Plan_2_name"],
     precio: '29,99',
     descripcion: translations!["Plan_2_description"],
@@ -56,7 +56,7 @@ List<Plan> planes = [
     ],
   ),
   Plan(
-    idPlan: 'price_1Owcf5IkdX2ffauudm4v0KAQ',
+    idPlan: 'price_1QC2J0LgnVzrMk83a9kqjztw',
     nombre: translations!["Plan_3_name"],
     precio: '49,99',
     descripcion: translations!["Plan_3_description"],
@@ -77,7 +77,7 @@ List<Plan> planes = [
     ],
   ),
   Plan(
-    idPlan: 'price_1OwcfMIkdX2ffauuEqdLsX5h',
+    idPlan: 'price_1QC2JNLgnVzrMk83cHx7ZVOy',
     nombre: translations!["Plan_4_name"],
     precio: '89,99',
     descripcion: translations!["Plan_4_description"],

@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:html' as html;
 import '../utils/current_state.dart';
 import '../utils/language_localizations.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -22,6 +23,8 @@ class SignInPageState extends State<SignInPage> {
   bool isPressedCreateAccount = false;
   bool _showAlert = false;
   String storeUrl = 'https://play.google.com/store';
+  late AudioPlayer _audioPlayer;
+
   void changeLanguage(BuildContext context, String languageCode) async {
     LanguageLocalizations? localizations = LanguageLocalizations.of(context);
     if (localizations != null) {
@@ -37,7 +40,25 @@ class SignInPageState extends State<SignInPage> {
   @override
   void initState() {
     super.initState();
+    _audioPlayer = AudioPlayer();
+    _playMusic();
     showPlatformToast();
+  }
+
+  Future<void> _playMusic() async {
+    _audioPlayer.setReleaseMode(ReleaseMode.stop);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _audioPlayer.setSource(AssetSource('audio/musica_inicio.wav'));
+      await _audioPlayer.resume();
+    });
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.stop();
+    _audioPlayer.dispose();
+    super.dispose();
   }
 
   void showPlatformToast() async {
@@ -216,7 +237,9 @@ class SignInPageState extends State<SignInPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const SignInScreen()),
+                                    builder: (context) => const SelectCamp(
+                                          registrando: true,
+                                        )),
                               );
                             },
                             text: translations!['sign_in'],
@@ -229,7 +252,7 @@ class SignInPageState extends State<SignInPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const SignUpScreen()),
+                                  builder: (context) => const SignInPage()),
                             );
                           },
                           text: translations!['create_account'],

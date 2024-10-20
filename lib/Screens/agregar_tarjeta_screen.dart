@@ -524,7 +524,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
     final destacarVideo = await ApiClient().post(
       'security_filter/v1/api/payment/subscription',
       {
-        "planId": "price_1P2RbpIkdX2ffauue0ZIWVUn",
+        "planId": "price_1QC2JhLgnVzrMk83aRVDtWvA",
         "customerId": player.customerStripeId,
         "paymentMethodId": playerProvider.selectedCard!.cardId,
         "paymentMethod":

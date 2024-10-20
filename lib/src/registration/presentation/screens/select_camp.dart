@@ -1,12 +1,12 @@
 import 'package:bro_app_to/Screens/player/edit_player_info.dart';
 import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
-import 'package:bro_app_to/src/registration/presentation/screens/sign_up.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/sign_up_2.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import '../../../../components/custom_text_button.dart';
 import '../../../../providers/player_provider.dart';
@@ -23,8 +23,8 @@ class SelectCamp extends StatefulWidget {
 
 class SelectCampState extends State<SelectCamp> {
   bool isLoading = false;
-
   bool isPhone = true;
+  late AudioPlayer _audioPlayer;
   List<Player> players = [
     Player(
       position: translations!['goalKeeper'],
@@ -196,16 +196,33 @@ class SelectCampState extends State<SelectCamp> {
   @override
   void initState() {
     super.initState();
+
+    _audioPlayer = AudioPlayer();
+    _playMusic();
+  }
+
+  Future<void> _playMusic() async {
+    _audioPlayer.setReleaseMode(ReleaseMode.stop);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _audioPlayer.setSource(AssetSource('audio/musica_select.wav'));
+      await _audioPlayer.resume();
+    });
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.stop();
+    _audioPlayer.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    if (screenSize.width > 500) {
-      setState(() {
-        isPhone = false;
-      });
-    }
+    setState(() {
+      isPhone = screenSize.width <= 500;
+    });
 
     List<Widget> playerWidgets = List.generate(
       players.length,
