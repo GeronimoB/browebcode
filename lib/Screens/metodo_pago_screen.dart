@@ -6,10 +6,8 @@ import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/current_state.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/agregar_tarjeta_screen.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../components/i_field.dart';

@@ -75,26 +75,14 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
           return;
         }
 
-        Uint8List? thumbnail = await _generateThumbnailFromBytes(videoBytes);
-
         _showUploadDialog();
+        final player = playerProvider.getPlayer()!;
         await uploadVideoAndImageBytes(
-          videoBytes,
-          thumbnail,
-          playerProvider.getPlayer()!.userId,
-        );
+            videoBytes, player.userId, '${player.name} ${player.lastName}');
       } else {
         return;
       }
-    } else {
-      // User canceled the picker
-    }
-  }
-
-  Future<Uint8List> _readFileBytes(String path) async {
-    // Usa el paquete 'dart:io' para leer archivos en móviles y de escritorio
-    final File file = File(path);
-    return await file.readAsBytes();
+    } else {}
   }
 
   Future<bool> _validateVideoBytes(Uint8List bytes) async {
@@ -128,54 +116,14 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     return true;
   }
 
-  Future<Uint8List?> _generateThumbnailFromBytes(Uint8List bytes) async {
-    final blob = html.Blob([bytes], 'video/mp4');
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    final videoElement = html.VideoElement()
-      ..src = url
-      ..load();
-    try {
-      await videoElement.onLoadedMetadata.first;
-      await videoElement.onCanPlayThrough.first;
-      videoElement.currentTime = 1;
-      await videoElement.onSeeked.first;
-
-      final canvas = html.CanvasElement(
-        width: videoElement.videoWidth,
-        height: videoElement.videoHeight,
-      );
-      final ctx = canvas.context2D;
-      ctx.drawImage(videoElement, 0, 0);
-
-      final thumbnailDataUrl = canvas.toDataUrl('image/png');
-      html.Url.revokeObjectUrl(url);
-
-      final byteString = html.window.atob(thumbnailDataUrl.split(',').last);
-      final buffer = Uint8List(byteString.length);
-      for (int i = 0; i < byteString.length; i++) {
-        buffer[i] = byteString.codeUnitAt(i);
-      }
-      return buffer;
-    } catch (e) {
-      showErrorSnackBar(context, 'Error al generar la miniatura: $e');
-      html.Url.revokeObjectUrl(url);
-      return null;
-    }
-  }
-
-  // Convierte el Data URL de la imagen en bytes
-  Future<Uint8List> _dataUrlToBytes(String dataUrl) async {
-    final uriData = Uri.parse(dataUrl);
-    return Uint8List.fromList(uriData.data!.contentAsBytes());
-  }
-
   Future<void> uploadVideoAndImageBytes(
-      Uint8List videoBytes, Uint8List? imageBytes, String? userId) async {
+      Uint8List videoBytes, String? userId, String? username) async {
     var request = http.MultipartRequest(
       'POST',
       Uri.parse('${ApiConstants.baseUrl}/auth/uploadFiles'),
     );
     request.fields["userId"] = userId ?? '';
+    request.fields["username"] = username ?? '';
 
     // Agregar el video como bytes
     request.files.add(http.MultipartFile.fromBytes(
@@ -184,16 +132,6 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
       filename: 'video.mp4',
       contentType: MediaType('video', 'mp4'),
     ));
-
-    // Agregar la imagen como bytes si está presente
-    if (imageBytes != null) {
-      request.files.add(http.MultipartFile.fromBytes(
-        'imagen',
-        imageBytes,
-        filename: 'imagen.png',
-        contentType: MediaType('image', 'png'),
-      ));
-    }
 
     var response = await request.send();
 
@@ -294,12 +232,12 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
         .get('auth/videos_count/${userProvider.getCurrentUser().userId}');
 
     try {
-      // Verifica si la respuesta es exitosa
       if (videosCountResponse.statusCode == 200) {
         final jsonData = jsonDecode(videosCountResponse.body);
         final total = jsonData["userVideosCount"];
-        final maxVideosAllowed =
-            videosForPlan[userProvider.getCurrentUser().subscription];
+        // final maxVideosAllowed =
+        //     videosForPlan[userProvider.getCurrentUser().subscription];
+        final maxVideosAllowed = 5;
 
         if (total >= maxVideosAllowed) {
           setState(() {
@@ -315,6 +253,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
         return false;
       }
     } catch (e) {
+      print(e);
       setState(() {
         errorMessage = translations!["ErrorOccurredMessage"];
       });
@@ -325,10 +264,10 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
   @override
   Widget build(BuildContext context) {
     final player = playerProvider.getPlayer();
-    final canUploadVideo = userProvider.getCurrentUser().status &&
-        (player?.registroCompleto ?? false) &&
-        (player?.emailVerified ?? false);
-
+    // final canUploadVideo = userProvider.getCurrentUser().status &&
+    //     (player?.registroCompleto ?? false) &&
+    //     (player?.emailVerified ?? false);
+    final canUploadVideo = true;
     if (!canUploadVideo) {
       errorMessage = translations!["InactiveSubscriptionMessage"];
     }

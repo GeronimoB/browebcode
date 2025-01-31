@@ -198,16 +198,18 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            translations!['category_label'],
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                              fontSize: 16,
+                          Wrap(children: [
+                            Text(
+                              translations!['category_label'],
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                fontStyle: FontStyle.italic,
+                                fontSize: 16,
+                              ),
                             ),
-                          ),
+                          ]),
                           const SizedBox(width: 10),
                           DropdownWidget<String>(
                             value: selectedCategory,

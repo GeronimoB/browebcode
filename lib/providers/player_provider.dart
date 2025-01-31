@@ -146,9 +146,13 @@ class PlayerProvider extends ChangeNotifier {
     return _savedCards;
   }
 
-  void updateDataToUpload(Uint8List? video, Uint8List? image) {
-    imagePathToUpload = image;
+  void updateVideoToUpload(Uint8List? video) {
     videoPathToUpload = video;
+    notifyListeners();
+  }
+
+  void updateImageToUpload(Uint8List? image) {
+    imagePathToUpload = image;
     notifyListeners();
   }
 
@@ -191,7 +195,6 @@ class PlayerProvider extends ChangeNotifier {
     _savedCards.clear();
     selectedCard = null;
     videoPathToUpload = null;
-    imagePathToUpload = null;
     userVideos.clear();
     isLoading = false;
     notifyListeners();

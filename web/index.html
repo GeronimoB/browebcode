@@ -148,7 +148,10 @@
     <script>
       // The value below is injected by flutter build, do not touch.
       const serviceWorkerVersion = null;
+      window.flutterWebRenderer = "html"; // Si estás usando canvasKit, mantenlo igual
+      window.flutterNavigationMode = "hash"; // Cambia a modo hash
     </script>
+
     <!-- This script adds the flutter initialization JS code -->
     <script src="flutter.js" defer=""></script>
     <style id="splash-screen-style">

@@ -4,9 +4,12 @@ import 'package:bro_app_to/Screens/agent/config_profile.dart';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/main.dart';
 import 'package:bro_app_to/src/auth/presentation/screens/sign_in.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../Screens/player/config_profile_player.dart';
+import '../Screens/users/unauth_user_screen.dart';
+import '../common/base_encode_helper.dart';
 
 class RouteHelper {
   static const String initial = '/';
@@ -38,6 +41,15 @@ class RouteHelper {
         final args = Get.arguments as Map<String, dynamic>;
         final initialIndex = args['initialIndex'] ?? 0;
         return CustomBottomNavigationBar(initialIndex: initialIndex);
+      },
+    ),
+    GetPage(
+      name: '/home/videos/:videoId',
+      page: () {
+        final videoId = Get.parameters['videoId'] ?? '';
+        final id = Base64Helper.decode(videoId);
+        print(id);
+        return UnauthUserScreen(videoId: id);
       },
     ),
   ];

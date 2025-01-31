@@ -8,7 +8,9 @@ import 'package:bro_app_to/utils/video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
+import '../../common/base_encode_helper.dart';
 import '../../components/custom_text_button.dart';
 import '../../utils/api_client.dart';
 import 'bottom_navigation_bar_player.dart';
@@ -186,6 +188,20 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                         _showDescriptionDialog(widget.video);
                       },
                     ),
+                    ListTile(
+                      title: Text(
+                        'Compartir',
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic),
+                      ),
+                      onTap: () {
+                        _overlayEntry?.remove();
+                        _overlayEntry = null;
+                        _handleShare(widget.video);
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -318,7 +334,7 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
   }
 
   Future<void> _handleDownload(Video video) async {
-    String? videoUrl = video.videoUrl;
+    String? videoUrl = video.downaloadVideoUrl;
     if (videoUrl == null || videoUrl.isEmpty) {
       return;
     }
@@ -350,7 +366,7 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
       final url = html.Url.createObjectUrlFromBlob(blob);
 
       // Crea un elemento de ancla para la descarga
-      final anchor = html.AnchorElement(href: url)
+      html.AnchorElement(href: url)
         ..setAttribute(
             'download', fileName) // Usa el nombre original del archivo
         ..click();
@@ -367,7 +383,13 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
     }
   }
 
-  void _showSuccessDialog() {
+  Future<void> _handleShare(Video video) async {
+    final encodedId = Base64Helper.encode(video.id.toString());
+    final videoUrl = 'https://app.bro.futbol/home/videos/$encodedId';
+    Share.share('Mira este video increíble: $videoUrl');
+  }
+
+  void showSuccessDialog() {
     showDialog(
       context: context,
       barrierDismissible: false,

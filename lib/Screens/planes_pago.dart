@@ -107,7 +107,7 @@ class PlanesPago extends StatefulWidget {
 }
 
 class PlanesPagoState extends State<PlanesPago> {
-  int _selectedCardIndex = -1; // Índice de la tarjeta seleccionada
+  int _selectedCardIndex = -1; 
   final ScrollController _scrollController = ScrollController();
   Color _appBarColor = Colors.transparent;
 

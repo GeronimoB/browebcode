@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/common/path_strategy.dart';
 import 'package:bro_app_to/firebase_options.dart';
+import 'package:bro_app_to/providers/unauth_home_provider.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/firebase_api.dart';
@@ -52,6 +53,10 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  final languageLocalizations = LanguageLocalizations(const Locale('es'));
+
+  await languageLocalizations.load();
+  translations = languageLocalizations.getJsonTranslate();
 
   runApp(const MyApp());
 }
@@ -94,6 +99,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PlayerProvider()),
         ChangeNotifierProvider(create: (_) => AgenteProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => UnauthHomeProvider()),
       ],
       child: GetMaterialApp(
         title: 'Bró Football Platform',

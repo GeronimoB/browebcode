@@ -43,7 +43,7 @@ dependencies:
   video_thumbnail: ^0.5.3
   flutter_stripe: ^10.1.1
   image_picker: ^1.0.7
-  carousel_slider: ^4.2.1
+  carousel_slider: ^5.0.0
   path_provider: ^2.0.2
   permission_handler: ^8.0.0
   firebase_core: ^2.27.0
@@ -63,9 +63,10 @@ dependencies:
   video_compress: ^3.1.2
   universal_html: ^2.2.4
   audioplayers: ^5.1.0
+  share_plus: ^10.1.4
 
 dependency_overrides:
-  web: ^0.5.1
+  web: ^1.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

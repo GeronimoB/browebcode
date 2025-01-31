@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bro_app_to/Screens/player/full_screen_video_page.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
+import 'package:bro_app_to/providers/user_provider.dart';
 import 'package:bro_app_to/src/registration/data/models/player_full_model.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:bro_app_to/utils/current_state.dart';
@@ -10,6 +11,11 @@ import 'package:bro_app_to/utils/video_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../../components/custom_text_button.dart';
+import '../../components/i_field.dart';
+import '../../components/snackbar.dart';
 
 class PlayerProfileToAgent extends StatefulWidget {
   final String userId;
@@ -24,11 +30,32 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
   double gridSpacing = 2.0;
   bool _isExpanded = false;
   PlayerFullModel? player;
+  OverlayEntry? _overlayEntry;
+  String selectedReason = '';
+  late TextEditingController additionalComments;
+
+  final List<String> reportReasons = [
+    'No me gusta',
+    'Bullying o contacto no deseado',
+    'Suicidio, autolesión o trastornos alimenticios',
+    'Violencia, odio o explotación',
+    'Vende o promociona artículos restringidos',
+    'Desnudos o actividad sexual',
+    'Estafas, fraudes o spam',
+    'Información falsa',
+  ];
 
   @override
   void initState() {
     super.initState();
+    additionalComments = TextEditingController();
     fetchPlayerInfo();
+  }
+
+  @override
+  void dispose() {
+    additionalComments.dispose();
+    super.dispose();
   }
 
   void fetchPlayerInfo() async {
@@ -135,6 +162,15 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
                   ),
                   onPressed: () => Navigator.pop(context),
                 ),
+                actions: [
+                  IconButton(
+                    icon:
+                        const Icon(Icons.more_horiz, color: Color(0xFF00E050)),
+                    onPressed: () {
+                      _showCustomMenu(context);
+                    },
+                  ),
+                ],
               ),
               extendBody: true,
               body: Column(
@@ -354,6 +390,187 @@ class PlayerProfileToAgentState extends State<PlayerProfileToAgent> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showCustomMenu(BuildContext context) {
+    _overlayEntry?.remove();
+    _overlayEntry = _createOverlayEntry(context);
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
+  OverlayEntry _createOverlayEntry(BuildContext context) {
+    RenderBox renderBox = context.findRenderObject() as RenderBox;
+    var size = renderBox.size;
+    var offset = renderBox.localToGlobal(Offset.zero);
+    double sizeWidth = size.width > 800 ? 800 : size.width;
+    double sizeWidth2 =
+        size.width > 800 ? ((size.width - 800) / 2 + 800) : size.width;
+
+    return OverlayEntry(
+      builder: (context) => Stack(
+        children: [
+          GestureDetector(
+            onTap: () {
+              _overlayEntry?.remove();
+              _overlayEntry = null;
+            },
+            child: Container(
+              width: sizeWidth,
+              height: MediaQuery.of(context).size.height,
+              color: Colors.transparent,
+            ),
+          ),
+          Positioned(
+            left: offset.dx + sizeWidth2 - 230,
+            top: offset.dy + 35,
+            width: 220,
+            child: Material(
+              borderRadius: BorderRadius.circular(15),
+              elevation: 5.0,
+              shadowColor: Colors.black.withOpacity(0.4),
+              color: const Color(0xFF3B3B3B),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xff3B3B3B),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: 10,
+                      offset: const Offset(5, 4),
+                    ),
+                  ],
+                ),
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    ListTile(
+                      title: const Text(
+                        'Denunciar',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic),
+                      ),
+                      onTap: () {
+                        _overlayEntry?.remove();
+                        _overlayEntry = null;
+                        _showReportModal();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showReportModal() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      backgroundColor: const Color.fromARGB(255, 44, 44, 44),
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Denunciar',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Divider(
+                    height: 2,
+                    color: Colors.white.withOpacity(0.25),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '¿Por qué quieres denunciar esta publicación?',
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  // Opciones
+                  ...reportReasons.map((reason) => ListTile(
+                        title: Text(
+                          reason,
+                          style: TextStyle(
+                              color: selectedReason == reason
+                                  ? const Color.fromARGB(255, 0, 224, 80)
+                                  : Colors.white),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: selectedReason == reason
+                              ? const Color.fromARGB(255, 0, 224, 80)
+                              : Colors.grey,
+                        ),
+                        selectedTileColor:
+                            const Color.fromARGB(255, 0, 224, 80),
+                        onTap: () {
+                          setModalState(() {
+                            selectedReason = reason;
+                          });
+                        },
+                      )),
+                  const SizedBox(height: 10),
+                  iField(additionalComments, 'Comentarios (opcional):'),
+                  const SizedBox(height: 15),
+                  CustomTextButton(
+                    onTap: () async {
+                      Navigator.of(context).pop();
+                      final response =
+                          await ApiClient().post('auth/reports/report', {
+                        "userId": context
+                            .read<UserProvider>()
+                            .getCurrentUser()
+                            .userId
+                            .toString(),
+                        "reportedUserId": widget.userId,
+                        "reason": selectedReason,
+                        "comments": additionalComments.text,
+                      });
+                      setModalState(() {
+                        selectedReason = '';
+                        additionalComments.text = '';
+                      });
+                      if (response.statusCode == 200) {
+                        showSucessSnackBar(context,
+                            'Tu reporte se ha enviado, lo revisaremos y te daremos noticias pronto.');
+                      } else {
+                        showErrorSnackBar(
+                            context, 'Ocurrio un error, intentalo de nuevo.');
+                      }
+                    },
+                    text: 'Enviar',
+                    buttonPrimary: true,
+                    width: 116,
+                    height: 39,
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

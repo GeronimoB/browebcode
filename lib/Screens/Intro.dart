@@ -233,13 +233,14 @@ class SignInPageState extends State<SignInPage> {
                         ),
                         const SizedBox(height: 35),
                         CustomTextButton(
-                            onTap: () {
+                            onTap: () async {
+                              await _audioPlayer.pause();
+                              await _audioPlayer.dispose();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const SelectCamp(
-                                          registrando: true,
-                                        )),
+                                  builder: (context) => const SignInScreen(),
+                                ),
                               );
                             },
                             text: translations!['sign_in'],
@@ -248,11 +249,13 @@ class SignInPageState extends State<SignInPage> {
                             height: 39),
                         const SizedBox(height: 20),
                         CustomTextButton(
-                          onTap: () {
+                          onTap: () async {
+                            await _audioPlayer.pause();
+                            await _audioPlayer.dispose();
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const SignInPage()),
+                                  builder: (context) => const SignUpScreen()),
                             );
                           },
                           text: translations!['create_account'],

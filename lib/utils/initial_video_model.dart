@@ -1,5 +1,7 @@
 class InitialVideoModel {
   String url;
+  String? shareUrl;
+  String? downloadUrl;
   int userId;
   String user;
   String description;
@@ -7,6 +9,8 @@ class InitialVideoModel {
 
   InitialVideoModel({
     required this.url,
+    this.shareUrl,
+    this.downloadUrl,
     required this.userId,
     required this.user,
     required this.description,
@@ -15,6 +19,8 @@ class InitialVideoModel {
   factory InitialVideoModel.fromJson(Map<String, dynamic> json) {
     return InitialVideoModel(
       url: json['video_url'],
+      shareUrl: json['share_video_url'],
+      downloadUrl: json['download_video_url'],
       userId: json['user_id'],
       user: '${json['name']} ${json['lastname']}',
       description: json['description'] ?? '',

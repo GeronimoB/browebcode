@@ -503,8 +503,9 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       final video = playerProvider.videoPathToUpload;
       final image = playerProvider.imagePathToUpload;
       final userId = player.userId;
-      uploadVideoAndImage(
-          video, image, userId, playerProvider.getActualPlan()?.nombre);
+      final username = '${player.name} ${player.lastName}';
+      uploadVideoAndImage(video, image, userId, username,
+          playerProvider.getActualPlan()?.nombre);
     } else {
       userProvider.updatePlan(playerProvider.getActualPlan()!.nombre,
           status: true);
@@ -559,13 +560,14 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
     });
   }
 
-  Future<void> uploadVideoAndImage(Uint8List? videoPath, Uint8List? uint8list,
-      String? userId, String? plan) async {
+  Future<void> uploadVideoAndImage(Uint8List? videoPath, Uint8List? imagePath,
+      String? userId, String? username, String? plan) async {
     var request = http.MultipartRequest(
       'POST',
       Uri.parse('${ApiConstants.baseUrl}/auth/uploadFiles'),
     );
     request.fields["userId"] = userId ?? '';
+    request.fields["username"] = username ?? '';
     if (videoPath != null) {
       request.files.add(http.MultipartFile.fromBytes(
         'video',
@@ -575,18 +577,17 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       ));
     }
 
-    if (uint8list != null) {
+    if (videoPath != null) {
       request.files.add(http.MultipartFile.fromBytes(
-        'imagen',
-        uint8list,
-        filename: 'imagen.png',
-        contentType: MediaType('image', 'png'),
+        'video',
+        videoPath,
+        filename: 'video.mp4',
+        contentType: MediaType('video', 'mp4'),
       ));
     }
 
     var response = await request.send();
 
-    // Verificar el estado de la respuesta
     if (response.statusCode == 200) {
       Navigator.pop(context);
       Navigator.of(context).pushReplacement(

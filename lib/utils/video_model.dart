@@ -2,6 +2,8 @@ class Video {
   int? id;
   String? userId;
   String? videoUrl;
+  String? shareVideoUrl;
+  String? downaloadVideoUrl;
   String? videoKey;
   String? imageUrl;
   String? imageKey;
@@ -14,6 +16,8 @@ class Video {
     this.id,
     this.userId,
     this.videoUrl,
+    this.shareVideoUrl,
+    this.downaloadVideoUrl,
     this.videoKey,
     this.imageUrl,
     this.imageKey,
@@ -29,6 +33,8 @@ class Video {
       userId: json['user_id'].toString(),
       videoKey: json['video_key'],
       videoUrl: json['video_url'],
+      shareVideoUrl: json['share_video_url'],
+      downaloadVideoUrl: json['download_video_url'],
       imageUrl: json['placeholder_url'],
       description: json['description'],
       imageKey: json['image_key'],

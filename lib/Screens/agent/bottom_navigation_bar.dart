@@ -21,9 +21,9 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    InicioPage(),
+    const InicioPage(),
     const Matche(),
-    MensajesPage(),
+    const MensajesPage(),
     const PerfilPage(),
   ];
 
@@ -47,7 +47,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       },
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 800),
+          constraints: const BoxConstraints(maxWidth: 800),
       child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(

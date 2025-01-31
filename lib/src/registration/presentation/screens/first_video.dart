@@ -4,13 +4,13 @@ import 'package:bro_app_to/Screens/planes_pago.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/upload_cover_image.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import '../../../../components/snackbar.dart';
 import '../../../../utils/current_state.dart';
 import 'dart:html' as html;
 
@@ -22,7 +22,6 @@ class FirstVideoWidget extends StatefulWidget {
 }
 
 class _FirstVideoWidgetState extends State<FirstVideoWidget> {
-  VideoPlayerController? _videoController;
   VideoPlayerController? _temporalVideoController;
   double _sliderValue = 0.0;
   String? videoPathToUpload;
@@ -30,7 +29,7 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
 
   @override
   void dispose() {
-    _videoController?.dispose();
+    _temporalVideoController?.dispose();
     _temporalVideoController?.dispose();
     super.dispose();
   }
@@ -73,41 +72,6 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
         );
       },
     );
-  }
-
-  Future<Uint8List?> _generateThumbnailFromBytes(Uint8List bytes) async {
-    final blob = html.Blob([bytes], 'video/mp4');
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    final videoElement = html.VideoElement()
-      ..src = url
-      ..load();
-    try {
-      await videoElement.onLoadedMetadata.first;
-      await videoElement.onCanPlayThrough.first;
-      videoElement.currentTime = 1;
-      await videoElement.onSeeked.first;
-
-      final canvas = html.CanvasElement(
-        width: videoElement.videoWidth,
-        height: videoElement.videoHeight,
-      );
-      final ctx = canvas.context2D;
-      ctx.drawImage(videoElement, 0, 0);
-
-      final thumbnailDataUrl = canvas.toDataUrl('image/png');
-      html.Url.revokeObjectUrl(url);
-
-      final byteString = html.window.atob(thumbnailDataUrl.split(',').last);
-      final buffer = Uint8List(byteString.length);
-      for (int i = 0; i < byteString.length; i++) {
-        buffer[i] = byteString.codeUnitAt(i);
-      }
-      return buffer;
-    } catch (e) {
-      showErrorSnackBar(context, 'Error al generar la miniatura: $e');
-      html.Url.revokeObjectUrl(url);
-      return null;
-    }
   }
 
   Future<bool> _validateVideoBytes(Uint8List bytes) async {
@@ -162,12 +126,10 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
           return;
         }
 
-        Uint8List? thumbnail = await _generateThumbnailFromBytes(videoBytes);
-
         final playerProvider =
             Provider.of<PlayerProvider>(context, listen: false);
 
-        playerProvider.updateDataToUpload(videoBytes, thumbnail);
+        playerProvider.updateVideoToUpload(videoBytes);
         playerProvider.isSubscriptionPayment = true;
         playerProvider.isNewSubscriptionPayment = true;
 
@@ -182,10 +144,11 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                 _temporalVideoController!.play();
               });
 
-        Future.delayed(const Duration(seconds: 10), () {
+        Future.delayed(const Duration(seconds: 5), () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const PlanesPago()),
+            MaterialPageRoute(
+                builder: (context) => const UploadCoverImageScreen()),
           );
         });
       } else {
@@ -236,25 +199,26 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox.shrink(),
-                  _videoController?.value.isInitialized ?? false
+                  _temporalVideoController?.value.isInitialized ?? false
                       ? Column(
                           children: [
                             SizedBox(
                               width: double.maxFinite,
                               height: 500,
-                              child: VideoPlayer(_videoController!),
+                              child: VideoPlayer(_temporalVideoController!),
                             ),
                             Slider(
                               activeColor: const Color(0xff3EAE64),
                               inactiveColor: const Color(0xff00F056),
                               value: _sliderValue,
                               min: 0.0,
-                              max: _videoController!.value.duration.inSeconds
+                              max: _temporalVideoController!
+                                  .value.duration.inSeconds
                                   .toDouble(),
                               onChanged: (value) {
                                 setState(() {
                                   _sliderValue = value;
-                                  _videoController!
+                                  _temporalVideoController!
                                       .seekTo(Duration(seconds: value.toInt()));
                                 });
                               },
