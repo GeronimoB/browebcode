@@ -30,10 +30,14 @@ class PlayerProfileState extends State<PlayerProfile> {
   bool _showAlert = false;
   int diasFaltantes = 3;
   int diasTranscurridos = 0;
+  int followers = 0;
+  int following = 0;
   late PlayerProvider playerProvider;
   late PlayerFullModel player;
   late UserProvider userProvider;
   late UserModel user;
+
+  Future<List<Video>>? _videosFuture;
   void _closeAlert() {
     setState(() {
       _showAlert = false;
@@ -48,6 +52,7 @@ class PlayerProfileState extends State<PlayerProfile> {
     userProvider = Provider.of<UserProvider>(context, listen: false);
     user = userProvider.getCurrentUser();
 
+    _videosFuture ??= fetchVideos();
     // if (!player.emailVerified) {
     //   _showAlert = true;
     //   DateTime dateCreated = player.dateCreated ?? DateTime.now();
@@ -66,10 +71,12 @@ class PlayerProfileState extends State<PlayerProfile> {
       final videosResponse = await ApiClient().get('auth/videos/$userId');
       if (videosResponse.statusCode == 200) {
         final jsonData = jsonDecode(videosResponse.body);
-        final videos = jsonData["videos"];
-        final List<Video> sortedVideos = mapListToVideos(videos);
+        setState(() {
+          followers = jsonData["followers"] ?? 0;
+          following = jsonData["following"] ?? 0;
+        });
+        final List<Video> sortedVideos = mapListToVideos(jsonData["videos"]);
 
-        //playerProvider.setUserVideos(mapListToVideos(videos));
         sortedVideos.sort((a, b) {
           if (a.isFavorite && !b.isFavorite) {
             return -1;
@@ -82,12 +89,11 @@ class PlayerProfileState extends State<PlayerProfile> {
         return sortedVideos;
       } else {
         debugPrint('Error al obtener los videos: ${videosResponse.statusCode}');
-        //playerProvider.setUserVideos(mapListToVideos([]));
         return [];
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print(stackTrace);
       debugPrint('Error en la solicitud de videos: $e');
-      //playerProvider.setUserVideos(mapListToVideos([]));
       return [];
     }
   }
@@ -97,23 +103,39 @@ class PlayerProfileState extends State<PlayerProfile> {
     final widthVideo = MediaQuery.of(context).size.width / 3;
 
     DateTime? birthDate = player.birthDate;
+
     String formattedDate =
         birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
+    String province = provincesByCountry[player.pais]?[player.provincia] ??
+        'Provincia desconocida';
+    String country = countries[player.pais] ?? 'País desconocido';
+
     String shortInfo =
-        '${provincesByCountry[player.pais][player.provincia]}, ${countries[player.pais]}\n ${translations!["birthdate"]}: $formattedDate';
-    String fullInfo =
-        '${provincesByCountry[player.pais][player.provincia]}, ${countries[player.pais]}\n'
+        '$province, $country\n${translations!["birthdate"]}: $formattedDate';
+    String fullInfo = '$province, $country\n'
         '${translations!["birthdate"]}: $formattedDate\n'
-        '${translations!["Categorys"]}: ${categorias[player.categoria]}\n'
-        '${translations!["position_label"]}: ${posiciones[player.position]}\n';
+        '${translations!["Categorys"]}: ${categorias[player.categoria] ?? "Categoría desconocida"}\n'
+        '${translations!["position_label"]}: ${posiciones[player.position] ?? "Posición desconocida"}\n';
 
     if (player.club != null && player.club!.isNotEmpty) {
       fullInfo += '${translations!["club_label"]}: ${player.club}\n';
     }
+    final seleccion =
+        selecciones[player.seleccionNacional] ?? "Selección desconocida";
+    final categoriaSeleccion = (player.seleccionNacional != null &&
+            nationalCategories.containsKey(player.seleccionNacional) &&
+            player.categoriaSeleccion != null &&
+            nationalCategories[player.seleccionNacional]!
+                .containsKey(player.categoriaSeleccion))
+        ? nationalCategories[player.seleccionNacional]![
+            player.categoriaSeleccion]!
+        : "Categoría desconocida";
+
+    final pie = piesDominantes[player.pieDominante] ?? "Desconocido";
 
     fullInfo +=
-        '${translations!["national_selection_short"]}: ${selecciones[player.seleccionNacional]} ${nationalCategories[player.seleccionNacional][player.categoriaSeleccion]}\n'
-        '${translations!["dominant_feet"]}: ${piesDominantes[player.pieDominante]}\n'
+        '${translations!["national_selection_short"]}: $seleccion $categoriaSeleccion\n'
+        '${translations!["dominant_feet"]}: $pie\n'
         '${translations!["height_label"]}: ${player.altura}\n';
 
     if (player.logrosIndividuales != null &&
@@ -121,6 +143,7 @@ class PlayerProfileState extends State<PlayerProfile> {
       fullInfo +=
           '${translations!["Achievements2"]}: ${player.logrosIndividuales}\n';
     }
+
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -212,6 +235,76 @@ class PlayerProfileState extends State<PlayerProfile> {
                   ],
                 ),
                 Text(
+                  '@${player.username}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.0,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          followers.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        const Text(
+                          'Seguidores',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic,
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      children: [
+                        Text(
+                          following.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        const Text(
+                          'Seguidos',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Montserrat',
+                            fontStyle: FontStyle.italic,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
                   _isExpanded ? fullInfo : shortInfo,
                   style: const TextStyle(
                     color: Colors.white,
@@ -253,7 +346,7 @@ class PlayerProfileState extends State<PlayerProfile> {
                       ]),
                 ),
                 FutureBuilder<List<Video>>(
-                    future: fetchVideos(),
+                    future: _videosFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Expanded(
@@ -319,31 +412,34 @@ class PlayerProfileState extends State<PlayerProfile> {
                                   },
                                   child: Stack(
                                     children: [
-                                      CachedNetworkImage(
-                                        placeholder: (context, url) {
-                                          return AspectRatio(
-                                            aspectRatio: 1,
-                                            child: Image.asset(
-                                              'assets/images/video_placeholder.jpg',
-                                              width: widthVideo,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          );
-                                        },
-                                        errorWidget:
-                                            (context, error, stackTrace) {
-                                          return AspectRatio(
-                                            aspectRatio: 1,
-                                            child: Image.asset(
-                                              'assets/images/video_placeholder.jpg',
-                                              width: widthVideo,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          );
-                                        },
-                                        imageUrl: video.imageUrl ?? "",
-                                        width: widthVideo,
-                                        fit: BoxFit.cover,
+                                      AspectRatio(
+                                        aspectRatio: 1,
+                                        child: CachedNetworkImage(
+                                          placeholder: (context, url) {
+                                            return AspectRatio(
+                                              aspectRatio: 1,
+                                              child: Image.asset(
+                                                'assets/images/video_placeholder.jpg',
+                                                width: widthVideo,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            );
+                                          },
+                                          errorWidget:
+                                              (context, error, stackTrace) {
+                                            return AspectRatio(
+                                              aspectRatio: 1,
+                                              child: Image.asset(
+                                                'assets/images/video_placeholder.jpg',
+                                                width: widthVideo,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            );
+                                          },
+                                          imageUrl: video.imageUrl ?? "",
+                                          width: widthVideo,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                       if (video.isFavorite)
                                         const Positioned(

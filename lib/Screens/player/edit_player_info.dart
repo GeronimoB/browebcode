@@ -32,6 +32,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
   late TextEditingController _nombreController;
   late TextEditingController _apellidoController;
   late TextEditingController _correoController;
+  late TextEditingController _usernameController;
   late TextEditingController _paisController;
   late TextEditingController _provinciaController;
   late TextEditingController _posicionController;
@@ -76,6 +77,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     _nombreController = TextEditingController(text: player.name);
     _apellidoController = TextEditingController(text: player.lastName);
     _correoController = TextEditingController(text: player.email);
+    _usernameController = TextEditingController(text: player.username);
     _paisController = TextEditingController(text: countries[player.pais] ?? '');
     _provinciaController = TextEditingController(
         text: provincesByCountry[player.pais]?[player.provincia] ?? '');
@@ -105,6 +107,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     _nombreController.dispose();
     _apellidoController.dispose();
     _correoController.dispose();
+    _usernameController.dispose();
     _paisController.dispose();
     _provinciaController.dispose();
     _posicionController.dispose();
@@ -158,6 +161,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
     if (_nombreController.text.isEmpty ||
         _apellidoController.text.isEmpty ||
         _correoController.text.isEmpty ||
+        _usernameController.text.isEmpty ||
         _paisController.text.isEmpty ||
         _provinciaController.text.isEmpty ||
         _posicionController.text.isEmpty ||
@@ -196,8 +200,8 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
       },
       child: Center(
         child: Container(
-          width: MediaQuery.of(context).size.width > 800
-              ? 800
+          width: MediaQuery.of(context).size.width > 530
+              ? 530
               : MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -297,6 +301,11 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                       label: translations!["Email"],
                       controller: _correoController,
                       camp: 'email'),
+                  _buildTextField(
+                    label: 'Usuario',
+                    controller: _usernameController,
+                    camp: 'username',
+                  ),
                   _buildTextField(
                       label: translations!["Direction"],
                       controller: _directionController,

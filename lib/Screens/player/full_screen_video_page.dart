@@ -3,10 +3,14 @@ import 'package:bro_app_to/Screens/metodo_pago_screen.dart';
 import 'package:bro_app_to/components/modal_decision.dart';
 import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
+import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/video_model.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
@@ -15,6 +19,7 @@ import '../../components/custom_text_button.dart';
 import '../../utils/api_client.dart';
 import 'bottom_navigation_bar_player.dart';
 import 'dart:html' as html;
+import 'package:http/http.dart' as http;
 
 class FullScreenVideoPage extends StatefulWidget {
   final Video video;
@@ -87,9 +92,9 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
     RenderBox renderBox = context.findRenderObject() as RenderBox;
     var size = renderBox.size;
     var offset = renderBox.localToGlobal(Offset.zero);
-    double sizeWidth = size.width > 800 ? 800 : size.width;
+    double sizeWidth = size.width > 530 ? 530 : size.width;
     double sizeWidth2 =
-        size.width > 800 ? ((size.width - 800) / 2 + 800) : size.width;
+        size.width > 530 ? ((size.width - 530) / 2 + 530) : size.width;
 
     return OverlayEntry(
       builder: (context) => Stack(
@@ -162,7 +167,7 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                     ),
                     ListTile(
                       title: Text(
-                        translations!['save'],
+                        translations!['download'],
                         style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'Montserrat',
@@ -202,6 +207,21 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                         _handleShare(widget.video);
                       },
                     ),
+                    ListTile(
+                      title: Text(
+                        'Cambiar portada',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                      onTap: () {
+                        _overlayEntry?.remove();
+                        _overlayEntry = null;
+                        _showCoverImageModal();
+                      },
+                    )
                   ],
                 ),
               ),
@@ -214,20 +234,26 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
 
   @override
   Widget build(BuildContext context) {
-    final videoHeight = MediaQuery.of(context).size.height - 100;
     return Center(
-      child: Container(
-        width: double.infinity,
-        constraints: BoxConstraints(maxWidth: 800),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 530),
         child: Stack(
           children: [
             GestureDetector(
               onTap: _togglePlayPause,
               child: _controller.value.isInitialized
-                  ? SizedBox(
-                      width: double.maxFinite,
-                      height: videoHeight,
-                      child: VideoPlayer(_controller),
+                  ? Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      color: Colors.black,
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        child: SizedBox(
+                          width: _controller.value.size.width,
+                          height: _controller.value.size.height,
+                          child: VideoPlayer(_controller),
+                        ),
+                      ),
                     )
                   : const Center(
                       child: CircularProgressIndicator(
@@ -235,6 +261,49 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                             AlwaysStoppedAnimation<Color>(Color(0xFF05FF00)),
                       ),
                     ),
+            ),
+            Positioned(
+              right: 10,
+              bottom: 162,
+              child: Column(
+                children: [
+                  Icon(
+                    widget.video.isLiked
+                        ? Icons.favorite
+                        : Icons.favorite_border,
+                    color: Colors.white,
+                    size: 36,
+                  ),
+                  Text(
+                    widget.video.likesCount.toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.0,
+                      height: 1,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Icon(
+                    Icons.mode_comment_outlined,
+                    color: Colors.white,
+                    size: 36,
+                  ),
+                  Text(
+                    widget.video.commentsCount.toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.0,
+                      height: 1,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ],
+              ),
             ),
             Positioned(
               top: MediaQuery.of(context).padding.top,
@@ -278,9 +347,9 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                 ),
               ),
             Positioned(
-              bottom: 0,
-              left: (MediaQuery.of(context).size.width > 800
-                          ? 800
+              bottom: 20,
+              left: (MediaQuery.of(context).size.width > 530
+                          ? 530
                           : MediaQuery.of(context).size.width) /
                       2 -
                   52,
@@ -296,7 +365,7 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
             Positioned(
               left: 0,
               right: 0,
-              bottom: MediaQuery.of(context).size.height - videoHeight - 2,
+              bottom: 2,
               child: VideoProgressIndicator(
                 _controller,
                 allowScrubbing: true,
@@ -386,7 +455,15 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
   Future<void> _handleShare(Video video) async {
     final encodedId = Base64Helper.encode(video.id.toString());
     final videoUrl = 'https://app.bro.futbol/home/videos/$encodedId';
-    Share.share('Mira este video increíble: $videoUrl');
+
+    Share.share(
+      'Mira este video increíble: $videoUrl',
+      sharePositionOrigin: Rect.fromLTWH(
+          0,
+          0,
+          MediaQuery.of(context).size.width,
+          MediaQuery.of(context).size.height / 2),
+    );
   }
 
   void showSuccessDialog() {
@@ -641,5 +718,153 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
         ),
       );
     }
+  }
+
+  Future<void> _pickCoverImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+
+    if (result != null) {
+      PlatformFile file = result.files.first;
+
+      _showUploadDialog();
+
+      uploadVideoAndImageBytes(widget.video.id.toString(), file.bytes);
+    }
+  }
+
+  void _showCoverImageModal() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
+          backgroundColor: const Color(0xFF3B3B3B),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "¿Deseas subir una imagen de portada?",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CustomTextButton(
+                    onTap: () async {
+                      Navigator.of(context).pop();
+                      await _pickCoverImage();
+                    },
+                    text: "Subir Imagen",
+                    buttonPrimary: true,
+                    width: 120,
+                    height: 30,
+                  ),
+                  CustomTextButton(
+                    onTap: () => Navigator.of(context).pop(),
+                    text: "Cancelar",
+                    buttonPrimary: false,
+                    width: 120,
+                    height: 30,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> uploadVideoAndImageBytes(
+      String? videoId, Uint8List? coverImageBytes) async {
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${ApiConstants.baseUrl}/auth/update-cover'),
+      );
+      request.fields["videoId"] = videoId ?? '';
+
+      if (coverImageBytes != null) {
+        request.files.add(http.MultipartFile.fromBytes(
+          'imagen',
+          coverImageBytes,
+          filename: 'imagen.png',
+          contentType: MediaType('image', 'png'),
+        ));
+      }
+
+      var response = await request.send();
+      await Future.delayed(const Duration(seconds: 1));
+      if (response.statusCode == 200) {
+        showSucessSnackBar(context, 'Portada cambiada exitosamente!');
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) =>
+                const CustomBottomNavigationBarPlayer(initialIndex: 4),
+          ),
+        );
+      } else {
+        showErrorSnackBar(context, 'Hubo un error, intentalo de nuevo.');
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) =>
+                const CustomBottomNavigationBarPlayer(initialIndex: 4),
+          ),
+        );
+      }
+    } catch (e) {
+      showErrorSnackBar(context, 'Hubo un error, intentalo de nuevo.');
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) =>
+              const CustomBottomNavigationBarPlayer(initialIndex: 4),
+        ),
+      );
+    }
+  }
+
+  void _showUploadDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
+          contentPadding: const EdgeInsets.all(25),
+          backgroundColor: const Color(0xFF3B3B3B),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Estamos subiendo tu imagen, esto puede tardar unos segundos…",
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 25),
+              LinearProgressIndicator(
+                color: Color(0xff00E050),
+                backgroundColor: Colors.white,
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

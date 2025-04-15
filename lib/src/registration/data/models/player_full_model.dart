@@ -1,6 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+
 import 'package:bro_app_to/src/registration/domain/entities/player_full_entity.dart';
 import 'package:bro_app_to/utils/current_state.dart';
-import 'package:flutter/material.dart';
 
 @immutable
 class PlayerFullModel extends PlayerFullEntity {
@@ -11,6 +15,7 @@ class PlayerFullModel extends PlayerFullEntity {
     final String? name,
     final String? lastName,
     final String? email,
+    final String? username,
     final String? referralCode,
     final bool? isAgent,
     final DateTime? birthDate,
@@ -33,6 +38,7 @@ class PlayerFullModel extends PlayerFullEntity {
     final bool verificado = false,
     final bool emailVerified = false,
     final bool registroCompleto = false,
+    final bool isPublicAccount = false,
   }) : super(
           customerStripeId: customerStripeId,
           userId: userId,
@@ -40,6 +46,7 @@ class PlayerFullModel extends PlayerFullEntity {
           name: name,
           lastName: lastName,
           email: email,
+          username: username,
           password: password,
           referralCode: referralCode,
           isAgent: isAgent,
@@ -62,6 +69,7 @@ class PlayerFullModel extends PlayerFullEntity {
           verificado: verificado,
           emailVerified: emailVerified,
           registroCompleto: registroCompleto,
+          isPublicAccount: isPublicAccount,
         );
 
   @override
@@ -72,6 +80,7 @@ class PlayerFullModel extends PlayerFullEntity {
     String? name,
     String? lastName,
     String? email,
+    String? username,
     String? referralCode,
     String? password,
     bool? isAgent,
@@ -94,6 +103,7 @@ class PlayerFullModel extends PlayerFullEntity {
     bool? verificado,
     bool? emailVerified,
     bool? registroCompleto,
+    bool? isPublicAccount,
   }) {
     return PlayerFullModel(
       customerStripeId: customerStripeId ?? this.customerStripeId,
@@ -103,6 +113,7 @@ class PlayerFullModel extends PlayerFullEntity {
       lastName: lastName ?? this.lastName,
       password: password ?? this.password,
       email: email ?? this.email,
+      username: username ?? this.username,
       position: position ?? this.position,
       referralCode: referralCode ?? this.referralCode,
       isAgent: isAgent ?? this.isAgent,
@@ -124,6 +135,7 @@ class PlayerFullModel extends PlayerFullEntity {
       verificado: verificado ?? this.verificado,
       emailVerified: emailVerified ?? this.emailVerified,
       registroCompleto: registroCompleto ?? this.registroCompleto,
+      isPublicAccount: isPublicAccount ?? this.isPublicAccount,
     );
   }
 
@@ -140,6 +152,7 @@ class PlayerFullModel extends PlayerFullEntity {
       name: json['name'] ?? '',
       lastName: json['lastname'] ?? '',
       email: json['email'] ?? '',
+      username: json['username'] ?? '',
       referralCode: json['referral_code'] ?? '',
       isAgent: json['isAgent'] ?? false,
       birthDate: birthDate,
@@ -165,6 +178,7 @@ class PlayerFullModel extends PlayerFullEntity {
       verificado: json['verificado'] ?? false,
       emailVerified: json['email_confirmed'] ?? false,
       registroCompleto: json['registroCompleto'] ?? false,
+      isPublicAccount: json['isPublic'] == 1 ? true : false,
     );
   }
 
@@ -175,6 +189,7 @@ class PlayerFullModel extends PlayerFullEntity {
     if (name != null) map['Name'] = name;
     if (lastName != null) map['LastName'] = lastName;
     if (email != null) map['Email'] = email;
+    if (username != null) map['username'] = username;
     if (referralCode != null) map['CodigoAfiliado'] = referralCode;
     if (password != null) map['Password'] = password;
     if (birthDate != null) map['Birthday'] = birthDate.toString();
@@ -193,5 +208,79 @@ class PlayerFullModel extends PlayerFullEntity {
     if (userImage != null) map['userImage'] = userImage;
     map['fcm'] = fcmToken;
     return map;
+  }
+}
+
+class UserProfileResponse {
+  final PlayerFullModel player;
+  final int followers;
+  final int following;
+  final String status;
+
+  const UserProfileResponse({
+    required this.player,
+    required this.followers,
+    required this.following,
+    required this.status,
+  });
+
+  UserProfileResponse copyWith({
+    PlayerFullModel? player,
+    int? followers,
+    int? following,
+    String? status,
+  }) {
+    return UserProfileResponse(
+      player: player ?? this.player,
+      followers: followers ?? this.followers,
+      following: following ?? this.following,
+      status: status ?? this.status,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'player': player.toMap(),
+      'followers': followers,
+      'following': following,
+      'status': status,
+    };
+  }
+
+  factory UserProfileResponse.fromMap(Map<String, dynamic> map) {
+    return UserProfileResponse(
+      player: PlayerFullModel.fromJson(map['player'] as Map<String, dynamic>),
+      followers: map['followers'] ?? 0,
+      following: map['following'] ?? 0,
+      status: map['status'] ?? 'Seguir',
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory UserProfileResponse.fromJson(String source) =>
+      UserProfileResponse.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'UserProfileResponse(player: $player, followers: $followers, following: $following, status: $status)';
+  }
+
+  @override
+  bool operator ==(covariant UserProfileResponse other) {
+    if (identical(this, other)) return true;
+
+    return other.player == player &&
+        other.followers == followers &&
+        other.following == following &&
+        other.status == status;
+  }
+
+  @override
+  int get hashCode {
+    return player.hashCode ^
+        followers.hashCode ^
+        following.hashCode ^
+        status.hashCode;
   }
 }

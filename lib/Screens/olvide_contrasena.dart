@@ -13,7 +13,7 @@ class OlvideContrasenaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 800),
+        constraints: BoxConstraints(maxWidth: 530),
         child: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(

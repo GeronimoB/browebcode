@@ -11,7 +11,7 @@ class ImageFullScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 800),
+        constraints: const BoxConstraints(maxWidth: 530),
         child: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(

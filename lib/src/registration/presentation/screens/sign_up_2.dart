@@ -69,7 +69,7 @@ class _SignUpScreen2State extends State<SignUpScreen2> {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 800),
+        constraints: BoxConstraints(maxWidth: 530),
         child: Scaffold(
           body: Stack(
             children: [

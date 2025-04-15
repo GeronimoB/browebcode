@@ -25,6 +25,11 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updatePrivacity(bool status) {
+    _currentUser = _currentUser.copyWith(isPublic: status);
+    notifyListeners();
+  }
+
   void updatePlan(String plan, {bool status = false}) {
     _currentUser = _currentUser.copyWith(subscription: plan, status: status);
     notifyListeners();
@@ -34,6 +39,7 @@ class UserProvider extends ChangeNotifier {
     _currentUser = _currentUser.copyWith(
         nombre: player.name,
         apellido: player.lastName,
+        usuario: player.username,
         birthDate: player.birthDate,
         correo: player.email,
         pais: player.pais,

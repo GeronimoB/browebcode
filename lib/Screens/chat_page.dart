@@ -25,7 +25,7 @@ import '../src/auth/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
-import 'agent/user_profile_to_agent.dart';
+import 'agent/user_profile/user_profile_to_agent.dart';
 
 class ChatPage extends StatefulWidget {
   final UserModel friend;
@@ -48,6 +48,7 @@ class ChatPageState extends State<ChatPage> {
   OverlayEntry? _overlayEntry;
   late UserProvider userProvider;
   bool isLoading = false;
+  static const CLOUDFRONT_URL = "https://d2ermq59z45967.cloudfront.net";
 
   @override
   void initState() {
@@ -69,14 +70,12 @@ class ChatPageState extends State<ChatPage> {
 
   String _buildSenderId() {
     final user = userProvider.getCurrentUser();
-    return user.isAgent ? "agente_${user.userId}" : "jugador_${user.userId}";
+    return "user_${user.userId}";
   }
 
   String _buildReceiverId() {
     final friend = widget.friend;
-    return friend.isAgent
-        ? "agente_${friend.userId}"
-        : "jugador_${friend.userId}";
+    return "user_${friend.userId}";
   }
 
   void _sendMessage() async {
@@ -128,10 +127,20 @@ class ChatPageState extends State<ChatPage> {
         .pinChat(_buildSenderId(), _buildReceiverId(), !isMute);
   }
 
+  String replaceToCloudUrl(String? url) {
+    if (url == null || url.isEmpty) {
+      return "";
+    }
+
+    final relativePath = url.split(".com/")[1];
+
+    return '$CLOUDFRONT_URL/$relativePath';
+  }
+
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width > 800
-        ? 800
+    double width = MediaQuery.of(context).size.width > 530
+        ? 530
         : MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     Sizes.initSizes(width, height);
@@ -153,7 +162,7 @@ class ChatPageState extends State<ChatPage> {
       },
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
+          constraints: const BoxConstraints(maxWidth: 530),
           child: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -301,18 +310,23 @@ class ChatPageState extends State<ChatPage> {
                                           "image") {
                                         return imageItem(
                                           context,
-                                          snapshot.data.docs[index]['url'],
+                                          replaceToCloudUrl(
+                                            snapshot.data.docs[index]['url'],
+                                          ),
                                           dateTime,
                                           snapshot.data.docs[index]['sent'],
                                           snapshot.data.docs[index]['read'],
                                         );
                                       } else {
                                         return fileItem(
+                                          replaceToCloudUrl(
                                             snapshot.data.docs[index]['url'],
-                                            dateTime,
-                                            snapshot.data.docs[index]['sent'],
-                                            snapshot.data.docs[index]['read'],
-                                            context);
+                                          ),
+                                          dateTime,
+                                          snapshot.data.docs[index]['sent'],
+                                          snapshot.data.docs[index]['read'],
+                                          context,
+                                        );
                                       }
                                     });
                               }
@@ -523,9 +537,9 @@ class ChatPageState extends State<ChatPage> {
     RenderBox renderBox = context.findRenderObject() as RenderBox;
     var size = renderBox.size;
     var offset = renderBox.localToGlobal(Offset.zero);
-    double sizeWidth = size.width > 800 ? 800 : size.width;
+    double sizeWidth = size.width > 530 ? 530 : size.width;
     double sizeWidth2 =
-        size.width > 800 ? ((size.width - 800) / 2 + 800) : size.width;
+        size.width > 530 ? ((size.width - 530) / 2 + 530) : size.width;
     return OverlayEntry(
       builder: (context) => Stack(
         children: [

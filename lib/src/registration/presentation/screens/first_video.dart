@@ -163,7 +163,7 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
       onWillPop: () async => false,
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
+          constraints: const BoxConstraints(maxWidth: 530),
           child: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -207,21 +207,14 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
                               height: 500,
                               child: VideoPlayer(_temporalVideoController!),
                             ),
-                            Slider(
-                              activeColor: const Color(0xff3EAE64),
-                              inactiveColor: const Color(0xff00F056),
-                              value: _sliderValue,
-                              min: 0.0,
-                              max: _temporalVideoController!
-                                  .value.duration.inSeconds
-                                  .toDouble(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _sliderValue = value;
-                                  _temporalVideoController!
-                                      .seekTo(Duration(seconds: value.toInt()));
-                                });
-                              },
+                            VideoProgressIndicator(
+                              _temporalVideoController!,
+                              allowScrubbing: true,
+                              colors: const VideoProgressColors(
+                                playedColor: Color(0xFF00E050),
+                                bufferedColor: Colors.white,
+                                backgroundColor: Colors.grey,
+                              ),
                             ),
                           ],
                         )

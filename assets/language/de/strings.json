@@ -1,4 +1,5 @@
 {
+  "download": "Descargar",
   "sign_in": "Anmelden",
   "create_account": "Konto erstellen",
   "identify": "Identifizieren",
@@ -544,5 +545,9 @@
   "vanuatu": "Vanuatu",
   "yemen": "Jemen",
   "djibouti": "Dschibuti",
-  "zambia": "Sambia"
+  "zambia": "Sambia",
+  "undefined": "Seguir",
+  "accepted": "Dejar de seguir",
+  "pending": "Solicitud pendiente",
+  "rejected": "Solicitud rechazada"
 }

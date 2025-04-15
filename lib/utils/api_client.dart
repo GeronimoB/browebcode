@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +14,48 @@ class ApiClient {
       final response = await http
           .post(
             Uri.parse('$baseUrl/$endpoint'),
-            body: body,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode(body),
+          )
+          .timeout(const Duration(seconds: 20));
+      return response;
+    } on TimeoutException catch (e) {
+      throw Exception('Timeout en la solicitud HTTP: $e');
+    } catch (e) {
+      throw Exception('Error en la solicitud HTTP: $e');
+    }
+  }
+
+   Future<http.Response> put(String endpoint, Map<String, dynamic> body) async {
+    try {
+      final response = await http
+          .put(
+            Uri.parse('$baseUrl/$endpoint'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode(body),
+          )
+          .timeout(const Duration(seconds: 20));
+      return response;
+    } on TimeoutException catch (e) {
+      throw Exception('Timeout en la solicitud HTTP: $e');
+    } catch (e) {
+      throw Exception('Error en la solicitud HTTP: $e');
+    }
+  }
+
+  Future<http.Response> delete(String endpoint, Map<String, dynamic> body) async {
+    try {
+      final response = await http
+          .delete(
+            Uri.parse('$baseUrl/$endpoint'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode(body),
           )
           .timeout(const Duration(seconds: 20));
       return response;

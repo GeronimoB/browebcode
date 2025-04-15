@@ -14,10 +14,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/intro.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as provider;
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'providers/agent_provider.dart';
@@ -58,7 +59,7 @@ void main() async {
   await languageLocalizations.load();
   translations = languageLocalizations.getJsonTranslate();
 
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 Future<List<NotificationModel>> getSavedNotifications() async {
@@ -73,6 +74,9 @@ Future<List<NotificationModel>> getSavedNotifications() async {
 
   return notifications;
 }
+
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -94,14 +98,15 @@ class MyApp extends StatelessWidget {
         900: Color(0xFF004C1D),
       },
     );
-    return MultiProvider(
+    return provider.MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => PlayerProvider()),
-        ChangeNotifierProvider(create: (_) => AgenteProvider()),
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => UnauthHomeProvider()),
+        provider.ChangeNotifierProvider(create: (_) => PlayerProvider()),
+        provider.ChangeNotifierProvider(create: (_) => AgenteProvider()),
+        provider.ChangeNotifierProvider(create: (_) => UserProvider()),
+        provider.ChangeNotifierProvider(create: (_) => UnauthHomeProvider()),
       ],
       child: GetMaterialApp(
+        scaffoldMessengerKey: scaffoldMessengerKey,
         title: 'Bró Football Platform',
         debugShowCheckedModeBanner: false,
         navigatorKey: Get.key,
@@ -159,7 +164,7 @@ class MySplashScreenState extends State<MySplashScreen> {
       final String savedPassword = prefs.getString('password') ?? '';
       if (savedUsername.isNotEmpty && savedPassword.isNotEmpty) {
         final playerProvider =
-            Provider.of<PlayerProvider>(context, listen: false);
+            provider.Provider.of<PlayerProvider>(context, listen: false);
 
         RemoteDataSourceImpl(playerProvider).signIn(
             UserEntity(username: savedUsername, password: savedPassword),

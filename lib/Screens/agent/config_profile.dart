@@ -75,7 +75,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
       },
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 800),
+          constraints: BoxConstraints(maxWidth: 530),
           child: Scaffold(
             extendBodyBehindAppBar: true,
             appBar: AppBar(

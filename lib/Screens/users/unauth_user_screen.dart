@@ -8,7 +8,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../components/slidedable_video.dart';
 import '../../utils/current_state.dart';
-import '../Intro.dart';
+import '../intro.dart';
 import 'interface/unauth_user_interface.dart';
 
 class UnauthUserScreen extends StatefulWidget {
@@ -39,8 +39,8 @@ class UnauthUserScreenState extends State<UnauthUserScreen>
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width > 800
-        ? 800
+    double width = MediaQuery.of(context).size.width > 530
+        ? 530
         : MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.black,

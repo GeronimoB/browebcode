@@ -32,6 +32,7 @@ class PlayerProvider extends ChangeNotifier {
     String? userId,
     String? name,
     String? email,
+    String? username,
     DateTime? birthDate,
     DateTime? dateCreated,
     String? password,
@@ -58,6 +59,7 @@ class PlayerProvider extends ChangeNotifier {
       direccion: direccion,
       name: name,
       email: email,
+      username: username,
       birthDate: birthDate,
       password: password,
       lastName: lastName,
@@ -82,6 +84,7 @@ class PlayerProvider extends ChangeNotifier {
     final Map<String, Function> fieldMap = {
       'name': (String value) => _player.copyWith(name: value),
       'email': (String value) => _player.copyWith(email: value),
+      'username': (String value) => _player.copyWith(username: value),
       'birthdate': (String value) =>
           _player.copyWith(birthDate: DateTime.tryParse(value)),
       'password': (String value) => _player.copyWith(password: value),

@@ -13,6 +13,7 @@ class UserEntity extends Equatable {
   final bool status;
   final bool verificado;
   final bool verificadoReferral;
+  final bool isPublicAccount;
 
   const UserEntity({
     required this.username,
@@ -27,6 +28,7 @@ class UserEntity extends Equatable {
     this.status = false,
     this.verificado = false,
     this.verificadoReferral = false,
+    this.isPublicAccount = true,
   });
 
   @override
@@ -42,6 +44,7 @@ class UserEntity extends Equatable {
         subscription,
         status,
         verificado,
-        verificadoReferral
+        verificadoReferral,
+        isPublicAccount,
       ];
 }

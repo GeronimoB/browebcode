@@ -20,7 +20,7 @@ class AfiliadosPlayer extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Container(
-          width: 800, // Ancho máximo del contenedor
+          width: 530, // Ancho máximo del contenedor
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,

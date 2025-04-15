@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../../../../utils/current_state.dart';
-import 'dart:html' as html;
 
 class UploadCoverImageScreen extends StatefulWidget {
   const UploadCoverImageScreen({super.key});
@@ -110,7 +108,7 @@ class _UploadCoverImageScreenState extends State<UploadCoverImageScreen> {
       onWillPop: () async => false,
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
+          constraints: const BoxConstraints(maxWidth: 530),
           child: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -142,44 +140,40 @@ class _UploadCoverImageScreenState extends State<UploadCoverImageScreen> {
                 automaticallyImplyLeading: false,
               ),
               body: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: pickImage,
-                        child: SvgPicture.asset(
-                          'assets/icons/CloudIcon.svg',
-                          width: 210,
-                        ),
-                      ),
-                      const Text(
-                        'Sube la portada de tu video, si no la subes el sistema generará una.',
-                        style: TextStyle(
-                          color: Color(0xFF00E050),
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.w900,
-                          fontSize: 15.0,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      CustomTextButton(
-                          onTap: () => Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const PlanesPago(),
-                                ),
-                              ),
-                          text: 'Omitir',
-                          buttonPrimary: true,
-                          width: 116,
-                          height: 39),
-                    ],
+                  GestureDetector(
+                    onTap: pickImage,
+                    child: SvgPicture.asset(
+                      'assets/icons/CloudIcon.svg',
+                      width: 210,
+                    ),
                   ),
+                  const SizedBox(height: 15),
+                  const Text(
+                    'Sube la portada de tu video, si no la subes el sistema generará una.',
+                    style: TextStyle(
+                      color: Color(0xFF00E050),
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w900,
+                      fontSize: 15.0,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 15),
+                  CustomTextButton(
+                      onTap: () => Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PlanesPago(),
+                            ),
+                          ),
+                      text: 'Omitir',
+                      buttonPrimary: true,
+                      width: 116,
+                      height: 39),
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.all(25),

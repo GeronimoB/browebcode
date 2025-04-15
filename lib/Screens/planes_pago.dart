@@ -13,7 +13,8 @@ import '../utils/plan_model.dart';
 
 List<Plan> planes = [
   Plan(
-    idPlan: 'price_1QC2HeLgnVzrMk83zySNqczj',
+    //idPlan: 'price_1QC2HeLgnVzrMk83zySNqczj',
+    idPlan: 'price_1QnSD6LgnVzrMk833gnqTXnG',
     nombre: translations!["Plan_1_name"],
     precio: '19,99',
     descripcion: translations!["Plan_1_description"],
@@ -34,7 +35,8 @@ List<Plan> planes = [
     ],
   ),
   Plan(
-    idPlan: 'price_1QC2IjLgnVzrMk8350ISRYtB',
+    //idPlan: 'price_1QC2IjLgnVzrMk8350ISRYtB',
+    idPlan: 'price_1QnSDhLgnVzrMk83xoAgjiWs',
     nombre: translations!["Plan_2_name"],
     precio: '29,99',
     descripcion: translations!["Plan_2_description"],
@@ -56,7 +58,8 @@ List<Plan> planes = [
     ],
   ),
   Plan(
-    idPlan: 'price_1QC2J0LgnVzrMk83a9kqjztw',
+    // idPlan: 'price_1QC2J0LgnVzrMk83a9kqjztw',
+    idPlan: 'price_1QnSEyLgnVzrMk83OtamJ2SK',
     nombre: translations!["Plan_3_name"],
     precio: '49,99',
     descripcion: translations!["Plan_3_description"],
@@ -77,7 +80,8 @@ List<Plan> planes = [
     ],
   ),
   Plan(
-    idPlan: 'price_1QC2JNLgnVzrMk83cHx7ZVOy',
+    //idPlan: 'price_1QC2JNLgnVzrMk83cHx7ZVOy',
+    idPlan: 'price_1QnSBPLgnVzrMk83xzijEGhD',
     nombre: translations!["Plan_4_name"],
     precio: '89,99',
     descripcion: translations!["Plan_4_description"],
@@ -107,7 +111,7 @@ class PlanesPago extends StatefulWidget {
 }
 
 class PlanesPagoState extends State<PlanesPago> {
-  int _selectedCardIndex = -1; 
+  int _selectedCardIndex = -1;
   final ScrollController _scrollController = ScrollController();
   Color _appBarColor = Colors.transparent;
 
@@ -139,7 +143,7 @@ class PlanesPagoState extends State<PlanesPago> {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 800),
+        constraints: const BoxConstraints(maxWidth: 530),
         child: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(

@@ -133,7 +133,7 @@ class CuentaPageState extends State<CuentaPage> {
     return Container(
       alignment: Alignment.center,
       child: Container(
-        width: 800,
+        width: 530,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -279,14 +279,14 @@ class CuentaPageState extends State<CuentaPage> {
                 const SizedBox(height: 35),
                 CarouselSlider(
                   options: CarouselOptions(
-                    height: 400.0,
+                    height: 450.0,
                     enlargeCenterPage: true,
                     autoPlay: false,
                     autoPlayCurve: Curves.fastOutSlowIn,
                     enableInfiniteScroll: true,
                     autoPlayAnimationDuration:
                         const Duration(milliseconds: 800),
-                    viewportFraction: width > 550 ? 0.5 : 0.8,
+                    viewportFraction: width > 500 ? 0.7 : 0.85,
                   ),
                   items: planes.map((plan) {
                     final isActualPlan =

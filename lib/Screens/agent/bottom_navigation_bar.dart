@@ -8,6 +8,15 @@ import 'package:provider/provider.dart';
 
 import '../../providers/user_provider.dart';
 
+import 'dart:html' as html;
+
+void preventBackNavigation() {
+  html.window.history.pushState(null, '', html.window.location.href);
+  html.window.onPopState.listen((event) {
+    html.window.history.pushState(null, '', html.window.location.href);
+  });
+}
+
 class CustomBottomNavigationBar extends StatefulWidget {
   final int initialIndex;
 
@@ -30,6 +39,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   @override
   void initState() {
     super.initState();
+    preventBackNavigation();
     _selectedIndex = widget.initialIndex;
   }
 
@@ -47,34 +57,34 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       },
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 44, 44, 44),
-              Color.fromARGB(255, 0, 0, 0),
-            ],
-          ),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          extendBody: true,
-          body: _pages[_selectedIndex],
-          bottomNavigationBar: Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.black,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children:
-                  List.generate(_pages.length, (index) => _buildNavItem(index)),
+          constraints: const BoxConstraints(maxWidth: 530),
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromARGB(255, 44, 44, 44),
+                  Color.fromARGB(255, 0, 0, 0),
+                ],
+              ),
+            ),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              extendBody: true,
+              body: _pages[_selectedIndex],
+              bottomNavigationBar: Container(
+                padding: const EdgeInsets.all(8),
+                color: Colors.black,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(
+                      _pages.length, (index) => _buildNavItem(index)),
+                ),
+              ),
             ),
           ),
         ),
-      ),
-      ),
       ),
     );
   }

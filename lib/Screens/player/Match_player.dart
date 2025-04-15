@@ -116,8 +116,8 @@ class MatcheState extends State<MatchePlayer> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 800,
-        constraints: const BoxConstraints(maxWidth: 800),
+        width: 530,
+        constraints: const BoxConstraints(maxWidth: 530),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,

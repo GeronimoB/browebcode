@@ -4,9 +4,7 @@ import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:bro_app_to/utils/plan_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
@@ -31,10 +29,8 @@ class _PlanesCuentaWidgetState extends State<PlanesCuentaWidget> {
     final plan = widget.plan;
     final isActualPlan = widget.isActualPlan;
     final playerProvider = Provider.of<PlayerProvider>(context);
-    print(plan.nombre);
-    print(translations!["whatsIncluded"]);
     return Container(
-      width: 360,
+      width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -120,7 +116,6 @@ class _PlanesCuentaWidgetState extends State<PlanesCuentaWidget> {
     String visualizacion = cualidad["visualizacion"] ?? '';
     int color = cualidad["color"] ?? 0;
     bool isVisualizacion = cualidad["isVisualizacion"] ?? false;
-    print(text);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(

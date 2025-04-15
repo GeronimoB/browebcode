@@ -14,7 +14,7 @@ class FirebaseMessageRepository implements MessageUseCase {
   Stream<List<ChatPreview>> streamLastMessagesWithUsers(
       String userId, bool isAgent, BuildContext context) async* {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final id = isAgent ? "agente_$userId" : "jugador_$userId";
+    final id = "user_$userId";
     try {
       final userDocSnapshot = FirebaseFirestore.instance
           .collection('users')

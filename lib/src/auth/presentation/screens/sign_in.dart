@@ -35,7 +35,7 @@ class _SignInScreenState extends State<SignInScreen> {
     super.initState();
     emailController = TextEditingController();
     passwordController = TextEditingController();
-    showPlatformToast();
+    //showPlatformToast();
   }
 
   @override
@@ -181,7 +181,7 @@ class _SignInScreenState extends State<SignInScreen> {
       onWillPop: () async => false,
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 800),
+          constraints: BoxConstraints(maxWidth: 530),
           child: Scaffold(
               backgroundColor: Colors.transparent,
               body: Stack(

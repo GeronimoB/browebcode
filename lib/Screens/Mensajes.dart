@@ -125,12 +125,9 @@ class _MensajesPageState extends State<MensajesPage> {
 
                         return GestureDetector(
                           onTap: () async {
-                            final userParsedId = user.isAgent
-                                ? "agente_${user.userId}"
-                                : "jugador_${user.userId}";
-                            final friendParsedId = chat.friendUser.isAgent
-                                ? "agente_${chat.friendUser.userId}"
-                                : "jugador_${chat.friendUser.userId}";
+                            final userParsedId = "user_${user.userId}";
+                            final friendParsedId =
+                                "user_${chat.friendUser.userId}";
                             await FirebaseMessageRepository()
                                 .markAllMessagesAsRead(
                               userParsedId,
@@ -372,12 +369,9 @@ class _ChatWidgetState extends State<ChatWidget>
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final user = userProvider.getCurrentUser();
-      final sender =
-          user.isAgent ? "agente_${user.userId}" : "jugador_${user.userId}";
+      final sender = "user_${user.userId}";
       final friend = widget.chat.friendUser;
-      final receiver = friend.isAgent
-          ? "agente_${friend.userId}"
-          : "jugador_${friend.userId}";
+      final receiver = "user_${friend.userId}";
       await FirebaseMessageRepository().deleteAllMessages(sender, receiver);
     } catch (e) {
       debugPrint(e.toString());

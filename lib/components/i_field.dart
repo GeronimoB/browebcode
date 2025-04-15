@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 
-Widget iField(TextEditingController ctlr, String label,
-    {TextInputType keybType = TextInputType.text,
-    Function(String)? onChanged}) {
+Widget iField(
+  TextEditingController ctlr,
+  String label, {
+  TextInputType keybType = TextInputType.text,
+  Function(String)? onChanged,
+  Key? key,
+  FocusNode? focusNode,
+  bool darkMode = true,
+}) {
   return TextField(
     controller: ctlr,
+    key: key,
+    focusNode: focusNode,
     keyboardType: keybType,
     decoration: InputDecoration(
       labelText: label,
-      labelStyle: const TextStyle(
-        color: Colors.white,
+      labelStyle: TextStyle(
+        color: darkMode ? Colors.white : Colors.black,
         fontFamily: 'Montserrat',
         fontWeight: FontWeight.w500,
         fontStyle: FontStyle.italic,
@@ -20,7 +28,13 @@ Widget iField(TextEditingController ctlr, String label,
         borderSide: BorderSide(color: Color(0xFF00F056), width: 2),
       ),
     ),
-    style: const TextStyle(color: Colors.white, fontFamily: 'Montserrat'),
+    style: TextStyle(
+      color: darkMode ? Colors.white : Colors.black,
+      fontFamily: 'Montserrat',
+    ),
     onChanged: onChanged,
+    onSubmitted: (_) {
+      focusNode?.unfocus();
+    },
   );
 }

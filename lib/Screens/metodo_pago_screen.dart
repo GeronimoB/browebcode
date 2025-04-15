@@ -55,145 +55,146 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
           ),
         ),
         child: Container(
-          width: 800, // Ancho máximo para el contenedor
+          width: 530,
           child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          backgroundColor: Colors.transparent,
-          title: appBarTitle(translations!["payment_method"]),
-          centerTitle: true,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Color(0xFF00E050),
-              size: 32,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Text(
-                '$valueToPay €',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              scrolledUnderElevation: 0,
+              backgroundColor: Colors.transparent,
+              title: appBarTitle(translations!["payment_method"]),
+              centerTitle: true,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
                   color: Color(0xFF00E050),
-                  fontSize: 40,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold,
+                  size: 32,
                 ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
             ),
-            const SizedBox(height: 16),
-            GestureDetector(
-              onTapDown: (_) {
-                setState(() {
-                  cardSelected = true;
-                });
-              },
-              onTapUp: (_) {
-                setState(() {
-                  cardSelected = false;
-                });
-              },
-              onTapCancel: () {
-                setState(() {
-                  cardSelected = false;
-                });
-              },
-              onTap: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        AgregarTarjetaScreen(valueToPay: valueToPay, cupon: couponToSend),
-                  ),
-                );
-              },
-              child: Container(
-                width: metodoPagoWidth,
-                height: metodoPagoHeight,
-                decoration: BoxDecoration(
-                    color: cardSelected ? Colors.black : Colors.white,
-                    border:
-                        Border.all(color: const Color(0xff05FF00), width: 1.5),
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    boxShadow: cardSelected
-                        ? [
-                            const CustomBoxShadow(
-                              color: Color(0xff05FF00),
-                              blurRadius: 4,
-                            )
-                          ]
-                        : null),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.asset(
-                      'assets/images/Mastercard_icon.png',
-                      width: 96,
-                      height: 54,
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Text(
+                    '$valueToPay €',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Color(0xFF00E050),
+                      fontSize: 40,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold,
                     ),
-                    Image.asset(
-                      'assets/images/Visa_icon.png',
-                      width: 96,
-                      height: 54,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                GestureDetector(
+                  onTapDown: (_) {
+                    setState(() {
+                      cardSelected = true;
+                    });
+                  },
+                  onTapUp: (_) {
+                    setState(() {
+                      cardSelected = false;
+                    });
+                  },
+                  onTapCancel: () {
+                    setState(() {
+                      cardSelected = false;
+                    });
+                  },
+                  onTap: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AgregarTarjetaScreen(
+                            valueToPay: valueToPay, cupon: couponToSend),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: metodoPagoWidth,
+                    height: metodoPagoHeight,
+                    decoration: BoxDecoration(
+                        color: cardSelected ? Colors.black : Colors.white,
+                        border: Border.all(
+                            color: const Color(0xff05FF00), width: 1.5),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        boxShadow: cardSelected
+                            ? [
+                                const CustomBoxShadow(
+                                  color: Color(0xff05FF00),
+                                  blurRadius: 4,
+                                )
+                              ]
+                            : null),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          'assets/images/Mastercard_icon.png',
+                          width: 96,
+                          height: 54,
+                        ),
+                        Image.asset(
+                          'assets/images/Visa_icon.png',
+                          width: 96,
+                          height: 54,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 25.0),
+                Text(
+                  translations!["applyDisc"],
+                  style: const TextStyle(
+                      color: Color(0xFF00E050),
+                      fontSize: 18,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.bold),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    SizedBox(width: 200, child: iField(cupon, '')),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    CustomTextButton(
+                      onTap: () => handleApplyDisc(cupon.text),
+                      text: translations!["apply"],
+                      buttonPrimary: true,
+                      width: 100,
+                      height: 25,
                     )
                   ],
                 ),
-              ),
-            ),
-            const SizedBox(height: 25.0),
-            Text(
-              translations!["applyDisc"],
-              style: const TextStyle(
-                  color: Color(0xFF00E050),
-                  fontSize: 18,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold),
-            ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                SizedBox(width: 200, child: iField(cupon, '')),
-                const SizedBox(
-                  width: 10,
+                const SizedBox(height: 26),
+                const Spacer(),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: SvgPicture.asset(
+                      'assets/icons/Logo.svg',
+                      width: 80,
+                    ),
+                  ),
                 ),
-                CustomTextButton(
-                  onTap: () => handleApplyDisc(cupon.text),
-                  text: translations!["apply"],
-                  buttonPrimary: true,
-                  width: 100,
-                  height: 25,
-                )
               ],
             ),
-            const SizedBox(height: 26),
-            const Spacer(),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: SvgPicture.asset(
-                  'assets/icons/Logo.svg',
-                  width: 80,
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
-      ),
       ),
     );
   }

@@ -545,5 +545,10 @@
   "vanuatu": "Vanuatu",
   "yemen": "Yemen",
   "djibouti": "Djibouti",
-  "zambia": "Zambia"
+  "zambia": "Zambia",
+  "download": "Descargar",
+  "undefined": "Seguir",
+  "accepted": "Dejar de seguir",
+  "pending": "Solicitud pendiente",
+  "rejected": "Solicitud rechazada"
 }

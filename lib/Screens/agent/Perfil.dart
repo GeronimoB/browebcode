@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bro_app_to/Screens/agent/user_profile_to_agent.dart';
+import 'user_profile/user_profile_to_agent.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/providers/agent_provider.dart';
 import 'package:bro_app_to/providers/user_provider.dart';

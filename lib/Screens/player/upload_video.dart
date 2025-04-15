@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:html' as html;
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
@@ -53,6 +51,87 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     super.dispose();
   }
 
+  Uint8List? coverImageBytes;
+  Uint8List? videoBytes;
+
+  Future<void> _pickCoverImage() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowMultiple: false,
+    );
+
+    if (result != null) {
+      PlatformFile file = result.files.first;
+      if (kIsWeb) {
+        coverImageBytes = file.bytes;
+        setState(() {});
+        Navigator.of(context).pop();
+        _showUploadDialog();
+        final player = playerProvider.getPlayer()!;
+        await uploadVideoAndImageBytes(
+            player.userId, '${player.name} ${player.lastName}');
+      } else {
+        // Manejo para otras plataformas si es necesario
+      }
+    }
+  }
+
+  void _showCoverImageModal() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(23)),
+          backgroundColor: const Color(0xFF3B3B3B),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "¿Deseas subir una imagen de portada?",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CustomTextButton(
+                    onTap: () async {
+                      await _pickCoverImage();
+                    },
+                    text: "Subir Imagen",
+                    buttonPrimary: true,
+                    width: 120,
+                    height: 30,
+                  ),
+                  CustomTextButton(
+                    onTap: () async {
+                      Navigator.of(context).pop();
+                      _showUploadDialog();
+                      final player = playerProvider.getPlayer()!;
+                      await uploadVideoAndImageBytes(
+                          player.userId, '${player.name} ${player.lastName}');
+                    },
+                    text: "Omitir",
+                    buttonPrimary: false,
+                    width: 120,
+                    height: 30,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _pickVideo() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.video,
@@ -61,7 +140,6 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
 
     if (result != null) {
       PlatformFile file = result.files.first;
-      Uint8List? videoBytes;
 
       // Si estás en la web, puede que necesites leer el archivo de una forma diferente.
       if (kIsWeb) {
@@ -71,18 +149,15 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
           return;
         }
 
-        if (!await _validateVideoBytes(videoBytes)) {
+        if (!await _validateVideoBytes(videoBytes!)) {
           return;
         }
-
-        _showUploadDialog();
-        final player = playerProvider.getPlayer()!;
-        await uploadVideoAndImageBytes(
-            videoBytes, player.userId, '${player.name} ${player.lastName}');
+        setState(() {});
+        _showCoverImageModal();
       } else {
         return;
       }
-    } else {}
+    }
   }
 
   Future<bool> _validateVideoBytes(Uint8List bytes) async {
@@ -117,7 +192,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
   }
 
   Future<void> uploadVideoAndImageBytes(
-      Uint8List videoBytes, String? userId, String? username) async {
+      String? userId, String? username) async {
     var request = http.MultipartRequest(
       'POST',
       Uri.parse('${ApiConstants.baseUrl}/auth/uploadFiles'),
@@ -128,10 +203,19 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
     // Agregar el video como bytes
     request.files.add(http.MultipartFile.fromBytes(
       'video',
-      videoBytes,
+      videoBytes!,
       filename: 'video.mp4',
       contentType: MediaType('video', 'mp4'),
     ));
+
+    if (coverImageBytes != null) {
+      request.files.add(http.MultipartFile.fromBytes(
+        'imagen',
+        coverImageBytes!,
+        filename: 'imagen.png',
+        contentType: MediaType('image', 'png'),
+      ));
+    }
 
     var response = await request.send();
 
@@ -217,6 +301,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
               SizedBox(height: 25),
               LinearProgressIndicator(
                 color: Color(0xff00E050),
+                backgroundColor: Colors.white,
               ),
             ],
           ),
@@ -235,9 +320,8 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
       if (videosCountResponse.statusCode == 200) {
         final jsonData = jsonDecode(videosCountResponse.body);
         final total = jsonData["userVideosCount"];
-        // final maxVideosAllowed =
-        //     videosForPlan[userProvider.getCurrentUser().subscription];
-        final maxVideosAllowed = 5;
+        final maxVideosAllowed =
+            videosForPlan[userProvider.getCurrentUser().subscription];
 
         if (total >= maxVideosAllowed) {
           setState(() {
@@ -264,10 +348,10 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
   @override
   Widget build(BuildContext context) {
     final player = playerProvider.getPlayer();
-    // final canUploadVideo = userProvider.getCurrentUser().status &&
-    //     (player?.registroCompleto ?? false) &&
-    //     (player?.emailVerified ?? false);
-    final canUploadVideo = true;
+    final canUploadVideo = userProvider.getCurrentUser().status &&
+        (player?.registroCompleto ?? false) &&
+        (player?.emailVerified ?? false);
+
     if (!canUploadVideo) {
       errorMessage = translations!["InactiveSubscriptionMessage"];
     }

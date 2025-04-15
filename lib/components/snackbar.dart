@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
-void showErrorSnackBar(BuildContext context, String text) {
-  ScaffoldMessenger.of(context).showSnackBar(
+import '../main.dart';
+
+void showErrorSnackBar(BuildContext ctx, String message) {
+  print(scaffoldMessengerKey.currentState);
+  scaffoldMessengerKey.currentState?.showSnackBar(
     SnackBar(
       backgroundColor: Colors.redAccent,
       content: Text(
-        text,
+        message,
         style: const TextStyle(
           color: Colors.white,
           fontFamily: 'Montserrat',
@@ -20,7 +23,7 @@ void showErrorSnackBar(BuildContext context, String text) {
 }
 
 void showSucessSnackBar(BuildContext context, String text) {
-  ScaffoldMessenger.of(context).showSnackBar(
+  scaffoldMessengerKey.currentState?.showSnackBar(
     SnackBar(
       backgroundColor: const Color(0xFF05FF00),
       content: Text(
@@ -33,7 +36,7 @@ void showSucessSnackBar(BuildContext context, String text) {
         ),
         textAlign: TextAlign.start,
       ),
-      duration: const Duration(seconds: 8),
+      duration: const Duration(seconds: 5),
     ),
   );
 }

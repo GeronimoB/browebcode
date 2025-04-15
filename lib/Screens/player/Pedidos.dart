@@ -12,7 +12,8 @@ import 'package:provider/provider.dart';
 import '../../utils/api_client.dart';
 
 class Pedidos extends StatefulWidget {
-  const Pedidos({super.key});
+
+  const Pedidos({ super.key});
 
   @override
   PedidosState createState() => PedidosState();
@@ -70,8 +71,8 @@ class PedidosState extends State<Pedidos> {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 800, // Ancho máximo para el contenedor
-        constraints: const BoxConstraints(maxWidth: 800),
+        width: 530, // Ancho máximo para el contenedor
+        constraints: const BoxConstraints(maxWidth: 530),
         child: Scaffold(
           extendBodyBehindAppBar: true,
           appBar: PreferredSize(

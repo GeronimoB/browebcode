@@ -108,7 +108,7 @@ class EditarInfoState extends State<EditarInfo> {
     return Scaffold(
       body: Center(
         child: Container(
-          width: 800,
+          width: 530,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,

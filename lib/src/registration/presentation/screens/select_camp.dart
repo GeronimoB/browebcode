@@ -1,6 +1,7 @@
 import 'package:bro_app_to/Screens/player/edit_player_info.dart';
 import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
+import 'package:bro_app_to/src/registration/presentation/screens/first_video.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/sign_up_2.dart';
 import 'package:bro_app_to/utils/api_client.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +33,8 @@ class SelectCampState extends State<SelectCamp> {
       number: "1",
       posiciones: {
         "pc": {
-          "top": 0.66,
-          "left": 0.48,
+          "top": 0.63,
+          "left": 0.45,
         },
         "phone": {
           "top": 0.64,
@@ -228,13 +229,20 @@ class SelectCampState extends State<SelectCamp> {
       players.length,
       (int index) {
         return playerPic(
-          players[index],
-          screenSize.height *
+          player: players[index],
+          top: screenSize.height *
               players[index].posiciones![isPhone ? "phone" : "pc"]["top"],
-          isPhone
+          left: isPhone
               ? screenSize.width * players[index].posiciones!["phone"]["left"]
-              : 800.0 * players[index].posiciones!["pc"]["left"],
-          isPhone,
+              : 530.0 * players[index].posiciones!["pc"]["left"],
+          isPhone: isPhone,
+          index: index,
+          onTap: () {
+            _showPositionDialog(players[index].position, () {
+              setState(() {});
+            });
+            handlePlayerSelection(players[index]);
+          },
         );
       },
     ).toList();
@@ -243,7 +251,7 @@ class SelectCampState extends State<SelectCamp> {
       onWillPop: () async => false,
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
+          constraints: const BoxConstraints(maxWidth: 530),
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: Stack(
@@ -347,11 +355,16 @@ class SelectCampState extends State<SelectCamp> {
                                 playerProvider.updateTemporalPlayer(
                                   position: selectedPlayer.positionToSave,
                                 );
-
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const SignUpScreen2()));
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const FirstVideoWidget()),
+                                );
+                                // Navigator.of(context).pushReplacement(
+                                //     MaterialPageRoute(
+                                //         builder: (context) =>
+                                //             const SignUpScreen2()));
                               } else {
                                 playerProvider.updatePlayer(
                                   fieldName: "position",
@@ -505,55 +518,6 @@ class SelectCampState extends State<SelectCamp> {
     );
   }
 
-  Widget playerPic(Player player, double top, double left, bool isPhone) {
-    double initialTop = -100.0;
-
-    return TweenAnimationBuilder<double>(
-      tween: Tween<double>(begin: initialTop, end: top),
-      duration: const Duration(seconds: 2),
-      builder: (context, animatedTop, child) {
-        return Positioned(
-          top: animatedTop,
-          left: left,
-          child: GestureDetector(
-            onTap: () {
-              _showPositionDialog(player.position, () {
-                setState(() {});
-              });
-              handlePlayerSelection(player);
-            },
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/football-player 1.png',
-                  height: isPhone ? 90 : 120,
-                  fit: BoxFit.fill,
-                ),
-                Positioned(
-                  top: isPhone ? 25 : 30,
-                  child: Text(
-                    player.number,
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      color: player.isSelected
-                          ? const Color(0xff05FF00)
-                          : Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: isPhone ? 16 : 20,
-                      letterSpacing: 1,
-                      height: 1,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   void handlePlayerSelection(Player selectedPlayer) {
     print(selectedPlayer.position);
     setState(() {
@@ -601,6 +565,85 @@ class Player {
       isPositionConfirmed: isPositionConfirmed ?? this.isPositionConfirmed,
       posiciones: posiciones ?? this.posiciones,
       positionToSave: positionToSave ?? this.positionToSave,
+    );
+  }
+}
+
+class playerPic extends StatefulWidget {
+  final Player player;
+  final double top;
+  final double left;
+  final bool isPhone;
+  final int index;
+  final void Function()? onTap;
+
+  const playerPic({
+    super.key,
+    required this.player,
+    required this.top,
+    required this.left,
+    required this.isPhone,
+    required this.index,
+    this.onTap,
+  });
+
+  @override
+  State<playerPic> createState() => _playerPicState();
+}
+
+class _playerPicState extends State<playerPic> {
+  double animatedTop = -100;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(Duration(seconds: widget.index)).then((_) {
+      if (mounted) {
+        setState(() {
+          animatedTop = widget.top;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedPositioned(
+      duration: const Duration(seconds: 2),
+      top: animatedTop,
+      left: widget.left,
+      child: GestureDetector(
+        onTap: () {
+          widget.onTap?.call();
+        },
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Image.asset(
+              'assets/images/football-player 1.png',
+              height: widget.isPhone ? 90 : 120,
+              fit: BoxFit.fill,
+            ),
+            Positioned(
+              top: widget.isPhone ? 25 : 30,
+              child: Text(
+                widget.player.number,
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  color: widget.player.isSelected
+                      ? const Color(0xff05FF00)
+                      : Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: widget.isPhone ? 16 : 20,
+                  letterSpacing: 1,
+                  height: 1,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

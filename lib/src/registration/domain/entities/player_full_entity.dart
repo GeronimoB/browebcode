@@ -13,6 +13,8 @@ class PlayerFullEntity extends Equatable {
 
   final String? email;
 
+  final String? username;
+
   final String? referralCode;
 
   final bool? isAgent;
@@ -52,6 +54,7 @@ class PlayerFullEntity extends Equatable {
   final bool verificado;
   final bool emailVerified;
   final bool registroCompleto;
+  final bool isPublicAccount;
 
   const PlayerFullEntity({
     this.customerStripeId,
@@ -60,6 +63,7 @@ class PlayerFullEntity extends Equatable {
     this.name,
     this.lastName,
     this.email,
+    this.username,
     this.referralCode,
     this.isAgent,
     this.birthDate,
@@ -82,6 +86,7 @@ class PlayerFullEntity extends Equatable {
     this.verificado = false,
     this.emailVerified = false,
     this.registroCompleto = false,
+    this.isPublicAccount = false,
   });
 
   PlayerFullEntity copyWith({
@@ -91,6 +96,7 @@ class PlayerFullEntity extends Equatable {
     String? name,
     String? lastName,
     String? email,
+    String? username,
     String? referralCode,
     bool? isAgent,
     DateTime? birthDate,
@@ -113,6 +119,7 @@ class PlayerFullEntity extends Equatable {
     bool? verificado,
     bool? emailVerified,
     bool? registroCompleto,
+    bool? isPublicAccount,
   }) {
     return PlayerFullEntity(
         customerStripeId: customerStripeId ?? this.customerStripeId,
@@ -121,6 +128,7 @@ class PlayerFullEntity extends Equatable {
         name: name ?? this.name,
         lastName: lastName ?? this.lastName,
         email: email ?? this.email,
+        username: username ?? this.username,
         referralCode: referralCode ?? this.referralCode,
         isAgent: isAgent ?? this.isAgent,
         birthDate: birthDate ?? this.birthDate,
@@ -142,6 +150,7 @@ class PlayerFullEntity extends Equatable {
         verificado: verificado ?? this.verificado,
         emailVerified: emailVerified ?? this.emailVerified,
         registroCompleto: registroCompleto ?? this.registroCompleto,
+        isPublicAccount: isPublicAccount ?? this.isPublicAccount,
         direccion: direccion ?? this.direccion);
   }
 
@@ -153,6 +162,7 @@ class PlayerFullEntity extends Equatable {
         name,
         lastName,
         email,
+        username,
         referralCode,
         isAgent,
         birthDate,
@@ -174,6 +184,7 @@ class PlayerFullEntity extends Equatable {
         verificado,
         emailVerified,
         registroCompleto,
+        isPublicAccount,
         direccion
       ];
 }

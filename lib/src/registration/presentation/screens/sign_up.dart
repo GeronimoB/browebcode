@@ -31,25 +31,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool isLoading = false;
   late TextEditingController nameController;
   late TextEditingController lastNameController;
-  late DateTime _selectedDate;
+  //late DateTime _selectedDate;
   late TextEditingController mailController;
   late TextEditingController passwordController;
-  late TextEditingController dniController;
+  //late TextEditingController dniController;
   late TextEditingController referralCodeCtlr;
-  late TextEditingController directionController;
+  //late TextEditingController directionController;
+  late TextEditingController userController;
   Future<bool> launchAction(String url) =>
       launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
 
   Future<bool> validateAndCheckEmail(BuildContext context, String email,
-      String name, String lastName, DateTime fecha, String password) async {
+      String name, String lastName, String password) async {
     if (email.isEmpty ||
         lastName.isEmpty ||
-        dniController.text.isEmpty ||
-        fecha == DateTime.now() ||
         password.isEmpty ||
         name.isEmpty ||
-        dniController.text.isEmpty ||
-        directionController.text.isEmpty) {
+        userController.text.isEmpty) {
       showErrorSnackBar(context, translations!['complete_all_fields']);
 
       return false;
@@ -66,8 +64,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     try {
-      final response =
-          await ApiClient().post('auth/verify-email', {"email": email});
+      final response = await ApiClient().post(
+        'auth/verify-email',
+        {
+          "email": email,
+          "username": userController.text,
+        },
+      );
 
       if (response.statusCode != 200) {
         showErrorSnackBar(context, translations!['email_in_use']);
@@ -109,47 +112,49 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     super.initState();
-    dniController = TextEditingController();
+    // dniController = TextEditingController();
     nameController = TextEditingController();
     passwordController = TextEditingController();
-    _selectedDate = DateTime.now();
+    // _selectedDate = DateTime.now();
     mailController = TextEditingController();
     lastNameController = TextEditingController();
     referralCodeCtlr = TextEditingController();
-    dniController = TextEditingController();
-    directionController = TextEditingController();
+    // dniController = TextEditingController();
+    // directionController = TextEditingController();
+    userController = TextEditingController();
   }
 
   @override
   void dispose() {
-    dniController.dispose();
+    //  dniController.dispose();
     nameController.dispose();
     passwordController.dispose();
     mailController.dispose();
     lastNameController.dispose();
     referralCodeCtlr.dispose();
-    dniController.dispose();
-    directionController.dispose();
+    //   dniController.dispose();
+    // directionController.dispose();
+    userController.dispose();
     super.dispose();
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final LanguageLocalizations? localizations =
-        LanguageLocalizations.of(context);
-    Locale? locale = localizations?.locale;
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-      locale: locale,
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
-  }
+  // Future<void> _selectDate(BuildContext context) async {
+  //   final LanguageLocalizations? localizations =
+  //       LanguageLocalizations.of(context);
+  //   Locale? locale = localizations?.locale;
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: _selectedDate,
+  //     firstDate: DateTime(1900),
+  //     lastDate: DateTime.now(),
+  //     locale: locale,
+  //   );
+  //   if (picked != null && picked != _selectedDate) {
+  //     setState(() {
+  //       _selectedDate = picked;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +162,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       onWillPop: () async => false,
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 800),
+          constraints: BoxConstraints(maxWidth: 530),
           child: Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -210,47 +215,49 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             iField(
                                 lastNameController, translations!['last_name']),
                             const SizedBox(height: 10),
-                            iField(dniController, translations!['dni_label']),
-                            const SizedBox(height: 10),
-                            iField(directionController,
-                                translations!['direction_label']),
-                            const SizedBox(height: 10),
-                            InkWell(
-                              onTap: () {
-                                _selectDate(context);
-                              },
-                              child: InputDecorator(
-                                decoration: InputDecoration(
-                                  labelText: translations!['birthdate'],
-                                  labelStyle: const TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.w500,
-                                    fontStyle: FontStyle.italic,
-                                    fontSize: 16,
-                                  ),
-                                  enabledBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Color(0xFF00E050), width: 2),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    ),
-                                    const Icon(Icons.calendar_today,
-                                        color: Colors.white),
-                                  ],
-                                ),
-                              ),
-                            ),
+                            iField(userController, 'Usuario'),
+                            // const SizedBox(height: 10),
+                            // iField(dniController, translations!['dni_label']),
+                            // const SizedBox(height: 10),
+                            // iField(directionController,
+                            //     translations!['direction_label']),
+                            // const SizedBox(height: 10),
+                            // InkWell(
+                            //   onTap: () {
+                            //     _selectDate(context);
+                            //   },
+                            //   child: InputDecorator(
+                            //     decoration: InputDecoration(
+                            //       labelText: translations!['birthdate'],
+                            //       labelStyle: const TextStyle(
+                            //         color: Colors.white,
+                            //         fontFamily: 'Montserrat',
+                            //         fontWeight: FontWeight.w500,
+                            //         fontStyle: FontStyle.italic,
+                            //         fontSize: 16,
+                            //       ),
+                            //       enabledBorder: const UnderlineInputBorder(
+                            //         borderSide: BorderSide(
+                            //             color: Color(0xFF00E050), width: 2),
+                            //       ),
+                            //     ),
+                            //     child: Row(
+                            //       mainAxisAlignment:
+                            //           MainAxisAlignment.spaceBetween,
+                            //       children: <Widget>[
+                            //         Text(
+                            //           '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
+                            //           style: const TextStyle(
+                            //             color: Colors.white,
+                            //             fontFamily: 'Montserrat',
+                            //           ),
+                            //         ),
+                            //         const Icon(Icons.calendar_today,
+                            //             color: Colors.white),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
                             const SizedBox(height: 10),
                             iField(mailController,
                                 translations!['personal_email']),
@@ -426,7 +433,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   mailController.text,
                                   nameController.text,
                                   lastNameController.text,
-                                  _selectedDate,
                                   passwordController.text,
                                 );
                                 if (!_acceptedTerms) {
@@ -444,14 +450,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       Provider.of<PlayerProvider>(context,
                                           listen: false);
                                   playerProvider.updateTemporalPlayer(
-                                    dni: dniController.text,
                                     codigoReferido: referralCodeCtlr.text,
                                     email: mailController.text,
+                                    username: userController.text,
                                     name: nameController.text,
                                     lastName: lastNameController.text,
-                                    birthDate: _selectedDate,
                                     password: passwordController.text,
-                                    direccion: directionController.text,
                                   );
 
                                   try {

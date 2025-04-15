@@ -1,5 +1,4 @@
 import 'package:bro_app_to/components/custom_text_button.dart';
-import 'package:bro_app_to/src/registration/presentation/screens/select_camp.dart';
 import 'package:bro_app_to/src/registration/presentation/screens/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/src/auth/presentation/screens/sign_in.dart';
@@ -42,7 +41,7 @@ class SignInPageState extends State<SignInPage> {
     super.initState();
     _audioPlayer = AudioPlayer();
     _playMusic();
-    showPlatformToast();
+    //showPlatformToast();
   }
 
   Future<void> _playMusic() async {
@@ -184,7 +183,7 @@ class SignInPageState extends State<SignInPage> {
       onWillPop: () async => false,
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
+          constraints: const BoxConstraints(maxWidth: 530),
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: Stack(

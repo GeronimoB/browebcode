@@ -79,7 +79,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 800),
+        constraints: const BoxConstraints(maxWidth: 530),
         child: Container(
           height: MediaQuery.of(context).size.height,
           decoration: const BoxDecoration(
@@ -497,7 +497,9 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       await Future.delayed(const Duration(seconds: 1));
 
       userProvider.setCurrentUser(UserModel.fromPlayer(player,
-          status: true, plan: playerProvider.getActualPlan()?.nombre));
+          status: true,
+          plan: playerProvider.getActualPlan()?.nombre,
+          isPublic: true));
       playerProvider.setNewUser();
       _showUploadDialog();
       final video = playerProvider.videoPathToUpload;
@@ -525,7 +527,7 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
     final destacarVideo = await ApiClient().post(
       'security_filter/v1/api/payment/subscription',
       {
-        "planId": "price_1QC2JhLgnVzrMk83aRVDtWvA",
+        "planId": "price_1QnS5LLgnVzrMk83Ncn4NdzR",
         "customerId": player.customerStripeId,
         "paymentMethodId": playerProvider.selectedCard!.cardId,
         "paymentMethod":
@@ -577,12 +579,12 @@ class AgregarTarjetaScreenState extends State<AgregarTarjetaScreen> {
       ));
     }
 
-    if (videoPath != null) {
+    if (imagePath != null) {
       request.files.add(http.MultipartFile.fromBytes(
-        'video',
-        videoPath,
-        filename: 'video.mp4',
-        contentType: MediaType('video', 'mp4'),
+        'imagen',
+        imagePath,
+        filename: 'imagen.png',
+        contentType: MediaType('image', 'png'),
       ));
     }
 

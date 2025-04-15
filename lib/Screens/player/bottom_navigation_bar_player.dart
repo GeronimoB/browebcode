@@ -7,11 +7,22 @@ import 'package:bro_app_to/Screens/player_profile.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
+import 'home_page/home_page_videos.dart';
+
+import 'dart:html' as html;
+
+void preventBackNavigation() {
+  html.window.history.pushState(null, '', html.window.location.href);
+  html.window.onPopState.listen((event) {
+    html.window.history.pushState(null, '', html.window.location.href);
+  });
+}
+
 final List<Widget> _pages = [
-  const PlayerProfile(),
+  const HomePageVideosScreen(),
   const MatchePlayer(),
   const UploadVideoWidget(),
-  MensajesPage(),
+  const MensajesPage(),
   const PlayerProfile(),
 ];
 
@@ -32,6 +43,7 @@ class CustomBottomNavigationBarPlayerState
   @override
   void initState() {
     super.initState();
+    preventBackNavigation();
     _selectedIndex = widget.initialIndex;
   }
 
@@ -49,34 +61,35 @@ class CustomBottomNavigationBarPlayerState
       },
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 800),
+          constraints: BoxConstraints(maxWidth: 530),
           child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 44, 44, 44),
-              Color.fromARGB(255, 0, 0, 0),
-            ],
-          ),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          extendBody: true,
-          body: _pages[_selectedIndex],
-          bottomNavigationBar: Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.black,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children:
-                  List.generate(_pages.length, (index) => _buildNavItem(index)),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromARGB(255, 44, 44, 44),
+                  Color.fromARGB(255, 0, 0, 0),
+                ],
+              ),
+            ),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              extendBody: true,
+              body: _pages[_selectedIndex],
+              bottomNavigationBar: Container(
+                height: 70,
+                padding: const EdgeInsets.all(8),
+                color: Colors.black,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: List.generate(
+                      _pages.length, (index) => _buildNavItem(index)),
+                ),
+              ),
             ),
           ),
         ),
-      ),
-      ),
       ),
     );
   }

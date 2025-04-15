@@ -17,6 +17,7 @@ class UserModel extends UserEntity {
     bool status = false,
     bool verificado = false,
     bool verificadoReferral = false,
+    bool isPublicAccount = true,
   }) : super(
           username: username,
           password: password,
@@ -30,6 +31,7 @@ class UserModel extends UserEntity {
           status: status,
           verificado: verificado,
           verificadoReferral: verificadoReferral,
+          isPublicAccount: isPublicAccount,
         );
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -47,6 +49,7 @@ class UserModel extends UserEntity {
       subscription: json['suscription'] ?? '',
       verificado: json['verificado'] ?? false,
       verificadoReferral: json['verificado_referral'] ?? false,
+      isPublicAccount: json['isPublic'] == 1 ? true : false,
     );
   }
 
@@ -63,7 +66,7 @@ class UserModel extends UserEntity {
   }
 
   factory UserModel.fromPlayer(PlayerFullModel player,
-      {bool? status, String? plan}) {
+      {bool? status, String? plan, bool? isPublic}) {
     return UserModel(
       username: '',
       password: '',
@@ -74,6 +77,7 @@ class UserModel extends UserEntity {
       imageUrl: player.userImage ?? '',
       status: status ?? false,
       subscription: plan ?? '',
+      isPublicAccount: isPublic ?? true,
     );
   }
 
@@ -88,18 +92,19 @@ class UserModel extends UserEntity {
       String? referralCode,
       String? imageUrl,
       String? subscription,
-      bool? status}) {
+      bool? status,
+      bool? isPublic}) {
     return UserModel(
-      userId: userId,
-      username: usuario ?? username,
-      password: '',
-      referralCode: referralCode ?? this.referralCode,
-      name: nombre ?? name,
-      lastName: apellido ?? lastName,
-      imageUrl: imageUrl ?? this.imageUrl,
-      isAgent: isAgent,
-      subscription: subscription ?? this.subscription,
-      status: status ?? this.status,
-    );
+        userId: userId,
+        username: usuario ?? username,
+        password: '',
+        referralCode: referralCode ?? this.referralCode,
+        name: nombre ?? name,
+        lastName: apellido ?? lastName,
+        imageUrl: imageUrl ?? this.imageUrl,
+        isAgent: isAgent,
+        subscription: subscription ?? this.subscription,
+        status: status ?? this.status,
+        isPublicAccount: isPublic ?? this.isPublicAccount);
   }
 }

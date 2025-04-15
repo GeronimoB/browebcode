@@ -6,6 +6,7 @@ import 'package:bro_app_to/Screens/player/cuenta_player.dart';
 import 'package:bro_app_to/Screens/notificaciones.dart';
 import 'package:bro_app_to/Screens/player/edit_player_info.dart';
 import 'package:bro_app_to/Screens/player/pedidos.dart';
+import 'package:bro_app_to/Screens/player/request/request_screen.dart';
 import 'package:bro_app_to/Screens/player/verification.dart';
 import 'package:bro_app_to/Screens/privacidad.dart';
 import 'package:bro_app_to/Screens/player/servicios.dart';
@@ -68,7 +69,7 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 800),
+        constraints: const BoxConstraints(maxWidth: 530),
         child: Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBar(
@@ -124,6 +125,25 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                       const SizedBox(height: 22),
                       _buildListItem(translations!['ACCOUNT'], context, true,
                           const CuentaPage()),
+                      _buildSwitchItem('CUENTA PUBLICA', context,
+                          isPublic: user.isPublicAccount,
+                          onSwitchChanged: (value) async {
+                        //userProvider.updateUserFromPlayer(player);
+
+                        final response = await ApiClient().post(
+                            'auth/edit-player-privacity', {
+                          "isPublic": value.toString(),
+                          "userId": user.userId
+                        });
+                        if (response.statusCode == 200) {
+                          userProvider.updatePrivacity(value);
+                        } else {
+                          showErrorSnackBar(context,
+                              'Error al actualizar el estado de tu cuenta');
+                        }
+                      }),
+                      _buildListItem('SOLICITUDES', context, true,
+                          RequestScreen(userId: user.userId)),
                       _buildListItem(translations!['EDIT_INFORMATION'], context,
                           true, const EditarInfoPlayer()),
                       _buildListItem(
@@ -711,6 +731,28 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
           );
         }
       },
+    );
+  }
+
+  Widget _buildSwitchItem(String title, BuildContext context,
+      {bool isPublic = true, Function(bool)? onSwitchChanged}) {
+    return ListTile(
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontFamily: 'Montserrat',
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      trailing: Switch(
+        value: isPublic, // Estado actual del switch (público o privado)
+        onChanged: onSwitchChanged, // Callback cuando el switch cambia
+        activeColor: const Color(0xFF05FF00), // Color cuando está activo
+        inactiveThumbColor: Colors.grey, // Color cuando está inactivo
+      ),
+      onTap: () {},
     );
   }
 

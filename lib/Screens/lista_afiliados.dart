@@ -64,8 +64,8 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
       child: Scaffold(
         body: Center(
           child: Container(
-            width: 800, // Ancho máximo para el contenedor
-            constraints: const BoxConstraints(maxWidth: 800),
+            width: 530, 
+            constraints: const BoxConstraints(maxWidth: 530),
             height: MediaQuery.of(context).size.height,
             decoration: const BoxDecoration(
               gradient: LinearGradient(

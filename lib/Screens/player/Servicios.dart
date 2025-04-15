@@ -100,7 +100,7 @@ class _PlanesPagoState extends State<Servicios> {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 800),
+        constraints: const BoxConstraints(maxWidth: 530),
         child: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(

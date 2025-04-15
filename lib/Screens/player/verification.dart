@@ -143,7 +143,7 @@ class VerificationScreenState extends State<VerificationScreen> {
       },
       child: Center(
         child: Container(
-          width: 800, // Ancho máximo para el contenedor
+          width: 530, // Ancho máximo para el contenedor
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,

@@ -3,5 +3,5 @@ class ApiConstants {
 
   static const String baseUrl = 'https://back.xn--br-6ja.com';
   static const String stripePublicKey =
-      'pk_test_51OHUSwIkdX2ffauuyXaqeAemhHoR58QXrZAlX8bIrUZuix4E0zhlARxzPBCGsT7dE4KymH23wtTXn7JO9DDoTNC5002jmBsZCu';
+      'pk_test_51PvzXHLgnVzrMk83Zg69ZlMHQyw2kxbr404NSjfEaM5b0UxyyTre4KeVGvByTCnHySYs5HXI0ccwLTz1bHcJFGA500ccrmf35b';
 }

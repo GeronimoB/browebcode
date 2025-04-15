@@ -217,8 +217,8 @@ class InicioPageState extends State<InicioPage> {
   Widget build(BuildContext context) {
     double scale = 1;
     double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width > 800
-        ? 800
+    double width = MediaQuery.of(context).size.width > 530
+        ? 530
         : MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       child: Column(

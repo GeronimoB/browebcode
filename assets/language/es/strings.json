@@ -13,7 +13,7 @@
   "complete_all_fields": "Por favor, complete todos los campos.",
   "valid_email": "Por favor, introduce un correo electrónico válido.",
   "valid_pssw": "Ingrese una contraseña valida.",
-  "email_in_use": "El correo electrónico ya está en uso.",
+  "email_in_use": "El correo electrónico o usuario ya está en uso.",
   "error_try_again": "Se ha producido un error. Por favor, inténtalo de nuevo.",
   "sign_up": "Regístrate",
   "sign_up2": "Alinéate",
@@ -547,5 +547,10 @@
   "vanuatu": "Vanuatu",
   "yemen": "Yemen",
   "djibouti": "Yibuti",
-  "zambia": "Zambia"
+  "zambia": "Zambia",
+  "download": "Descargar",
+  "undefined": "Seguir",
+  "accepted": "Dejar de seguir",
+  "pending": "Solicitud pendiente",
+  "rejected": "Solicitud rechazada"
 }

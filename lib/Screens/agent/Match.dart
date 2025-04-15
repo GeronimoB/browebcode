@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:bro_app_to/Screens/agent/user_profile_to_agent.dart';
 import 'package:bro_app_to/Screens/chat_page.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
@@ -17,6 +15,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
 import 'package:intl/intl.dart';
+
+import 'user_profile/user_profile_to_agent.dart';
 
 class Matche extends StatefulWidget {
   const Matche({super.key});

@@ -66,7 +66,7 @@ class _MatchProfileState extends State<MatchProfile> {
       "title": "¡Tienes un nuevo Match!",
       "body":
           "${provider.getCurrentUser().name} ${provider.getCurrentUser().lastName} te ha hecho match al video...",
-      "friendID": "jugador_$userId",
+      "friendID": "user_$userId",
     };
     ApiClient().post(uri, body);
     await FirebaseFirestore.instance
@@ -104,7 +104,7 @@ class _MatchProfileState extends State<MatchProfile> {
     return Scaffold(
       body: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 800),
+          constraints: BoxConstraints(maxWidth: 530),
           child: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
