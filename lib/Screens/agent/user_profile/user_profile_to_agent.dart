@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bro_app_to/Screens/player/full_screen_video_page.dart';
+import 'package:bro_app_to/common/player_helper.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
 import 'package:bro_app_to/components/custom_box_shadow.dart';
 import 'package:bro_app_to/providers/user_provider.dart';
@@ -115,56 +116,8 @@ class _PlayerProfileToAgentState extends ConsumerState<PlayerProfileToAgent> {
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (err, stack) => Center(child: Text('Error: $err')),
                 data: (data) {
-                  DateTime? birthDate = data?.player.birthDate;
-
-                  String formattedDate = birthDate != null
-                      ? DateFormat('dd-MM-yyyy').format(birthDate)
-                      : '';
-                  String province = provincesByCountry[data?.player.pais]
-                          ?[data?.player.provincia] ??
-                      'Provincia desconocida';
-                  String country =
-                      countries[data?.player.pais] ?? 'País desconocido';
-
-                  String shortInfo =
-                      '$province, $country\n${translations!["birthdate"]}: $formattedDate';
-                  String fullInfo = '$province, $country\n'
-                      '${translations!["birthdate"]}: $formattedDate\n'
-                      '${translations!["Categorys"]}: ${categorias[data?.player.categoria] ?? "Categoría desconocida"}\n'
-                      '${translations!["position_label"]}: ${posiciones[data?.player.position] ?? "Posición desconocida"}\n';
-
-                  if (data?.player.club != null &&
-                      (data?.player.club?.isNotEmpty ?? false)) {
-                    fullInfo +=
-                        '${translations!["club_label"]}: ${data?.player.club}\n';
-                  }
-                  final seleccion =
-                      selecciones[data?.player.seleccionNacional] ??
-                          "Selección desconocida";
-                  final categoriaSeleccion = (data?.player.seleccionNacional !=
-                              null &&
-                          nationalCategories
-                              .containsKey(data?.player.seleccionNacional) &&
-                          data?.player.categoriaSeleccion != null &&
-                          nationalCategories[data?.player.seleccionNacional]!
-                              .containsKey(data?.player.categoriaSeleccion))
-                      ? nationalCategories[data?.player.seleccionNacional]![
-                          data?.player.categoriaSeleccion]!
-                      : "Categoría desconocida";
-
-                  final pie = piesDominantes[data?.player.pieDominante] ??
-                      "Desconocido";
-
-                  fullInfo +=
-                      '${translations!["national_selection_short"]}: $seleccion $categoriaSeleccion\n'
-                      '${translations!["dominant_feet"]}: $pie\n'
-                      '${translations!["height_label"]}: ${data?.player.altura}\n';
-
-                  if (data?.player.logrosIndividuales != null &&
-                      (data?.player.logrosIndividuales!.isNotEmpty ?? false)) {
-                    fullInfo +=
-                        '${translations!["Achievements2"]}: ${data?.player.logrosIndividuales}\n';
-                  }
+                  final (shortInfo, fullInfo) =
+                      PlayerHelper.getPlayerInfoFormatted(data?.player);
 
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -304,22 +257,23 @@ class _PlayerProfileToAgentState extends ConsumerState<PlayerProfileToAgent> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isExpanded = !_isExpanded;
-                          });
-                        },
-                        child: Text(
-                          _isExpanded
-                              ? translations!['seeLess']
-                              : translations!['seeMore'],
-                          style: const TextStyle(
-                              color: Color(0xFF05FF00),
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w900),
+                      if (fullInfo.isNotEmpty)
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isExpanded = !_isExpanded;
+                            });
+                          },
+                          child: Text(
+                            _isExpanded
+                                ? translations!['seeLess']
+                                : translations!['seeMore'],
+                            style: const TextStyle(
+                                color: Color(0xFF05FF00),
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w900),
+                          ),
                         ),
-                      ),
                       const SizedBox(
                         height: 5,
                       ),

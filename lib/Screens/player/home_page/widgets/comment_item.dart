@@ -6,6 +6,7 @@ import 'package:bro_app_to/utils/global_video_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../common/player_helper.dart';
 import '../../../../providers/user_provider.dart';
 import '../../../agent/user_profile/user_profile_to_agent.dart';
 
@@ -61,13 +62,9 @@ class CommentItem extends StatelessWidget {
                       children: [
                         Expanded(
                           child: GestureDetector(
-                            onTap: () => Navigator.push(
+                            onTap: () => PlayerHelper.navigateToFriendProfile(
+                              comment.userId.toString(),
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => PlayerProfileToAgent(
-                                  userId: comment.userId.toString(),
-                                ),
-                              ),
                             ),
                             child: Text(
                               comment.username,

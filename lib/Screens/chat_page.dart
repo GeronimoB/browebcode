@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../common/player_helper.dart';
 import '../common/sizes.dart';
 import '../components/image_item.dart';
 import '../infrastructure/firebase_message_repository.dart';
@@ -202,31 +203,39 @@ class ChatPageState extends State<ChatPage> {
                         height: 40,
                       ),
                     ),
-                    const SizedBox(width: 20),
-                    Row(
-                      children: [
-                        Text(
-                          trimmedName,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Montserrat',
-                            color: Colors.white,
-                          ),
-                          overflow: TextOverflow.ellipsis,
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => PlayerHelper.navigateToFriendProfile(
+                          widget.friend.userId,
+                          context,
                         ),
-                        const SizedBox(
-                          width: 5,
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                trimmedName,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            if (widget.friend.verificado)
+                              const Icon(
+                                Icons.verified,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                          ],
                         ),
-                        if (widget.friend.verificado)
-                          const Icon(
-                            Icons.verified,
-                            color: Colors.white,
-                            size: 16,
-                          ),
-                      ],
+                      ),
                     ),
-                    const Spacer(),
                     IconButton(
                       icon: const Icon(
                         Icons.more_horiz,
@@ -586,13 +595,10 @@ class ChatPageState extends State<ChatPage> {
                         onTap: () {
                           _overlayEntry?.remove();
                           _overlayEntry = null;
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PlayerProfileToAgent(
-                                  userId: widget.friend.userId,
-                                ),
-                              ));
+                          PlayerHelper.navigateToFriendProfile(
+                            widget.friend.userId,
+                            context,
+                          );
                         },
                       ),
                     ListTile(

@@ -212,8 +212,6 @@ class _ChatWidgetState extends State<ChatWidget>
   Widget build(BuildContext context) {
     String fullName =
         '${widget.chat.friendUser.name} ${widget.chat.friendUser.lastName}';
-    String trimmedName =
-        fullName.length > 18 ? fullName.substring(0, 18) + '...' : fullName;
 
     return Slidable(
       key: widget.key!,
@@ -281,15 +279,18 @@ class _ChatWidgetState extends State<ChatWidget>
                   children: [
                     Row(
                       children: [
-                        Text(
-                          trimmedName,
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w900,
-                            fontFamily: 'Montserrat',
-                            color: Colors.white,
+                        Expanded(
+                          child: Text(
+                            fullName,
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w900,
+                              fontFamily: 'Montserrat',
+                              color: Colors.white,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
-                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(
                           width: 5,

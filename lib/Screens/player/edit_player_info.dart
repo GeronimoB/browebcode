@@ -302,7 +302,7 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                       controller: _correoController,
                       camp: 'email'),
                   _buildTextField(
-                    label: 'Usuario',
+                    label: 'USUARIO',
                     controller: _usernameController,
                     camp: 'username',
                   ),
@@ -314,10 +314,6 @@ class EditarInfoPlayerState extends State<EditarInfoPlayer> {
                       label: 'DOCUMENTO DE IDENTIDAD',
                       controller: _dniController,
                       camp: 'dni'),
-                  _buildTextField(
-                      label: 'Direccion',
-                      controller: _directionController,
-                      camp: 'direccion'),
                   _buildTextField(
                       label: translations!["Country"],
                       controller: _paisController,

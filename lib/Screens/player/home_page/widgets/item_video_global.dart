@@ -2,21 +2,19 @@ import 'dart:convert';
 
 import 'package:bro_app_to/Screens/player/home_page/widgets/comments_modal.dart';
 import 'package:bro_app_to/Screens/player/home_page/widgets/search_users_result.dart';
+import 'package:bro_app_to/common/player_helper.dart';
 import 'package:bro_app_to/components/i_field.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../common/base_encode_helper.dart';
-import '../../../../components/user_filter_result.dart';
 import '../../../../providers/user_provider.dart';
 import '../../../../utils/api_client.dart';
 import '../../../../utils/global_video_model.dart';
-import '../../../../utils/initial_video_model.dart';
 import '../../../agent/user_profile/user_profile_to_agent.dart';
+import '../../bottom_navigation_bar_player.dart';
 import '../models/user_in_filter.dart';
 
 class ItemVideoGlobal extends StatefulWidget {
@@ -242,13 +240,9 @@ class _ItemVideoGlobalState extends State<ItemVideoGlobal> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 GestureDetector(
-                  onTap: () => Navigator.push(
+                  onTap: () => PlayerHelper.navigateToFriendProfile(
+                    widget.video.userId.toString(),
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => PlayerProfileToAgent(
-                        userId: widget.video.userId.toString(),
-                      ),
-                    ),
                   ),
                   child: Row(
                     children: [

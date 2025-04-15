@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:http/http.dart' as http;
 
+import '../../common/player_helper.dart';
 import '../../components/i_field.dart';
 import '../../utils/api_client.dart';
 
@@ -103,32 +104,7 @@ class CuentaPageState extends State<CuentaPage> {
   Widget build(BuildContext context) {
     final playerProvider = Provider.of<PlayerProvider>(context);
     final player = playerProvider.getPlayer()!;
-    DateTime? birthDate = player.birthDate;
-
-    String formattedDate =
-        birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
-    String shortInfo =
-        '${provincesByCountry[player.pais][player.provincia]}, ${countries[player.pais]}\n ${translations!["birthdate"]}: $formattedDate';
-    String fullInfo =
-        '${provincesByCountry[player.pais][player.provincia]}, ${countries[player.pais]}\n'
-        '${translations!["birthdate"]}: $formattedDate\n'
-        '${translations!["Categorys"]}: ${categorias[player.categoria]}\n'
-        '${translations!["position_label"]}: ${posiciones[player.position]}\n';
-
-    if (player.club != null && player.club!.isNotEmpty) {
-      fullInfo += '${translations!["club_label"]}: ${player.club}\n';
-    }
-
-    fullInfo +=
-        '${translations!["national_selection_short"]}: ${selecciones[player.seleccionNacional]} ${nationalCategories[player.seleccionNacional][player.categoriaSeleccion]}\n'
-        '${translations!["dominant_feet"]}: ${piesDominantes[player.pieDominante]}\n'
-        '${translations!["height_label"]}: ${player.altura}\n';
-
-    if (player.logrosIndividuales != null &&
-        player.logrosIndividuales!.isNotEmpty) {
-      fullInfo +=
-          '${translations!["Achievements2"]}: ${player.logrosIndividuales}\n';
-    }
+    final (shortInfo, fullInfo) = PlayerHelper.getPlayerInfoFormatted(player);
     double width = MediaQuery.of(context).size.width;
     return Container(
       alignment: Alignment.center,
@@ -262,20 +238,21 @@ class CuentaPageState extends State<CuentaPage> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isExpanded = !_isExpanded;
-                    });
-                  },
-                  child: Text(
-                    _isExpanded ? 'Ver menos' : 'Ver más',
-                    style: const TextStyle(
-                      color: Color(0xFF05FF00),
-                      fontSize: 16.0,
+                if (fullInfo.isNotEmpty)
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isExpanded = !_isExpanded;
+                      });
+                    },
+                    child: Text(
+                      _isExpanded ? 'Ver menos' : 'Ver más',
+                      style: const TextStyle(
+                        color: Color(0xFF05FF00),
+                        fontSize: 16.0,
+                      ),
                     ),
                   ),
-                ),
                 const SizedBox(height: 35),
                 CarouselSlider(
                   options: CarouselOptions(

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../common/player_helper.dart';
 import '../components/custom_box_shadow.dart';
 import '../providers/player_provider.dart';
 import '../utils/api_client.dart';
@@ -102,47 +103,7 @@ class PlayerProfileState extends State<PlayerProfile> {
   Widget build(BuildContext context) {
     final widthVideo = MediaQuery.of(context).size.width / 3;
 
-    DateTime? birthDate = player.birthDate;
-
-    String formattedDate =
-        birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
-    String province = provincesByCountry[player.pais]?[player.provincia] ??
-        'Provincia desconocida';
-    String country = countries[player.pais] ?? 'País desconocido';
-
-    String shortInfo =
-        '$province, $country\n${translations!["birthdate"]}: $formattedDate';
-    String fullInfo = '$province, $country\n'
-        '${translations!["birthdate"]}: $formattedDate\n'
-        '${translations!["Categorys"]}: ${categorias[player.categoria] ?? "Categoría desconocida"}\n'
-        '${translations!["position_label"]}: ${posiciones[player.position] ?? "Posición desconocida"}\n';
-
-    if (player.club != null && player.club!.isNotEmpty) {
-      fullInfo += '${translations!["club_label"]}: ${player.club}\n';
-    }
-    final seleccion =
-        selecciones[player.seleccionNacional] ?? "Selección desconocida";
-    final categoriaSeleccion = (player.seleccionNacional != null &&
-            nationalCategories.containsKey(player.seleccionNacional) &&
-            player.categoriaSeleccion != null &&
-            nationalCategories[player.seleccionNacional]!
-                .containsKey(player.categoriaSeleccion))
-        ? nationalCategories[player.seleccionNacional]![
-            player.categoriaSeleccion]!
-        : "Categoría desconocida";
-
-    final pie = piesDominantes[player.pieDominante] ?? "Desconocido";
-
-    fullInfo +=
-        '${translations!["national_selection_short"]}: $seleccion $categoriaSeleccion\n'
-        '${translations!["dominant_feet"]}: $pie\n'
-        '${translations!["height_label"]}: ${player.altura}\n';
-
-    if (player.logrosIndividuales != null &&
-        player.logrosIndividuales!.isNotEmpty) {
-      fullInfo +=
-          '${translations!["Achievements2"]}: ${player.logrosIndividuales}\n';
-    }
+    final (shortInfo, fullInfo) = PlayerHelper.getPlayerInfoFormatted(player);
 
     return Container(
       decoration: const BoxDecoration(
@@ -315,22 +276,23 @@ class PlayerProfileState extends State<PlayerProfile> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isExpanded = !_isExpanded;
-                    });
-                  },
-                  child: Text(
-                    _isExpanded
-                        ? translations!["seLess"]
-                        : translations!["seMore"],
-                    style: const TextStyle(
-                      color: Color(0xFF05FF00),
-                      fontSize: 16.0,
+                if (fullInfo.isNotEmpty)
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isExpanded = !_isExpanded;
+                      });
+                    },
+                    child: Text(
+                      _isExpanded
+                          ? translations!["seLess"]
+                          : translations!["seMore"],
+                      style: const TextStyle(
+                        color: Color(0xFF05FF00),
+                        fontSize: 16.0,
+                      ),
                     ),
                   ),
-                ),
                 const SizedBox(
                   height: 15,
                 ),

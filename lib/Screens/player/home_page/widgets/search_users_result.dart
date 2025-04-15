@@ -1,6 +1,7 @@
 import 'package:bro_app_to/Screens/player/home_page/models/user_in_filter.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../common/player_helper.dart';
 import '../../../agent/user_profile/user_profile_to_agent.dart';
 
 Widget SearchUsersResult(
@@ -72,13 +73,9 @@ Widget SearchUsersResult(
                       overflow: TextOverflow.ellipsis,
                     ),
                     trailing: GestureDetector(
-                      onTap: () => Navigator.push(
+                      onTap: () => PlayerHelper.navigateToFriendProfile(
+                        e.id.toString(),
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => PlayerProfileToAgent(
-                            userId: e.id.toString(),
-                          ),
-                        ),
                       ),
                       child: const Icon(Icons.chevron_right,
                           color: Color(0xFF05FF00)),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../Screens/agent/user_profile/user_profile_to_agent.dart';
+import '../common/player_helper.dart';
 import '../utils/initial_video_model.dart';
 
 Widget userFilterResultWidget(
@@ -48,13 +49,9 @@ Widget userFilterResultWidget(
                       overflow: TextOverflow.ellipsis,
                     ),
                     trailing: GestureDetector(
-                      onTap: () => Navigator.push(
+                      onTap: () => PlayerHelper.navigateToFriendProfile(
+                        e.userId.toString(),
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => PlayerProfileToAgent(
-                            userId: e.userId.toString(),
-                          ),
-                        ),
                       ),
                       child: const Icon(Icons.chevron_right,
                           color: Color(0xFF05FF00)),
