@@ -26,7 +26,6 @@ import '../src/auth/data/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
-import 'agent/user_profile/user_profile_to_agent.dart';
 
 class ChatPage extends StatefulWidget {
   final UserModel friend;

@@ -30,7 +30,6 @@ class _FirstVideoWidgetState extends State<FirstVideoWidget> {
   @override
   void dispose() {
     _temporalVideoController?.dispose();
-    _temporalVideoController?.dispose();
     super.dispose();
   }
 
