@@ -3,20 +3,10 @@ import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/components/i_field.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/components/app_bar_title.dart';
-import 'dart:io' as io;
-import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/utils/current_state.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 import '../components/upload_invoice_widthdrawl.dart';
-import '../providers/user_provider.dart';
-import '../utils/api_constants.dart';
 
 class RetirarMenu extends StatefulWidget {
   final double total;

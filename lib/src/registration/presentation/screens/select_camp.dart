@@ -467,7 +467,7 @@ class SelectCampState extends State<SelectCamp> {
                         activeColor: const Color(0xff00E050),
                       ),
                       const Text("SÍ",
-                          style: const TextStyle(
+                          style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.bold,
@@ -485,7 +485,7 @@ class SelectCampState extends State<SelectCamp> {
                         activeColor: const Color(0xff00E050),
                       ),
                       const Text("NO",
-                          style: const TextStyle(
+                          style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.bold,

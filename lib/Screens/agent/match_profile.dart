@@ -100,11 +100,10 @@ class _MatchProfileState extends State<MatchProfile> {
         2.2;
     final double availableHeight =
         MediaQuery.of(context).size.height - appBarHeight;
-    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 530),
+          constraints: const BoxConstraints(maxWidth: 530),
           child: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -158,6 +157,45 @@ class _MatchProfileState extends State<MatchProfile> {
                     String formattedDate = birthDate != null
                         ? DateFormat('dd-MM-yyyy').format(birthDate)
                         : '';
+
+                    String? estado;
+                    if (userData.pais != null && userData.provincia != null) {
+                      final provincia = provincesByCountry[userData.pais]
+                          ?[userData.provincia];
+                      final pais = countries[userData.pais];
+                      if (provincia != null && pais != null) {
+                        estado = '$provincia, $pais';
+                      } else if (provincia != null) {
+                        estado = provincia;
+                      } else if (pais != null) {
+                        estado = pais;
+                      }
+                    }
+                    String? pieDominante = userData.pieDominante != null
+                        ? piesDominantes[userData.pieDominante]
+                        : null;
+
+                    String? posicion = userData.position != null
+                        ? posiciones[userData.position] ?? userData.position
+                        : null;
+
+                    String? categoria = userData.categoria != null
+                        ? categorias[userData.categoria]
+                        : null;
+
+                    String seleccion = '';
+                    if (userData.seleccionNacional != null) {
+                      final sel = selecciones[userData.seleccionNacional];
+                      final catSel = (userData.categoriaSeleccion != null &&
+                              nationalCategories[userData.seleccionNacional] !=
+                                  null)
+                          ? nationalCategories[userData.seleccionNacional]![
+                              userData.categoriaSeleccion]
+                          : null;
+
+                      if (sel != null) seleccion += sel;
+                      if (catSel != null) seleccion += ' $catSel';
+                    }
                     return SingleChildScrollView(
                       controller: _scrollController,
                       padding: const EdgeInsets.all(0),
@@ -209,24 +247,36 @@ class _MatchProfileState extends State<MatchProfile> {
                                   ),
                               ],
                             ),
-                            _buildDataRow(context,
-                                '${translations!["BirthDate"]}: $formattedDate'),
-                            _buildDataRow(context,
-                                '${translations!["state_label"]}: ${provincesByCountry[userData.pais][userData.provincia]}, ${countries[userData.pais]}'),
-                            _buildDataRow(context,
-                                '${translations!["height_label"]}: ${userData.altura}'),
-                            _buildDataRow(context,
-                                '${translations!["dominant_feet"]}: ${piesDominantes[userData.pieDominante]}'),
-                            _buildDataRow(context,
-                                '${translations!["position_label"]}: ${posiciones[userData.position]}'),
-                            _buildDataRow(context,
-                                '${translations!["Categorys"]}: ${categorias[userData.categoria]}'),
-                            _buildDataRow(context,
-                                '${translations!["SportsSchool"]}: ${userData.club}'),
-                            _buildDataRow(context,
-                                '${translations!["IndividualAchievements"]}: ${userData.logrosIndividuales}'),
-                            _buildDataRow(context,
-                                '${translations!["Selections"]}: ${selecciones[userData.seleccionNacional]} ${userData.categoriaSeleccion}'),
+                            if (formattedDate.isNotEmpty)
+                              _buildDataRow(context,
+                                  '${translations!["BirthDate"]}: $formattedDate'),
+                            if (estado != null)
+                              _buildDataRow(context,
+                                  '${translations!["state_label"]}: $estado'),
+                            if (userData.altura != null &&
+                                userData.altura!.isNotEmpty)
+                              _buildDataRow(context,
+                                  '${translations!["height_label"]}: ${userData.altura}'),
+                            if (pieDominante != null)
+                              _buildDataRow(context,
+                                  '${translations!["dominant_feet"]}: $pieDominante'),
+                            if (posicion != null && posicion.isNotEmpty)
+                              _buildDataRow(context,
+                                  '${translations!["position_label"]}: $posicion'),
+                            if (categoria != null && categoria.isNotEmpty)
+                              _buildDataRow(context,
+                                  '${translations!["Categorys"]}: $categoria'),
+                            if (userData.club != null &&
+                                userData.club!.isNotEmpty)
+                              _buildDataRow(context,
+                                  '${translations!["SportsSchool"]}: ${userData.club}'),
+                            if (userData.logrosIndividuales != null &&
+                                userData.logrosIndividuales!.isNotEmpty)
+                              _buildDataRow(context,
+                                  '${translations!["IndividualAchievements"]}: ${userData.logrosIndividuales}'),
+                            if (seleccion.isNotEmpty)
+                              _buildDataRow(context,
+                                  '${translations!["Selections"]}: $seleccion'),
                             const SizedBox(height: 20),
                             CustomTextButton(
                                 onTap: () {

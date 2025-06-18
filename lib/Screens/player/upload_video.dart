@@ -291,7 +291,7 @@ class _UploadVideoWidgetState extends State<UploadVideoWidget> {
             children: [
               Text(
                 "Estamos subiendo tu vídeo, esto puede tardar unos segundos…",
-                style: const TextStyle(
+                style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
                     fontWeight: FontWeight.bold,

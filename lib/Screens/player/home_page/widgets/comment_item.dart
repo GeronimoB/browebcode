@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 
 import '../../../../common/player_helper.dart';
 import '../../../../providers/user_provider.dart';
-import '../../../agent/user_profile/user_profile_to_agent.dart';
 
 class CommentItem extends StatelessWidget {
   final Comment comment;
@@ -34,48 +33,28 @@ class CommentItem extends StatelessWidget {
         children: [
           ListTile(
             contentPadding: EdgeInsets.zero,
-            title: LayoutBuilder(
-              builder: (context, constraints) {
-                final textSpan = TextSpan(
-                  text: comment.username,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
-                  ),
-                );
-                final textPainter = TextPainter(
-                  text: textSpan,
-                  maxLines: 1,
-                  textDirection: TextDirection.ltr,
-                )..layout(
-                    maxWidth:
-                        constraints.maxWidth - (video.verificado ? 30 : 0));
-
-                final fitsInOneLine = !textPainter.didExceedMaxLines;
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+            title: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => PlayerHelper.navigateToFriendProfile(
+                      comment.userId.toString(),
+                      context,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () => PlayerHelper.navigateToFriendProfile(
-                              comment.userId.toString(),
-                              context,
+                        Flexible(
+                          child: Text(
+                            comment.username,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
                             ),
-                            child: Text(
-                              comment.username,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                         if (video.verificado)
@@ -84,29 +63,19 @@ class CommentItem extends StatelessWidget {
                             child: Icon(Icons.verified,
                                 color: Colors.black, size: 20),
                           ),
-                        if (fitsInOneLine)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                              timeAgo(comment.createdAt),
-                              style: const TextStyle(
-                                  color: Colors.black54, fontSize: 10.0),
-                            ),
-                          ),
                       ],
                     ),
-                    if (!fitsInOneLine)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 3),
-                        child: Text(
-                          timeAgo(comment.createdAt),
-                          style: const TextStyle(
-                              color: Colors.black54, fontSize: 10.0),
-                        ),
-                      ),
-                  ],
-                );
-              },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: Text(
+                    timeAgo(comment.createdAt),
+                    style:
+                        const TextStyle(color: Colors.black54, fontSize: 10.0),
+                  ),
+                ),
+              ],
             ),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 3.0),

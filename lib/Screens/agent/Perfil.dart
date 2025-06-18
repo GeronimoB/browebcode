@@ -88,6 +88,17 @@ class PerfilPageState extends State<PerfilPage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final provider = Provider.of<AgenteProvider>(context, listen: true);
     final agente = provider.getAgente();
+    String locationInfo = '';
+    String? province = provincesByCountry[agente.pais]?[agente.provincia];
+    String? country = countries[agente.pais];
+
+    if (province != null && country != null) {
+      locationInfo = '$province, $country';
+    } else if (province != null) {
+      locationInfo = province;
+    } else if (country != null) {
+      locationInfo = country;
+    }
 
     return Container(
       decoration: const BoxDecoration(
@@ -151,7 +162,7 @@ class PerfilPageState extends State<PerfilPage> {
               ),
             ),
             Text(
-              '${countries[agente.pais]}',
+              locationInfo,
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
@@ -232,14 +243,14 @@ class PerfilPageState extends State<PerfilPage> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '$formattedDate ',
+                  formattedDate,
                   style: const TextStyle(
                     color: Colors.grey,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${posiciones[player.position]}',
+                  posiciones[player.position] ?? '',
                   style: const TextStyle(
                     color: Colors.grey,
                   ),

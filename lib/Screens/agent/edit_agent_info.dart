@@ -312,8 +312,8 @@ class EditarInfoState extends State<EditarInfo> {
                         color: Colors.white,
                       ),
                       decoration: const InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(vertical: 5),
-                        enabledBorder: const UnderlineInputBorder(
+                        contentPadding: EdgeInsets.symmetric(vertical: 5),
+                        enabledBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(color: Color(0xFF00E050), width: 2),
                         ),

@@ -35,7 +35,7 @@ class UserModel extends UserEntity {
         );
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    final userid = json["user_id"] != null ? json["user_id"] : json["id"];
+    final userid = json["user_id"] ?? json["id"];
     return UserModel(
       username: json['username'] ?? '',
       userId: userid.toString(),
@@ -78,6 +78,7 @@ class UserModel extends UserEntity {
       status: status ?? false,
       subscription: plan ?? '',
       isPublicAccount: isPublic ?? true,
+      verificado: player.verificado,
     );
   }
 
@@ -105,6 +106,6 @@ class UserModel extends UserEntity {
         isAgent: isAgent,
         subscription: subscription ?? this.subscription,
         status: status ?? this.status,
-        isPublicAccount: isPublic ?? this.isPublicAccount);
+        isPublicAccount: isPublic ?? isPublicAccount);
   }
 }

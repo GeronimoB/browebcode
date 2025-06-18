@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:bro_app_to/components/app_bar_title.dart';
 import 'package:bro_app_to/components/avatar_placeholder.dart';
@@ -13,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:bro_app_to/providers/player_provider.dart';
 import 'package:http/http.dart' as http;
@@ -76,7 +74,7 @@ class CuentaPageState extends State<CuentaPage> {
 
   Future<void> _uploadImage(XFile imageFile) async {
     final player = playerProvider.getPlayer()!;
-    final url = '${ApiConstants.baseUrl}/auth/upload-player-image';
+    const url = '${ApiConstants.baseUrl}/auth/upload-player-image';
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
 

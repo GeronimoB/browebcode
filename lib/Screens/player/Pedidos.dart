@@ -77,7 +77,7 @@ class PedidosState extends State<Pedidos> {
           extendBodyBehindAppBar: true,
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight),
-            child: Container(
+            child: SizedBox(
               width: double.infinity,
               child: AppBar(
                 scrolledUnderElevation: 0,
@@ -142,7 +142,7 @@ class PedidosState extends State<Pedidos> {
                           child: Center(
                             child: Text(
                               "¡Aún no tienes pedidos!",
-                              style: const TextStyle(
+                              style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Montserrat',
                                   fontWeight: FontWeight.bold,

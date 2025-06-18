@@ -214,7 +214,7 @@ class ListaReferidosScreenState extends State<ListaReferidosScreen> {
                           return Expanded(
                             child: Center(
                               child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 35.0),
+                                padding: const EdgeInsets.symmetric(horizontal: 35.0),
                                 child: Text(
                                   translations!["noReferralsMessage"],
                                   style: const TextStyle(

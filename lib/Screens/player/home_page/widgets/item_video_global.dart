@@ -13,8 +13,6 @@ import '../../../../common/base_encode_helper.dart';
 import '../../../../providers/user_provider.dart';
 import '../../../../utils/api_client.dart';
 import '../../../../utils/global_video_model.dart';
-import '../../../agent/user_profile/user_profile_to_agent.dart';
-import '../../bottom_navigation_bar_player.dart';
 import '../models/user_in_filter.dart';
 
 class ItemVideoGlobal extends StatefulWidget {
@@ -233,7 +231,7 @@ class _ItemVideoGlobalState extends State<ItemVideoGlobal> {
           bottom: 74,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            height: widget.video.description.isNotEmpty ? 60 : 38,
+            height: widget.video.description.isNotEmpty ? 60 : 44,
             color: Colors.black.withAlpha(100),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

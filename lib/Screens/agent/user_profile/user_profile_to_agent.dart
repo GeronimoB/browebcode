@@ -244,7 +244,7 @@ class _PlayerProfileToAgentState extends ConsumerState<PlayerProfileToAgent> {
                         ],
                       ),
                       const SizedBox(
-                        height: 5,
+                        height: 4,
                       ),
                       Text(
                         _isExpanded ? fullInfo : shortInfo,
@@ -257,7 +257,10 @@ class _PlayerProfileToAgentState extends ConsumerState<PlayerProfileToAgent> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      if (fullInfo.isNotEmpty)
+                      if (fullInfo.isNotEmpty) ...[
+                        const SizedBox(
+                          height: 8,
+                        ),
                         GestureDetector(
                           onTap: () {
                             setState(() {
@@ -274,8 +277,9 @@ class _PlayerProfileToAgentState extends ConsumerState<PlayerProfileToAgent> {
                                 fontWeight: FontWeight.w900),
                           ),
                         ),
+                      ],
                       const SizedBox(
-                        height: 5,
+                        height: 12,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -396,7 +400,7 @@ class _PlayerProfileToAgentState extends ConsumerState<PlayerProfileToAgent> {
                             width: 180,
                             height: 35,
                           ),
-                          const SizedBox(width: 15),
+                          const SizedBox(width: 16),
                           CustomTextButton(
                             onTap: () {
                               final friend = UserModel.fromPlayer(
@@ -703,9 +707,9 @@ class _PlayerProfileToAgentState extends ConsumerState<PlayerProfileToAgent> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
+                  const Text(
                     'Denunciar',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -717,9 +721,9 @@ class _PlayerProfileToAgentState extends ConsumerState<PlayerProfileToAgent> {
                     color: Colors.white.withOpacity(0.25),
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                  const Text(
                     '¿Por qué quieres denunciar esta publicación?',
-                    style: const TextStyle(fontSize: 16, color: Colors.white),
+                    style: TextStyle(fontSize: 16, color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),

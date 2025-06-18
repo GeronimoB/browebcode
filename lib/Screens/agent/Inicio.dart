@@ -9,11 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../components/custom_dropdown.dart';
 import '../../components/slidedable_video.dart';
-import '../../components/user_filter_result.dart';
+import '../player/home_page/models/user_in_filter.dart';
+import '../player/home_page/widgets/search_users_result.dart';
 import '../../utils/current_state.dart';
 
 class InicioPage extends StatefulWidget {
@@ -30,7 +30,7 @@ class InicioPageState extends State<InicioPage> {
   bool showTextField = false;
   final List<InitialVideoModel> _videosRandom = [];
   final List<UserFilter> usuarios = [];
-  List<UserFilter> usuariosFiltrados = [];
+  List<UserInFilter> usuariosFiltrados = [];
   late VideoPlayerController? currentController;
   late VideoPlayerController? nextController;
   late UserProvider userProvider;
@@ -106,20 +106,24 @@ class InicioPageState extends State<InicioPage> {
       setState(() {
         isLoading = false;
       });
-      throw Exception('Error al obtener las URLs de los videos ${error}');
+      throw Exception('Error al obtener las URLs de los videos $error');
     }
   }
 
-  void filterUsers(String name) {
-    print("nombre a filtrar: $name");
-    usuariosFiltrados.clear();
-    final users = usuarios
-        .where((user) => user.user.toLowerCase().contains(name.toLowerCase()))
-        .toList();
-    setState(() {
-      usuariosFiltrados.addAll(users);
-    });
-    print("len ${usuariosFiltrados.length}");
+  void filterUsers(String name) async {
+    try {
+      final response = await ApiClient()
+          .get('security_filter/v1/api/social/users?query=$name');
+      final data = jsonDecode(response.body);
+      if (data['ok']) {
+        setState(() {
+          usuariosFiltrados = List<UserInFilter>.from(
+              data['users'].map((user) => UserInFilter.fromJson(user)));
+        });
+      }
+    } catch (e) {
+      print("Error al obtener usuarios: $e");
+    }
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
@@ -177,15 +181,6 @@ class InicioPageState extends State<InicioPage> {
     date.dispose();
     player.dispose();
     super.dispose();
-  }
-
-  void _writeRejectionData(int userId, String currentUserId) async {
-    FirebaseFirestore.instance
-        .collection('Rejects')
-        .doc('agente-$currentUserId')
-        .collection('AgentRejects')
-        .doc('jugador-$userId')
-        .set({});
   }
 
   void _showCustomMenu(BuildContext context) {
@@ -402,7 +397,7 @@ class InicioPageState extends State<InicioPage> {
                                           height: 8,
                                         ),
                                         if (showContainerResult)
-                                          userFilterResultWidget(
+                                          SearchUsersResult(
                                             context,
                                             usuariosFiltrados,
                                           ),
@@ -461,7 +456,7 @@ class InicioPageState extends State<InicioPage> {
         children: [
           const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF05FF00))),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Text(translations!["LoadingVideos..."]),
         ],
       ),

@@ -23,7 +23,7 @@ class FirstVideoWidget extends StatefulWidget {
 
 class _FirstVideoWidgetState extends State<FirstVideoWidget> {
   VideoPlayerController? _temporalVideoController;
-  double _sliderValue = 0.0;
+  final double _sliderValue = 0.0;
   String? videoPathToUpload;
   Uint8List? imagePathToUpload;
 

@@ -29,7 +29,7 @@ class PerfilDetallePage extends StatelessWidget {
             title: Text(
               translations!["playerProfileInfo"],
               style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
             trailing: const SizedBox(width: 24), // To center the title
           ),
@@ -65,7 +65,7 @@ class PerfilDetallePage extends StatelessWidget {
                     // Acción para ir al chat
                   },
                   child:  Text(translations!["goToChat"],
-                      style: TextStyle(color: Colors.green)),
+                      style: const TextStyle(color: Colors.green)),
                 ),
               ],
             ),

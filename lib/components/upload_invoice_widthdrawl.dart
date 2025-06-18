@@ -1,12 +1,9 @@
-import 'dart:io' as io;
 import 'package:bro_app_to/Screens/lista_afiliados.dart';
 import 'package:bro_app_to/components/custom_text_button.dart';
 import 'package:bro_app_to/components/snackbar.dart';
 import 'package:bro_app_to/utils/current_state.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 

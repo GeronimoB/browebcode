@@ -157,10 +157,10 @@ class MatcheState extends State<Matche> {
                       ),
                     ],
                   )
-                : Center(
+                : const Center(
                     child: Text(
                       "¡Aún no tienes match!",
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold,
@@ -177,6 +177,21 @@ class MatcheState extends State<Matche> {
 
     String formattedDate =
         birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
+    String? estado;
+    if (player.pais != null && player.provincia != null) {
+      final provincia = provincesByCountry[player.pais]?[player.provincia];
+      final pais = countries[player.pais];
+      if (provincia != null && pais != null) {
+        estado = '$provincia, $pais';
+      } else if (provincia != null) {
+        estado = provincia;
+      } else if (pais != null) {
+        estado = pais;
+      }
+    }
+
+    String? categoria =
+        player.categoria != null ? categorias[player.categoria] : null;
 
     return GestureDetector(
       onTapDown: (_) {
@@ -283,18 +298,24 @@ class MatcheState extends State<Matche> {
                           ],
                         ),
                         Text(
-                          '$formattedDate - ${categorias[player.categoria]}',
+                          [
+                            if (formattedDate.isNotEmpty) formattedDate,
+                            if (categoria != null && categoria.isNotEmpty)
+                              categoria,
+                          ].join(' - '),
                           style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.white.withOpacity(0.7),
-                              fontStyle: FontStyle.italic),
+                            fontSize: 14.0,
+                            color: Colors.white.withOpacity(0.7),
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                         Text(
-                          '${provincesByCountry[player.pais][player.provincia]}, ${countries[player.pais]}',
+                          estado ?? '',
                           style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.white.withOpacity(0.7),
-                              fontStyle: FontStyle.italic),
+                            fontSize: 14.0,
+                            color: Colors.white.withOpacity(0.7),
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ],
                     ),

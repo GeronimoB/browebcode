@@ -1,12 +1,8 @@
 import 'package:bro_app_to/Screens/users/presenter/unauth_user_presenter.dart';
 import 'package:bro_app_to/components/item_video.dart';
-import 'package:bro_app_to/providers/unauth_home_provider.dart';
 import 'package:bro_app_to/utils/initial_video_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
 
-import '../../components/slidedable_video.dart';
 import '../../utils/current_state.dart';
 import '../intro.dart';
 import 'interface/unauth_user_interface.dart';

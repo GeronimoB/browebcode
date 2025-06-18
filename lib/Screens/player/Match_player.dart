@@ -79,7 +79,7 @@ class MatcheState extends State<MatchePlayer> {
 
           if (response.statusCode == 200) {
             final jsonData = jsonDecode(response.body);
-            final player = jsonData['player'];
+            final player = jsonData['agents'][0];
             final playerData = Agente.fromJson(player);
             playersAux.add(playerData);
           } else {
@@ -181,6 +181,18 @@ class MatcheState extends State<MatchePlayer> {
 
     String formattedDate =
         birthDate != null ? DateFormat('dd-MM-yyyy').format(birthDate) : '';
+    String estado = '';
+    if (agente.pais != null && agente.provincia != null) {
+      final provincia = provincesByCountry[agente.pais]?[agente.provincia];
+      final pais = countries[agente.pais];
+      if (provincia != null && pais != null) {
+        estado = '$provincia, $pais';
+      } else if (provincia != null) {
+        estado = provincia;
+      } else if (pais != null) {
+        estado = pais;
+      }
+    }
     return GestureDetector(
       onTapDown: (_) {
         setState(() {
@@ -279,7 +291,7 @@ class MatcheState extends State<MatchePlayer> {
                               fontStyle: FontStyle.italic),
                         ),
                         Text(
-                          '${agente.provincia}, ${agente.pais}',
+                          estado,
                           style: TextStyle(
                               fontSize: 14.0,
                               color: Colors.white.withOpacity(0.7),
@@ -296,19 +308,20 @@ class MatcheState extends State<MatchePlayer> {
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: CustomTextButton(
-                      onTap: () {
-                        final friend = UserModel.fromAgent(agente);
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChatPage(
-                                      friend: friend,
-                                    )));
-                      },
-                      text: translations!["goToChat!"],
-                      buttonPrimary: false,
-                      width: 145,
-                      height: 38),
+                    onTap: () {
+                      final friend = UserModel.fromAgent(agente);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChatPage(
+                                    friend: friend,
+                                  )));
+                    },
+                    text: translations!["goToChat"],
+                    buttonPrimary: false,
+                    width: 145,
+                    height: 38,
+                  ),
                 ),
               ),
             ],

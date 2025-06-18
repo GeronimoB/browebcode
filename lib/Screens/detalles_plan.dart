@@ -56,7 +56,7 @@ class PlanDetailsScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ...generatePlanItems(planItems),
              Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Text(
                 translations!["loremIpsum"],
                 style: const TextStyle(fontFamily: 'Montserrat'),

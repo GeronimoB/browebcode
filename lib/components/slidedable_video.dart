@@ -44,7 +44,19 @@ class _SlidableVideoState extends State<SlidableVideo> {
         alignment: Alignment.bottomCenter,
         children: [
           widget.controller.value.isInitialized
-              ? VideoPlayer(widget.controller)
+              ? Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.black,
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    child: SizedBox(
+                      width: widget.controller.value.size.width,
+                      height: widget.controller.value.size.height,
+                      child: VideoPlayer(widget.controller),
+                    ),
+                  ),
+                )
               : const Center(
                   child: CircularProgressIndicator(
                     valueColor:

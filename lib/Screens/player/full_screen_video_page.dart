@@ -194,9 +194,9 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                       },
                     ),
                     ListTile(
-                      title: Text(
+                      title: const Text(
                         'Compartir',
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Montserrat',
                             fontStyle: FontStyle.italic),
@@ -208,9 +208,9 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                       },
                     ),
                     ListTile(
-                      title: Text(
+                      title: const Text(
                         'Cambiar portada',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'Montserrat',
                           fontStyle: FontStyle.italic,
@@ -314,19 +314,16 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
                   color: Color(0xFF00E050),
                   size: 32,
                 ),
-                onPressed: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => widget.showOptions
-                          ? const CustomBottomNavigationBarPlayer(
-                              initialIndex: 4,
-                            )
-                          : const CustomBottomNavigationBar(
-                              initialIndex: 3,
-                            ),
-                    ),
-                  );
-                },
+                onPressed: () => widget.showOptions
+                    ? Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const CustomBottomNavigationBarPlayer(
+                            initialIndex: 4,
+                          ),
+                        ),
+                      )
+                    : Navigator.of(context).pop(),
               ),
             ),
             if (widget.showOptions)
@@ -849,7 +846,7 @@ class FullScreenVideoPageState extends State<FullScreenVideoPage> {
             children: [
               Text(
                 "Estamos subiendo tu imagen, esto puede tardar unos segundos…",
-                style: const TextStyle(
+                style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'Montserrat',
                     fontWeight: FontWeight.bold,

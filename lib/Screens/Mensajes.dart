@@ -280,27 +280,34 @@ class _ChatWidgetState extends State<ChatWidget>
                     Row(
                       children: [
                         Expanded(
-                          child: Text(
-                            fullName,
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w900,
-                              fontFamily: 'Montserrat',
-                              color: Colors.white,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  fullName,
+                                  style: const TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w900,
+                                    fontFamily: 'Montserrat',
+                                    color: Colors.white,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
+                              if (widget.chat.friendUser.verificado)
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 4.0),
+                                  child: Icon(
+                                    Icons.verified,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        if (widget.chat.friendUser.verificado)
-                          const Icon(
-                            Icons.verified,
-                            color: Colors.white,
-                            size: 16,
-                          ),
                       ],
                     ),
                     Text(

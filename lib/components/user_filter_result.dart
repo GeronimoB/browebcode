@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../Screens/agent/user_profile/user_profile_to_agent.dart';
 import '../common/player_helper.dart';
 import '../utils/initial_video_model.dart';
 

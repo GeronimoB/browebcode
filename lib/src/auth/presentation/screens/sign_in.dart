@@ -181,7 +181,7 @@ class _SignInScreenState extends State<SignInScreen> {
       onWillPop: () async => false,
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 530),
+          constraints: const BoxConstraints(maxWidth: 530),
           child: Scaffold(
               backgroundColor: Colors.transparent,
               body: Stack(
@@ -327,10 +327,10 @@ class _SignInScreenState extends State<SignInScreen> {
                                   });
                                 },
                                 fillColor:
-                                    MaterialStateProperty.resolveWith<Color?>(
-                                  (Set<MaterialState> states) {
+                                    WidgetStateProperty.resolveWith<Color?>(
+                                  (Set<WidgetState> states) {
                                     if (states
-                                        .contains(MaterialState.selected)) {
+                                        .contains(WidgetState.selected)) {
                                       return const Color(0xff00E050);
                                     }
                                     return Colors.white;

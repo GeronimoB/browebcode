@@ -1,17 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/common/path_strategy.dart';
 import 'package:bro_app_to/firebase_options.dart';
 import 'package:bro_app_to/providers/unauth_home_provider.dart';
 import 'package:bro_app_to/utils/api_constants.dart';
 import 'package:bro_app_to/utils/current_state.dart';
-import 'package:bro_app_to/utils/firebase_api.dart';
 import 'package:bro_app_to/utils/language_localizations.dart';
 import 'package:bro_app_to/utils/notification_model.dart';
 import 'package:bro_app_to/utils/router_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:bro_app_to/Screens/intro.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

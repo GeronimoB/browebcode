@@ -14,7 +14,6 @@ import '../../../../providers/player_provider.dart';
 
 import '../../../../utils/api_client.dart';
 import '../../../../utils/current_state.dart';
-import '../../../../utils/language_localizations.dart';
 import 'select_camp.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -162,7 +161,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       onWillPop: () async => false,
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 530),
+          constraints: const BoxConstraints(maxWidth: 530),
           child: Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -342,10 +341,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     });
                                   },
                                   fillColor:
-                                      MaterialStateProperty.resolveWith<Color?>(
-                                    (Set<MaterialState> states) {
+                                      WidgetStateProperty.resolveWith<Color?>(
+                                    (Set<WidgetState> states) {
                                       if (states
-                                          .contains(MaterialState.selected)) {
+                                          .contains(WidgetState.selected)) {
                                         return const Color(0xff00E050);
                                       }
                                       return Colors.white;

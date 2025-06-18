@@ -2,7 +2,6 @@ import 'package:bro_app_to/Screens/player/home_page/models/user_in_filter.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../common/player_helper.dart';
-import '../../../agent/user_profile/user_profile_to_agent.dart';
 
 Widget SearchUsersResult(
   BuildContext context,

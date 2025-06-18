@@ -54,7 +54,7 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
             colors: [Color(0xFF2C2C2C), Color(0xFF000000)],
           ),
         ),
-        child: Container(
+        child: SizedBox(
           width: 530,
           child: Scaffold(
             backgroundColor: Colors.transparent,
@@ -113,7 +113,9 @@ class _MetodoDePagoScreenState extends State<MetodoDePagoScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => AgregarTarjetaScreen(
-                            valueToPay: valueToPay, cupon: couponToSend),
+                          valueToPay: valueToPay,
+                          cupon: couponToSend,
+                        ),
                       ),
                     );
                   },

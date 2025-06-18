@@ -251,7 +251,7 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
         return Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
-            constraints: BoxConstraints(maxWidth: 400),
+            constraints: const BoxConstraints(maxWidth: 400),
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: const Color(0xff3B3B3B),
@@ -334,7 +334,7 @@ class _ConfigProfilePlayerState extends State<ConfigProfilePlayer> {
                     width: double.maxFinite,
                     child: Text(
                       translations!['AreYouSureYouWantToLogOut'],
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

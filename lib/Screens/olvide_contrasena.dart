@@ -13,7 +13,7 @@ class OlvideContrasenaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 530),
+        constraints: const BoxConstraints(maxWidth: 530),
         child: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
@@ -57,7 +57,7 @@ class OlvideContrasenaPage extends StatelessWidget {
               children: <Widget>[
                 const SizedBox(height: 25),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Text(
                     translations!["emailLinkMessage"],
                     style: const TextStyle(

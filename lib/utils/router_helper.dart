@@ -4,7 +4,6 @@ import 'package:bro_app_to/Screens/agent/config_profile.dart';
 import 'package:bro_app_to/Screens/player/bottom_navigation_bar_player.dart';
 import 'package:bro_app_to/main.dart';
 import 'package:bro_app_to/src/auth/presentation/screens/sign_in.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../Screens/player/config_profile_player.dart';

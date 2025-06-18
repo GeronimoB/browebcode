@@ -145,7 +145,7 @@ class ChatPageState extends State<ChatPage> {
     double height = MediaQuery.of(context).size.height;
     Sizes.initSizes(width, height);
     String fullName = '${widget.friend.name} ${widget.friend.lastName}';
-    String trimmedName = fullName;
+   
 
     return WillPopScope(
       onWillPop: () async {
@@ -213,7 +213,7 @@ class ChatPageState extends State<ChatPage> {
                           children: [
                             Flexible(
                               child: Text(
-                                trimmedName,
+                                fullName,
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,

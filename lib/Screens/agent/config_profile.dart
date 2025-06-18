@@ -75,7 +75,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
       },
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 530),
+          constraints: const BoxConstraints(maxWidth: 530),
           child: Scaffold(
             extendBodyBehindAppBar: true,
             appBar: AppBar(
@@ -132,7 +132,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
                       children: [
                         const SizedBox(height: 22),
                         _buildListItem(translations!["EditInformation"],
-                            context, true, EditarInfo()),
+                            context, true, const EditarInfo()),
                         _buildListItem(
                           translations!['change_pss'],
                           context,
@@ -543,7 +543,7 @@ class _ConfigProfileState extends State<ConfigProfile> {
         return Dialog(
           backgroundColor: Colors.transparent,
           child: Container(
-            constraints: BoxConstraints(maxWidth: 400),
+            constraints: const BoxConstraints(maxWidth: 400),
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: const Color(0xff3B3B3B),

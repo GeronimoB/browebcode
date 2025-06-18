@@ -65,7 +65,7 @@ class Privacidad extends StatelessWidget {
                   children: [
                     Text(
                       translations!["ChangePassword"],
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.bold,
@@ -76,30 +76,14 @@ class Privacidad extends StatelessWidget {
                       onTap: () {
                         showPassDialog(context);
                       },
-                      child:
-                          Icon(Icons.chevron_right, color: Color(0xff00E050)),
+                      child: const Icon(Icons.chevron_right,
+                          color: Color(0xff00E050)),
                     ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            // ListTile(
-            //   title: const Text(
-            //     'AUTENTICACION DE DOBLE FACTOR',
-            //     style: const TextStyle(
-            //       color: Colors.white,
-            //       fontFamily: 'Montserrat',
-            //       fontSize: 16,
-            //       fontWeight: FontWeight.bold,
-            //     ),
-            //   ),
-            //   onTap: () {
-            //     _editarCampo(context, 'Autenticación de Doble Factor',
-            //         TextEditingController());
-            //   },
-            //   trailing: Icon(Icons.chevron_right, color: Color(0xff00E050)),
-            // ),
             const SizedBox(height: 10),
             Expanded(
               child: Align(
@@ -171,14 +155,14 @@ class Privacidad extends StatelessWidget {
                         fontStyle: FontStyle.italic,
                         fontSize: 16,
                       ),
-                      errorStyle: TextStyle(
+                      errorStyle: const TextStyle(
                         color: Color.fromARGB(255, 255, 106, 106),
                         fontFamily: 'Montserrat',
                         fontWeight: FontWeight.w500,
                         fontStyle: FontStyle.italic,
                         fontSize: 11,
                       ),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 5),
                       enabledBorder: const UnderlineInputBorder(
                         borderSide:
                             BorderSide(color: Color(0xFF00E050), width: 2),
@@ -218,7 +202,7 @@ class Privacidad extends StatelessWidget {
                         fontStyle: FontStyle.italic,
                         fontSize: 11,
                       ),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 5),
                       enabledBorder: const UnderlineInputBorder(
                         borderSide:
                             BorderSide(color: Color(0xFF00E050), width: 2),
@@ -273,7 +257,7 @@ class Privacidad extends StatelessWidget {
                         fontStyle: FontStyle.italic,
                         fontSize: 11,
                       ),
-                      contentPadding: EdgeInsets.symmetric(vertical: 5),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 5),
                       enabledBorder: const UnderlineInputBorder(
                         borderSide:
                             BorderSide(color: Color(0xFF00E050), width: 2),

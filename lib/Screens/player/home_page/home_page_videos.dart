@@ -37,7 +37,7 @@ class HomePageVideosScreenState extends State<HomePageVideosScreen>
         .addPostFrameCallback((_) => presenter.fetchVideoUrls(userId));
   }
 
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   @override
   Widget build(BuildContext context) {
     return isLoading
